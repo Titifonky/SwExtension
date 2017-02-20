@@ -1,0 +1,223 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{669ECF2C-E4AF-4488-908A-50A559A9331C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SwExtension</RootNamespace>
+    <AssemblyName>SwExtension</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <RegisterForComInterop>true</RegisterForComInterop>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Etienne.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="SolidWorks.Interop.sldworks">
+      <HintPath>C:\Program Files\SOLIDWORKS Corp\SOLIDWORKS\api\redist\SolidWorks.Interop.sldworks.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="SolidWorks.Interop.swcommands">
+      <HintPath>C:\Program Files\SOLIDWORKS Corp\SOLIDWORKS\api\redist\SolidWorks.Interop.swcommands.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="SolidWorks.Interop.swconst">
+      <HintPath>C:\Program Files\SOLIDWORKS Corp\SOLIDWORKS\api\redist\SolidWorks.Interop.swconst.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="SolidWorks.Interop.swpublished">
+      <HintPath>C:\Program Files\SOLIDWORKS Corp\SOLIDWORKS\api\redist\SolidWorks.Interop.swpublished.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="solidworkstools">
+      <HintPath>C:\Program Files\SOLIDWORKS Corp\SOLIDWORKS\solidworkstools.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BoutonBase.cs" />
+    <Compile Include="Info.cs" />
+    <Compile Include="Macros\BoutonActiverAimantation.cs" />
+    <Compile Include="Macros\BoutonOuvrirDossier.cs" />
+    <Compile Include="Macros\BoutonExclureNomenclature.cs" />
+    <Compile Include="Macros\BoutonRenommerFeuille.cs" />
+    <Compile Include="Macros\BoutonRedimensionnerFeuille.cs" />
+    <Compile Include="Macros\BoutonMettreEnPage.cs" />
+    <Compile Include="Macros\BoutonRenommerToutesFeuilles.cs" />
+    <Compile Include="Macros\BoutonMAJListePiecesSoudees.cs" />
+    <Compile Include="Macros\Test.cs" />
+    <Compile Include="ModuleEmpreinte\PageEmpreinte - Copier.cs" />
+    <Compile Include="ModuleLaser\ModuleListeDebit\CmdListeDebit.cs" />
+    <Compile Include="ModuleLaser\ModuleListeDebit\PageListeDebit.cs" />
+    <Compile Include="ModuleLaser\ModuleExportBarre\CmdExportBarre.cs" />
+    <Compile Include="ModuleLaser\ModuleExportBarre\PageExportBarre.cs" />
+    <Compile Include="ModuleEmpreinte\CmdEmpreinte.cs" />
+    <Compile Include="ModuleEmpreinte\PageEmpreinte.cs" />
+    <Compile Include="ModuleExportFichier\ModulePdf\CmdPdf.cs" />
+    <Compile Include="ModuleExportFichier\ModulePdf\PagePdf.cs" />
+    <Compile Include="ModuleExportFichier\ModuleDxfDwg\CmdDxfDwg.cs" />
+    <Compile Include="ModuleExportFichier\ModuleDxfDwg\PageDxfDwg.cs" />
+    <Compile Include="ModuleLaser\ModuleCreerConfigDvp\CmdCreerConfigDvp.cs" />
+    <Compile Include="ModuleLaser\ModuleCreerConfigDvp\PageCreerConfigDvp.cs" />
+    <Compile Include="ModuleLaser\ModuleCreerDvp\CmdCreerDvp.cs" />
+    <Compile Include="ModuleLaser\ModuleCreerDvp\PageCreerDVP.cs" />
+    <Compile Include="ModuleLaser\OutilsCommun.cs" />
+    <Compile Include="ModuleExportFichier\PageExportFichier.cs" />
+    <Compile Include="ModuleListerConfigComp\CmdListerConfigComp.cs" />
+    <Compile Include="ModuleListerConfigComp\PageListerConfigComp.cs" />
+    <Compile Include="ModuleListerMateriaux\CmdListerMateriaux.cs" />
+    <Compile Include="ModuleListerMateriaux\PageListerMateriaux.cs" />
+    <Compile Include="ModuleMarchePositionner\ModuleBalancerMarches\PageBalancerMarches.cs" />
+    <Compile Include="ModuleMarchePositionner\ModuleInsererMarches\CmdInsererMarches.cs" />
+    <Compile Include="ModuleMarchePositionner\ModuleInsererMarches\PageInsererMarches.cs" />
+    <Compile Include="ModuleMarchePositionner\PageMarchePositionner.cs" />
+    <Compile Include="ModuleMarcheConfig\PageMarcheConfig.cs" />
+    <Compile Include="ModuleVoronoi\CmdVoronoi.cs" />
+    <Compile Include="ModuleVoronoi\QuadraticElements.cs" />
+    <Compile Include="NotePad.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NotePad.Designer.cs">
+      <DependentUpon>NotePad.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OngletParametres.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OngletParametres.Designer.cs">
+      <DependentUpon>OngletParametres.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OngletLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OngletLog.Designer.cs">
+      <DependentUpon>OngletLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Macros\BoutonListerMateriaux.cs" />
+    <Compile Include="Macros\BoutonSupprimerConfigDepliee.cs" />
+    <Compile Include="Macros\BoutonToutReconstruire.cs" />
+    <Compile Include="ModuleMarcheConfig\ModuleInsererEsquisseConfig\CmdInsererEsquisseConfig.cs" />
+    <Compile Include="ModuleMarcheConfig\ModuleInsererEsquisseConfig\PageInsererEsquisseConfig.cs" />
+    <Compile Include="ModuleInsererPercage\CmdInsererPercage.cs" />
+    <Compile Include="ModuleInsererPercage\PageInsererPercage.cs" />
+    <Compile Include="ModuleMarcheConfig\ModuleConfigurerPlatine\CmdConfigurerPlatine.cs" />
+    <Compile Include="ModuleMarcheConfig\ModuleConfigurerPlatine\PageConfigurerPlatine.cs" />
+    <Compile Include="ModuleContraindreComposant\CmdContraindreComposant.cs" />
+    <Compile Include="ModuleContraindreComposant\PageContraindreComposant.cs" />
+    <Compile Include="ModuleImporterInfos\CmdImporterInfos.cs" />
+    <Compile Include="ModuleImporterInfos\PageImporterInfos.cs" />
+    <None Include="Outils\DlgRechercherUnDossier.cs" />
+    <None Include="Outils\DlgRechercherUnFichier.cs" />
+    <None Include="Outils\DlgSauverUnFichier.cs" />
+    <Compile Include="Outils\Divers.cs" />
+    <Compile Include="Outils\InputBox.cs" />
+    <Compile Include="Outils\TestBoolean.cs" />
+    <Compile Include="Outils\PMPControls.cs" />
+    <Compile Include="Outils\Reflexion.cs" />
+    <Compile Include="Outils\Texte.cs" />
+    <Compile Include="Outils\Sw.cs" />
+    <Compile Include="Log.cs" />
+    <Compile Include="Outils\Math.cs" />
+    <None Include="Outils\Tree.cs" />
+    <Compile Include="Parametres.cs" />
+    <Compile Include="BoutonPMPManager.cs" />
+    <Compile Include="ModuleLierLesConfigurations\CmdLierLesConfigurations.cs" />
+    <Compile Include="ModuleLierLesConfigurations\PageLierLesConfigurations.cs" />
+    <Compile Include="ModuleParametres\PageParametres.cs" />
+    <Compile Include="ModuleMarcheConfig\ModuleConfigurerContreMarche\CmdConfigurerContreMarche.cs" />
+    <Compile Include="ModuleMarcheConfig\ModuleConfigurerContreMarche\PageConfigurerContreMarche.cs" />
+    <Compile Include="ModuleMarcheConfig\ModulePositionnerPlatine\PagePositionnerPlatine.cs" />
+    <Compile Include="ModuleMarcheConfig\ModulePositionnerPlatine\CmdPositionnerPlatine.cs" />
+    <Compile Include="swAddin_PM.cs" />
+    <Compile Include="swAddin.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Outils\Geometrie.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DLL_Desinstaller.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="DLL_Installer.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Etienne.snk" />
+    <None Include="log4net.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="NotePad.resx">
+      <DependentUpon>NotePad.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OngletParametres.resx">
+      <DependentUpon>OngletParametres.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OngletLog.resx">
+      <DependentUpon>OngletLog.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\clipper_ver6.4\C#\clipper_library\clipper_library.csproj">
+      <Project>{9b062971-a88e-4a3d-b3c9-12b78d15fa66}</Project>
+      <Name>clipper_library</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Triangle.NET_V4\Triangle\Triangle.csproj">
+      <Project>{f7907a0a-b75f-400b-9e78-bfad00db4d6b}</Project>
+      <Name>Triangle</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LoreSoft.MathExpressions\LoreSoft.MathExpressions.csproj">
+      <Project>{b6813448-fce2-429c-81b5-9722fea839b8}</Project>
+      <Name>LoreSoft.MathExpressions</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>call "$(TargetDir)DLL_Installer.bat" $(TargetName)</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

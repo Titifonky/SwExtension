@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="c:\program files (x86)\microsoft visual studio 14.0\team tools\static analysis tools\fxcop\Xml\CodeAnalysisReport.xsl"?>
+<FxCopReport Version="14.0">
+ <Targets>
+  <Target Name="E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\bin\Debug\LoreSoft.MathExpressions.dll">
+   <Modules>
+    <Module Name="loresoft.mathexpressions.dll">
+     <Messages>
+      <Message TypeName="MarkAssembliesWithNeutralResourcesLanguage" Category="Microsoft.Performance" CheckId="CA1824" Status="Active" Created="2017-01-13 12:23:30Z" FixCategory="NonBreaking">
+       <Issue Certainty="95" Level="Warning">Comme un assembly 'LoreSoft.MathExpressions.dll' contient un fichier de ressources .resx, marquez-le avec l'attribut NeutralResourcesLanguage, en spécifiant le langage des ressources au sein de l'assembly. Cela permet d'améliorer les performances de recherche lorsqu'une ressource est extraite pour la première fois.</Issue>
+      </Message>
+     </Messages>
+     <Namespaces>
+      <Namespace Name="LoreSoft.MathExpressions">
+       <Types>
+        <Type Name="FunctionExpression" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#.ctor(System.String,System.Boolean)" Kind="Method" Static="False" Accessibility="Assembly" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="NormalizeStringsToUppercase" Category="Microsoft.Globalization" CheckId="CA1308" Status="Active" Created="2017-01-13 12:23:30Z" FixCategory="NonBreaking">
+             <Issue Name="ToUpperInvariant" Certainty="90" Level="Error" Path="E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions" File="FunctionExpression.cs" Line="32">Dans la méthode 'FunctionExpression.FunctionExpression(string, bool)', remplacez l'appel à 'string.ToLowerInvariant()' par String.ToUpperInvariant().</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="NumberExpression" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#IsNegativeSign(System.Char)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="c" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2017-01-13 12:23:30Z" FixCategory="Breaking">
+             <Issue Name="MemberParameterMoreMeaningfulName" Certainty="75" Level="CriticalWarning" Path="E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions" File="NumberExpression.cs" Line="51">Dans la méthode 'NumberExpression.IsNegativeSign(char)', si possible, donnez un nom plus significatif que le nom de paramètre 'c'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#IsNumber(System.Char)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="c" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2017-01-13 12:23:30Z" FixCategory="Breaking">
+             <Issue Name="MemberParameterMoreMeaningfulName" Certainty="75" Level="CriticalWarning" Path="E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions" File="NumberExpression.cs" Line="42">Dans la méthode 'NumberExpression.IsNumber(char)', si possible, donnez un nom plus significatif que le nom de paramètre 'c'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="OperatorExpression" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#IsSymbol(System.Char)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="c" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2017-01-13 12:23:30Z" FixCategory="Breaking">
+             <Issue Name="MemberParameterMoreMeaningfulName" Certainty="75" Level="CriticalWarning" Path="E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions" File="OperatorExpression.cs" Line="187">Dans la méthode 'OperatorExpression.IsSymbol(char)', si possible, donnez un nom plus significatif que le nom de paramètre 'c'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#IsSymbol(System.String)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="s" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2017-01-13 12:23:30Z" FixCategory="Breaking">
+             <Issue Name="MemberParameterMoreMeaningfulName" Certainty="75" Level="CriticalWarning" Path="E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions" File="OperatorExpression.cs" Line="175">Dans la méthode 'OperatorExpression.IsSymbol(string)', si possible, donnez un nom plus significatif que le nom de paramètre 's'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+       </Types>
+      </Namespace>
+     </Namespaces>
+    </Module>
+   </Modules>
+  </Target>
+ </Targets>
+ <Rules>
+  <Rule TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704">
+   <Name>L'orthographe des identificateurs doit être correcte</Name>
+   <Description>Les mots individuels qui composent un identificateur ne doivent pas être abrégés et être orthographiés comme il se doit. Si cette règle génère un faux positif dans un terme qui doit être reconnu, ajoutez le mot au dictionnaire FxCop personnalisé.</Description>
+   <Resolution Name="MemberParameterMoreMeaningfulName">Dans la méthode {0}, si possible, donnez un nom plus significatif que le nom de paramètre {1}.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/bb264492.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="75">CriticalWarning</MessageLevel>
+   <File Name="namingrules.dll" Version="14.0.0.0" />
+  </Rule>
+  <Rule TypeName="MarkAssembliesWithNeutralResourcesLanguage" Category="Microsoft.Performance" CheckId="CA1824">
+   <Name>Marquer les assemblys avec NeutralResourcesLanguageAttribute</Name>
+   <Description>L'attribut NeutralResourcesLanguage informe le ResourceManager du langage utilisé pour restituer les ressources de la culture neutre d'un assembly. Lors de la recherche de ressources dans la même culture que le langage des ressources neutre, le ResourceManager utilise automatiquement les ressources situées dans l'assembly principal, au lieu de chercher un assembly satellite ayant la culture de l'interface utilisateur actuelle pour le thread actif. Cela permet d'améliorer les performances de recherche de la première ressource chargée et de réduire votre jeu de travail.</Description>
+   <Resolution Name="Default">Comme un assembly {0} contient un fichier de ressources .resx, marquez-le avec l'attribut NeutralResourcesLanguage, en spécifiant le langage des ressources au sein de l'assembly. Cela permet d'améliorer les performances de recherche lorsqu'une ressource est extraite pour la première fois.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/bb385967.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">Warning</MessageLevel>
+   <File Name="performancerules.dll" Version="14.0.0.0" />
+  </Rule>
+  <Rule TypeName="NormalizeStringsToUppercase" Category="Microsoft.Globalization" CheckId="CA1308">
+   <Name>Normaliser les chaînes en majuscules</Name>
+   <Description>Les chaînes doivent être normalisées en majuscules.</Description>
+   <Resolution Name="ToUpperInvariant">Dans la méthode {0}, remplacez l'appel à {1} par String.ToUpperInvariant().</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/bb386042.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="90">Error</MessageLevel>
+   <File Name="globalizationrules.dll" Version="14.0.0.0" />
+  </Rule>
+ </Rules>
+ <Localized>
+  <String Key="Category">Catégorie</String>
+  <String Key="Certainty">Certitude</String>
+  <String Key="CollapseAll">Réduire tout</String>
+  <String Key="CheckId">ID de contrôle</String>
+  <String Key="Error">Erreur</String>
+  <String Key="Errors">erreur(s)</String>
+  <String Key="ExpandAll">Développer tout</String>
+  <String Key="Help">Aide</String>
+  <String Key="Line">Ligne</String>
+  <String Key="Messages">message(s)</String>
+  <String Key="LocationNotStoredInPdb">[Emplacement non stocké dans le fichier Pdb]</String>
+  <String Key="Project">Projet</String>
+  <String Key="Resolution">Résolution</String>
+  <String Key="Rule">Règle</String>
+  <String Key="RuleFile">Fichier de règles</String>
+  <String Key="RuleDescription">Description de la règle</String>
+  <String Key="Source">Source</String>
+  <String Key="Status">État</String>
+  <String Key="Target">Cible</String>
+  <String Key="Warning">Avertissement</String>
+  <String Key="Warnings">avertissement(s)</String>
+  <String Key="ReportTitle">Rapport d'analyse du code</String>
+ </Localized>
+</FxCopReport>

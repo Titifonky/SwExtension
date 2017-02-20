@@ -1,0 +1,47 @@
+F:\Mes documents\Visual Studio 2013\Projects\Calculator\LoreSoft.MathExpressions\obj\Debug\LoreSoft.MathExpressions.Properties.Resources.resources
+F:\Mes documents\Visual Studio 2013\Projects\Calculator\LoreSoft.MathExpressions\obj\Debug\LoreSoft.MathExpressions.csproj.GenerateResource.Cache
+F:\Mes documents\Visual Studio 2013\Projects\Calculator\LoreSoft.MathExpressions\obj\Debug\LoreSoft.MathExpressions.dll
+F:\Mes documents\Visual Studio 2013\Projects\Calculator\LoreSoft.MathExpressions\obj\Debug\LoreSoft.MathExpressions.pdb
+F:\Mes documents\Visual Studio 2013\Projects\Gestion_App V4\LoreSoft.MathExpressions\obj\Debug\LoreSoft.MathExpressions.Properties.Resources.resources
+F:\Mes documents\Visual Studio 2013\Projects\Gestion_App V4\LoreSoft.MathExpressions\obj\Debug\LoreSoft.MathExpressions.csproj.GenerateResource.Cache
+F:\Mes documents\Visual Studio 2013\Projects\Gestion_App V4\LoreSoft.MathExpressions\obj\Debug\LoreSoft.MathExpressions.dll
+F:\Mes documents\Visual Studio 2013\Projects\Gestion_App V4\LoreSoft.MathExpressions\obj\Debug\LoreSoft.MathExpressions.pdb
+F:\Mes documents\Visual Studio 2013\Projects\Gestion_App V4\LoreSoft.MathExpressions\obj\Debug\LoreSoft.MathExpressions.csprojResolveAssemblyReference.cache
+F:\Mes documents\Visual Studio 2013\Projects\Gestion_App V5\LoreSoft.MathExpressions\obj\Debug\LoreSoft.MathExpressions.Properties.Resources.resources
+F:\Mes documents\Visual Studio 2013\Projects\Gestion_App V5\LoreSoft.MathExpressions\obj\Debug\LoreSoft.MathExpressions.csproj.GenerateResource.Cache
+F:\Mes documents\Visual Studio 2013\Projects\Gestion_App V5\LoreSoft.MathExpressions\obj\Debug\LoreSoft.MathExpressions.dll
+F:\Mes documents\Visual Studio 2013\Projects\Gestion_App V5\LoreSoft.MathExpressions\obj\Debug\LoreSoft.MathExpressions.pdb
+F:\Mes documents\Visual Studio 2013\Projects\Gestion_App V5\LoreSoft.MathExpressions\obj\Debug\LoreSoft.MathExpressions.csprojResolveAssemblyReference.cache
+F:\Mes documents\Visual Studio 2013\Projects\Build\Debug\LoreSoft.MathExpressions.XML
+F:\Mes documents\Visual Studio 2013\Projects\Build\Debug\LoreSoft.MathExpressions.dll
+F:\Mes documents\Visual Studio 2013\Projects\Build\Debug\LoreSoft.MathExpressions.pdb
+F:\Mes documents\Visual Studio 2013\Projects\Build\Debug\LoreSoft.MathExpressions.dll.CodeAnalysisLog.xml
+F:\Mes documents\Visual Studio 2013\Projects\Build\Debug\LoreSoft.MathExpressions.dll.lastcodeanalysissucceeded
+F:\Mes documents\Visual Studio 2013\Projects\Gestion_App V6\LoreSoft.MathExpressions\obj\Debug\LoreSoft.MathExpressions.csprojResolveAssemblyReference.cache
+F:\Mes documents\Visual Studio 2013\Projects\Gestion_App V6\LoreSoft.MathExpressions\obj\Debug\LoreSoft.MathExpressions.Properties.Resources.resources
+F:\Mes documents\Visual Studio 2013\Projects\Gestion_App V6\LoreSoft.MathExpressions\obj\Debug\LoreSoft.MathExpressions.csproj.GenerateResource.Cache
+F:\Mes documents\Visual Studio 2013\Projects\Gestion_App V6\LoreSoft.MathExpressions\obj\Debug\LoreSoft.MathExpressions.dll
+F:\Mes documents\Visual Studio 2013\Projects\Gestion_App V6\LoreSoft.MathExpressions\obj\Debug\LoreSoft.MathExpressions.pdb
+F:\Mes documents\Projets Visual Studio\Build\Debug\LoreSoft.MathExpressions.XML
+F:\Mes documents\Projets Visual Studio\Build\Debug\LoreSoft.MathExpressions.dll
+F:\Mes documents\Projets Visual Studio\Build\Debug\LoreSoft.MathExpressions.pdb
+F:\Mes documents\Projets Visual Studio\Build\Debug\LoreSoft.MathExpressions.dll.CodeAnalysisLog.xml
+F:\Mes documents\Projets Visual Studio\Build\Debug\LoreSoft.MathExpressions.dll.lastcodeanalysissucceeded
+F:\Mes documents\Projets Visual Studio\Gestion_App V6\LoreSoft.MathExpressions\obj\Debug\LoreSoft.MathExpressions.Properties.Resources.resources
+F:\Mes documents\Projets Visual Studio\Gestion_App V6\LoreSoft.MathExpressions\obj\Debug\LoreSoft.MathExpressions.csproj.GenerateResource.Cache
+F:\Mes documents\Projets Visual Studio\Gestion_App V6\LoreSoft.MathExpressions\obj\Debug\LoreSoft.MathExpressions.dll
+F:\Mes documents\Projets Visual Studio\Gestion_App V6\LoreSoft.MathExpressions\obj\Debug\LoreSoft.MathExpressions.pdb
+F:\Mes documents\Projets Visual Studio\Gestion_App V6\LoreSoft.MathExpressions\obj\Debug\LoreSoft.MathExpressions.csprojResolveAssemblyReference.cache
+F:\Mes documents\Projets Visual Studio\Gestion_App V6\LoreSoft.MathExpressions\bin\Debug\LoreSoft.MathExpressions.dll
+F:\Mes documents\Projets Visual Studio\Gestion_App V6\LoreSoft.MathExpressions\bin\Debug\LoreSoft.MathExpressions.pdb
+F:\Mes documents\Projets Visual Studio\Gestion_App V6\LoreSoft.MathExpressions\bin\Debug\LoreSoft.MathExpressions.dll.CodeAnalysisLog.xml
+F:\Mes documents\Projets Visual Studio\Gestion_App V6\LoreSoft.MathExpressions\bin\Debug\LoreSoft.MathExpressions.dll.lastcodeanalysissucceeded
+E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\bin\Debug\LoreSoft.MathExpressions.dll
+E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\bin\Debug\LoreSoft.MathExpressions.pdb
+E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\bin\Debug\LoreSoft.MathExpressions.dll.CodeAnalysisLog.xml
+E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\bin\Debug\LoreSoft.MathExpressions.dll.lastcodeanalysissucceeded
+E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\obj\Debug\LoreSoft.MathExpressions.csprojResolveAssemblyReference.cache
+E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\obj\Debug\LoreSoft.MathExpressions.Properties.Resources.resources
+E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\obj\Debug\LoreSoft.MathExpressions.csproj.GenerateResource.Cache
+E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\obj\Debug\LoreSoft.MathExpressions.dll
+E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\obj\Debug\LoreSoft.MathExpressions.pdb
