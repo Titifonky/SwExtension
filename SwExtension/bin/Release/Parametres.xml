@@ -44,13 +44,13 @@
   </Module>
   <Module name="CreerDvp" intitule="Creer les dvp de tôle">
     <Parametre name="PropQuantite" intitule="Propriete &quot;Quantite&quot;" tip="Recherche cette propriete" type="System.String">Quantite</Parametre>
-    <Parametre name="AfficherLignePliage" intitule="Afficher les lignes de pliage" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="AfficherNotePliage" intitule="Afficher les notes de pliage" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="InscrireNomTole" intitule="Inscrire la réf du dvp sur la tole" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="AfficherLignePliage" intitule="Afficher les lignes de pliage" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="AfficherNotePliage" intitule="Afficher les notes de pliage" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="InscrireNomTole" intitule="Inscrire la réf du dvp sur la tole" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="TailleInscription" intitule="Ht des inscriptions en mm" tip="Ht des inscriptions en mm" type="System.Int32">5</Parametre>
     <Parametre name="ComposantExterne" intitule="Créer les dvp des composants externe au dossier du modèle" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="OrienterDvp" intitule="Orienter les dvps" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="OrientationDvp" intitule="" tip="" type="Outils.eOrientation">Portrait</Parametre>
+    <Parametre name="OrientationDvp" intitule="" tip="" type="Outils.eOrientation">Paysage</Parametre>
     <Parametre name="FermerPlan" intitule="Fermer les plans" tip="Fermer les plans après génération des dvps" type="System.Boolean">False</Parametre>
     <Parametre name="ConvertirEsquisse" intitule="Convertir les dvp en esquisse" tip="Le lien entre le dvp et le modèle est cassé, la config dvp est supprimée après la création de la vue" type="System.Boolean">False</Parametre>
   </Module>
@@ -170,5 +170,8 @@
   <Module name="ListerConfigComp" intitule="Lister les configs">
   </Module>
   <Module name="" intitule="">
+  </Module>
+  <Module name="DecompterPercage" intitule="Decompter les perçages" />
+  <Module name="ListerPercage" intitule="Lister les percages">
   </Module>
 </Parametres>

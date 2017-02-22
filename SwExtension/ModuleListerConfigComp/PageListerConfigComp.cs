@@ -196,7 +196,9 @@ namespace ModuleListerConfigComp
                     _DicIntitule.Add(String.Format(format, Cfg, Dic[Cfg].Count), Cfg);
                 }
 
-                return _DicIntitule.Keys.ToList();
+                var lst = _DicIntitule.Keys.ToList();
+                lst.Sort(new WindowsStringComparer());
+                return lst;
             }
 
             public List<Component2> ListeComposants(String Intitule)

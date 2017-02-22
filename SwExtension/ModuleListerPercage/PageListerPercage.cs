@@ -234,7 +234,9 @@ namespace ModuleListerPercage
                     _DicIntitule.Add(String.Format(format, Diam, nb), Diam);
                 }
 
-                return _DicIntitule.Keys.ToList();
+                var lst = _DicIntitule.Keys.ToList();
+                lst.Sort(new WindowsStringComparer());
+                return lst;
             }
 
             public Dictionary<Component2, List<Face2>> ListeFace(String Intitule)
