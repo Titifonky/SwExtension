@@ -2311,7 +2311,7 @@ namespace Outils
 
         //========================================================================================
 
-        public static String eNomDossier(this BodyFolder dossier) { return dossier.GetFeature().Name; }
+        public static String eNom(this BodyFolder dossier) { return dossier.GetFeature().Name; }
 
         /// <summary>
         /// Retourne ou défini si le dossier est exclu de la nomenclature.

@@ -187,7 +187,7 @@ namespace ModuleLaser.ModuleCreerConfigDvp
                             String NoDossier = dossier.eProp(CONSTANTES.NO_DOSSIER);
 
                             if (NoDossier.IsNull() || String.IsNullOrWhiteSpace(NoDossier))
-                                NoDossier = Piece.eNumeroterDossier(MajListePiecesSoudees)[dossier.eNomDossier()].ToString();
+                                NoDossier = Piece.eNumeroterDossier(MajListePiecesSoudees)[dossier.eNom()].ToString();
 
                             String NomConfigDepliee = Sw.eNomConfigDepliee(NomConfigPliee, NoDossier);
 

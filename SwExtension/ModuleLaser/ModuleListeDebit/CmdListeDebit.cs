@@ -134,18 +134,20 @@ namespace ModuleLaser
                     for (int noCp = 0; noCp < ListeCp.Count; noCp++)
                     {
                         var Comp = ListeCp[noCp];
+                        var NomConfigPliee = Comp.eNomConfiguration();
+
                         ModelDoc2 mdl = Comp.eModelDoc2();
+                        mdl.ShowConfiguration2(NomConfigPliee);
 
                         if (ReinitialiserNoDossier)
                             mdl.ePartDoc().eReinitialiserNoDossierMax();
 
-                        var NomConfigPliee = Comp.eNomConfiguration();
                         int QuantiteCfg = DicQte[Comp.eKeyAvecConfig(NomConfigPliee)];
 
                         if (NumeroterDossier)
                             Comp.eNumeroterDossier(MajListePiecesSoudees);
 
-                        List<Feature> ListeDossier = Comp.eListeDesFonctionsDePiecesSoudees(null);
+                        List<Feature> ListeDossier = mdl.ePartDoc().eListeDesFonctionsDePiecesSoudees(null);
 
                         for (int noD = 0; noD < ListeDossier.Count; noD++)
                         {
@@ -174,7 +176,7 @@ namespace ModuleLaser
                             String noDossier = dossier.eProp(CONSTANTES.NO_DOSSIER);
 
                             if (noDossier.IsNull() || String.IsNullOrWhiteSpace(noDossier))
-                                noDossier = Comp.eNumeroterDossier(MajListePiecesSoudees)[dossier.eNomDossier()].ToString();
+                                noDossier = Comp.eNumeroterDossier(MajListePiecesSoudees)[dossier.eNom()].ToString();
 
                             int QuantiteBarre = QuantiteCfg * dossier.GetBodyCount();
 

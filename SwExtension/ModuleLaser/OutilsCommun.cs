@@ -141,7 +141,7 @@ namespace ModuleLaser
                     PM.ePropAdd(CONSTANTES.NO_DOSSIER, pNoDossier);
                 }
 
-                Dic.AddIfNotExist(dossier.eNomDossier(), pNoDossier);
+                Dic.AddIfNotExist(dossier.eNom(), pNoDossier);
             }
 
             // On met à jour le parametre
