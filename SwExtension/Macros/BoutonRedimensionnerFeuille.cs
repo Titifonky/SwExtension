@@ -12,18 +12,24 @@ namespace Macros
     {
         protected override void Command()
         {
-            DrawingDoc dessin = App.ModelDoc2.eDrawingDoc();
+            var dessin = App.ModelDoc2.eDrawingDoc();
+            var feuille = dessin.eFeuilleActive(); ;
 
-            dessin.eParcourirLesFeuilles(
-                f =>
-                {
-                    dessin.ActivateSheet(f.GetName());
-                    WindowLog.Ecrire("  - " + f.GetName());
-                    f.eAjusterAutourDesVues();
-                    App.ModelDoc2.eZoomEtendu();
-                    return false;
-                }
-                );
+            dessin.ActivateSheet(feuille.GetName());
+            WindowLog.Ecrire("  - " + feuille.GetName());
+            feuille.eAjusterAutourDesVues();
+            App.ModelDoc2.eZoomEtendu();
+
+            //dessin.eParcourirLesFeuilles(
+            //    f =>
+            //    {
+            //        dessin.ActivateSheet(f.GetName());
+            //        WindowLog.Ecrire("  - " + f.GetName());
+            //        f.eAjusterAutourDesVues();
+            //        App.ModelDoc2.eZoomEtendu();
+            //        return false;
+            //    }
+            //    );
         }
     }
 }

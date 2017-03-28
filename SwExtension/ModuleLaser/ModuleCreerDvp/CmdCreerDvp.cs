@@ -196,7 +196,7 @@ namespace ModuleLaser.ModuleCreerDvp
 
                             DrawingDoc dessin = CreerPlan(Materiau, Epaisseur);
                             dessin.eModelDoc2().eActiver();
-                            Sheet Feuille = dessin.GetCurrentSheet();
+                            Sheet Feuille = dessin.eFeuilleActive();
 
                             View v = CreerVueToleDvp(dessin, Feuille, Piece, NomConfigDepliee, RefPiece, Materiau, QuantiteTole, Epaisseur);
 
@@ -219,7 +219,7 @@ namespace ModuleLaser.ModuleCreerDvp
                 {
                     int Errors = 0, Warnings = 0;
                     dessin.eModelDoc2().eActiver();
-                    ((Sheet)dessin.GetCurrentSheet()).eAjusterAutourDesVues();
+                    dessin.eFeuilleActive().eAjusterAutourDesVues();
                     dessin.eModelDoc2().ViewZoomtofit2();
                     dessin.eModelDoc2().Save3((int)swSaveAsOptions_e.swSaveAsOptions_SaveReferenced + (int)swSaveAsOptions_e.swSaveAsOptions_Silent, ref Errors, ref Warnings);
                 }
@@ -317,8 +317,7 @@ namespace ModuleLaser.ModuleCreerDvp
 
             DrawingDoc Dessin = Sw.eCreerDocument(DossierDVP, Fichier, eTypeDoc.Dessin, CONSTANTES.MODELE_DE_DESSIN_LASER).eDrawingDoc();
 
-            Sheet feuille = Dessin.GetCurrentSheet();
-            feuille.SetName(Fichier);
+            Dessin.eFeuilleActive().SetName(Fichier);
             DicDessins.Add(Fichier, Dessin);
 
             ModelDoc2 mdl = Dessin.eModelDoc2();

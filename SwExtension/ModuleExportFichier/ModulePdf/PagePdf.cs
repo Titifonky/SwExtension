@@ -83,7 +83,7 @@ namespace ModuleExportFichier
                 Cmd.typeExport = eTypeFichierExport.PDF;
                 Cmd.CheminDossier = NomDossier;
                 Cmd.ToutesLesFeuilles = _CheckBox_ToutesLesFeuilles.IsChecked;
-                Cmd.Feuille = (Sheet)App.DrawingDoc.GetCurrentSheet();
+                Cmd.Feuille = App.DrawingDoc.eFeuilleActive();
                 Cmd.NomFichier = NomFichierComplet;
 
                 Cmd.Executer();

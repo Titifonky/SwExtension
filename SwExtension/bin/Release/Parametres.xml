@@ -15,7 +15,7 @@
     <Parametre name="ToleranceFusion" intitule="Tolérance de fusion" tip="Tolérance de fusion" type="System.Double">0.01</Parametre>
     <Parametre name="ExporterHauteQualite" intitule="Exporter en haute qualité" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="ConvertirSplineToPolyligne" intitule="Convertir les splines en polylignes" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">D:\Projet\E139 - Vincent Pascal\ED358 - Tables et chaises de bar\0\Plans Développées\DWG - Ind A</Parametre>
+    <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">D:\Projet\E56 - SAS Concept-TY\AD356 - SCCV OCEANIS - Activity Denain - Escalier Louise FDM02\2\Plans Développées\DWG - Ind A</Parametre>
   </Module>
   <Module name="ExportPdf" intitule="Exporter en Pdf">
     <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">True</Parametre>
@@ -50,7 +50,7 @@
     <Parametre name="TailleInscription" intitule="Ht des inscriptions en mm" tip="Ht des inscriptions en mm" type="System.Int32">5</Parametre>
     <Parametre name="ComposantExterne" intitule="Créer les dvp des composants externe au dossier du modèle" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="OrienterDvp" intitule="Orienter les dvps" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="OrientationDvp" intitule="" tip="" type="Outils.eOrientation">Portrait</Parametre>
+    <Parametre name="OrientationDvp" intitule="" tip="" type="Outils.eOrientation">Paysage</Parametre>
     <Parametre name="FermerPlan" intitule="Fermer les plans" tip="Fermer les plans après génération des dvps" type="System.Boolean">False</Parametre>
     <Parametre name="ConvertirEsquisse" intitule="Convertir les dvp en esquisse" tip="Le lien entre le dvp et le modèle est cassé, la config dvp est supprimée après la création de la vue" type="System.Boolean">False</Parametre>
   </Module>

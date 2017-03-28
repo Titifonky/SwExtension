@@ -4519,6 +4519,11 @@ namespace Outils
             return format.GetEnumInfo<Intitule>() + " " + orientation.GetEnumInfo<Intitule>();
         }
 
+        public static Sheet eFeuilleActive(this DrawingDoc dessin)
+        {
+            return dessin.GetCurrentSheet();
+        }
+
         public static List<Sheet> eListeDesFeuilles(this DrawingDoc dessin)
         {
             List<Sheet> pListeFeuilles = new List<Sheet>();
