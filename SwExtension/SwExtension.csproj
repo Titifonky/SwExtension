@@ -78,6 +78,7 @@
     <Compile Include="Macros\BoutonActiverAimantation.cs" />
     <Compile Include="Macros\BoutonOuvrirDossier.cs" />
     <Compile Include="Macros\BoutonExclureNomenclature.cs" />
+    <Compile Include="Macros\BoutonEnregistrerVue.cs" />
     <Compile Include="Macros\BoutonRenommerFeuille.cs" />
     <Compile Include="Macros\BoutonRedimensionnerFeuille.cs" />
     <Compile Include="Macros\BoutonMettreEnPage.cs" />
