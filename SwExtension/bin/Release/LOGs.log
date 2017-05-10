@@ -1,20 +1,176 @@
-09:04:35,916 | 
+10:34:01,939 | 
  
-09:04:35,922 | ====================================================================================================
-09:04:35,922 | |                                                                                                  |
-09:04:35,922 | |                                          DEBUG                                                   |
-09:04:35,922 | |                                                                                                  |
-09:04:35,922 | ====================================================================================================
-09:04:35,922 | 
+10:34:01,944 | ====================================================================================================
+10:34:01,944 | |                                                                                                  |
+10:34:01,944 | |                                          DEBUG                                                   |
+10:34:01,944 | |                                                                                                  |
+10:34:01,944 | ====================================================================================================
+10:34:01,944 | 
  
-11:15:37,645 | 				-> ## 11:15:37     0     0      REDIMENSIONNER LA FEUILLE
-11:15:41,102 | 				-> ## 11:15:41     3     3  ========================
-11:15:41,119 | 				-> ## 11:15:41     4     0  
-11:15:42,019 | 				-> ## 11:15:42     4     1    - AA01-0
-11:15:42,770 | 				-> ## 11:15:42     5     1    - AR10-0
-11:15:43,286 | 				-> ## 11:15:43     6     1    - AR12-0
-11:15:43,719 | 				-> ## 11:15:43     6     0    - AR21-0
-11:15:43,886 | 				-> ## 11:15:43     6     0    - 5
-11:15:43,986 | 				-> ## 11:15:43     6     0    - Feuille1
-11:15:44,019 | 				-> ## 11:15:44     6     0  Executé en 2s878
-11:15:44,036 | 				-> ## 11:15:44     6     0  
+10:38:44,611 | 			PageEmpreinte..ctor  ->  Est initialisé : True
+10:38:44,639 | 				-> ## 10:38:44     0     0      EMPREINTE ENTRE LES COMPOSANTS
+10:38:44,665 | 				-> ## 10:38:44     0     0  ========================
+10:38:44,680 | 				-> ## 10:38:44     0     0  
+10:38:44,713 | 			PageEmpreinte.Command  ->  Show
+10:38:44,847 | 				-> ## 10:38:44     0     0  Executé en 0s137
+10:38:44,864 | 				-> ## 10:38:44     0     0  
+10:38:46,145 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:38:46,145 | 				-> Callback methode -> OnSubmitSelection
+10:38:46,171 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:38:46,171 | 				-> Callback methode -> OnSelectionboxListChanged
+10:38:48,734 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:38:48,734 | 				-> Callback methode -> OnSelectionboxFocusChanged
+10:38:50,903 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:38:50,903 | 				-> Callback methode -> OnGainedFocus
+10:38:51,888 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:38:51,888 | 				-> Callback methode -> OnTextboxChanged
+10:38:52,159 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:38:52,159 | 				-> Callback methode -> OnTextboxChanged
+10:38:52,383 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:38:52,383 | 				-> Callback methode -> OnTextboxChanged
+10:38:52,575 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:38:52,575 | 				-> Callback methode -> OnTextboxChanged
+10:38:53,049 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:38:53,049 | 				-> Callback methode -> OnLostFocus
+10:38:53,136 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:38:53,136 | 				-> Callback methode -> OnButtonPress
+10:38:53,176 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:38:53,176 | 				-> Callback methode -> OnSubmitSelection
+10:38:53,177 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:38:53,177 | 				-> Callback methode -> OnSubmitSelection
+10:38:53,177 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:38:53,177 | 				-> Callback methode -> OnSubmitSelection
+10:38:53,177 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:38:53,177 | 				-> Callback methode -> OnSubmitSelection
+10:38:53,177 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:38:53,177 | 				-> Callback methode -> OnSubmitSelection
+10:38:53,178 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:38:53,178 | 				-> Callback methode -> OnSubmitSelection
+10:38:53,178 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:38:53,178 | 				-> Callback methode -> OnSubmitSelection
+10:38:53,178 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:38:53,178 | 				-> Callback methode -> OnSubmitSelection
+10:38:53,181 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:38:53,181 | 				-> Callback methode -> OnSelectionboxListChanged
+10:39:00,035 | 				-> ## 10:39:00    15    15  vesa_Empreinte_1
+10:39:00,098 | 				-> ## 10:39:00    15     0  
+10:39:00,114 | 				-> ## 10:39:00    16     0  Executé en 1s419
+10:39:03,965 | 			PageEmpreinte..ctor  ->  Est initialisé : True
+10:39:03,984 | 				-> ## 10:39:03     0     0      EMPREINTE ENTRE LES COMPOSANTS
+10:39:04,014 | 				-> ## 10:39:04     0     0  ========================
+10:39:04,031 | 				-> ## 10:39:04     0     0  
+10:39:04,031 | 			PageEmpreinte.Command  ->  Show
+10:39:04,164 | 				-> ## 10:39:04     0     0  Executé en 0s108
+10:39:04,181 | 				-> ## 10:39:04     0     0  
+10:39:04,839 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:39:04,839 | 				-> Callback methode -> OnSubmitSelection
+10:39:04,841 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:39:04,841 | 				-> Callback methode -> OnSelectionboxListChanged
+10:39:05,810 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:39:05,810 | 				-> Callback methode -> OnSelectionboxFocusChanged
+10:39:07,962 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:39:07,963 | 				-> Callback methode -> OnButtonPress
+10:39:07,970 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:39:07,970 | 				-> Callback methode -> OnSubmitSelection
+10:39:07,970 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:39:07,970 | 				-> Callback methode -> OnSubmitSelection
+10:39:07,971 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:39:07,971 | 				-> Callback methode -> OnSubmitSelection
+10:39:07,971 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:39:07,971 | 				-> Callback methode -> OnSubmitSelection
+10:39:07,971 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:39:07,971 | 				-> Callback methode -> OnSubmitSelection
+10:39:07,971 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:39:07,971 | 				-> Callback methode -> OnSubmitSelection
+10:39:07,972 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:39:07,972 | 				-> Callback methode -> OnSubmitSelection
+10:39:07,972 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:39:07,972 | 				-> Callback methode -> OnSubmitSelection
+10:39:07,975 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+10:39:07,975 | 				-> Callback methode -> OnSelectionboxListChanged
+10:39:10,034 | 				-> ## 10:39:10     6     6  vesa_Empreinte_1
+10:39:10,142 | 				-> ## 10:39:10     6     0  
+10:39:10,165 | 				-> ## 10:39:10     6     0  Executé en 0s867
+10:40:03,217 | 				-> ## 10:40:03     0     0      SUPP. CONFIG DEPLIEE
+10:40:03,249 | 				-> ## 10:40:03     0     0  ========================
+10:40:03,264 | 				-> ## 10:40:03     0     0  
+10:40:03,297 | 				-> ## 10:40:03     0     0  PP02.SLDPRT
+10:40:03,331 | 				-> ## 10:40:03     0     0  PP01.SLDPRT
+10:40:03,348 | 				-> ## 10:40:03     0     0  Executé en 0s66
+10:40:03,365 | 				-> ## 10:40:03     0     0  
+10:40:07,201 | 				-> ## 10:40:07     0     0      LISTER LES MATERIAUX
+10:40:07,232 | 				-> ## 10:40:07     0     0  ========================
+10:40:07,248 | 				-> ## 10:40:07     0     0  
+10:40:07,298 | 				-> ## 10:40:07     0     0  Nb de composants : 2
+10:40:07,314 | 				-> ## 10:40:07     0     0  
+10:40:07,331 | 				-> ## 10:40:07     0     0  1 × PP01 Config "0"
+10:40:07,349 | 				-> ## 10:40:07     0     0   -> Mat : Tôle dkp / Base : Matériaux
+10:40:07,401 | 				-> ## 10:40:07     0     0   -- ×1 Article-liste-des-pièces-soudées1 -> Tôle dkp : 3.6 kg / Base : Matériaux (herité) 
+10:40:07,434 | 				-> ## 10:40:07     0     0  Poids de la piece : 3.6 kg
+10:40:07,465 | 				-> ## 10:40:07     0     0    Métaux : 3.6 kg
+10:40:07,482 | 				-> ## 10:40:07     0     0    -- Tôle dkp : 3.6 kg
+10:40:07,498 | 				-> ## 10:40:07     0     0  
+10:40:07,515 | 				-> ## 10:40:07     0     0  1 × PP02 Config "0"
+10:40:07,532 | 				-> ## 10:40:07     0     0   -> Mat : Tôle dkp / Base : Matériaux
+10:40:07,566 | 				-> ## 10:40:07     0     0   -- ×1 Article-liste-des-pièces-soudées1 -> Tôle dkp : 3.5 kg / Base : Matériaux (herité) 
+10:40:07,582 | 				-> ## 10:40:07     0     0  Poids de la piece : 3.5 kg
+10:40:07,598 | 				-> ## 10:40:07     0     0    Métaux : 3.5 kg
+10:40:07,616 | 				-> ## 10:40:07     0     0    -- Tôle dkp : 3.5 kg
+10:40:07,649 | 				-> ## 10:40:07     0     0  
+10:40:07,665 | 				-> ## 10:40:07     0     0  
+10:40:07,699 | 				-> ## 10:40:07     1     0  Resultat :
+10:40:07,716 | 				-> ## 10:40:07     1     0  ----------------
+10:40:07,732 | 				-> ## 10:40:07     1     0  Poids de l'ensemble : 7.2 kg
+10:40:07,749 | 				-> ## 10:40:07     1     0    Métaux : 7.2 kg
+10:40:07,765 | 				-> ## 10:40:07     1     0    -- Tôle dkp : 7.2 kg
+10:40:07,783 | 				-> ## 10:40:07     1     0  
+10:40:07,816 | 				-> ## 10:40:07     1     0  Executé en 0s534
+10:40:07,832 | 				-> ## 10:40:07     1     0  
+10:40:19,907 | 			PageCreerConfigDvp..ctor  ->  Est initialisé : True
+10:40:19,934 | 				-> ## 10:40:19     0     0      CREER LES CONFIG. DVP
+10:40:19,965 | 				-> ## 10:40:19     0     0  ========================
+10:40:19,982 | 				-> ## 10:40:19     0     0  
+10:40:19,988 | 			PageCreerConfigDvp.Command  ->  Show
+10:40:20,081 | 				-> ## 10:40:20     0     0  Executé en 0s76
+10:40:20,098 | 				-> ## 10:40:20     0     0  
+10:40:29,835 | 			PageCreerConfigDvp.CanRaiseEvent  ->  CanRaiseEvent True
+10:40:29,835 | 				-> Callback methode -> OnCheckboxCheck
+10:40:30,693 | 			PageCreerConfigDvp.CanRaiseEvent  ->  CanRaiseEvent True
+10:40:30,693 | 				-> Callback methode -> OnCheckboxCheck
+10:40:32,017 | 				-> ## 10:40:32    12    12  
+10:40:32,048 | 				-> ## 10:40:32    12     0  [1/2] PP01
+10:40:32,547 | 				-> ## 10:40:32    13     0  
+10:40:32,564 | 				-> ## 10:40:32    13     0    [1/1] Config : "0"
+10:40:32,917 | 				-> 0
+10:40:32,931 | 				-> ## 10:40:32    13     0      - [1/1] Dossier : "Article-liste-des-pièces-soudées1"
+10:40:32,964 | 				-> ## 10:40:32    13     0          cfg : "0SM-FLAT-PATTERN1"
+10:40:36,199 | 				-> ## 10:40:36    16     3  
+10:40:36,432 | 				-> ## 10:40:36    17     0  
+10:40:36,448 | 				-> ## 10:40:36    17     0  [2/2] PP02
+10:40:36,964 | 				-> ## 10:40:36    17     1  
+10:40:36,981 | 				-> ## 10:40:36    17     0    [1/1] Config : "0"
+10:40:37,157 | 				-> 0
+10:40:37,180 | 				-> ## 10:40:37    17     0      - [1/1] Dossier : "Article-liste-des-pièces-soudées1"
+10:40:37,198 | 				-> ## 10:40:37    17     0          cfg : "0SM-FLAT-PATTERN1"
+10:40:39,131 | 				-> ## 10:40:39    19     2  
+10:40:39,366 | 				-> ## 10:40:39    19     0  Pas d'erreur
+10:40:39,381 | 				-> ## 10:40:39    19     0  
+10:40:39,398 | 				-> ## 10:40:39    19     0  Resultat :
+10:40:39,415 | 				-> ## 10:40:39    20     0  ----------------
+10:40:39,432 | 				-> ## 10:40:39    20     0    2 dvp crées
+10:40:39,530 | 				-> ## 10:40:39    20     0  
+10:40:39,548 | 				-> ## 10:40:39    20     0  Executé en 7s533
+10:40:43,390 | 			PageCreerDvp..ctor  ->  Est initialisé : True
+10:40:43,416 | 				-> ## 10:40:43     0     0      CREER LES DVP DE TÔLE
+10:40:43,431 | 				-> ## 10:40:43     0     0  ========================
+10:40:43,447 | 				-> ## 10:40:43     0     0  
+10:40:43,457 | 			PageCreerDvp.Command  ->  Show
+10:40:43,532 | 				-> ## 10:40:43     0     0  Recherche des materiaux : 
+10:40:43,565 | 				-> ## 10:40:43     0     0   - Tôle dkp
+10:40:43,582 | 				-> ## 10:40:43     0     0  
+10:40:43,631 | 				-> ## 10:40:43     0     0  Executé en 0s164
+10:40:43,648 | 				-> ## 10:40:43     0     0  
+10:40:47,385 | 			PageCreerDvp.CanRaiseEvent  ->  CanRaiseEvent True
+10:40:47,385 | 				-> Callback methode -> OnGainedFocus
+10:40:51,922 | 			PageCreerDvp.CanRaiseEvent  ->  CanRaiseEvent True
+10:40:51,922 | 				-> Callback methode -> OnLostFocus
