@@ -251,8 +251,8 @@ namespace Macros
                         String herite = InfoCorps.Herite ? " (herité) " : "";
 
                         String nomCorps = corps.Name;
-                        if (!dossier.eNomDossier().eIsLike(CONSTANTES.ARTICLE_LISTE_DES_PIECES_SOUDEES, false))
-                            nomCorps = dossier.eNomDossier();
+                        if (!dossier.eNom().eIsLike(CONSTANTES.ARTICLE_LISTE_DES_PIECES_SOUDEES, false))
+                            nomCorps = dossier.eNom();
 
                         String Ligne = String.Format(" -- ×{5} {0} -> {1} : {2:0.0} kg / Base : {3}{4}",
                             nomCorps,

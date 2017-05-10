@@ -20,10 +20,7 @@ namespace Macros
             if (Interaction.InputBox("Nouveau nom", "Nom :", ref nom) == DialogResult.OK)
             {
                 if (!String.IsNullOrWhiteSpace(nom))
-                {
-                    Sheet Feuille = (Sheet)dessin.GetCurrentSheet();
-                    Feuille.SetName(nom);
-                }
+                    dessin.eFeuilleActive().SetName(nom);
             }
         }
     }

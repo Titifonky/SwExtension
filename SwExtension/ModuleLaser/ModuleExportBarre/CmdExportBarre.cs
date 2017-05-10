@@ -196,7 +196,7 @@ namespace ModuleLaser
                                 String noDossier = dossier.eProp(CONSTANTES.NO_DOSSIER);
 
                                 if (noDossier.IsNull() || String.IsNullOrWhiteSpace(noDossier))
-                                    noDossier = Piece.eNumeroterDossier(MajListePiecesSoudees)[dossier.eNomDossier()].ToString();
+                                    noDossier = Piece.eNumeroterDossier(MajListePiecesSoudees)[dossier.eNom()].ToString();
 
                                 int QuantiteBarre = QuantiteCfg * dossier.GetBodyCount();
 

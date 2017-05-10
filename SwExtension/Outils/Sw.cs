@@ -2311,7 +2311,7 @@ namespace Outils
 
         //========================================================================================
 
-        public static String eNomDossier(this BodyFolder dossier) { return dossier.GetFeature().Name; }
+        public static String eNom(this BodyFolder dossier) { return dossier.GetFeature().Name; }
 
         /// <summary>
         /// Retourne ou défini si le dossier est exclu de la nomenclature.
@@ -4517,6 +4517,11 @@ namespace Outils
                 pSetupFeuille.Orientation = (int)swPageSetupOrientation_e.swPageSetupOrient_Portrait;
 
             return format.GetEnumInfo<Intitule>() + " " + orientation.GetEnumInfo<Intitule>();
+        }
+
+        public static Sheet eFeuilleActive(this DrawingDoc dessin)
+        {
+            return dessin.GetCurrentSheet();
         }
 
         public static List<Sheet> eListeDesFeuilles(this DrawingDoc dessin)

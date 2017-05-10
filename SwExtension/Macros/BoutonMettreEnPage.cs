@@ -16,7 +16,7 @@ namespace Macros
         {
             DrawingDoc dessin = App.ModelDoc2.eDrawingDoc();
 
-            String FeuilleCourante = ((Sheet)dessin.GetCurrentSheet()).GetName();
+            String FeuilleCourante = dessin.eFeuilleActive().GetName();
 
             Boolean HauteQualite = true;
 

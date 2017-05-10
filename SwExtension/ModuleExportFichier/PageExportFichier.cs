@@ -130,7 +130,7 @@ namespace ModuleExportFichier
 
             _CheckBox_ToutesLesFeuilles.OnIsCheck += delegate (Object sender, Boolean value)
             {
-                    String n = ((Sheet)App.DrawingDoc.GetCurrentSheet()).GetName();
+                    String n = App.DrawingDoc.eFeuilleActive().GetName();
                     if (value)
                         n = App.ModelDoc2.eNomSansExt();
 

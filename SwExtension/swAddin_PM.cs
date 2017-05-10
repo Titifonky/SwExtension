@@ -106,7 +106,8 @@ namespace SwExtension
 
                 _Mnu.AjouterCmde("PM", typeof(PageParametres));
                 _Mnu.AjouterCmde("OD", typeof(BoutonOuvrirDossier));
-                _Mnu.AjouterCmde("AA", typeof(BoutonActiverAimantation));
+                _Mnu.AjouterCmde("AA", typeof(BoutonActiverAimantation), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
+                _Mnu.AjouterCmde("AR", typeof(BoutonActiverRelationAuto), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
 
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde("Tr", typeof(BoutonToutReconstruire), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);

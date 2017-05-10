@@ -115,7 +115,7 @@ namespace ModuleExportFichier
 
             private List<Sheet> ListeFeuilles()
             {
-                List<Sheet> liste = new List<Sheet>() { (Sheet)App.DrawingDoc.GetCurrentSheet() };
+                List<Sheet> liste = new List<Sheet>() { App.DrawingDoc.eFeuilleActive() };
 
                 if (_CheckBox_ToutesLesFeuilles.IsChecked)
                     liste = App.DrawingDoc.eListeDesFeuilles();
@@ -131,7 +131,7 @@ namespace ModuleExportFichier
                 Cmd.Dessin = App.DrawingDoc;
                 Cmd.typeExport = _EnumComboBox_FormatExport.Val;
                 Cmd.CheminDossier = NomDossier;
-                Cmd.Feuille = (Sheet)App.DrawingDoc.GetCurrentSheet();
+                Cmd.Feuille = App.DrawingDoc.eFeuilleActive();
                 Cmd.NomFichier = NomFichierComplet;
 
                 CheminDernierDossier.SetValeur<String>(NomDossier);
