@@ -15,7 +15,7 @@
     <Parametre name="ToleranceFusion" intitule="Tolérance de fusion" tip="Tolérance de fusion" type="System.Double">0</Parametre>
     <Parametre name="ExporterHauteQualite" intitule="Exporter en haute qualité" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="ConvertirSplineToPolyligne" intitule="Convertir les splines en polylignes" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">E:\Mes documents\Google Drive\Projet\E17 - Ludovic Leleux - Deco Menuiserie\AD331 - Escalier Notting Hill Lille Flandre\1\Plans Développées\DWG - Ind E</Parametre>
+    <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">D:\Projet\E56 - SAS Concept-TY\ED404 - SCCV OCEANIS - Activity Denain - Escalier droit\0\Plans Développées\DWG - Ind A</Parametre>
   </Module>
   <Module name="ExportPdf" intitule="Exporter en Pdf">
     <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">False</Parametre>
@@ -44,10 +44,10 @@
   </Module>
   <Module name="CreerDvp" intitule="Creer les dvp de tôle">
     <Parametre name="PropQuantite" intitule="Propriete &quot;Quantite&quot;" tip="Recherche cette propriete" type="System.String">Quantite</Parametre>
-    <Parametre name="AfficherLignePliage" intitule="Afficher les lignes de pliage" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="AfficherNotePliage" intitule="Afficher les notes de pliage" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="InscrireNomTole" intitule="Inscrire la réf du dvp sur la tole" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="TailleInscription" intitule="Ht des inscriptions en mm" tip="Ht des inscriptions en mm" type="System.Int32">5</Parametre>
+    <Parametre name="AfficherLignePliage" intitule="Afficher les lignes de pliage" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="AfficherNotePliage" intitule="Afficher les notes de pliage" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="InscrireNomTole" intitule="Inscrire la réf du dvp sur la tole" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="TailleInscription" intitule="Ht des inscriptions en mm" tip="Ht des inscriptions en mm" type="System.Int32">20</Parametre>
     <Parametre name="ComposantExterne" intitule="Créer les dvp des composants externe au dossier du modèle" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="OrienterDvp" intitule="Orienter les dvps" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="OrientationDvp" intitule="" tip="" type="Outils.eOrientation">Portrait</Parametre>
@@ -71,9 +71,9 @@
     <Parametre name="FaceDessus" intitule="Selectionnez la face du dessus :" tip="" type="System.String">F_Dessus</Parametre>
     <Parametre name="FaceDevant" intitule="Selectionnez la face de devant :" tip="" type="System.String">F_Devant</Parametre>
     <Parametre name="PlatineG" intitule="Selectionnez la platine gauche :" tip="" type="System.String">AP10</Parametre>
-    <Parametre name="PlatineD" intitule="Selectionnez la platine droite :" tip="" type="System.String">AP20</Parametre>
+    <Parametre name="PlatineD" intitule="Selectionnez la platine droite :" tip="" type="System.String">PP20</Parametre>
     <Parametre name="PlanContrainte" intitule="Nom du plan à contraindre :" tip="" type="System.String">Plan de droite</Parametre>
-    <Parametre name="ToutesLesConfig" intitule="Appliquer à toutes les configs" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="ToutesLesConfig" intitule="Appliquer à toutes les configs" tip="" type="System.Boolean">False</Parametre>
   </Module>
   <Module name="ConfigurerPlatine" intitule="Configurer les platines">
     <Parametre name="Marche" intitule="Selectionnez la marche" tip="" type="System.String">PM01</Parametre>
@@ -84,15 +84,15 @@
     <Parametre name="EsquisseD" intitule="Selectionnez l'esquisse à configurer droite" tip="" type="System.String">PP20</Parametre>
     <Parametre name="PlanContrainte" intitule="Nom du plan à contraindre" tip="" type="System.String">Plan de droite</Parametre>
     <Parametre name="NomEsquisse" intitule="Esquisse à configurer" tip="" type="System.String">Config</Parametre>
-    <Parametre name="LgMin" intitule="Lg mini de la platine (mm)" tip="" type="System.Double">50</Parametre>
-    <Parametre name="ToutesLesConfig" intitule="Appliquer à toutes les configs" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="LgMin" intitule="Lg mini de la platine (mm)" tip="" type="System.Double">10</Parametre>
+    <Parametre name="ToutesLesConfig" intitule="Appliquer à toutes les configs" tip="" type="System.Boolean">False</Parametre>
   </Module>
   <Module name="ContraindreComposant" intitule="Contraindre des composants">
     <Parametre name="FixerComposant" intitule="Fixer les composants" tip="" type="System.Boolean">False</Parametre>
   </Module>
   <Module name="Empreinte" intitule="Empreinte entre les composants">
-    <Parametre name="PrefixeBase" intitule="Filtrer les prefixes (?*#):" tip="" type="System.String">M2</Parametre>
-    <Parametre name="PrefixeEmpreinte" intitule="Filtrer les prefixes (?*#):" tip="" type="System.String">AR</Parametre>
+    <Parametre name="PrefixeBase" intitule="Filtrer les prefixes (?*#):" tip="" type="System.String">P2</Parametre>
+    <Parametre name="PrefixeEmpreinte" intitule="Filtrer les prefixes (?*#):" tip="" type="System.String">D8.5</Parametre>
     <Parametre name="PropEmpreinte" intitule="Propriete &quot;Empreinte&quot;" tip="" type="System.String">Empreinte</Parametre>
     <Parametre name="PropPrefixeEmpreinte" intitule="Propriete &quot;PrefixeEmpreinte&quot;" tip="" type="System.String">PrefixeEmpreinte</Parametre>
     <Parametre name="PropTarauderEmpreinte" intitule="Propriete &quot;TarauderEmpreinte&quot;" tip="" type="System.String">TarauderEmpreinte</Parametre>
@@ -155,7 +155,7 @@
   </Module>
   <Module name="LierLesConfigurations" intitule="Créer/Lier les configurations">
     <Parametre name="CreerConfig" intitule="Creer les configs manquante" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="ListeConfigs" intitule="Ajouter des configs&#xD;&#xA; Noms séparés par un espace" tip="" type="System.String">0 1</Parametre>
+    <Parametre name="ListeConfigs" intitule="Ajouter des configs&#xD;&#xA; Noms séparés par un espace" tip="" type="System.String">3 4 5</Parametre>
     <Parametre name="SupprimerNvlFonction" intitule="Supprimer les nouvelles fonctions ou contraintes&#xD;&#xA; dans la configuration" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="SupprimerNvComposant" intitule="Supprimer les nouveaux composants&#xD;&#xA; dans la configuration" tip="" type="System.Boolean">False</Parametre>
   </Module>
@@ -175,4 +175,5 @@
   <Module name="ListerPercage" intitule="Lister les percages">
   </Module>
   <Module name="EnregistrerVue" intitule="Enregistrer la vue" />
+  <Module name="ActiverRelationAuto" intitule="Activer/Desactiver les relation auto" />
 </Parametres>

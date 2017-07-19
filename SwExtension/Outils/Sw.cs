@@ -3190,12 +3190,19 @@ namespace Outils
         {
             List<Body2> Liste = new List<Body2>();
 
-            Object InfosCorps;
+            Object vInfosCorps;
 
-            Object[] Corps = (Object[])cp.GetBodies3((int)swBodyType_e.swSolidBody, out InfosCorps);
+            Object[] Corps = (Object[])cp.GetBodies3((int)swBodyType_e.swSolidBody, out vInfosCorps);
+            int[] InfosCorps = (int[])vInfosCorps;
 
-            foreach (Body2 Cp in Corps)
-                Liste.Add(Cp);
+            for (int i = 0; i < Corps.Length; i++)
+            {
+                if (InfosCorps[i] == (int)swBodyInfo_e.swNormalBody_e)
+                    Liste.Add((Body2)Corps[i]);
+            }
+
+            //foreach (Body2 Cp in Corps)
+            //    Liste.Add(Cp);
 
             return Liste;
         }
@@ -3819,19 +3826,23 @@ namespace Outils
 
         public static eTypeCorps eTypeDeCorps(this Body2 corps)
         {
-            foreach (Feature Fonction in corps.GetFeatures())
+            if (corps.IsRef())
             {
-                switch (Fonction.GetTypeName2())
+                foreach (Feature Fonction in corps.GetFeatures())
                 {
-                    case "SheetMetal":
-                    case "SMBaseFlange":
-                    case "SolidToSheetMetal":
-                    case "FlatPattern":
-                        return eTypeCorps.Tole;
-                    case "WeldMemberFeat":
-                        return eTypeCorps.Barre;
-                    default:
-                        break;
+                    switch (Fonction.GetTypeName2())
+                    {
+                        case "SheetMetal":
+                        case "SMBaseFlange":
+                        case "SolidToSheetMetal":
+                        case "FlatPattern":
+                            return eTypeCorps.Tole;
+                        case "WeldMemberFeat":
+                        case "WeldCornerFeat":
+                            return eTypeCorps.Barre;
+                        default:
+                            break;
+                    }
                 }
             }
             return eTypeCorps.Autre;

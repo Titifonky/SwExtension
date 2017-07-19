@@ -1,9 +1,46 @@
-15:10:30,968 | 
+15:52:12,719 | 
  
-15:10:30,984 | ====================================================================================================
-15:10:30,984 | |                                                                                                  |
-15:10:30,984 | |                                          DEBUG                                                   |
-15:10:30,984 | |                                                                                                  |
-15:10:30,984 | ====================================================================================================
-15:10:30,984 | 
+15:52:12,725 | ====================================================================================================
+15:52:12,725 | |                                                                                                  |
+15:52:12,725 | |                                          DEBUG                                                   |
+15:52:12,725 | |                                                                                                  |
+15:52:12,725 | ====================================================================================================
+15:52:12,725 | 
  
+15:52:21,505 | 			PageListeDebit..ctor  ->  Est initialisé : True
+15:52:21,528 | 				-> ## 03:52:21     0     0      LISTE DE DÉBIT
+15:52:21,557 | 				-> ## 03:52:21     0     0  ========================
+15:52:21,575 | 				-> ## 03:52:21     0     0  
+15:52:21,605 | 			PageListeDebit.Command  ->  Show
+15:52:21,723 | 				-> ## 03:52:21     0     0  Recherche des materiaux : 
+15:52:21,773 | 				-> ## 03:52:21     0     0   - Acier S235
+15:52:21,806 | 				-> ## 03:52:21     0     0  
+15:52:21,857 | 				-> ## 03:52:21     0     0  Executé en 0s262
+15:52:21,874 | 				-> ## 03:52:21     0     0  
+15:52:25,524 | 				-> ## 03:52:25     4     4  D:\Projet\A143 - Ville de La Madeleine\AD375 - Escalier + casquette\0\Auvent\A-PG01.SLDPRT_0 : × 1
+15:52:25,540 | 				-> ## 03:52:25     4     0  D:\Projet\A143 - Ville de La Madeleine\AD375 - Escalier + casquette\0\Auvent\A-PB01.SLDPRT_0 : × 7
+15:52:25,557 | 				-> ## 03:52:25     4     0  D:\Projet\A143 - Ville de La Madeleine\AD375 - Escalier + casquette\0\Auvent\A-PL01.SLDPRT_0 : × 2
+15:52:25,574 | 				-> ## 03:52:25     4     0  D:\Projet\A143 - Ville de La Madeleine\AD375 - Escalier + casquette\0\Auvent\A-PL01.SLDPRT_1 : × 1
+15:52:25,591 | 				-> ## 03:52:25     4     0  D:\Projet\A143 - Ville de La Madeleine\AD375 - Escalier + casquette\0\Auvent\A-PG02.SLDPRT_0 : × 1
+15:52:25,724 | 				-> ## 03:52:25     4     0  
+15:52:25,740 | 				-> ## 03:52:25     4     0  Executé en 0s226
+15:52:25,775 | 			PageListeDebit.CanRaiseEvent  ->  CanRaiseEvent True
+15:52:25,775 | 				-> Callback methode -> OnGainedFocus
+15:52:28,676 | 			PageListeDebit.CanRaiseEvent  ->  CanRaiseEvent True
+15:52:28,676 | 				-> Callback methode -> OnLostFocus
+15:52:43,240 | <Base><Materiau name="Acier S235"><Profil name="Tube D70x2">6000</Profil><Profil name="Tube D80x2">6000</Profil><Profil name="Tube Rc 80x40x2">6000</Profil></Materiau></Base>
+15:52:43,259 | 				-> ## 03:52:43    22    18  Lg max des barres :
+15:52:43,291 | 				-> ## 03:52:43    22     0  Tube D70x2 [Acier S235]       6000
+15:52:43,324 | 				-> ## 03:52:43    22     0  Tube D80x2 [Acier S235]       6000
+15:52:43,357 | 				-> ## 03:52:43    22     0  Tube Rc 80x40x2 [Acier S235]       6000
+15:52:43,391 | 				-> ## 03:52:43    22     0  
+Acier S235
+      1× Tube D70x2
+      1× Tube D80x2
+      4× Tube Rc 80x40x2
+15:52:43,425 | 				-> ## 03:52:43    22     0  
+15:52:43,458 | 				-> ## 03:52:43    22     0  
+15:52:43,491 | 				-> ## 03:52:43    22     0  Nb d'éléments 8
+15:52:43,525 | 				-> ## 03:52:43    22     0  Nb de barres 6
+15:52:43,559 | 				-> ## 03:52:43    22     0  
+15:52:43,595 | 				-> ## 03:52:43    22     0  Executé en 0s166
