@@ -18,6 +18,7 @@ namespace ModuleExportFichier
             public String CheminDossier;
             public String NomFichier;
             public Sheet Feuille;
+            public String CheminFichierExport;
 
             protected override void Command()
             {
@@ -28,7 +29,7 @@ namespace ModuleExportFichier
                     WindowLog.EcrireF("  Dossier : {0}", new DirectoryInfo(CheminDossier).Name);
 
                     WindowLog.EcrireF("   {0}", NomFichier + typeExport.GetEnumInfo<ExtFichier>());
-                    Feuille.eExporterEn(Dessin, typeExport, CheminDossier, NomFichier, ToutesLesFeuilles);
+                    CheminFichierExport = Feuille.eExporterEn(Dessin, typeExport, CheminDossier, NomFichier, ToutesLesFeuilles);
                 }
                 catch (Exception e)
                 { this.LogMethode(new Object[] { e }); }

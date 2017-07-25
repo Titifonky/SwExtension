@@ -83,19 +83,22 @@ namespace ModuleLaser
                         ListeCp = MdlBase.eRecListeComposant(
                         c =>
                         {
+
                             if ((ComposantsExterne || c.eEstDansLeDossier(MdlBase)) && !c.IsHidden(true) && !c.ExcludeFromBOM && (c.TypeDoc() == eTypeDoc.Piece))
                             {
+
                                 if (!c.eNomConfiguration().eEstConfigPliee() || DicQte.Plus(c.eKeyAvecConfig()))
                                     return false;
 
                                 if (ReinitialiserNoDossier)
                                     c.eEffacerNoDossier();
 
-                                foreach (Body2 corps in c.eListeCorps())
+                                var LstDossier = c.eListeDesDossiersDePiecesSoudees();
+                                foreach (var dossier in LstDossier)
                                 {
-                                    if (Filtre.HasFlag(corps.eTypeDeCorps()))
+                                    if (Filtre.HasFlag(dossier.eTypeDeDossier()))
                                     {
-                                        String Materiau = corps.eGetMateriauCorpsOuComp(c);
+                                        String Materiau = dossier.eGetMateriau();
 
                                         if (!HashMateriaux.Contains(Materiau))
                                             continue;
@@ -120,6 +123,39 @@ namespace ModuleLaser
                                         }
                                     }
                                 }
+
+                                // Ancienne méthode pour lister les matériaux.
+                                // Bug avec les barres fractionnées ou ajustées.
+                                // Elles ne sont pas reconnues comme des barres.
+                                //foreach (Body2 corps in c.eListeCorps())
+                                //{
+                                //    if (Filtre.HasFlag(corps.eTypeDeCorps()))
+                                //    {
+                                //        String Materiau = corps.eGetMateriauCorpsOuComp(c);
+
+                                //        if (!HashMateriaux.Contains(Materiau))
+                                //            continue;
+
+                                //        DicQte.Add(c.eKeyAvecConfig());
+
+                                //        if (DicConfig.ContainsKey(c.eKeySansConfig()))
+                                //        {
+                                //            List<String> l = DicConfig[c.eKeySansConfig()];
+                                //            if (l.Contains(c.eNomConfiguration()))
+                                //                return false;
+                                //            else
+                                //            {
+                                //                l.Add(c.eNomConfiguration());
+                                //                return true;
+                                //            }
+                                //        }
+                                //        else
+                                //        {
+                                //            DicConfig.Add(c.eKeySansConfig(), new List<string>() { c.eNomConfiguration() });
+                                //            return true;
+                                //        }
+                                //    }
+                                //}
                             }
 
                             return false;

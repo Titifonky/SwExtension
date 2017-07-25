@@ -2714,15 +2714,18 @@ namespace Outils
             return dossier.GetFeature().CustomPropertyManager;
         }
 
-        public static Boolean ePropExiste(this CustomPropertyManager pm, String nomPropriete)
+        public static Boolean ePropExiste(this CustomPropertyManager pm, String nomPropriete, Boolean CaseSensitive = false)
         {
             string[] CustomPropNames = (string[])pm.GetNames();
+
+            String compare = CaseSensitive ? nomPropriete : nomPropriete.RemoveDiacritics().ToUpperInvariant();
 
             if (CustomPropNames.TabIsRef_LgthNotNull())
             {
                 foreach (String n in CustomPropNames)
                 {
-                    if (nomPropriete == n)
+                    String test = CaseSensitive ? n : n.RemoveDiacritics().ToUpperInvariant();
+                    if (compare == test)
                         return true;
                 }
             }
@@ -2747,10 +2750,10 @@ namespace Outils
             return mdl.ePropExiste(nomPropriete, cp.eNomConfiguration());
         }
 
-        public static Boolean ePropExiste(this BodyFolder dossier, String nomPropriete)
+        public static Boolean ePropExiste(this BodyFolder dossier, String nomPropriete, Boolean CaseSensitive = false)
         {
             CustomPropertyManager pm = dossier.eGestProp();
-            return pm.ePropExiste(nomPropriete);
+            return pm.ePropExiste(nomPropriete, CaseSensitive);
         }
 
         public static String eProp(this ModelDoc2 mdl, String nomPropriete, String nomConfig = "")
@@ -2793,6 +2796,11 @@ namespace Outils
         public static void ePropSet(this CustomPropertyManager pm, String nomPropriete, Object val)
         {
             pm.Set2(nomPropriete, val.ToString());
+        }
+
+        public static Dictionary<String, String> eListProp(this BodyFolder bf)
+        {
+            return bf.eGestProp().eListProp();
         }
 
         public static Dictionary<String, String> eListProp(this CustomPropertyManager pm)
@@ -4003,6 +4011,18 @@ namespace Outils
             return pMateriau;
         }
 
+        public static String eGetMateriau(this BodyFolder dossier)
+        {
+            String mat = dossier.eProp("Materiau");
+            if(String.IsNullOrWhiteSpace(mat))
+                mat = dossier.eProp("Matériau");
+
+            WindowLog.Ecrire(dossier.eNom());
+            WindowLog.Ecrire("   " + mat);
+
+            return mat;
+        }
+
         public static void eSetMateriau(this PartDoc piece, String nomMateriau, String baseMateriau, String nomConfig)
         {
             piece.SetMaterialPropertyName2(nomConfig, baseMateriau, nomMateriau);
@@ -4467,7 +4487,7 @@ namespace Outils
 
         }
 
-        public static void eExporterEn(this Sheet feuille, DrawingDoc dessin, eTypeFichierExport TypeExport, String CheminDossier, String NomDuFichierAlternatif = "", Boolean ToutesLesFeuilles = false)
+        public static String eExporterEn(this Sheet feuille, DrawingDoc dessin, eTypeFichierExport TypeExport, String CheminDossier, String NomDuFichierAlternatif = "", Boolean ToutesLesFeuilles = false)
         {
             ExportPdfData OptionsPDF = null;
 
@@ -4504,6 +4524,8 @@ namespace Outils
 
             CheminFichier = Path.Combine(CheminDossier, CheminFichier + TypeExport.GetEnumInfo<ExtFichier>());
             dessin.eModelDoc2().Extension.SaveAs(CheminFichier, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, (int)swSaveAsOptions_e.swSaveAsOptions_Silent, OptionsPDF, Erreur, Warning);
+
+            return CheminFichier;
         }
 
         public static String eMettreEnPagePourImpression(this DrawingDoc dessin, Sheet feuille, swPageSetupDrawingColor_e couleur = swPageSetupDrawingColor_e.swPageSetup_AutomaticDrawingColor, Boolean hauteQualite = false)

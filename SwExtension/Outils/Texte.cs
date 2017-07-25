@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using System.Globalization;
 
 namespace Outils
 {
@@ -152,6 +153,23 @@ namespace Outils
                 return valeurSiNon;
 
             return text;
+        }
+
+        public static String RemoveDiacritics(this String stIn)
+        {
+            string stFormD = stIn.Normalize(NormalizationForm.FormD);
+            StringBuilder sb = new StringBuilder();
+
+            for (int ich = 0; ich < stFormD.Length; ich++)
+            {
+                UnicodeCategory uc = CharUnicodeInfo.GetUnicodeCategory(stFormD[ich]);
+                if (uc != UnicodeCategory.NonSpacingMark)
+                {
+                    sb.Append(stFormD[ich]);
+                }
+            }
+
+            return (sb.ToString().Normalize(NormalizationForm.FormC));
         }
     }
 

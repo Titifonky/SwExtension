@@ -15,11 +15,11 @@
     <Parametre name="ToleranceFusion" intitule="Tolérance de fusion" tip="Tolérance de fusion" type="System.Double">0</Parametre>
     <Parametre name="ExporterHauteQualite" intitule="Exporter en haute qualité" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="ConvertirSplineToPolyligne" intitule="Convertir les splines en polylignes" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">D:\Projet\E56 - SAS Concept-TY\ED404 - SCCV OCEANIS - Activity Denain - Escalier droit\0\Plans Développées\DWG - Ind A</Parametre>
+    <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">D:\Projet\E146 - Jérémy Nguyen\AD382 - Escalier limon central\1</Parametre>
   </Module>
   <Module name="ExportPdf" intitule="Exporter en Pdf">
-    <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="SelectionnerDossier" intitule="Selectionner un dossier" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="SelectionnerDossier" intitule="Selectionner un dossier" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="ToutesLesFeuilles" intitule="Toutes les feuilles" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="FormatExport" intitule="Format" tip="" type="Outils.eTypeFichierExport">PDF</Parametre>
     <Parametre name="ExporterEnCouleur" intitule="Exporter en couleur" tip="" type="System.Boolean">True</Parametre>
@@ -133,7 +133,7 @@
   </Module>
   <Module name="ListeDebit" intitule="Liste de débit">
     <Parametre name="PropQuantite" intitule="Propriete &quot;Quantite&quot;" tip="Recherche cette propriete" type="System.String">Quantite</Parametre>
-    <Parametre name="PrendreEnCompteTole" intitule="Prendre en compte les tôles" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="PrendreEnCompteTole" intitule="Prendre en compte les tôles" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="ComposantExterne" intitule="Créer les dvp des composants externe au dossier du modèle" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="NumeroterDossier" intitule="Numeroter les dossier" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="LgBarre" intitule="Lg d'une barre" tip="" type="System.Int32">6000</Parametre>

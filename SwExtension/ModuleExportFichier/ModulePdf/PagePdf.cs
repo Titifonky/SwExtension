@@ -87,6 +87,9 @@ namespace ModuleExportFichier
                 Cmd.NomFichier = NomFichierComplet;
 
                 Cmd.Executer();
+
+                if (File.Exists(Cmd.CheminFichierExport))
+                    System.Diagnostics.Process.Start(Cmd.CheminFichierExport);
             }
         }
     }
