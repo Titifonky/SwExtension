@@ -96,11 +96,12 @@ namespace ModuleLaser
                                 if (ReinitialiserNoDossier)
                                     c.eEffacerNoDossier();
 
-                                foreach (Body2 corps in c.eListeCorps())
+                                var LstDossier = c.eListeDesDossiersDePiecesSoudees();
+                                foreach (var dossier in LstDossier)
                                 {
-                                    if (Filtre.HasFlag(corps.eTypeDeCorps()))
+                                    if (Filtre.HasFlag(dossier.eTypeDeDossier()))
                                     {
-                                        String Materiau = corps.eGetMateriauCorpsOuComp(c);
+                                        String Materiau = dossier.eGetMateriau();
 
                                         if (!HashMateriaux.Contains(Materiau))
                                             continue;
@@ -109,16 +110,46 @@ namespace ModuleLaser
 
                                         if (DicConfig.ContainsKey(c.eKeySansConfig()))
                                         {
-                                            if(DicConfig[c.eKeySansConfig()].AddIfNotExist(c.eNomConfiguration()) && ReinitialiserNoDossier)
-                                                c.eEffacerNoDossier();
-
-                                            return false;
+                                            List<String> l = DicConfig[c.eKeySansConfig()];
+                                            if (l.Contains(c.eNomConfiguration()))
+                                                return false;
+                                            else
+                                            {
+                                                l.Add(c.eNomConfiguration());
+                                                return true;
+                                            }
                                         }
-
-                                        DicConfig.Add(c.eKeySansConfig(), new List<string>() { c.eNomConfiguration() });
-                                        return true;
+                                        else
+                                        {
+                                            DicConfig.Add(c.eKeySansConfig(), new List<string>() { c.eNomConfiguration() });
+                                            return true;
+                                        }
                                     }
                                 }
+
+                                //foreach (Body2 corps in c.eListeCorps())
+                                //{
+                                //    if (Filtre.HasFlag(corps.eTypeDeCorps()))
+                                //    {
+                                //        String Materiau = corps.eGetMateriauCorpsOuComp(c);
+
+                                //        if (!HashMateriaux.Contains(Materiau))
+                                //            continue;
+
+                                //        DicQte.Add(c.eKeyAvecConfig());
+
+                                //        if (DicConfig.ContainsKey(c.eKeySansConfig()))
+                                //        {
+                                //            if(DicConfig[c.eKeySansConfig()].AddIfNotExist(c.eNomConfiguration()) && ReinitialiserNoDossier)
+                                //                c.eEffacerNoDossier();
+
+                                //            return false;
+                                //        }
+
+                                //        DicConfig.Add(c.eKeySansConfig(), new List<string>() { c.eNomConfiguration() });
+                                //        return true;
+                                //    }
+                                //}
                             }
 
                             return false;

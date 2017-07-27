@@ -258,11 +258,12 @@ namespace ModuleLaser
                     {
                         if (!c.IsHidden(false) && !c.ExcludeFromBOM && (c.TypeDoc() == eTypeDoc.Piece))
                         {
-                            foreach (Body2 corps in c.eListeCorps())
+                            var LstDossier = c.eListeDesDossiersDePiecesSoudees();
+                            foreach (var dossier in LstDossier)
                             {
-                                if (TypeCorps.HasFlag(corps.eTypeDeCorps()))
+                                if (TypeCorps.HasFlag(dossier.eTypeDeDossier()))
                                 {
-                                    String Materiau = corps.eGetMateriauCorpsOuComp(c);
+                                    String Materiau = dossier.eGetMateriau();
 
                                     ListeMateriaux.AddIfNotExist(Materiau);
                                 }
@@ -275,15 +276,26 @@ namespace ModuleLaser
             }
             else if (mdl.TypeDoc() == eTypeDoc.Piece)
             {
-                foreach (Body2 corps in mdl.ePartDoc().eListeCorps(true))
+                var LstDossier = mdl.ePartDoc().eListeDesDossiersDePiecesSoudees();
+                foreach (var dossier in LstDossier)
                 {
-                    if (TypeCorps.HasFlag(corps.eTypeDeCorps()))
+                    if (TypeCorps.HasFlag(dossier.eTypeDeDossier()))
                     {
-                        String Materiau = corps.eGetMateriauCorpsOuPiece(mdl.ePartDoc(), mdl.eNomConfigActive());
+                        String Materiau = dossier.eGetMateriau();
 
                         ListeMateriaux.AddIfNotExist(Materiau);
                     }
                 }
+
+                //foreach (Body2 corps in mdl.ePartDoc().eListeCorps(true))
+                //{
+                //    if (TypeCorps.HasFlag(corps.eTypeDeCorps()))
+                //    {
+                //        String Materiau = corps.eGetMateriauCorpsOuPiece(mdl.ePartDoc(), mdl.eNomConfigActive());
+
+                //        ListeMateriaux.AddIfNotExist(Materiau);
+                //    }
+                //}
             }
 
             return ListeMateriaux;
