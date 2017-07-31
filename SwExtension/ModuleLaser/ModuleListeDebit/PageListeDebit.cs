@@ -63,7 +63,6 @@ namespace ModuleLaser
             private CtrlCheckBox _CheckBox_PrendreEnCompteTole;
             private CtrlCheckBox _CheckBox_ForcerMateriau;
             private CtrlTextComboBox _TextComboBox_ForcerMateriau;
-            private CtrlCheckBox _CheckBox_NumeroterDossier;
             private CtrlCheckBox _CheckBox_ReinitialiserNoDossier;
             private CtrlTextBox _Texte_LgBarre;
 
@@ -120,12 +119,7 @@ namespace ModuleLaser
                     _CheckBox_PrendreEnCompteTole = G.AjouterCheckBox(PrendreEnCompteTole);
                     _CheckBox_PrendreEnCompteTole.OnIsCheck += delegate (Object sender, Boolean value) { Rechercher_Materiaux(); };
 
-                    _CheckBox_NumeroterDossier = G.AjouterCheckBox(NumeroterDossier);
                     _CheckBox_ReinitialiserNoDossier = G.AjouterCheckBox("Reinitialiser les n° de dossier");
-                    _CheckBox_NumeroterDossier.OnUnCheck += _CheckBox_ReinitialiserNoDossier.UnCheck;
-                    _CheckBox_NumeroterDossier.OnIsCheck += _CheckBox_ReinitialiserNoDossier.IsEnable;
-                    _CheckBox_ReinitialiserNoDossier.IsEnabled = _CheckBox_NumeroterDossier.IsChecked;
-                    _CheckBox_ReinitialiserNoDossier.StdIndent();
                     _CheckBox_AfficherListe = G.AjouterCheckBox(AfficherListe);
 
                     ListeGroupe2.Add(_Calque.AjouterGroupe("Lg des barres"));
@@ -293,8 +287,7 @@ namespace ModuleLaser
                 Cmd.PrendreEnCompteTole = _CheckBox_PrendreEnCompteTole.IsChecked;
                 Cmd.ComposantsExterne = _CheckBox_ComposantsExterne.IsChecked;
                 Cmd.RefFichier = _Texte_RefFichier.Text;
-                Cmd.NumeroterDossier = _CheckBox_NumeroterDossier.IsChecked;
-                Cmd.ReinitialiserNoDossier = _CheckBox_NumeroterDossier.IsEnabled ? _CheckBox_ReinitialiserNoDossier.IsChecked : false;
+                Cmd.ReinitialiserNoDossier = _CheckBox_ReinitialiserNoDossier.IsChecked;
                 Cmd.LgBarre = _Texte_LgBarre.Text.eToInteger();
 
                 ListeLgProfil = Cmd.Analyser();

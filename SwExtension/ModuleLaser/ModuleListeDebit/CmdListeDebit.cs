@@ -20,7 +20,6 @@ namespace ModuleLaser
             public Boolean ComposantsExterne = false;
             public String RefFichier = "";
 
-            public Boolean NumeroterDossier = false;
             public Boolean ReinitialiserNoDossier = false;
             public Boolean MajListePiecesSoudees = false;
             public String ForcerMateriau = null;
@@ -179,9 +178,6 @@ namespace ModuleLaser
                             mdl.ePartDoc().eReinitialiserNoDossierMax();
 
                         int QuantiteCfg = DicQte[Comp.eKeyAvecConfig(NomConfigPliee)];
-
-                        if (NumeroterDossier)
-                            Comp.eNumeroterDossier(MajListePiecesSoudees);
 
                         List<Feature> ListeDossier = mdl.ePartDoc().eListeDesFonctionsDePiecesSoudees(null);
 

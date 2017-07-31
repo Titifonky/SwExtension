@@ -172,9 +172,16 @@ namespace ModuleLaser
             return mdl.ConfigurationManager.AddConfiguration(NomConfigDepliee, NomConfigDepliee, "", 0, NomConfigPliee, "");
         }
 
-        public static String RefPiece(this ModelDoc2 mdl, String configPliee, String noDossier)
+        public static String RefPiece(this ModelDoc2 mdl, String Pattern, String configPliee, String noDossier)
         {
-            return String.Format("{0}-{1}-{2}", mdl.eNomSansExt(), configPliee, noDossier);
+            //<Nom_Piece>-<Nom_Config>-<No_Dossier>
+
+            String result = Pattern;
+
+            result = result.Replace("<Nom_Piece>", mdl.eNomSansExt());
+            result = result.Replace("<Nom_Config>", configPliee);
+            result = result.Replace("<No_Dossier>", noDossier);
+            return result;
         }
 
         public static void DeplierTole(this Body2 Tole, ModelDoc2 mdl, String nomConfigDepliee)

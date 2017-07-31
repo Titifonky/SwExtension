@@ -35,7 +35,7 @@ namespace ModuleLaser
                     PrendreEnCompteTole = _Config.AjouterParam("PrendreEnCompteTole", true, "Prendre en compte les tôles");
                     NumeroterDossier = _Config.AjouterParam("NumeroterDossier", true, "Numeroter les dossier");
                     ComposantsExterne = _Config.AjouterParam("ComposantExterne", false, "Exporter les barres externes au dossier du modèle");
-                    TypeExport = _Config.AjouterParam("TypeExport", eTypeFichierExport.ParasolidBinary);
+                    TypeExport = _Config.AjouterParam("TypeExport", eTypeFichierExport.ParasolidBinary, "Format :");
 
                     CreerPdf3D = _Config.AjouterParam("CreerPdf3D", false, "Créer les pdf 3D des barres");
 
@@ -56,7 +56,6 @@ namespace ModuleLaser
             private CtrlCheckBox _CheckBox_ForcerMateriau;
             private CtrlTextComboBox _TextComboBox_ForcerMateriau;
             private CtrlCheckBox _CheckBox_CreerPdf3D;
-            private CtrlCheckBox _CheckBox_NumeroterDossier;
             private CtrlCheckBox _CheckBox_ReinitialiserNoDossier;
 
             protected void Calque()
@@ -109,12 +108,7 @@ namespace ModuleLaser
                                                             eTypeFichierExport.STEP;
                     _CheckBox_CreerPdf3D = G.AjouterCheckBox(CreerPdf3D);
 
-                    _CheckBox_NumeroterDossier = G.AjouterCheckBox(NumeroterDossier);
                     _CheckBox_ReinitialiserNoDossier = G.AjouterCheckBox("Reinitialiser les n° de dossier");
-                    _CheckBox_NumeroterDossier.OnUnCheck += _CheckBox_ReinitialiserNoDossier.UnCheck;
-                    _CheckBox_NumeroterDossier.OnIsCheck += _CheckBox_ReinitialiserNoDossier.IsEnable;
-                    _CheckBox_ReinitialiserNoDossier.IsEnabled = _CheckBox_NumeroterDossier.IsChecked;
-                    _CheckBox_ReinitialiserNoDossier.StdIndent();
 
                 }
                 catch (Exception e)
@@ -168,8 +162,7 @@ namespace ModuleLaser
                 Cmd.PrendreEnCompteTole = _CheckBox_PrendreEnCompteTole.IsChecked;
                 Cmd.ComposantsExterne = _CheckBox_ComposantsExterne.IsChecked;
                 Cmd.RefFichier = _Texte_RefFichier.Text;
-                Cmd.NumeroterDossier = _CheckBox_NumeroterDossier.IsChecked;
-                Cmd.ReinitialiserNoDossier = _CheckBox_NumeroterDossier.IsEnabled ? _CheckBox_ReinitialiserNoDossier.IsChecked : false;
+                Cmd.ReinitialiserNoDossier = _CheckBox_ReinitialiserNoDossier.IsChecked;
 
                 Cmd.Executer();
             }

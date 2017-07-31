@@ -25,6 +25,7 @@ namespace ModuleLaser.ModuleCreerDvp
         public Boolean ComposantsExterne = false;
         public String RefFichier = "";
         public int TailleInscription = 5;
+        public String FormatInscription = "<Nom_Piece>-<Nom_Config>-<No_Dossier>";
 
         private HashSet<String> HashMateriaux;
         private Dictionary<String, int> DicQte = new Dictionary<string, int>();
@@ -112,8 +113,6 @@ namespace ModuleLaser.ModuleCreerDvp
                 // On multiplie les quantites
                 DicQte.Multiplier(Quantite);
 
-                WindowLog.Ecrire(ListeCp.Count);
-
                 for (int noCp = 0; noCp < ListeCp.Count; noCp++)
                 {
                     var Cp = ListeCp[noCp];
@@ -171,7 +170,8 @@ namespace ModuleLaser.ModuleCreerDvp
                             
                             String NoDossier = dossier.eProp(CONSTANTES.NO_DOSSIER);
                             String NomConfigDepliee = Sw.eNomConfigDepliee(NomConfigPliee, NoDossier);
-                            String RefPiece = mdl.RefPiece(NomConfigPliee, NoDossier);
+                            String RefQuantite = mdl.RefPiece("<Nom_Piece>-<Nom_Config>-<No_Dossier>", NomConfigPliee, NoDossier);
+                            String RefGravure = mdl.RefPiece(FormatInscription, NomConfigPliee, NoDossier);
 
                             WindowLog.EcrireF("      Ep {0} / Materiau {1}", Epaisseur, Materiau);
                             WindowLog.EcrireF("          Config {0}", NomConfigDepliee);
@@ -198,7 +198,7 @@ namespace ModuleLaser.ModuleCreerDvp
                             dessin.eModelDoc2().eActiver();
                             Sheet Feuille = dessin.eFeuilleActive();
 
-                            View v = CreerVueToleDvp(dessin, Feuille, Piece, NomConfigDepliee, RefPiece, Materiau, QuantiteTole, Epaisseur);
+                            View v = CreerVueToleDvp(dessin, Feuille, Piece, NomConfigDepliee, RefQuantite, RefGravure, Materiau, QuantiteTole, Epaisseur);
 
                             if (ConvertirEsquisse)
                             {
@@ -338,7 +338,7 @@ namespace ModuleLaser.ModuleCreerDvp
             return Dessin;
         }
 
-        public View CreerVueToleDvp(DrawingDoc dessin, Sheet feuille, PartDoc piece, String configDepliee, String nomTole, String materiau, int quantite, Double epaisseur)
+        public View CreerVueToleDvp(DrawingDoc dessin, Sheet feuille, PartDoc piece, String configDepliee, String RefQuantite, String RefGravure, String materiau, int quantite, Double epaisseur)
         {
             // Si des corps autre que la tole dépliée sont encore visible dans la config, on les cache et on recontruit tout
             foreach (Body2 pCorps in piece.eListeCorps(false))
@@ -361,7 +361,7 @@ namespace ModuleLaser.ModuleCreerDvp
                 Vue.eSelectionner(dessin);
 
                 {
-                    Note Note = dessin.eModelDoc2().InsertNote(String.Format("{0}× {1} [{2}] (Ep{3})", quantite, nomTole, materiau, epaisseur));
+                    Note Note = dessin.eModelDoc2().InsertNote(String.Format("{0}× {1} [{2}] (Ep{3})", quantite, RefQuantite, materiau, epaisseur));
                     Note.SetTextJustification((int)swTextJustification_e.swTextJustificationCenter);
 
                     Annotation Annotation = Note.GetAnnotation();
@@ -380,7 +380,7 @@ namespace ModuleLaser.ModuleCreerDvp
 
                 if (InscrireNomTole)
                 {
-                    Note Note = dessin.eModelDoc2().InsertNote(nomTole);
+                    Note Note = dessin.eModelDoc2().InsertNote(RefGravure);
                     Note.SetTextJustification((int)swTextJustification_e.swTextJustificationCenter);
 
                     Annotation Annotation = Note.GetAnnotation();

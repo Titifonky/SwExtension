@@ -36,7 +36,6 @@ namespace ModuleLaser.ModuleCreerConfigDvp
             }
         }
         public Boolean MasquerEsquisses = false;
-        public Boolean NumeroterDossier = false;
 
         private Boolean _ReinitialiserNoDossier = false;
         public Boolean ReinitialiserNoDossier
@@ -162,9 +161,6 @@ namespace ModuleLaser.ModuleCreerConfigDvp
                             cmdSupprimerFonctions(mdl, NomConfigPliee);
 
                         PartDoc Piece = mdl.ePartDoc();
-
-                        if (NumeroterDossier)
-                            Piece.eNumeroterDossier(MajListePiecesSoudees);
 
                         var ListeDossier = Piece.eListePIDdesFonctionsDePiecesSoudees(null);
 

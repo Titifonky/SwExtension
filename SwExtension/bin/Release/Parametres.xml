@@ -15,7 +15,7 @@
     <Parametre name="ToleranceFusion" intitule="Tolérance de fusion" tip="Tolérance de fusion" type="System.Double">0</Parametre>
     <Parametre name="ExporterHauteQualite" intitule="Exporter en haute qualité" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="ConvertirSplineToPolyligne" intitule="Convertir les splines en polylignes" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">D:\Projet\E146 - Jérémy Nguyen\AD382 - Escalier limon central\1</Parametre>
+    <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">D:\Projet\E146 - Jérémy Nguyen\AD382 - Escalier limon central\1\Plans Développées\DWG - Ind B</Parametre>
   </Module>
   <Module name="ExportPdf" intitule="Exporter en Pdf">
     <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">False</Parametre>
@@ -34,7 +34,7 @@
     <Parametre name="ToutReconstruire" intitule="Reconstruire le modèle à la fin de l'importation" tip="" type="System.Boolean">False</Parametre>
   </Module>
   <Module name="CreerConfigDvp" intitule="Creer les config. dvp">
-    <Parametre name="SupprimerLesAnciennesConfigs" intitule="Supprimer les anciennes configs dvp" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="SupprimerLesAnciennesConfigs" intitule="Supprimer les anciennes configs dvp" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="ReconstuireLesConfig" intitule="Reconstruire toutes les configs dvp" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="NumeroterDossier" intitule="Numeroter les dossier" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="ToutesLesConfigurations" intitule="Appliquer à toutes les configs" tip="Creer les configs dvp pour toutes les configs pliées de chaque composants, même celles non utilisées dans le modele" type="System.Boolean">True</Parametre>
@@ -44,10 +44,11 @@
   </Module>
   <Module name="CreerDvp" intitule="Creer les dvp de tôle">
     <Parametre name="PropQuantite" intitule="Propriete &quot;Quantite&quot;" tip="Recherche cette propriete" type="System.String">Quantite</Parametre>
-    <Parametre name="AfficherLignePliage" intitule="Afficher les lignes de pliage" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="AfficherNotePliage" intitule="Afficher les notes de pliage" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="AfficherLignePliage" intitule="Afficher les lignes de pliage" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="AfficherNotePliage" intitule="Afficher les notes de pliage" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="InscrireNomTole" intitule="Inscrire la réf du dvp sur la tole" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="TailleInscription" intitule="Ht des inscriptions en mm" tip="Ht des inscriptions en mm" type="System.Int32">20</Parametre>
+    <Parametre name="FormatInscription" intitule="Format :" tip="Format de l'inscription à graver" type="System.String">&lt;No_Dossier&gt;</Parametre>
     <Parametre name="ComposantExterne" intitule="Créer les dvp des composants externe au dossier du modèle" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="OrienterDvp" intitule="Orienter les dvps" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="OrientationDvp" intitule="" tip="" type="Outils.eOrientation">Portrait</Parametre>
@@ -124,7 +125,7 @@
     <Parametre name="PrendreEnCompteTole" intitule="Prendre en compte les tôles" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="NumeroterDossier" intitule="Numeroter les dossier" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="ComposantExterne" intitule="Exporter les barres externes au dossier du modèle" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="TypeExport" intitule="" tip="" type="Outils.eTypeFichierExport">ParasolidBinary</Parametre>
+    <Parametre name="TypeExport" intitule="Format :" tip="" type="Outils.eTypeFichierExport">ParasolidBinary</Parametre>
     <Parametre name="CreerPdf3D" intitule="Créer les pdf 3D des barres" tip="" type="System.Boolean">True</Parametre>
   </Module>
   <Module name="RenommerToutesFeuilles" intitule="Renommer toutes les feuilles">

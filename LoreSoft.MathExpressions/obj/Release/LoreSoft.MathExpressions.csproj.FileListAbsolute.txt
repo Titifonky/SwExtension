@@ -29,4 +29,3 @@ E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\obj\
 E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\obj\Release\LoreSoft.MathExpressions.csproj.GenerateResource.Cache
 E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\obj\Release\LoreSoft.MathExpressions.dll
 E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\obj\Release\LoreSoft.MathExpressions.pdb
-E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\obj\Release\LoreSoft.MathExpressions.csprojResolveAssemblyReference.cache

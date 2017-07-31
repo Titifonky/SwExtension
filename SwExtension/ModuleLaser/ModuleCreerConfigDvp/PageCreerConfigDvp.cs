@@ -44,7 +44,6 @@ namespace ModuleLaser.ModuleCreerConfigDvp
         private CtrlCheckBox _CheckBox_ReconstuireLesConfigs;
         private CtrlCheckBox _CheckBox_ToutesLesConfigurations;
         private CtrlCheckBox _CheckBox_MasquerEsquisses;
-        private CtrlCheckBox _CheckBox_NumeroterDossier;
         private CtrlCheckBox _CheckBox_ReinitialiserNoDossier;
         private GroupeAvecCheckBox _GroupeAvecCheckBox;
         private CtrlTextBox _TextBox_NomFonctionSupprimer;
@@ -73,13 +72,8 @@ namespace ModuleLaser.ModuleCreerConfigDvp
 
                 G = _Calque.AjouterGroupe("Options");
                 _CheckBox_MasquerEsquisses = G.AjouterCheckBox(MasquerEsquisses);
-                _CheckBox_NumeroterDossier = G.AjouterCheckBox(NumeroterDossier);
                 _CheckBox_ReinitialiserNoDossier = G.AjouterCheckBox("Reinitialiser les n° de dossier");
-                _CheckBox_NumeroterDossier.OnUnCheck += _CheckBox_ReinitialiserNoDossier.UnCheck;
-                _CheckBox_NumeroterDossier.OnIsCheck += _CheckBox_ReinitialiserNoDossier.IsEnable;
-                _CheckBox_ReinitialiserNoDossier.IsEnabled = _CheckBox_NumeroterDossier.IsChecked;
                 _CheckBox_ReinitialiserNoDossier.OnCheck += _CheckBox_ToutesLesConfigurations.Check;
-                _CheckBox_ReinitialiserNoDossier.StdIndent();
 
                 _GroupeAvecCheckBox = _Calque.AjouterGroupeAvecCheckBox(SupprimerFonctions);
                 _TextBox_NomFonctionSupprimer = _GroupeAvecCheckBox.AjouterTexteBox(NomFonctionSupprimer);
@@ -101,8 +95,7 @@ namespace ModuleLaser.ModuleCreerConfigDvp
             Cmd.SupprimerLesAnciennesConfigs = _CheckBox_SupprimerLesAnciennesConfigs.IsChecked;
             Cmd.ReconstuireLesConfigs = _CheckBox_ReconstuireLesConfigs.IsChecked;
             Cmd.MasquerEsquisses = _CheckBox_MasquerEsquisses.IsChecked;
-            Cmd.NumeroterDossier = _CheckBox_NumeroterDossier.IsChecked;
-            Cmd.ReinitialiserNoDossier = _CheckBox_NumeroterDossier.IsEnabled ? _CheckBox_ReinitialiserNoDossier.IsChecked : false;
+            Cmd.ReinitialiserNoDossier = _CheckBox_ReinitialiserNoDossier.IsChecked;
             Cmd.ToutesLesConfigurations = _CheckBox_ToutesLesConfigurations.IsChecked;
             Cmd.SupprimerFonctions = _GroupeAvecCheckBox.IsChecked;
             Cmd.NomFonctionSupprimer = _TextBox_NomFonctionSupprimer.Text;

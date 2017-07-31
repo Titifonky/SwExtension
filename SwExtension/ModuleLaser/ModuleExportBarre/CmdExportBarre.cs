@@ -24,7 +24,6 @@ namespace ModuleLaser
             public Boolean ComposantsExterne = false;
             public String RefFichier = "";
 
-            public Boolean NumeroterDossier = false;
             public Boolean ReinitialiserNoDossier = false;
             public Boolean MajListePiecesSoudees = false;
             public String ForcerMateriau = null;
@@ -187,9 +186,6 @@ namespace ModuleLaser
                             mdl.ShowConfiguration2(NomConfigPliee);
                             mdl.EditRebuild3();
                             PartDoc Piece = mdl.ePartDoc();
-
-                            if (NumeroterDossier)
-                                Piece.eNumeroterDossier(MajListePiecesSoudees);
 
                             ListPID<Feature> ListeDossier = Piece.eListePIDdesFonctionsDePiecesSoudees(null);
 

@@ -4013,14 +4013,12 @@ namespace Outils
 
         public static String eGetMateriau(this BodyFolder dossier)
         {
-            String mat = dossier.eProp("Materiau");
-            if(String.IsNullOrWhiteSpace(mat))
-                mat = dossier.eProp("Matériau");
+            String materiau = dossier.eProp("Materiau");
 
-            WindowLog.Ecrire(dossier.eNom());
-            WindowLog.Ecrire("   " + mat);
+            if(String.IsNullOrWhiteSpace(materiau))
+                materiau = dossier.eProp("Matériau");
 
-            return mat;
+            return materiau;
         }
 
         public static void eSetMateriau(this PartDoc piece, String nomMateriau, String baseMateriau, String nomConfig)
