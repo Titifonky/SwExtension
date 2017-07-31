@@ -70,7 +70,7 @@ namespace ModuleLaser
 
                     String Ref = App.ModelDoc2.eRefFichier();
                     _Texte_RefFichier.Text = Ref;
-                    _Texte_RefFichier.LectureSeule = true;
+                    _Texte_RefFichier.LectureSeule = false;
 
                     // S'il n'y a pas de reference, on met le texte en rouge
                     if (String.IsNullOrWhiteSpace(Ref))
