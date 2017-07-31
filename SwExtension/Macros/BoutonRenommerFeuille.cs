@@ -15,7 +15,7 @@ namespace Macros
         {
             DrawingDoc dessin = App.ModelDoc2.eDrawingDoc();
 
-            String nom = "";
+            String nom = dessin.eFeuilleActive().GetName();
 
             if (Interaction.InputBox("Nouveau nom", "Nom :", ref nom) == DialogResult.OK)
             {
