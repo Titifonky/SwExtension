@@ -37,7 +37,7 @@ namespace ModuleLaser
                 {
                     PropQuantite = _Config.AjouterParam("PropQuantite", CONSTANTES.PROPRIETE_QUANTITE, "Propriete \"Quantite\"", "Recherche cette propriete");
                     PrendreEnCompteTole = _Config.AjouterParam("PrendreEnCompteTole", true, "Prendre en compte les tôles");
-                    ComposantsExterne = _Config.AjouterParam("ComposantExterne", false, "Créer les dvp des composants externe au dossier du modèle");
+                    ComposantsExterne = _Config.AjouterParam("ComposantExterne", false, "Prendre en compte les composants externe au dossier du modèle");
                     NumeroterDossier = _Config.AjouterParam("NumeroterDossier", true, "Numeroter les dossier");
                     LgBarre = _Config.AjouterParam("LgBarre", 6000, "Lg d'une barre");
                     AfficherListe = _Config.AjouterParam("AfficherListe", true, "Afficher la liste après execution");
@@ -54,6 +54,7 @@ namespace ModuleLaser
 
             private List<Groupe> ListeGroupe1 = new List<Groupe>();
             private List<Groupe> ListeGroupe2 = new List<Groupe>();
+            private List<CtrlCheckBox> ListeCheckBoxLg = new List<CtrlCheckBox>();
             private List<CtrlTextBox> ListeTextBoxLg = new List<CtrlTextBox>();
 
             private CtrlTextBox _Texte_RefFichier;
@@ -128,8 +129,13 @@ namespace ModuleLaser
 
                     for (int i = 0; i < NbProfilMax; i++)
                     {
-                        ListeTextBoxLg.Add(G.AjouterTexteBox(_Texte_LgBarre.Text.eToInteger().ToString(), "Profil " + (i + 1)));
+                        ListeCheckBoxLg.Add(G.AjouterCheckBox("Profil " + (i + 1)));
+                        CtrlCheckBox c = ListeCheckBoxLg.Last();
+                        c.Visible = false;
+
+                        ListeTextBoxLg.Add(G.AjouterTexteBox());
                         CtrlTextBox t = ListeTextBoxLg.Last();
+                        t.Text = _Texte_LgBarre.Text.eToInteger().ToString();
                         t.Visible = false;
                     }
 
@@ -194,7 +200,7 @@ namespace ModuleLaser
                     XmlNode Base = xmlDoc.CreateNode(XmlNodeType.Element, _TagRacine, "");
                     xmlDoc.AppendChild(Base);
 
-                    foreach (var materiau in ListeLgProfil.Dic.Keys)
+                    foreach (var materiau in ListeLgProfil.DicLg.Keys)
                     {
                         XmlNode NdMateriau = xmlDoc.CreateNode(XmlNodeType.Element, _TagMateriau, "");
                         XmlAttribute AttMatt = xmlDoc.CreateAttribute(_TagNom);
@@ -202,9 +208,9 @@ namespace ModuleLaser
                         NdMateriau.Attributes.SetNamedItem(AttMatt);
                         Base.AppendChild(NdMateriau);
 
-                        foreach (var profil in ListeLgProfil.Dic[materiau].Keys)
+                        foreach (var profil in ListeLgProfil.DicLg[materiau].Keys)
                         {
-                            String lg = ListeLgProfil.Dic[materiau][profil].ToString();
+                            String lg = ListeLgProfil.DicLg[materiau][profil].ToString();
 
                             XmlNode NdProfil = xmlDoc.CreateNode(XmlNodeType.Element, _TagProfil, "");
                             XmlAttribute AttProfil = xmlDoc.CreateAttribute(_TagNom);
@@ -229,7 +235,7 @@ namespace ModuleLaser
                 try
                 {
                     String s = App.ModelDoc2.eGetListeLgProfils();
-                    var DicMateriaux = ListeLgProfil.Dic;
+                    var DicMateriaux = ListeLgProfil.DicLg;
 
                     if (String.IsNullOrWhiteSpace(s) || DicMateriaux.IsNull()) return;
 
@@ -311,17 +317,21 @@ namespace ModuleLaser
 
                 int i = 0;
 
-                foreach (var materiau in ListeLgProfil.Dic.Keys)
+                foreach (var materiau in ListeLgProfil.DicLg.Keys)
                 {
-                    foreach (var profil in ListeLgProfil.Dic[materiau].Keys)
+                    foreach (var profil in ListeLgProfil.DicLg[materiau].Keys)
                     {
                         if (i == NbProfilMax) return true;
 
+                        var c = ListeCheckBoxLg[i];
+                        c.Visible = true;
+                        c.Caption = String.Format("{0} [{1}]", profil, materiau);
+                        c.IsChecked = true;
+
                         var t = ListeTextBoxLg[i++];
                         t.Visible = true;
-                        t.LabelText = String.Format("{0} [{1}]", profil, materiau);
-                        t.Text = ListeLgProfil.Dic[materiau][profil].ToString();
-                        t.OnTextBoxChanged += delegate (Object sender, String text) { ListeLgProfil.Dic[materiau][profil] = text.eToInteger(); };
+                        t.Text = ListeLgProfil.DicLg[materiau][profil].ToString();
+                        t.OnTextBoxChanged += delegate (Object sender, String text) { ListeLgProfil.DicLg[materiau][profil] = text.eToInteger(); };
                     }
                 }
 
@@ -337,11 +347,11 @@ namespace ModuleLaser
 
                 WindowLog.Ecrire("Lg max des barres :");
 
-                foreach (var materiau in ListeLgProfil.Dic.Keys)
+                foreach (var materiau in ListeLgProfil.DicLg.Keys)
                 {
-                    foreach (var profil in ListeLgProfil.Dic[materiau].Keys)
+                    foreach (var profil in ListeLgProfil.DicLg[materiau].Keys)
                     {
-                        String lg = ListeLgProfil.Dic[materiau][profil].ToString();
+                        String lg = ListeLgProfil.DicLg[materiau][profil].ToString();
                         WindowLog.EcrireF("{0,10} [{1:10}] {2,10}", profil, materiau, lg);
                     }
                 }

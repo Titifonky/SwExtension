@@ -95,7 +95,7 @@ namespace ModuleLaser
                                 var LstDossier = c.eListeDesDossiersDePiecesSoudees();
                                 foreach (var dossier in LstDossier)
                                 {
-                                    if (Filtre.HasFlag(dossier.eTypeDeDossier()))
+                                    if (Filtre.HasFlag(dossier.eTypeDeDossier()) && !dossier.eEstExclu())
                                     {
                                         String Materiau = dossier.eGetMateriau();
 
@@ -186,7 +186,7 @@ namespace ModuleLaser
                             Feature f = ListeDossier[noD];
                             BodyFolder dossier = f.GetSpecificFeature2();
 
-                            if (dossier.IsNull() || (dossier.GetBodyCount() == 0)) continue;
+                            if (dossier.IsNull() || (dossier.GetBodyCount() == 0) || dossier.eEstExclu()) continue;
 
                             String Profil = dossier.eProp(CONSTANTES.PROFIL_NOM);
                             Double Longueur = dossier.eProp(CONSTANTES.PROFIL_LONGUEUR).eToDouble();
@@ -240,7 +240,7 @@ namespace ModuleLaser
 
                     WindowLog.Ecrire(ResumeBarre);
 
-                    CheminFichier = Path.Combine(MdlBase.eDossier(), RefFichier + " - Liste de débit.txt");
+                    CheminFichier = Path.Combine(MdlBase.eDossier(), RefFichier + " - " + MdlBase.eNomSansExt() + " - Liste de débit.txt");
 
                     StreamWriter s = new StreamWriter(CheminFichier);
                     s.Write(Complet);
@@ -315,7 +315,7 @@ namespace ModuleLaser
                 private Double _LgBarre = 6000;
                 private Dictionary<String, Dictionary<String, Double>> _dic = new Dictionary<string, Dictionary<string, Double>>();
 
-                public Dictionary<String, Dictionary<String, Double>> Dic { get { return _dic; } }
+                public Dictionary<String, Dictionary<String, Double>> DicLg { get { return _dic; } }
 
                 public ListeLgProfil(int lgBarre)
                 {
