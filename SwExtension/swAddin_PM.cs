@@ -9,6 +9,7 @@ using ModuleInsererPercage;
 using ModuleLaser.ModuleCreerConfigDvp;
 using ModuleLaser.ModuleCreerDvp;
 using ModuleLaser.ModuleExportBarre;
+using ModuleLaser.ModuleExportBarreN;
 using ModuleLaser.ModuleListeDebit;
 using ModuleLierLesConfigurations;
 using ModuleListerMateriaux;
@@ -78,6 +79,7 @@ namespace SwExtension
 
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde("Eb", typeof(PageExportBarre));
+                _Mnu.AjouterCmde("En", typeof(PageExportBarreN));
                 _Mnu.AjouterCmde("Ld", typeof(PageListeDebit));
 
                 _Mnu.NouveauGroupe();

@@ -44,6 +44,8 @@ namespace ModuleLaser
                     CreerPdf3D = _Config.AjouterParam("CreerPdf3D", false, "Créer les pdf 3D des barres");
 
                     OnCalque += Calque;
+                    OnNextPage += RunOnNextPage;
+                    OnPreviousPage += delegate { return false; };
                     OnRunAfterActivation += Rechercher_Materiaux;
                     OnRunOkCommand += RunOkCommand;
                 }
@@ -188,8 +190,8 @@ namespace ModuleLaser
                 Cmd.ListeMateriaux = _TextListBox_Materiaux.ListSelectedText.Count > 0 ? _TextListBox_Materiaux.ListSelectedText : _TextListBox_Materiaux.Liste;
                 Cmd.ForcerMateriau = _CheckBox_ForcerMateriau.IsChecked ? _TextComboBox_ForcerMateriau.Text : null;
                 Cmd.Quantite = _Texte_Quantite.Text.eToInteger();
-                Cmd.CreerPdf3D = _CheckBox_CreerPdf3D.IsChecked;
-                Cmd.TypeExport = _EnumComboBox_TypeExport.Val;
+                //Cmd.CreerPdf3D = _CheckBox_CreerPdf3D.IsChecked;
+                //Cmd.TypeExport = _EnumComboBox_TypeExport.Val;
                 Cmd.PrendreEnCompteTole = _CheckBox_PrendreEnCompteTole.IsChecked;
                 Cmd.ComposantsExterne = _CheckBox_ComposantsExterne.IsChecked;
                 Cmd.RefFichier = _Texte_RefFichier.Text;
@@ -220,10 +222,13 @@ namespace ModuleLaser
                     {
                         if (i == NbProfilMax) return true;
 
-                        var c = ListeCheckBoxProfil[i];
+                        var val = ListeProfil.DicProfil[materiau][profil];
+
+                        var c = ListeCheckBoxProfil[i++];
                         c.Visible = true;
                         c.Caption = String.Format("{0} [{1}]", profil, materiau);
-                        c.IsChecked = true;
+                        c.IsChecked = val;
+                        c.OnIsCheck += delegate (Object sender, Boolean value) { ListeProfil.DicProfil[materiau][profil] = value; };
                     }
                 }
 

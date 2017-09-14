@@ -67,8 +67,6 @@ namespace ModuleLaser
                             }
                             MdlBase.ShowConfiguration2(nomConfigBase);
                         }
-
-                        DicQte.Add(CpRacine.eKeyAvecConfig());
                     }
 
                     eTypeCorps Filtre = PrendreEnCompteTole ? eTypeCorps.Barre | eTypeCorps.Tole : eTypeCorps.Barre;
@@ -98,8 +96,6 @@ namespace ModuleLaser
                                         if (!HashMateriaux.Contains(Materiau))
                                             continue;
 
-                                        DicQte.Add(c.eKeyAvecConfig());
-
                                         if (DicConfig.ContainsKey(c.eKeySansConfig()))
                                         {
                                             List<String> l = DicConfig[c.eKeySansConfig()];
@@ -126,9 +122,6 @@ namespace ModuleLaser
                         true
                     );
 
-                    // On multiplie les quantites
-                    DicQte.Multiplier(Quantite);
-
                     for (int noCp = 0; noCp < ListeCp.Count; noCp++)
                     {
                         var Comp = ListeCp[noCp];
@@ -139,8 +132,6 @@ namespace ModuleLaser
 
                         if (ReinitialiserNoDossier)
                             mdl.ePartDoc().eReinitialiserNoDossierMax();
-
-                        int QuantiteCfg = DicQte[Comp.eKeyAvecConfig(NomConfigPliee)];
 
                         List<Feature> ListeDossier = mdl.ePartDoc().eListeDesFonctionsDePiecesSoudees(null);
 
