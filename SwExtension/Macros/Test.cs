@@ -19,7 +19,7 @@ namespace Macros
     public class Test : BoutonBase
     {
 
-        private Dictionary<Double, int> DicQte = new Dictionary<Double, int>();
+        private List<String> CalquesBase = new List<string>() {"Annotations", "Cotations", "Tables", "Vue", "Construction", "Bordure", "Pliage"};
 
         protected override void Command()
         {
@@ -27,48 +27,91 @@ namespace Macros
             {
                 ModelDoc2 MdlBase = App.ModelDoc2;
 
-                if (MdlBase.TypeDoc() == eTypeDoc.Piece)
-                    Decompter(MdlBase.eComposantRacine());
-                else
-                    MdlBase.eRecParcourirComposants(Decompter);
+                MdlBase.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swWeldmentEnableAutomaticCutList, 0, true);
+                MdlBase.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swWeldmentEnableAutomaticUpdate, 0, false);
+                MdlBase.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swDisableDerivedConfigurations, 0, false);
+                MdlBase.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swWeldmentRenameCutlistDescriptionPropertyValue, 0, true);
+                MdlBase.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swWeldmentCollectIdenticalBodies, 0, true);
+                MdlBase.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swSheetMetalBodiesDescriptionUseDefault, 0, false);
+                MdlBase.Extension.SetUserPreferenceString((int)swUserPreferenceStringValue_e.swSheetMetalDescription, 0, "Tôle");
+                MdlBase.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swFlatPatternOpt_SimplifyBends, 0, false);
+                MdlBase.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swFlatPatternOpt_CornerTreatment, 0, false);
 
-                WindowLog.SautDeLigne();
-
-                foreach (var item in DicQte)
-                    WindowLog.EcrireF("{0,-5} : {1,-5}", "D" + Math.Round(item.Key, 2), "×" + item.Value);
-
-            }
-            catch (Exception e) { this.LogMethode(new Object[] { e }); }
-
-        }
-
-        private Boolean Decompter(Component2 cp)
-        {
-            try
-            {
-                if (!cp.IsHidden(true))
+                if (MdlBase.TypeDoc() == eTypeDoc.Dessin)
                 {
-                    foreach (var corps in cp.eListeCorps())
-                    {
-                        foreach (var face in corps.eListeDesFaces())
-                        {
-                            Surface S = face.GetSurface();
-                            if (S.IsCylinder() && (face.GetLoopCount() > 1))
-                            {
-                                Double[] ListeParam = (Double[])S.CylinderParams;
-                                Double Diam = Math.Round(ListeParam[6] * 2.0 * 1000, 2);
 
-                                DicQte.AddIfNotExistOrPlus(Diam);
-                            }
+                    LayerMgr LM = MdlBase.GetLayerManager();
+
+                    String[] ListeCalques = LM.GetLayerList();
+
+                    WindowLog.Ecrire(MdlBase.GetPathName());
+
+                    foreach (var Calque in ListeCalques)
+                    {
+                        if (!CalquesBase.Contains(Calque))
+                        {
+                            WindowLog.Ecrire(Calque + " : " + LM.DeleteLayer(Calque));
+                        }
+                        else
+                        {
+                            WindowLog.Ecrire(Calque);
                         }
                     }
+
+                    String cheminDossier = App.Sw.GetUserPreferenceStringValue((int)swUserPreferenceStringValue_e.swFileLocationsSheetFormat) + "\\";
+                    String cheminFondPlan = MdlBase.eDrawingDoc().eFeuilleActive().eGetGabaritDeFeuille();
+
+                    String nomFondPlan = cheminFondPlan.Replace(cheminDossier, "");
+
+                    WindowLog.Ecrire(nomFondPlan);
+
+                    if (nomFondPlan.ToLower().StartsWith("archi"))
+                        MdlBase.Extension.LoadDraftingStandard("E:\\Mes documents\\SolidWorks\\2018\\Norme dessin\\Norme Archi.sldstd");
+                    else
+                        MdlBase.Extension.LoadDraftingStandard("E:\\Mes documents\\SolidWorks\\2018\\Norme dessin\\Norme Fab.sldstd");
+
+                    MdlBase.eDrawingDoc().eFeuilleActive().SaveFormat(cheminFondPlan);
+                }
+                else
+                {
+                    int lErrors = 0;
+                    int lWarnings = 0;
+
+                    MdlBase.Save3((int)swSaveAsOptions_e.swSaveAsOptions_Silent, ref lErrors, ref lWarnings);
                 }
 
             }
             catch (Exception e) { this.LogMethode(new Object[] { e }); }
 
-            return false;
         }
+
+        //private Boolean Decompter(Component2 cp)
+        //{
+        //    try
+        //    {
+        //        if (!cp.IsHidden(true))
+        //        {
+        //            foreach (var corps in cp.eListeCorps())
+        //            {
+        //                foreach (var face in corps.eListeDesFaces())
+        //                {
+        //                    Surface S = face.GetSurface();
+        //                    if (S.IsCylinder() && (face.GetLoopCount() > 1))
+        //                    {
+        //                        Double[] ListeParam = (Double[])S.CylinderParams;
+        //                        Double Diam = Math.Round(ListeParam[6] * 2.0 * 1000, 2);
+
+        //                        DicQte.AddIfNotExistOrPlus(Diam);
+        //                    }
+        //                }
+        //            }
+        //        }
+
+        //    }
+        //    catch (Exception e) { this.LogMethode(new Object[] { e }); }
+
+        //    return false;
+        //}
     }
 
     //public class Test : BoutonBase

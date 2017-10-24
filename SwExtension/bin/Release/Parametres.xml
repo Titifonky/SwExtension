@@ -15,7 +15,7 @@
     <Parametre name="ToleranceFusion" intitule="Tolérance de fusion" tip="Tolérance de fusion" type="System.Double">0</Parametre>
     <Parametre name="ExporterHauteQualite" intitule="Exporter en haute qualité" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="ConvertirSplineToPolyligne" intitule="Convertir les splines en polylignes" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">D:\Projet\E144 - Ville d'Arras\ED379 - Pole educatif Val de Scarpe\1\4.3.1 Garde-corps\Plans Développées\DWG - Ind A</Parametre>
+    <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">D:\Projet\E1 - MFB\Tas\Plans Développées</Parametre>
   </Module>
   <Module name="ExportPdf" intitule="Exporter en Pdf">
     <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">True</Parametre>
@@ -34,7 +34,7 @@
     <Parametre name="ToutReconstruire" intitule="Reconstruire le modèle à la fin de l'importation" tip="" type="System.Boolean">False</Parametre>
   </Module>
   <Module name="CreerConfigDvp" intitule="Creer les config. dvp">
-    <Parametre name="SupprimerLesAnciennesConfigs" intitule="Supprimer les anciennes configs dvp" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="SupprimerLesAnciennesConfigs" intitule="Supprimer les anciennes configs dvp" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="ReconstuireLesConfig" intitule="Reconstruire toutes les configs dvp" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="NumeroterDossier" intitule="Numeroter les dossier" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="ToutesLesConfigurations" intitule="Appliquer à toutes les configs" tip="Creer les configs dvp pour toutes les configs pliées de chaque composants, même celles non utilisées dans le modele" type="System.Boolean">True</Parametre>
@@ -135,10 +135,10 @@
   <Module name="ListeDebit" intitule="Liste de débit">
     <Parametre name="PropQuantite" intitule="Propriete &quot;Quantite&quot;" tip="Recherche cette propriete" type="System.String">Quantite</Parametre>
     <Parametre name="PrendreEnCompteTole" intitule="Prendre en compte les tôles" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="ComposantExterne" intitule="Prendre en compte les composants externe au dossier du modèle" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="NumeroterDossier" intitule="Numeroter les dossier" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="ComposantExterne" intitule="Exporter les barres externes au dossier du modèle" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="TypeExport" intitule="Format :" tip="" type="Outils.eTypeFichierExport">ParasolidBinary</Parametre>
-    <Parametre name="CreerPdf3D" intitule="Créer les pdf 3D des barres" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="LgBarre" intitule="Lg d'une barre" tip="" type="System.Int32">6000</Parametre>
+    <Parametre name="AfficherListe" intitule="Afficher la liste après execution" tip="" type="System.Boolean">True</Parametre>
   </Module>
   <Module name="ExclureNomenclature" intitule="Inclure/Exclure de la nomenclature">
     <Parametre name="ExclureNomenclature" intitule="Nom de la propriete à verifier&#xA; pour exclure de la nomenclature" tip="" type="System.String">ExcluNomenclature</Parametre>
@@ -156,7 +156,7 @@
   </Module>
   <Module name="LierLesConfigurations" intitule="Créer/Lier les configurations">
     <Parametre name="CreerConfig" intitule="Creer les configs manquante" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="ListeConfigs" intitule="Ajouter des configs&#xD;&#xA; Noms séparés par un espace" tip="" type="System.String">3 4 5</Parametre>
+    <Parametre name="ListeConfigs" intitule="Ajouter des configs&#xD;&#xA; Noms séparés par un espace" tip="" type="System.String">2</Parametre>
     <Parametre name="SupprimerNvlFonction" intitule="Supprimer les nouvelles fonctions ou contraintes&#xD;&#xA; dans la configuration" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="SupprimerNvComposant" intitule="Supprimer les nouveaux composants&#xD;&#xA; dans la configuration" tip="" type="System.Boolean">False</Parametre>
   </Module>
