@@ -1,13 +1,9 @@
 using LogDebugging;
 using Outils;
 using SolidWorks.Interop.sldworks;
-using SolidWorks.Interop.swconst;
 using SwExtension;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
-using System.Linq;
 
 namespace ModuleExportFichier
 {
@@ -21,6 +17,7 @@ namespace ModuleExportFichier
             public String CheminDossier;
             public String NomFichier;
             public Sheet Feuille;
+            public Boolean ToutesLesFeuilles = false;
 
             protected override void Command()
             {
@@ -31,7 +28,7 @@ namespace ModuleExportFichier
                     WindowLog.EcrireF("  Dossier : {0}", new DirectoryInfo(CheminDossier).Name);
 
                     WindowLog.EcrireF("   {0}", NomFichier + typeExport.GetEnumInfo<ExtFichier>());
-                    Feuille.eExporterEn(Dessin, typeExport, CheminDossier, NomFichier);
+                    Feuille.eExporterEn(Dessin, typeExport, CheminDossier, NomFichier, ToutesLesFeuilles);
                 }
                 catch (Exception e)
                 { this.LogMethode(new Object[] { e }); }

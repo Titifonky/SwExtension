@@ -61,10 +61,6 @@ namespace Macros
                             {
                                 WindowLog.Ecrire(Calque + " : " + LM.DeleteLayer(Calque));
                             }
-                            else
-                            {
-                                WindowLog.Ecrire(Calque);
-                            }
                         }
 
                         String cheminFondPlan = MdlBase.eDrawingDoc().eFeuilleActive().eGetGabaritDeFeuille();
@@ -73,10 +69,44 @@ namespace Macros
 
                         WindowLog.Ecrire(nomFondPlan);
 
+                        //MdlBase.Extension.DeleteDraftingStandard();
+
+                        //MdlBase.ForceRebuild3(false);
+
                         if (nomFondPlan.ToLower().StartsWith("archi"))
-                            MdlBase.Extension.LoadDraftingStandard("E:\\Mes documents\\SolidWorks\\2018\\Norme dessin\\Norme Archi.sldstd");
+                        {
+                            Boolean r = MdlBase.Extension.LoadDraftingStandard("E:\\Mes documents\\SolidWorks\\2018\\Norme dessin\\Norme Archi.sldstd");
+                            WindowLog.Ecrire("Norme Archi.sldstd" + " : " + r);
+                        }
                         else
-                            MdlBase.Extension.LoadDraftingStandard("E:\\Mes documents\\SolidWorks\\2018\\Norme dessin\\Norme Fab.sldstd");
+                        {
+                            Boolean r = MdlBase.Extension.LoadDraftingStandard("E:\\Mes documents\\SolidWorks\\2018\\Norme dessin\\Norme Fab.sldstd");
+                            WindowLog.Ecrire("Norme Fab.sldstd" + " : " + r);
+                        }
+
+                        MdlBase.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swUnitSystem, 0, (int)swUnitSystem_e.swUnitSystem_Custom);
+                        MdlBase.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swUnitsLinearFeetAndInchesFormat, 0, false);
+                        MdlBase.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swUnitsDualLinearFractionDenominator, 0, 0);
+                        MdlBase.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swUnitsDualLinearFeetAndInchesFormat, 0, false);
+                        MdlBase.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swSheetMetalColorFlatPatternSketch, 0, 8421504);
+                        TextFormat myTextFormat = MdlBase.Extension.GetUserPreferenceTextFormat((int)swUserPreferenceTextFormat_e.swSheetMetalBendNotesTextFormat, 0);
+                        myTextFormat.CharHeight = 0.004;
+                        MdlBase.Extension.SetUserPreferenceTextFormat((int)swUserPreferenceTextFormat_e.swSheetMetalBendNotesTextFormat, 0, myTextFormat);
+                        MdlBase.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swSheetMetalBendNotesLeaderJustificationSnapping, 0, true);
+                        MdlBase.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDetailingAltLinearDimPrecision, (int)swUserPreferenceOption_e.swDetailingLinearDimension, 2);
+                        MdlBase.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDetailingAltLinearDimPrecision, (int)swUserPreferenceOption_e.swDetailingDiameterDimension, 2);
+                        MdlBase.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDimensionsExtensionLineStyle, (int)swUserPreferenceOption_e.swDetailingRadiusDimension, (int)swLineStyles_e.swLineCONTINUOUS);
+                        MdlBase.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDimensionsExtensionLineStyleThickness, (int)swUserPreferenceOption_e.swDetailingRadiusDimension, (int)swLineWeights_e.swLW_THIN);
+                        MdlBase.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDetailingAltLinearDimPrecision, (int)swUserPreferenceOption_e.swDetailingRadiusDimension, 2);
+                        MdlBase.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDimensionsExtensionLineStyle, (int)swUserPreferenceOption_e.swDetailingHoleDimension, (int)swLineStyles_e.swLineCONTINUOUS);
+                        MdlBase.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDimensionsExtensionLineStyleThickness, (int)swUserPreferenceOption_e.swDetailingHoleDimension, (int)swLineWeights_e.swLW_THIN);
+                        MdlBase.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDetailingLinearDimPrecision, (int)swUserPreferenceOption_e.swDetailingHoleDimension, 4);
+                        MdlBase.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDetailingAltLinearDimPrecision, (int)swUserPreferenceOption_e.swDetailingHoleDimension, 2);
+                        MdlBase.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDetailingAngleTrailingZero, (int)swUserPreferenceOption_e.swDetailingAngleDimension, (int)swDetailingDimTrailingZero_e.swDimRemoveTrailingZeroes);
+                        MdlBase.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDetailingAngleTrailingZeroTolerance, (int)swUserPreferenceOption_e.swDetailingAngleDimension, (int)swDetailingDimTrailingZero_e.swDimSameAsDocumentTolerance);
+                        MdlBase.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDimensionsExtensionLineStyle, (int)swUserPreferenceOption_e.swDetailingChamferDimension, (int)swLineStyles_e.swLineCONTINUOUS);
+
+                        //MdlBase.ForceRebuild3(false);
 
                         MdlBase.eDrawingDoc().eFeuilleActive().SaveFormat(cheminFondPlan);
                     }
@@ -95,185 +125,4 @@ namespace Macros
 
         }
     }
-
-    //public class Test : BoutonBase
-    //{
-    //    private MathTransform xForm = null;
-    //    private MathUtility Mu = null;
-    //    private Sketch Esquisse = null;
-    //    private Double FacteurDecal = 0.8;
-
-    //    protected override void Command()
-    //    {
-
-    //        ModelDoc2 MdlBase = App.ModelDoc2;
-
-    //        String[] tabs = MdlBase.Extension.GetCommandTabs();
-
-    //        foreach (var tab in tabs)
-    //        {
-    //            WindowLog.Ecrire(tab);
-    //            //WindowLog.Ecrire(tab.Name);
-    //            //WindowLog.Ecrire("   " + tab.GetCommandTabBoxCount());
-    //            //WindowLog.SautDeLigne();
-    //        }
-
-    //        WindowLog.Ecrire(MdlBase.Extension.ActiveCommandTab);
-
-    //    }
-
-    //    private void CreerVoronoi()
-    //    {
-    //        ModelDoc2 MdlBase = App.ModelDoc2;
-
-    //        Feature Fonction = MdlBase.eSelect_RecupererObjet<Feature>(1, -1);
-
-    //        MdlBase.eEffacerSelection();
-
-    //        Esquisse = Fonction.GetSpecificFeature2();
-    //        xForm = Esquisse.ModelToSketchTransform.Inverse();
-    //        Mu = App.Sw.GetMathUtility();
-
-    //        String fact = "0.8";
-
-    //        if (Interaction.InputBox("Facteur de décalage", "F :", ref fact) == DialogResult.OK)
-    //        {
-    //            if (!String.IsNullOrWhiteSpace(fact))
-    //            {
-    //                Double r = fact.eToDouble();
-    //                if (r != 0)
-    //                    FacteurDecal = r;
-    //            }
-    //        }
-
-    //        var polygon = new Polygon();
-
-    //        if (Esquisse.GetSketchRegionCount() == 0) return;
-
-    //        // On ajoute les contours
-    //        SketchRegion region = Esquisse.GetSketchRegions()[0];
-    //        Loop2 loop = region.GetFirstLoop();
-
-    //        int i = 0;
-    //        while (loop != null)
-    //        {
-    //            var ListPt = new List<TriangleNet.Geometry.Vertex>();
-    //            foreach (SolidWorks.Interop.sldworks.Vertex v in loop.GetVertices())
-    //            {
-    //                double[] pt = (double[])v.GetPoint();
-    //                ListPt.Add(new TriangleNet.Geometry.Vertex(pt[0], pt[1]));
-    //            }
-
-    //            polygon.Add(new Contour(ListPt, i++), !loop.IsOuter());
-
-    //            loop = loop.GetNext();
-    //        }
-
-
-    //        foreach (SketchPoint pt in Esquisse.GetSketchPoints2())
-    //            polygon.Add(new TriangleNet.Geometry.Vertex(pt.X, pt.Y));
-
-    //        var contraintes = new ConstraintOptions();
-    //        contraintes.ConformingDelaunay = true;
-    //        contraintes.SegmentSplitting = 0;
-
-    //        //var Qualite = new QualityOptions();
-    //        //Qualite.SteinerPoints = 0;
-    //        Mesh mesh = (Mesh)polygon.Triangulate(contraintes);
-
-    //        var voronoi = new BoundedVoronoi(mesh);
-
-    //        var SM = MdlBase.SketchManager;
-
-    //        SelectionnerSupportEsquisse();
-    //        SM.InsertSketch(false);
-    //        SM.AddToDB = true;
-    //        SM.DisplayWhenAdded = false;
-
-    //        List<TriangleNet.Geometry.Vertex> lstVertex = new List<TriangleNet.Geometry.Vertex>();
-    //        foreach (var v in mesh.Vertices)
-    //        {
-    //            lstVertex.Add(v);
-    //        }
-
-    //        foreach (var edge in mesh.Edges)
-    //        {
-    //            TriangleNet.Geometry.Point p1 = TransformPt(lstVertex[edge.P0]);
-    //            TriangleNet.Geometry.Point p2 = TransformPt(lstVertex[edge.P1]);
-    //            SM.CreateLine(p1.X, p1.Y, 0, p2.X, p2.Y, 0);
-    //        }
-
-    //        SM.DisplayWhenAdded = true;
-    //        SM.AddToDB = false;
-    //        SM.InsertSketch(true);
-    //        MdlBase.eEffacerSelection();
-
-    //        SelectionnerSupportEsquisse();
-    //        SM.InsertSketch(false);
-    //        SM.AddToDB = true;
-    //        SM.DisplayWhenAdded = false;
-
-    //        foreach (var f in voronoi.Faces)
-    //        {
-    //            try
-    //            {
-    //                TriangleNet.Geometry.Point centre = f.generator;
-
-    //                foreach (var e in f.EnumerateEdges())
-    //                {
-    //                    var pt1 = TransformPt(Echelle(centre, e.Origin, FacteurDecal));
-    //                    var pt2 = TransformPt(Echelle(centre, e.Twin.Origin, FacteurDecal));
-    //                    SM.CreateLine(pt1.X, pt1.Y, 0, pt2.X, pt2.Y, 0);
-    //                }
-    //            }
-    //            catch (Exception errDesc)
-    //            { this.LogMethode(new Object[] { errDesc }); }
-    //        }
-
-    //        SM.DisplayWhenAdded = true;
-    //        SM.AddToDB = false;
-    //        SM.InsertSketch(true);
-    //    }
-
-    //    private void SelectionnerSupportEsquisse()
-    //    {
-    //        int TypeRef = 0;
-    //        Object obj = Esquisse.GetReferenceEntity(ref TypeRef);
-    //        if (TypeRef == (int)swSelectType_e.swSelFACES)
-    //        {
-    //            Entity ent = (Entity)obj;
-    //            ent.eSelectEntite();
-    //        }
-    //        else
-    //        {
-    //            RefPlane plan = (RefPlane)obj;
-    //            Feature f = (Feature)obj;
-    //            f.eSelect();
-    //        }
-    //    }
-
-    //    private TriangleNet.Geometry.Point TransformPt(TriangleNet.Geometry.Point Pt)
-    //    {
-    //        double[] arr = new double[3];
-    //        arr[0] = Pt.X;
-    //        arr[1] = Pt.Y;
-    //        arr[2] = 0;
-    //        MathPoint swPt = (MathPoint)Mu.CreatePoint(arr);
-
-    //        swPt = swPt.MultiplyTransform(xForm);
-    //        arr = swPt.ArrayData;
-
-    //        return new TriangleNet.Geometry.Point(arr[0], arr[1]);
-    //    }
-
-    //    private TriangleNet.Geometry.Point Echelle(TriangleNet.Geometry.Point centre, TriangleNet.Geometry.Point point, double f)
-    //    {
-    //        Vecteur v = new Vecteur(point.X - centre.X, point.Y - centre.Y, 0);
-    //        v.Multiplier(f);
-    //        double x = centre.X + v.X;
-    //        double y = centre.Y + v.Y;
-
-    //        return new TriangleNet.Geometry.Point(x, y);
-    //    }
-    //}
 }

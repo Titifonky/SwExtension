@@ -113,15 +113,15 @@ namespace ModuleExportFichier
                 Sw.DxfDwg_ExporterSplineEnPolyligne = _CheckBox_ConvertirSplineToPolyligne.IsChecked;
             }
 
-            private List<Sheet> ListeFeuilles()
-            {
-                List<Sheet> liste = new List<Sheet>() { App.DrawingDoc.eFeuilleActive() };
+            //private List<Sheet> ListeFeuilles()
+            //{
+            //    List<Sheet> liste = new List<Sheet>() { App.DrawingDoc.eFeuilleActive() };
 
-                if (_CheckBox_ToutesLesFeuilles.IsChecked)
-                    liste = App.DrawingDoc.eListeDesFeuilles();
+            //    if (_CheckBox_ToutesLesFeuilles.IsChecked)
+            //        liste = App.DrawingDoc.eListeDesFeuilles();
 
-                return liste;
-            }
+            //    return liste;
+            //}
 
             protected void RunOkCommand()
             {
@@ -132,6 +132,7 @@ namespace ModuleExportFichier
                 Cmd.typeExport = _EnumComboBox_FormatExport.Val;
                 Cmd.CheminDossier = NomDossier;
                 Cmd.Feuille = App.DrawingDoc.eFeuilleActive();
+                Cmd.ToutesLesFeuilles = _CheckBox_ToutesLesFeuilles.IsChecked;
                 Cmd.NomFichier = NomFichierComplet;
 
                 CheminDernierDossier.SetValeur<String>(NomDossier);

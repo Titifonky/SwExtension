@@ -42,7 +42,7 @@ namespace ModuleContraindreComposant
                 _Select_CompBase.UneSeuleEntite = true;
                 _Select_CompBase.FiltreSelection(swSelectType_e.swSelCOMPONENTS, swSelectType_e.swSelFACES);
                 // Filtre sur les composants autre que root
-                _Select_CompBase.OnSubmitSelection += SelectionnerComposant1erNvx;
+                //_Select_CompBase.OnSubmitSelection += SelectionnerComposant1erNvx;
 
                 G = _Calque.AjouterGroupe("Selectionner les composants à contraindre");
 

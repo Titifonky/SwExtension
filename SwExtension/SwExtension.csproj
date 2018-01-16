@@ -87,6 +87,7 @@
     <Compile Include="Macros\BoutonRenommerToutesFeuilles.cs" />
     <Compile Include="Macros\BoutonMAJListePiecesSoudees.cs" />
     <Compile Include="Macros\BoutonDecompterPercage.cs" />
+    <Compile Include="Macros\BoutonMasquerCorpsVue.cs" />
     <Compile Include="Macros\Test.cs" />
     <Compile Include="ModuleEmpreinte\PageEmpreinte - Copier.cs" />
     <Compile Include="ModuleLaser\ModuleExportBarreN\CmdExportBarreN.cs" />

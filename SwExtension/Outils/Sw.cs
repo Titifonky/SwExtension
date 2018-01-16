@@ -4493,9 +4493,13 @@ namespace Outils
             {
                 case eTypeFichierExport.DXF:
                     Sw.DxfDwg_ExporterToutesLesFeuilles = swDxfMultisheet_e.swDxfActiveSheetOnly;
+                    if (ToutesLesFeuilles)
+                        Sw.DxfDwg_ExporterToutesLesFeuilles = swDxfMultisheet_e.swDxfMultiSheet;
                     break;
                 case eTypeFichierExport.DWG:
                     Sw.DxfDwg_ExporterToutesLesFeuilles = swDxfMultisheet_e.swDxfActiveSheetOnly;
+                    if (ToutesLesFeuilles)
+                        Sw.DxfDwg_ExporterToutesLesFeuilles = swDxfMultisheet_e.swDxfMultiSheet;
                     break;
                 case eTypeFichierExport.PDF:
                     OptionsPDF = App.Sw.GetExportFileData((int)swExportDataFileType_e.swExportPdfData);

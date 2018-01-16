@@ -79,7 +79,7 @@ namespace SwExtension
 
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde("Eb", typeof(PageExportBarre));
-                _Mnu.AjouterCmde("En", typeof(PageExportBarreN));
+                //_Mnu.AjouterCmde("En", typeof(PageExportBarreN));
                 _Mnu.AjouterCmde("Ld", typeof(PageListeDebit));
 
                 _Mnu.NouveauGroupe();
@@ -137,6 +137,7 @@ namespace SwExtension
                 _Mnu.AjouterCmde("Rf", typeof(BoutonRedimensionnerFeuille));
                 _Mnu.AjouterCmde("Rn", typeof(BoutonRenommerFeuille));
                 _Mnu.AjouterCmde("Rt", typeof(BoutonRenommerToutesFeuilles));
+                _Mnu.AjouterCmde("Rt", typeof(BoutonMasquerCorpsVue));
 
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde("Ed", typeof(PageDxfDwg));
