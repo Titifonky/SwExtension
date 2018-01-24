@@ -268,7 +268,7 @@ namespace ModuleLaser
                             var LstDossier = c.eListeDesDossiersDePiecesSoudees();
                             foreach (var dossier in LstDossier)
                             {
-                                if (TypeCorps.HasFlag(dossier.eTypeDeDossier()))
+                                if (!dossier.eEstExclu() && TypeCorps.HasFlag(dossier.eTypeDeDossier()))
                                 {
                                     String Materiau = dossier.eGetMateriau();
 
@@ -286,7 +286,7 @@ namespace ModuleLaser
                 var LstDossier = mdl.ePartDoc().eListeDesDossiersDePiecesSoudees();
                 foreach (var dossier in LstDossier)
                 {
-                    if (TypeCorps.HasFlag(dossier.eTypeDeDossier()))
+                    if (!dossier.eEstExclu() && TypeCorps.HasFlag(dossier.eTypeDeDossier()))
                     {
                         String Materiau = dossier.eGetMateriau();
 

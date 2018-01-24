@@ -263,6 +263,11 @@ namespace Outils
             return new CtrlButton(this, titre, Option, tip);
         }
 
+        public CtrlLabel AjouterLabel(String titre, String tip = "")
+        {
+            return new CtrlLabel(this, titre, Option, tip);
+        }
+
         public CtrlTextBox AjouterTexteBox(String labelTitre = "", String labelTip = "")
         {
             return new CtrlTextBox(this, Option, labelTitre, labelTip);
@@ -379,9 +384,9 @@ namespace Outils
 
         public PropertyManagerPageControl swControl { get { return _swControl; } }
 
-        protected PropertyManagerPageLabel _swLabel;
+        protected PropertyManagerPageLabel _swLabelBase;
 
-        public PropertyManagerPageLabel swLabel { get { return _swLabel; } }
+        public PropertyManagerPageLabel swLabelBase { get { return _swLabelBase; } }
 
         public Boolean IsEnabled { get { return _swControl.Enabled; } set { IsEnable(this, value); } }
 
@@ -391,16 +396,16 @@ namespace Outils
         {
             get
             {
-                if (_swLabel.IsRef())
-                    return _swLabel.Caption;
+                if (_swLabelBase.IsRef())
+                    return _swLabelBase.Caption;
 
                 return null;
             }
 
             set
             {
-                if (_swLabel.IsRef())
-                    _swLabel.Caption = value;
+                if (_swLabelBase.IsRef())
+                    _swLabelBase.Caption = value;
             }
         }
 
@@ -416,9 +421,9 @@ namespace Outils
         {
             set
             {
-                if (_swLabel.IsRef())
+                if (_swLabelBase.IsRef())
                 {
-                    PropertyManagerPageControl c = _swLabel as PropertyManagerPageControl;
+                    PropertyManagerPageControl c = _swLabelBase as PropertyManagerPageControl;
                     c.Left = value;
                 }
 
@@ -438,9 +443,9 @@ namespace Outils
         {
             set
             {
-                if (_swLabel.IsRef())
+                if (_swLabelBase.IsRef())
                 {
-                    PropertyManagerPageControl c = _swLabel as PropertyManagerPageControl;
+                    PropertyManagerPageControl c = _swLabelBase as PropertyManagerPageControl;
                     c.Top = value;
                 }
 
@@ -452,9 +457,9 @@ namespace Outils
         {
             int cl16 = couleur.R | couleur.G << 5 | couleur.B << 11;
 
-            if (!ControlOnly && _swLabel.IsRef())
+            if (!ControlOnly && _swLabelBase.IsRef())
             {
-                PropertyManagerPageControl c = _swLabel as PropertyManagerPageControl;
+                PropertyManagerPageControl c = _swLabelBase as PropertyManagerPageControl;
                 c.BackgroundColor = cl16;
             }
 
@@ -469,7 +474,7 @@ namespace Outils
 
             if (avecLabel)
             {
-                _swLabel = _Groupe.swGroup.AddControl2(ID.NextIdControl, (int)swPropertyManagerPageControlType_e.swControlType_Label,
+                _swLabelBase = _Groupe.swGroup.AddControl2(ID.NextIdControl, (int)swPropertyManagerPageControlType_e.swControlType_Label,
                                                                                         labelTitre,
                                                                                         (int)swPropertyManagerPageControlLeftAlign_e.swControlAlign_LeftEdge,
                                                                                         (int)swAddControlOptions_e.swControlOptions_Visible + (int)swAddControlOptions_e.swControlOptions_Enabled,
@@ -502,8 +507,8 @@ namespace Outils
                 OnIsVisible(this, value);
 
             _swControl.Visible = value;
-            if (_swLabel.IsRef())
-                ((PropertyManagerPageControl)_swLabel).Visible = value;
+            if (_swLabelBase.IsRef())
+                ((PropertyManagerPageControl)_swLabelBase).Visible = value;
         }
 
         public delegate void OnIsEnableHandler(Object sender, Boolean value);
@@ -549,9 +554,9 @@ namespace Outils
         public void Enable(Object sender)
         {
             _swControl.Enabled = true;
-            if (_swLabel.IsRef())
+            if (_swLabelBase.IsRef())
             {
-                PropertyManagerPageControl ctrl = _swLabel as PropertyManagerPageControl;
+                PropertyManagerPageControl ctrl = _swLabelBase as PropertyManagerPageControl;
                 ctrl.Enabled = true;
             }
 
@@ -566,9 +571,9 @@ namespace Outils
         public void Disable(Object sender)
         {
             _swControl.Enabled = false;
-            if (_swLabel.IsRef())
+            if (_swLabelBase.IsRef())
             {
-                PropertyManagerPageControl ctrl = _swLabel as PropertyManagerPageControl;
+                PropertyManagerPageControl ctrl = _swLabelBase as PropertyManagerPageControl;
                 ctrl.Enabled = false;
             }
 
@@ -597,6 +602,33 @@ namespace Outils
         {
             if (OnLostFocus.IsRef())
                 OnLostFocus(this);
+        }
+    }
+
+    public class CtrlLabel : Control
+    {
+        private PropertyManagerPageLabel _swLabel;
+
+        public PropertyManagerPageLabel swLabel { get { return _swLabel; } }
+
+        public override String Caption { get { return _swLabel.Caption; } set { _swLabel.Caption = value; } }
+
+        private void Init(String intitule, int options, String tip = "")
+        {
+            _swLabel = _Groupe.swGroup.AddControl2(Id, (int)swPropertyManagerPageControlType_e.swControlType_Label,
+                                                                                        intitule,
+                                                                                        (int)swPropertyManagerPageControlLeftAlign_e.swControlAlign_Indent,
+                                                                                        options,
+                                                                                        tip);
+            _swControl = (PropertyManagerPageControl)_swLabel;
+
+            _Groupe.Page.DicControl.Add(Id, this);
+        }
+
+        public CtrlLabel(Groupe groupe, String info, int options, String tip)
+            : base(groupe)
+        {
+            Init(info, options, tip);
         }
     }
 

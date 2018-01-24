@@ -142,7 +142,7 @@ namespace ModuleLaser.ModuleCreerDvp
                             Feature f = ListeDossier[noD];
                             BodyFolder dossier = f.GetSpecificFeature2();
 
-                            if (dossier.IsNull() || (dossier.GetBodyCount() == 0)) continue;
+                            if (dossier.eEstExclu() || dossier.IsNull() || (dossier.GetBodyCount() == 0)) continue;
 
                             WindowLog.SautDeLigne();
                             WindowLog.EcrireF("    - [{1}/{2}] Dossier : \"{0}\"", f.Name, noD + 1, ListeDossier.Count);

@@ -95,7 +95,7 @@ namespace ModuleLaser
                                 var LstDossier = c.eListeDesDossiersDePiecesSoudees();
                                 foreach (var dossier in LstDossier)
                                 {
-                                    if (Filtre.HasFlag(dossier.eTypeDeDossier()) && !dossier.eEstExclu())
+                                    if (!dossier.eEstExclu() && Filtre.HasFlag(dossier.eTypeDeDossier()))
                                     {
                                         String Materiau = dossier.eGetMateriau();
 
@@ -186,7 +186,7 @@ namespace ModuleLaser
                             Feature f = ListeDossier[noD];
                             BodyFolder dossier = f.GetSpecificFeature2();
 
-                            if (dossier.IsNull() || (dossier.GetBodyCount() == 0) || dossier.eEstExclu()) continue;
+                            if (dossier.eEstExclu() || dossier.IsNull() || (dossier.GetBodyCount() == 0) || dossier.eEstExclu()) continue;
 
                             String Profil = dossier.eProp(CONSTANTES.PROFIL_NOM);
                             Double Longueur = dossier.eProp(CONSTANTES.PROFIL_LONGUEUR).eToDouble();

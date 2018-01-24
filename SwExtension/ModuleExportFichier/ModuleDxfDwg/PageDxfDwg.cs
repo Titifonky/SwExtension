@@ -23,6 +23,7 @@ namespace ModuleExportFichier
             private Parametre ToleranceFusion;
 
             private Parametre ExporterHauteQualite;
+            private Parametre ExporterFeuilleEspacePapier;
             private Parametre ConvertirSplineToPolyligne;
 
             private Parametre CheminDernierDossier;
@@ -39,6 +40,7 @@ namespace ModuleExportFichier
                     FusionnerExtremites = _Config.AjouterParam("FusionnerExtremites", true, "Fusionner les extremités");
                     ToleranceFusion = _Config.AjouterParam("ToleranceFusion", 0.01, "Tolérance de fusion", "Tolérance de fusion");
                     ExporterHauteQualite = _Config.AjouterParam("ExporterHauteQualite", true, "Exporter en haute qualité");
+                    ExporterFeuilleEspacePapier = _Config.AjouterParam("ExporterFeuilleEspacePapier", false, "Exporter les feuilles dans l'espace papier");
                     ConvertirSplineToPolyligne = _Config.AjouterParam("ConvertirSplineToPolyligne", false, "Convertir les splines en polylignes");
 
                     CheminDernierDossier = _Config.AjouterParam("CheminDernierDossier", "", "Dernier dossier utilisé");
@@ -60,6 +62,7 @@ namespace ModuleExportFichier
             private CtrlCheckBox _CheckBox_FusionnerExtremites;
             private CtrlTextBox _TextBox_ToleranceFusion;
             private CtrlCheckBox _CheckBox_ExporterHauteQualite;
+            private CtrlCheckBox _CheckBox_ExporterFeuilleEspacePapier;
             private CtrlCheckBox _CheckBox_ConvertirSplineToPolyligne;
 
             protected void Calque()
@@ -87,6 +90,8 @@ namespace ModuleExportFichier
 
                     _CheckBox_ConvertirSplineToPolyligne = G.AjouterCheckBox(ConvertirSplineToPolyligne);
 
+                    _CheckBox_ExporterFeuilleEspacePapier = G.AjouterCheckBox(ExporterFeuilleEspacePapier);
+
                     AjouterCalqueDossier();
 
                     _EnumComboBox_FormatExport.OnSelectionChanged += delegate (Object sender, int Item)
@@ -102,6 +107,8 @@ namespace ModuleExportFichier
                 { this.LogMethode(new Object[] { e }); }
             }
 
+            private Boolean Svg_DxfDwg_ExporterFeuilleDansEspacePapier = false;
+
             private void AppliquerOptions()
             {
                 Sw.DxfDwg_Version = _EnumComboBox_VersionExport.Val;
@@ -111,17 +118,12 @@ namespace ModuleExportFichier
                 Sw.DxfDwg_JoindreExtremitesTolerance = _TextBox_ToleranceFusion.Text.eToDouble();
                 Sw.DxfDwg_JoindreExtremitesHauteQualite = _CheckBox_ExporterHauteQualite.IsChecked;
                 Sw.DxfDwg_ExporterSplineEnPolyligne = _CheckBox_ConvertirSplineToPolyligne.IsChecked;
+
+                Svg_DxfDwg_ExporterFeuilleDansEspacePapier = Sw.DxfDwg_ExporterFeuilleDansEspacePapier;
+                Sw.DxfDwg_ExporterFeuilleDansEspacePapier = _CheckBox_ExporterFeuilleEspacePapier.IsChecked;
             }
 
-            //private List<Sheet> ListeFeuilles()
-            //{
-            //    List<Sheet> liste = new List<Sheet>() { App.DrawingDoc.eFeuilleActive() };
 
-            //    if (_CheckBox_ToutesLesFeuilles.IsChecked)
-            //        liste = App.DrawingDoc.eListeDesFeuilles();
-
-            //    return liste;
-            //}
 
             protected void RunOkCommand()
             {
@@ -138,6 +140,14 @@ namespace ModuleExportFichier
                 CheminDernierDossier.SetValeur<String>(NomDossier);
 
                 Cmd.Executer();
+
+                RetablirOptions();
+            }
+
+            private void RetablirOptions()
+            {
+                Sw.DxfDwg_ExporterFeuilleDansEspacePapier = Svg_DxfDwg_ExporterFeuilleDansEspacePapier;
+                ExporterFeuilleEspacePapier.SetValeur(Svg_DxfDwg_ExporterFeuilleDansEspacePapier);
             }
         }
     }
