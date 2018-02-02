@@ -25,7 +25,7 @@ namespace Macros
                 feuille.SetName((i++).ToString());
 
             List<String> ListeNomFeuille = new List<string>();
-            Dictionary<String, Sheet> DicFeuilles = new Dictionary<string, Sheet>();
+            Dictionary<String, List<Sheet>> DicFeuilles = new Dictionary<string, List<Sheet>>();
 
             foreach (Sheet feuille in Dessin.eListeDesFeuilles())
             {
@@ -46,30 +46,37 @@ namespace Macros
                 String NomFeuille =( mdlVue.eNomSansExt() + "-" + v.ReferencedConfiguration + " " + Designation).Trim();
 
                 String NomTemp = NomFeuille;
-                int Indice = 1;
 
-                while (DicFeuilles.ContainsKey(NomTemp))
+                if(DicFeuilles.ContainsKey(NomTemp))
                 {
-                    if(Indice == 1)
-                    {
-                        Sheet f = DicFeuilles[NomTemp];
-                        DicFeuilles.Remove(NomTemp);
-                        NomTemp = NomFeuille + " (" + Indice++ + ")";
-                        DicFeuilles.Add(NomTemp, f);
-                    }
-                    NomTemp = NomFeuille + " (" + Indice++ + ")";
+                    var l = DicFeuilles[NomTemp];
+                    l.Add(feuille);
                 }
-
-                NomFeuille = NomTemp;
-
-                DicFeuilles.Add(NomTemp, feuille);
+                else
+                {
+                    var l = new List<Sheet>() { feuille };
+                    DicFeuilles.Add(NomTemp, l);
+                }
             }
 
             foreach (String NomFeuille in DicFeuilles.Keys)
             {
-                Sheet feuille = DicFeuilles[NomFeuille];
-                feuille.SetName(NomFeuille);
-                WindowLog.Ecrire(NomFeuille);
+                var l = DicFeuilles[NomFeuille];
+                if (l.Count > 1)
+                {
+                    int j = 1;
+                    foreach (var feuille in DicFeuilles[NomFeuille])
+                    {
+                        var n = NomFeuille + "(" + j++ + ")";
+                        feuille.SetName(n);
+                        WindowLog.Ecrire(n);
+                    }
+                }
+                else
+                {
+                    l[0].SetName(NomFeuille);
+                    WindowLog.Ecrire(NomFeuille);
+                }
             }
 
             App.ModelDoc2.ForceRebuild3(false);
