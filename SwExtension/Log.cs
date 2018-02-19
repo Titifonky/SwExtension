@@ -2,15 +2,13 @@
 using log4net.Appender;
 using log4net.Config;
 using log4net.Repository;
+using Outils;
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using Outils;
 using System.Windows.Forms;
-using System.Collections.Generic;
 
 namespace LogDebugging
 {
