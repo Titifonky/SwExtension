@@ -241,7 +241,7 @@ namespace ModuleEmpreinte
                 _TextListBox_Configs = G.AjouterTextListBox("Liste des configurations");
                 _TextListBox_Configs.TouteHauteur = true;
                 _TextListBox_Configs.Height = 80;
-                _TextListBox_Configs.SelectionMultiple = false;
+                _TextListBox_Configs.SelectionMultiple = true;
 
                 _Button = G.AjouterBouton("Rechercher empreintes");
                 _Button.OnButtonPress += delegate (Object sender) { SelectionnerComposants(); };
@@ -253,7 +253,7 @@ namespace ModuleEmpreinte
             {
                 var mdl = App.ModelDoc2;
 
-                List<Component2> listeComps = Bdd.ListeComposants(_TextListBox_Configs.SelectedIndex);
+                List<Component2> listeComps = Bdd.ListeComposants(_TextListBox_Configs.ListSelectedIndex);
 
                 foreach (var Comp in mdl.eSelect_RecupererListeComposants(_SelectionBox.Marque))
                     Comp.eDeSelectById(mdl);
@@ -333,9 +333,14 @@ namespace ModuleEmpreinte
                     return _ListeNomsConfigs;
                 }
 
-                public List<Component2> ListeComposants(int index)
+                public List<Component2> ListeComposants(List<int> ListeIndex)
                 {
-                    return Dic[_ListeNomsConfigs[index]];
+                    List<Component2> Liste = new List<Component2>();
+
+                    foreach (var index in ListeIndex)
+                        Liste.AddRange(Dic[_ListeNomsConfigs[index]]);
+
+                    return Liste;
                 }
             }
         }

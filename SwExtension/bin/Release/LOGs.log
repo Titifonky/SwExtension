@@ -1,40 +1,87 @@
-15:49:31,188 | 
+16:05:25,937 | 
  
-15:49:31,202 | ====================================================================================================
-15:49:31,203 | |                                                                                                  |
-15:49:31,203 | |                                          DEBUG                                                   |
-15:49:31,203 | |                                                                                                  |
-15:49:31,203 | ====================================================================================================
-15:49:31,203 | 
+16:05:25,951 | ====================================================================================================
+16:05:25,952 | |                                                                                                  |
+16:05:25,952 | |                                          DEBUG                                                   |
+16:05:25,952 | |                                                                                                  |
+16:05:25,952 | ====================================================================================================
+16:05:25,952 | 
  
-15:50:41,354 | 			PagePdf..ctor  ->  Est initialisé : True
-15:50:41,496 | 				-> ## 03:50:41     0     0      EXPORTER EN PDF
-15:50:41,524 | 				-> ## 03:50:41     0     0  ========================
-15:50:41,553 | 				-> ## 03:50:41     0     0  
-15:50:42,195 | 			PagePdf.Command  ->  Show
-15:50:42,615 | 				-> ## 03:50:42     1     1  Executé en 1s15
-15:50:42,647 | 				-> ## 03:50:42     1     0  
-15:51:06,732 | 			PagePdf..ctor  ->  Est initialisé : True
-15:51:06,779 | 				-> ## 03:51:06     0     0      EXPORTER EN PDF
-15:51:06,809 | 				-> ## 03:51:06     0     0  ========================
-15:51:06,840 | 				-> ## 03:51:06     0     0  
-15:51:06,845 | 			PagePdf.Command  ->  Show
-15:51:07,008 | 				-> ## 03:51:07     0     0  Executé en 0s146
-15:51:07,162 | 				-> ## 03:51:07     0     0  
-15:52:30,080 | 			PageDxfDwg..ctor  ->  Est initialisé : True
-15:52:30,124 | 				-> ## 03:52:30     0     0      EXPORTER EN DXF/DWG
-15:52:30,151 | 				-> ## 03:52:30     0     0  ========================
-15:52:30,180 | 				-> ## 03:52:30     0     0  
-15:52:30,240 | 			PageDxfDwg.Command  ->  Show
-15:52:30,435 | 				-> ## 03:52:30     0     0  Executé en 0s228
-15:52:30,466 | 				-> ## 03:52:30     0     0  
-15:52:33,788 | 			PageDxfDwg.CanRaiseEvent  ->  CanRaiseEvent True
-15:52:33,788 | 				-> Callback methode -> OnGainedFocus
-15:52:33,819 | 			PageDxfDwg.CanRaiseEvent  ->  CanRaiseEvent True
-15:52:33,820 | 				-> Callback methode -> OnListboxSelectionChanged
-15:52:35,924 | 			PageDxfDwg.CanRaiseEvent  ->  CanRaiseEvent True
-15:52:35,924 | 				-> Callback methode -> OnLostFocus
-15:52:35,992 | 			PageDxfDwg.CanRaiseEvent  ->  CanRaiseEvent True
-15:52:35,992 | 				-> Callback methode -> OnGainedFocus
-15:52:37,428 | 			PageDxfDwg.CanRaiseEvent  ->  CanRaiseEvent True
-15:52:37,428 | 				-> Callback methode -> OnLostFocus
+16:05:49,131 | 			PageEmpreinte..ctor  ->  Est initialisé : True
+16:05:49,177 | 				-> ## 04:05:49     0     0      EMPREINTE ENTRE LES COMPOSANTS
+16:05:49,200 | 				-> ## 04:05:49     0     0  ========================
+16:05:49,231 | 				-> ## 04:05:49     0     0  
+16:05:49,288 | 			PageEmpreinte.Command  ->  Show
+16:05:49,548 | 				-> ## 04:05:49     0     0  Executé en 0s284
+16:05:49,583 | 				-> ## 04:05:49     0     0  
+16:05:51,076 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:05:51,076 | 				-> Callback methode -> OnSubmitSelection
+16:05:51,090 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:05:51,090 | 				-> Callback methode -> OnSelectionboxListChanged
+16:05:52,376 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:05:52,376 | 				-> Callback methode -> OnGroupExpand
+16:05:58,284 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:05:58,284 | 				-> Callback methode -> OnGroupExpand
+16:06:02,090 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:06:02,091 | 				-> Callback methode -> OnOptionCheck
+16:06:03,118 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:06:03,118 | 				-> Callback methode -> OnSelectionboxFocusChanged
+16:06:04,565 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:06:04,565 | 				-> Callback methode -> OnSubmitSelection
+16:06:04,573 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:06:04,573 | 				-> Callback methode -> OnSelectionboxListChanged
+16:06:04,593 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:06:04,593 | 				-> Callback methode -> OnSelectionboxListChanged
+16:06:04,733 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:06:04,733 | 				-> Callback methode -> OnSelectionboxListChanged
+16:06:08,908 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:06:08,908 | 				-> Callback methode -> OnGroupExpand
+16:06:10,156 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:06:10,156 | 				-> Callback methode -> OnSelectionboxFocusChanged
+16:06:10,294 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:06:10,295 | 				-> Callback methode -> OnListboxSelectionChanged
+16:06:11,347 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:06:11,347 | 				-> Callback methode -> OnSelectionboxListChanged
+16:06:11,377 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:06:11,377 | 				-> Callback methode -> OnSelectionboxListChanged
+16:06:13,087 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:06:13,087 | 				-> Callback methode -> OnSubmitSelection
+16:06:13,096 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:06:13,096 | 				-> Callback methode -> OnSelectionboxListChanged
+16:06:16,836 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:06:16,836 | 				-> Callback methode -> OnGainedFocus
+16:06:16,980 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:06:16,980 | 				-> Callback methode -> OnListboxSelectionChanged
+16:06:18,362 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:06:18,363 | 				-> Callback methode -> OnLostFocus
+16:06:18,368 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:06:18,368 | 				-> Callback methode -> OnGainedFocus
+16:06:18,480 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:06:18,480 | 				-> Callback methode -> OnListboxSelectionChanged
+16:06:19,479 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:06:19,479 | 				-> Callback methode -> OnLostFocus
+16:06:19,600 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:06:19,600 | 				-> Callback methode -> OnButtonPress
+16:06:19,633 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:06:19,634 | 				-> Callback methode -> OnSubmitSelection
+16:06:19,634 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:06:19,634 | 				-> Callback methode -> OnSubmitSelection
+16:06:19,635 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:06:19,635 | 				-> Callback methode -> OnSubmitSelection
+16:06:19,635 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:06:19,635 | 				-> Callback methode -> OnSubmitSelection
+16:06:19,635 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:06:19,635 | 				-> Callback methode -> OnSubmitSelection
+16:06:19,636 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:06:19,636 | 				-> Callback methode -> OnSubmitSelection
+16:06:19,636 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:06:19,636 | 				-> Callback methode -> OnSubmitSelection
+16:06:19,636 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:06:19,636 | 				-> Callback methode -> OnSubmitSelection
+16:06:19,642 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:06:19,643 | 				-> Callback methode -> OnSubmitSelection
+16:06:19,648 | 			PageEmpreinte.CanRaiseEvent  ->  CanRaiseEvent True
+16:06:19,648 | 				-> Callback methode -> OnSelectionboxListChanged
+16:06:29,819 | 				-> ## 04:06:29    41    40  _Empreinte_1
+16:06:29,931 | 				-> ## 04:06:29    41     0  
+16:06:29,961 | 				-> ## 04:06:29    41     0  Executé en 1s850
