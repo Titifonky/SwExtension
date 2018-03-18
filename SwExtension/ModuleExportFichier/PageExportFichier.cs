@@ -241,7 +241,6 @@ namespace ModuleExportFichier
 
             public eTypeFichierExport TypeFichier { get { return _TypeFichier; } set { _TypeFichier = value; } }
 
-
             public String NomDossierComplet { get { CheminDossierComplet(); return _NomDossierComplet; } }
             public String NomDossierRelatifSvg
             {
@@ -496,6 +495,11 @@ namespace ModuleExportFichier
                 if (!String.IsNullOrWhiteSpace(_Indice))
                     return;
 
+                _Indice = ChercherPropIndice();
+
+                if (!String.IsNullOrWhiteSpace(_Indice))
+                    return;
+
                 List<String> ListeF = ListeFichiers(D, false);
 
                 _Indice = ChercherIndice(ListeF);
@@ -524,6 +528,18 @@ namespace ModuleExportFichier
                 }
 
                 return "Ind " + ChaineIndice.Last();
+            }
+
+            private String ChercherPropIndice()
+            {
+                if(App.ModelDoc2.ePropExiste("Indice"))
+                {
+                    var val = App.ModelDoc2.eProp("Indice").Trim();
+                    if (!String.IsNullOrWhiteSpace(val))
+                        return "Ind " + val;
+                }
+
+                return "";
             }
 
         }
