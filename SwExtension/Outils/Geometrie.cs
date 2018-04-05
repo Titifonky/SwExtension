@@ -28,6 +28,13 @@ namespace Outils
             Z = Pt[2];
         }
 
+        public Point(SketchPoint pt)
+        {
+            X = pt.X;
+            Y = pt.Y;
+            Z = pt.Z;
+        }
+
         public Point(Vertex pt)
         {
             Double[] Pt = (Double[])pt.GetPoint();
