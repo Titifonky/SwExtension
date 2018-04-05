@@ -34,6 +34,7 @@ namespace ModuleListerMateriaux
 
         private CtrlTextListBox _TextListBox_Materiaux;
         private CtrlCheckBox _CheckBox_ComposantsCache;
+        private CtrlTextBox _TextBox_Nb;
         private CtrlSelectionBox _Select_Selection;
 
         private CtrlButton _Button_IsolerComposants;
@@ -62,12 +63,16 @@ namespace ModuleListerMateriaux
 
                 G = _Calque.AjouterGroupe("Selection");
 
+                _TextBox_Nb = G.AjouterTexteBox("Nb de corps :");
+                _TextBox_Nb.LectureSeule = true;
+
                 _Select_Selection = G.AjouterSelectionBox("");
                 _Select_Selection.SelectionMultipleMemeEntite = true;
                 _Select_Selection.SelectionDansMultipleBox = true;
                 _Select_Selection.UneSeuleEntite = false;
                 _Select_Selection.FiltreSelection(swSelectType_e.swSelSOLIDBODIES , swSelectType_e.swSelCOMPONENTS);
                 _Select_Selection.Hauteur = 15;
+                _Select_Selection.OnSelectionChanged += delegate (Object sender, int nb) { _TextBox_Nb.Text = nb.ToString(); };
             }
             catch (Exception e)
             { this.LogMethode(new Object[] { e }); }
