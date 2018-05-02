@@ -65,9 +65,13 @@ namespace ModuleLaser
             private CtrlCheckBox _CheckBox_ForcerMateriau;
             private CtrlTextComboBox _TextComboBox_ForcerMateriau;
             private CtrlCheckBox _CheckBox_ReinitialiserNoDossier;
+            private CtrlOption _Option_ListeDebit;
+            private CtrlOption _Option_ListeBarres;
             private CtrlTextBox _Texte_LgBarre;
 
             private CtrlCheckBox _CheckBox_AfficherListe;
+
+            private eTypeSortie TypeSortie = eTypeSortie.ListeDebit;
 
             private readonly int NbProfilMax = 40;
 
@@ -114,6 +118,11 @@ namespace ModuleLaser
 
                     ListeGroupe1.Add(_Calque.AjouterGroupe("Options"));
                     G = ListeGroupe1.Last();
+
+                    _Option_ListeDebit = G.AjouterOption("Liste de débit");
+                    _Option_ListeBarres = G.AjouterOption("Liste des barres");
+                    _Option_ListeDebit.OnCheck += delegate (Object sender) { TypeSortie = eTypeSortie.ListeDebit; };
+                    _Option_ListeBarres.OnCheck += delegate (Object sender) { TypeSortie = eTypeSortie.ListeBarre; };
 
                     _Texte_LgBarre = G.AjouterTexteBox(LgBarre, true);
 
@@ -287,6 +296,7 @@ namespace ModuleLaser
 
                 Cmd.MdlBase = App.Sw.ActiveDoc;
 
+                Cmd.TypeSortie = TypeSortie;
                 Cmd.ListeMateriaux = _TextListBox_Materiaux.ListSelectedText.Count > 0 ? _TextListBox_Materiaux.ListSelectedText : _TextListBox_Materiaux.Liste;
                 Cmd.ForcerMateriau = _CheckBox_ForcerMateriau.IsChecked ? _TextComboBox_ForcerMateriau.Text : null;
                 Cmd.Quantite = _Texte_Quantite.Text.eToInteger();

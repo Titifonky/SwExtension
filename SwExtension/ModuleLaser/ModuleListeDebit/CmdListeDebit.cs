@@ -11,6 +11,12 @@ namespace ModuleLaser
 {
     namespace ModuleListeDebit
     {
+        public enum eTypeSortie
+        {
+            ListeDebit = 1,
+            ListeBarre = 2
+        }
+
         public class CmdListeDebit : Cmd
         {
             public ModelDoc2 MdlBase = null;
@@ -20,6 +26,7 @@ namespace ModuleLaser
             public Boolean ComposantsExterne = false;
             public String RefFichier = "";
 
+            public eTypeSortie TypeSortie = eTypeSortie.ListeDebit;
             public Boolean ReinitialiserNoDossier = false;
             public Boolean MajListePiecesSoudees = false;
             public String ForcerMateriau = null;
@@ -231,24 +238,49 @@ namespace ModuleLaser
             {
                 try
                 {
-                    var DicBarre = listeElement.ListeBarre();
+                    switch (TypeSortie)
+                    {
+                        case eTypeSortie.ListeDebit:
+                            {
+                                var DicBarre = listeElement.ListeBarre();
 
-                    String ResumeBarre = DicBarre.ResumeBarre();
-                    String ResumeListeDebit = DicBarre.ResumeListeDebit();
+                                String ResumeBarre = DicBarre.ResumeNbBarre();
+                                String ResumeListeDebit = DicBarre.ResumeListeDebit();
 
-                    String Complet = RefFichier + "\r\n" + ResumeBarre + "\r\n\r\n" + ResumeListeDebit;
+                                String Complet = RefFichier + "\r\n" + ResumeBarre + "\r\n\r\n" + ResumeListeDebit;
 
-                    WindowLog.Ecrire(ResumeBarre);
+                                WindowLog.Ecrire(ResumeBarre);
 
-                    CheminFichier = Path.Combine(MdlBase.eDossier(), RefFichier + " - " + MdlBase.eNomSansExt() + " - Liste de débit.txt");
+                                CheminFichier = Path.Combine(MdlBase.eDossier(), RefFichier + " - " + MdlBase.eNomSansExt() + " - Liste de débit.txt");
 
-                    StreamWriter s = new StreamWriter(CheminFichier);
-                    s.Write(Complet);
-                    s.Close();
+                                StreamWriter s = new StreamWriter(CheminFichier);
+                                s.Write(Complet);
+                                s.Close();
 
-                    WindowLog.SautDeLigne(2);
-                    WindowLog.EcrireF("Nb d'éléments {0}", listeElement.NbElement);
-                    WindowLog.EcrireF("Nb de barres {0}", DicBarre.NbBarre);
+                                WindowLog.SautDeLigne(2);
+                                WindowLog.EcrireF("Nb d'éléments {0}", listeElement.NbElement);
+                                WindowLog.EcrireF("Nb de barres {0}", DicBarre.NbBarre);
+                            }
+                            break;
+                        case eTypeSortie.ListeBarre:
+                            {
+                                String ResumeListeBarre = listeElement.ResumeListeBarre();
+
+                                CheminFichier = Path.Combine(MdlBase.eDossier(), RefFichier + " - " + MdlBase.eNomSansExt() + " - Liste des barres.txt");
+                                String Complet = RefFichier + "\r\n" + ResumeListeBarre;
+
+                                WindowLog.Ecrire(ResumeListeBarre);
+
+                                StreamWriter s = new StreamWriter(CheminFichier);
+                                s.Write(Complet);
+                                s.Close();
+
+                                WindowLog.SautDeLigne(2);
+                            }
+                            break;
+                        default:
+                            break;
+                    }
                 }
                 catch (Exception e)
                 { this.LogMethode(new Object[] { e }); }
@@ -427,6 +459,41 @@ namespace ModuleLaser
                     }
                 }
 
+                public String ResumeListeBarre()
+                {
+                    String text = "";
+
+                    foreach (var Materiau in _dic.Keys)
+                    {
+                        text += "\r\n" + Materiau;
+                        var DicMat = _dic[Materiau];
+
+                        foreach (var Prof in DicMat.Keys)
+                        {
+                            var ListProf = DicMat[Prof];
+
+                            int nbEle = 0;
+                            double Lg = ListProf[0].Lg;
+
+                            foreach (var ele in ListProf)
+                            {
+                                if (ele.Lg != Lg)
+                                {
+                                    text += String.Format("\r\n  {0,-10} {1,6:0.0}mm ×{2}", Prof, Lg, nbEle);
+                                    nbEle = 1;
+                                    Lg = ele.Lg;
+                                }
+                                else
+                                    nbEle += 1;
+                            }
+
+                            text += String.Format("\r\n  {0,10} {1,6:0.0}mm ×{2}", Prof, Lg, nbEle);
+                        }
+                    }
+
+                    return text;
+                }
+
                 public int NbElement { get; private set; }
             }
 
@@ -483,7 +550,7 @@ namespace ModuleLaser
                     
                 }
 
-                public String ResumeBarre()
+                public String ResumeNbBarre()
                 {
                     String text = "";
 

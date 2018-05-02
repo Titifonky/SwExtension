@@ -20,60 +20,232 @@ namespace Macros
         {
             try
             {
-                ModelDoc2 MdlBase = App.ModelDoc2;
+                ModelDoc2 mdl = App.ModelDoc2;
+                //var DossierExport = mdl.eDossier();
+                //var NomFichier = mdl.eNomSansExt();
 
-                Feature Fonction = MdlBase.eSelect_RecupererObjet<Feature>(1, -1);
+                Double NbTrou = 0;
+                Double LgTotal = 0;
 
-                MdlBase.eEffacerSelection();
-
-                Sketch Esquisse = Fonction.GetSpecificFeature2();
-
-                List<Point> ListPt = new List<Point>();
-
-                HashSet<String> ListId = new HashSet<string>();
-
-                Func<SketchPoint, String> IdString = delegate (SketchPoint sp)
+                foreach (var Face in mdl.eSelect_RecupererListeObjets<Face2>(-1))
                 {
-                    int[] id = (int[])sp.GetID();
-                    return id[0] + "-" + id[1];
-                };
+                    var Liste = Face.eListeDesBoucles();
 
+                    NbTrou += Liste.Count - 1;
 
-                foreach (SketchSegment sg in Esquisse.GetSketchSegments())
-                {
-                    if (sg.GetType() != (int)swSketchSegments_e.swSketchLINE)
-                        continue;
-
-                    SketchLine l = sg as SketchLine;
-                    SketchPoint pt;
-
-                    pt = l.GetStartPoint2();
-                    if(!ListId.Contains(IdString(pt)))
-                        ListPt.Add(new Point(pt));
-
-                    pt = l.GetEndPoint2();
-                    if (!ListId.Contains(IdString(pt)))
-                        ListPt.Add(new Point(pt));
-                }
-
-                if (ListPt.Count > 0)
-                {
-                    String Fichier = Path.Combine(MdlBase.eDossier(), "ExportPoint.csv");
-
-                    using (StreamWriter Sw = File.CreateText(Fichier))
+                    Double Lg = 0;
+                    foreach (var Loop in Liste)
                     {
-                        foreach (var pt in ListPt)
+                        Loop.IsOuter();
+                        Double LgLoop = 0;
+                        foreach (var Coedge in Loop.eListeDesCoArrete())
                         {
-                            Sw.WriteLine(String.Format("{0};{1};{2}", Math.Round(pt.X, 3), Math.Round(pt.Y, 3), Math.Round(pt.Z, 3)));
-                            WindowLog.EcrireF("{0} {1} {2}", Math.Round(pt.X, 3), Math.Round(pt.Y, 3), Math.Round(pt.Z, 3));
+                            Curve Courbe = ((Edge)Coedge.GetEdge()).GetCurve();
+                            double Start, End; bool Ferme, Periodic;
+                            Courbe.GetEndParams(out Start, out End, out Ferme, out Periodic);
+                            LgLoop += Courbe.GetLength3(Start, End);
                         }
+
+                        if (!Loop.IsOuter())
+                            Lg += LgLoop;
+
+                        LgLoop = 0;
                     }
+
+                    LgTotal += Lg;
                 }
+
+                WindowLog.Ecrire(NbTrou);
+                WindowLog.Ecrire(Math.Round(LgTotal * 1000));
+
+
+                //var ListeNomConfigs = mdl.eListeNomConfiguration(eTypeConfig.Pliee);
+                //ListeNomConfigs.Sort(new WindowsStringComparer());
+
+                //for (int noCfg = 0; noCfg < ListeNomConfigs.Count; noCfg++)
+                //{
+                //    mdl.ClearSelection2(true);
+
+                //    var NomConfigPliee = ListeNomConfigs[noCfg];
+                //    mdl.ShowConfiguration2(NomConfigPliee);
+                //    mdl.EditRebuild3();
+                //    PartDoc Piece = mdl.ePartDoc();
+
+                //    ListPID<Feature> ListeDossier = Piece.eListePIDdesFonctionsDePiecesSoudees(null);
+
+                //    for (int noD = 0; noD < ListeDossier.Count; noD++)
+                //    {
+                //        Feature f = ListeDossier[noD];
+                //        BodyFolder dossier = f.GetSpecificFeature2();
+
+                //        if (dossier.eEstExclu() || dossier.IsNull() || (dossier.GetBodyCount() == 0)) continue;
+
+                //        String Profil = dossier.eProp(CONSTANTES.PROFIL_NOM);
+                //        String Longueur = dossier.eProp(CONSTANTES.PROFIL_LONGUEUR);
+
+                //        if (String.IsNullOrWhiteSpace(Profil) || String.IsNullOrWhiteSpace(Longueur))
+                //        {
+                //            WindowLog.Ecrire("      Pas de barres");
+                //            continue;
+                //        }
+
+                //        var Barre = dossier.ePremierCorps();
+
+                //        foreach (var Face in Barre.eListeDesFaces())
+                //        {
+
+                //            foreach (var Loop in Face.eListeDesBoucles())
+                //            {
+                //                WindowLog.Ecrire("");
+                //            }
+                //        } 
+                //    }
+                //}
+
             }
             catch (Exception e) { this.LogMethode(new Object[] { e }); }
 
         }
     }
+
+    //public class Test : BoutonBase
+    //{
+    //    protected override void Command()
+    //    {
+    //        try
+    //        {
+    //            ModelDoc2 mdl = App.ModelDoc2;
+    //            var DossierExport = mdl.eDossier();
+    //            var NomFichier = mdl.eNomSansExt();
+
+    //            var ListeNomConfigs = mdl.eListeNomConfiguration(eTypeConfig.Pliee);
+    //            ListeNomConfigs.Sort(new WindowsStringComparer());
+
+    //            for (int noCfg = 0; noCfg < ListeNomConfigs.Count; noCfg++)
+    //            {
+    //                mdl.ClearSelection2(true);
+
+    //                var NomConfigPliee = ListeNomConfigs[noCfg];
+    //                mdl.ShowConfiguration2(NomConfigPliee);
+    //                mdl.EditRebuild3();
+    //                PartDoc Piece = mdl.ePartDoc();
+
+    //                ListPID<Feature> ListeDossier = Piece.eListePIDdesFonctionsDePiecesSoudees(null);
+
+    //                for (int noD = 0; noD < ListeDossier.Count; noD++)
+    //                {
+    //                    Feature f = ListeDossier[noD];
+    //                    BodyFolder dossier = f.GetSpecificFeature2();
+
+    //                    if (dossier.eEstExclu() || dossier.IsNull() || (dossier.GetBodyCount() == 0)) continue;
+
+    //                    String Profil = dossier.eProp(CONSTANTES.PROFIL_NOM);
+    //                    String Longueur = dossier.eProp(CONSTANTES.PROFIL_LONGUEUR);
+
+    //                    if (String.IsNullOrWhiteSpace(Profil) || String.IsNullOrWhiteSpace(Longueur))
+    //                    {
+    //                        WindowLog.Ecrire("      Pas de barres");
+    //                        continue;
+    //                    }
+
+    //                    foreach (var Barre in dossier.eListeDesCorps())
+    //                        Barre.Select2(true, null);
+    //                }
+
+    //                var mdlExport = ExportSelection(Piece, DossierExport, NomFichier + "-" + noCfg + "-Export Tube", eTypeFichierExport.Piece);
+
+    //                mdlExport.ViewZoomtofit2();
+    //                mdlExport.ShowNamedView2("*Isométrique", 7);
+    //                int lErrors = 0, lWarnings = 0;
+    //                mdlExport.Save3((int)swSaveAsOptions_e.swSaveAsOptions_Silent, ref lErrors, ref lWarnings);
+
+    //                App.Sw.CloseDoc(mdlExport.GetPathName());
+    //            }
+
+    //        }
+    //        catch (Exception e) { this.LogMethode(new Object[] { e }); }
+
+    //    }
+
+    //    private ModelDoc2 ExportSelection(PartDoc piece, String dossier, String nomFichier, eTypeFichierExport typeExport)
+    //    {
+    //        int pStatut;
+    //        int pWarning;
+
+    //        Boolean Resultat = piece.SaveToFile3(Path.Combine(dossier, nomFichier + typeExport.GetEnumInfo<ExtFichier>()),
+    //                                              (int)swSaveAsOptions_e.swSaveAsOptions_Silent,
+    //                                              (int)swCutListTransferOptions_e.swCutListTransferOptions_CutListProperties,
+    //                                              false,
+    //                                              "",
+    //                                              out pStatut,
+    //                                              out pWarning);
+    //        if (Resultat)
+    //            return App.ModelDoc2;
+
+    //        return null;
+    //    }
+    //}
+
+    //public class Test : BoutonBase
+    //{
+    //    protected override void Command()
+    //    {
+    //        try
+    //        {
+    //            ModelDoc2 MdlBase = App.ModelDoc2;
+
+    //            Feature Fonction = MdlBase.eSelect_RecupererObjet<Feature>(1, -1);
+
+    //            MdlBase.eEffacerSelection();
+
+    //            Sketch Esquisse = Fonction.GetSpecificFeature2();
+
+    //            List<Point> ListPt = new List<Point>();
+
+    //            HashSet<String> ListId = new HashSet<string>();
+
+    //            Func<SketchPoint, String> IdString = delegate (SketchPoint sp)
+    //            {
+    //                int[] id = (int[])sp.GetID();
+    //                return id[0] + "-" + id[1];
+    //            };
+
+
+    //            foreach (SketchSegment sg in Esquisse.GetSketchSegments())
+    //            {
+    //                if (sg.GetType() != (int)swSketchSegments_e.swSketchLINE)
+    //                    continue;
+
+    //                SketchLine l = sg as SketchLine;
+    //                SketchPoint pt;
+
+    //                pt = l.GetStartPoint2();
+    //                if (!ListId.Contains(IdString(pt)))
+    //                    ListPt.Add(new Point(pt));
+
+    //                pt = l.GetEndPoint2();
+    //                if (!ListId.Contains(IdString(pt)))
+    //                    ListPt.Add(new Point(pt));
+    //            }
+
+    //            if (ListPt.Count > 0)
+    //            {
+    //                String Fichier = Path.Combine(MdlBase.eDossier(), "ExportPoint.csv");
+
+    //                using (StreamWriter Sw = File.CreateText(Fichier))
+    //                {
+    //                    foreach (var pt in ListPt)
+    //                    {
+    //                        Sw.WriteLine(String.Format("{0};{1};{2}", Math.Round(pt.X, 3), Math.Round(pt.Y, 3), Math.Round(pt.Z, 3)));
+    //                        WindowLog.EcrireF("{0} {1} {2}", Math.Round(pt.X, 3), Math.Round(pt.Y, 3), Math.Round(pt.Z, 3));
+    //                    }
+    //                }
+    //            }
+    //        }
+    //        catch (Exception e) { this.LogMethode(new Object[] { e }); }
+
+    //    }
+    //}
 
     //public class TestOld : BoutonBase
     //{

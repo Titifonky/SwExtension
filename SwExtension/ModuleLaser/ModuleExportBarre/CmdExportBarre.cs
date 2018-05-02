@@ -232,6 +232,8 @@ namespace ModuleLaser
 
                                 WindowLog.EcrireF("    Profil {0}  Materiau {1}", Profil, Materiau);
 
+
+
                                 Nomenclature.AjouterLigne(RefBarre, Materiau, Profil, Math.Round(Longueur.eToDouble()).ToString(), "× " + QuantiteBarre.ToString());
 
                                 //mdl.ViewZoomtofit2();

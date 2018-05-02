@@ -3357,6 +3357,31 @@ namespace Outils
         }
 
         //========================================================================================
+        public static List<Loop2> eListeDesBoucles(this Face2 f)
+        {
+            List<Loop2> Liste = new List<Loop2>();
+
+            Object[] Loop = (Object[])f.GetLoops();
+
+            foreach (Loop2 L in Loop)
+                Liste.Add(L);
+
+            return Liste;
+        }
+
+        public static List<CoEdge> eListeDesCoArrete(this Loop2 l)
+        {
+            List<CoEdge> Liste = new List<CoEdge>();
+
+            Object[] CoEdge = (Object[])l.GetCoEdges();
+
+            foreach (CoEdge C in CoEdge)
+                Liste.Add(C);
+
+            return Liste;
+        }
+
+        //========================================================================================
 
         public static Boolean eIsSame(this Object obj1, Object obj2)
         {
