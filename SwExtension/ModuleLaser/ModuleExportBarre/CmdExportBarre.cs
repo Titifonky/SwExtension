@@ -233,11 +233,12 @@ namespace ModuleLaser
                                 WindowLog.EcrireF("    Profil {0}  Materiau {1}", Profil, Materiau);
 
                                 var ListeTrous = ListePercage(Barre);
+
                                 Double LgDecoupe = 0;
                                 foreach (var lg in ListeTrous)
-                                {
-                                    LgDecoupe += lg * 1000;
-                                }
+                                    LgDecoupe += lg;
+
+                                LgDecoupe = Math.Round(LgDecoupe * 1000, 1);
 
                                 Nomenclature.AjouterLigne(RefBarre, Materiau, Profil, Math.Round(Longueur.eToDouble()).ToString(), "× " + QuantiteBarre.ToString(), ListeTrous.Count.ToString(), LgDecoupe.ToString());
 
