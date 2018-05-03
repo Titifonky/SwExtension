@@ -157,7 +157,7 @@ namespace ModuleLaser
                         true
                     );
 
-                    Nomenclature.TitreColonnes("Barre ref.", "Materiau", "Profil", "Lg", "Nb");
+                    Nomenclature.TitreColonnes("Barre ref.", "Materiau", "Profil", "Lg", "Nb", "Nb percages", "Lg decoupe");
 
                     // On multiplie les quantites
                     DicQte.Multiplier(Quantite);
@@ -214,7 +214,7 @@ namespace ModuleLaser
 
                                 if (!HashMateriaux.Contains(Materiau))
                                 {
-                                    WindowLog.Ecrire("      Pas de barres");
+                                    WindowLog.Ecrire("      Materiau exclu");
                                     continue;
                                 }
 
@@ -232,22 +232,27 @@ namespace ModuleLaser
 
                                 WindowLog.EcrireF("    Profil {0}  Materiau {1}", Profil, Materiau);
 
+                                var ListeTrous = ListePercage(Barre);
+                                Double LgDecoupe = 0;
+                                foreach (var lg in ListeTrous)
+                                {
+                                    LgDecoupe += lg * 1000;
+                                }
 
-
-                                Nomenclature.AjouterLigne(RefBarre, Materiau, Profil, Math.Round(Longueur.eToDouble()).ToString(), "× " + QuantiteBarre.ToString());
+                                Nomenclature.AjouterLigne(RefBarre, Materiau, Profil, Math.Round(Longueur.eToDouble()).ToString(), "× " + QuantiteBarre.ToString(), ListeTrous.Count.ToString(), LgDecoupe.ToString());
 
                                 //mdl.ViewZoomtofit2();
                                 //mdl.ShowNamedView2("*Isométrique", 7);
 
-                                ModelDoc2 mdlBarre = Barre.eEnregistrerSous(Piece, DossierExport, NomFichierBarre, TypeExport);
+                                //ModelDoc2 mdlBarre = Barre.eEnregistrerSous(Piece, DossierExport, NomFichierBarre, TypeExport);
 
-                                if (CreerPdf3D)
-                                {
-                                    String CheminPDF = Path.Combine(DossierExportPDF, NomFichierBarre + eTypeFichierExport.PDF.GetEnumInfo<ExtFichier>());
-                                    mdlBarre.SauverEnPdf3D(CheminPDF);
-                                }
+                                //if (CreerPdf3D)
+                                //{
+                                //    String CheminPDF = Path.Combine(DossierExportPDF, NomFichierBarre + eTypeFichierExport.PDF.GetEnumInfo<ExtFichier>());
+                                //    mdlBarre.SauverEnPdf3D(CheminPDF);
+                                //}
 
-                                App.Sw.CloseDoc(mdlBarre.GetPathName());
+                                //App.Sw.CloseDoc(mdlBarre.GetPathName());
                             }
                         }
 
@@ -265,6 +270,190 @@ namespace ModuleLaser
                 }
                 catch (Exception e)
                 { this.LogMethode(new Object[] { e }); }
+            }
+
+            // ========================================================================================
+            // Fonctions pour determiner le nb de percage
+            private List<Double> ListePercage(Body2 Barre)
+            {
+                Func<List<Edge>, Double> LgPercage = delegate (List<Edge> liste)
+                {
+                    double lg = 0;
+
+                    foreach (var e in liste)
+                    {
+                        lg += e.eLgArrete();
+                    }
+
+                    return lg * 0.5;
+                };
+
+                var ListeListeArretes = new List<List<Edge>>();
+
+                var ListeFoncCorps = Barre.eListeFonctions(null, false);
+
+                if (ListeFoncCorps != null)
+                {
+                    ListeFoncCorps.RemoveAt(0);
+
+                    var ListeFaces = new List<List<Edge>>();
+
+                    foreach (var Fonc in ListeFoncCorps)
+                    {
+                        var ListeFoncFace = Fonc.eListeDesFaces();
+
+                        foreach (var Face in ListeFoncFace)
+                        {
+                            var B = (Body2)Face.GetBody();
+                            if (B.Name == Barre.Name)
+                            {
+                                var ListeBoucles = Face.eListeDesBoucles(l =>
+                                {
+                                    if (l.IsOuter())
+                                        return true;
+
+                                    return false;
+                                });
+
+                                // On ne recupère que les boucles exterieures
+                                var ListeArrete = new List<Edge>();
+                                foreach (var Boucle in ListeBoucles)
+                                {
+                                    foreach (var Arrete in Boucle.GetEdges())
+                                    {
+                                        ListeArrete.Add(Arrete);
+                                    }
+                                }
+
+                                ListeFaces.Add(ListeArrete);
+                            }
+                        }
+                    }
+
+                    while (ListeFaces.Count > 0)
+                    {
+                        var ArreteFace1 = ListeFaces[0];
+                        ListeListeArretes.Add(ArreteFace1);
+                        ListeFaces.RemoveAt(0);
+
+                        int index = 0;
+                        while (index < ListeFaces.Count)
+                        {
+                            var ArreteFace2 = ListeFaces[index];
+                            if (Union(ref ArreteFace1, ref ArreteFace2))
+                            {
+                                ListeFaces.RemoveAt(index);
+                                index = -1;
+                            }
+
+                            index++;
+                        }
+                    }
+
+                    WindowLog.Ecrire("Nb perçages : " + ListeListeArretes.Count);
+
+                    int i = 0;
+                    foreach (var liste in ListeListeArretes)
+                    {
+                        WindowLog.Ecrire("Boucle " + i + " : " + liste.Count);
+                        liste[0].eSelectEntite(true);
+                    }
+                }
+
+                var ListePercage = new List<Double>();
+
+                foreach (var liste in ListeListeArretes)
+                {
+                    ListePercage.Add(LgPercage(liste));
+                }
+
+                return ListePercage;
+            }
+
+            private Boolean Union(ref List<Edge> ListeArretes1, ref List<Edge> ListeArretes2)
+            {
+                Boolean Joindre = false;
+
+                int i = 0;
+                while (i < ListeArretes1.Count)
+                {
+                    var Arrete1 = ListeArretes1[i];
+
+                    int j = 0;
+                    while (j < ListeArretes2.Count)
+                    {
+                        var Arrete2 = ListeArretes2[j];
+
+                        if (Arrete1.eIsSame(Arrete2))
+                        {
+                            Joindre = true;
+
+                            ListeArretes1.RemoveAt(i);
+                            ListeArretes2.RemoveAt(j);
+                            i--;
+                            break;
+                        }
+
+                        j++;
+                    }
+                    i++;
+                }
+
+                if (Joindre)
+                {
+                    ListeArretes1.AddRange(ListeArretes2);
+                    return true;
+                }
+
+                return false;
+            }
+            // ========================================================================================
+
+            public String InfosDecoupe(Body2 Barre)
+            {
+                WindowLog.Ecrire("Nom du corps : " + Barre.Name);
+                var ListeFoncCorps = Barre.eListeFonctions(null, false);
+
+                if (ListeFoncCorps != null)
+                {
+
+                    ListeFoncCorps.RemoveAt(0);
+
+                    var ListeFaces = new List<Face2>();
+
+                    foreach (var Fonc in ListeFoncCorps)
+                    {
+                        var ListeFoncFace = Fonc.eListeDesFaces();
+
+                        foreach (var Face in ListeFoncFace)
+                        {
+                            var B = (Body2)Face.GetBody();
+                            if (B.Name == Barre.Name)
+                            {
+                                ListeFaces.Add(Face);
+                                //Face.eSelectEntite(true);
+                            }
+                        }
+                    }
+
+                    var F1 = ListeFaces[0];
+                    ListeFaces.RemoveAt(0);
+                    F1.eSelectEntite(false);
+                    foreach (Edge Eb in F1.GetEdges())
+                    {
+                        foreach (var F in ListeFaces)
+                        {
+                            foreach (Edge Et in F.GetEdges())
+                            {
+                                if (Eb.eIsSame(Et))
+                                    WindowLog.Ecrire("identique");
+                            }
+
+                        }
+                    }
+                }
+
+                return "";
             }
 
             public String ConstruireRefBarre(ModelDoc2 mdl, String configPliee, String noDossier)

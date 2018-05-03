@@ -2433,7 +2433,7 @@ namespace Outils
         {
             if (composant.TypeDoc() != eTypeDoc.Piece) return;
 
-            if(composant.IsRoot())
+            if (composant.IsRoot())
                 composant.ePartDoc().eDossierListeDesPiecesSoudees().eMajListeDesPiecesSoudees();
             else
                 composant.eDossierListeDesPiecesSoudees().eMajListeDesPiecesSoudees();
@@ -3311,14 +3311,32 @@ namespace Outils
             return Liste;
         }
 
+        public static List<Face2> eListeDesFacesModifiees(this Feature f)
+        {
+            List<Face2> Liste = new List<Face2>();
+
+            Object[] Faces = (Object[])f.GetAffectedFaces();
+
+            if (Faces != null)
+            {
+                foreach (Face2 F in Faces)
+                    Liste.Add(F);
+            }
+
+            return Liste;
+        }
+
         public static List<Face2> eListeDesFaces(this Feature f)
         {
             List<Face2> Liste = new List<Face2>();
 
             Object[] Faces = (Object[])f.GetFaces();
 
-            foreach (Face2 F in Faces)
-                Liste.Add(F);
+            if (Faces != null)
+            {
+                foreach (Face2 F in Faces)
+                    Liste.Add(F);
+            }
 
             return Liste;
         }
@@ -3357,16 +3375,27 @@ namespace Outils
         }
 
         //========================================================================================
-        public static List<Loop2> eListeDesBoucles(this Face2 f)
+
+        public static List<Loop2> eListeDesBoucles(this Face2 f, Predicate<Loop2> filtreTest)
         {
             List<Loop2> Liste = new List<Loop2>();
 
             Object[] Loop = (Object[])f.GetLoops();
 
             foreach (Loop2 L in Loop)
-                Liste.Add(L);
+            {
+                if (filtreTest.IsNull() || filtreTest(L))
+                {
+                    Liste.Add(L);
+                }
+            }
 
             return Liste;
+        }
+
+        public static List<Loop2> eListeDesBoucles(this Face2 f)
+        {
+            return eListeDesBoucles(f, null);
         }
 
         public static List<CoEdge> eListeDesCoArrete(this Loop2 l)
@@ -3379,6 +3408,28 @@ namespace Outils
                 Liste.Add(C);
 
             return Liste;
+        }
+
+        //========================================================================================
+
+        public static Double eLgBoucle(this Loop2 l)
+        {
+            Double Lg = 0;
+            foreach (var CoArrete in l.eListeDesCoArrete())
+            {
+                Edge Arrete = CoArrete.GetEdge();
+                Lg += Arrete.eLgArrete();
+            }
+
+            return Lg;
+        }
+
+        public static Double eLgArrete(this Edge e)
+        {
+            Curve Courbe = e.GetCurve();
+            double Start, End; bool Ferme, Periodic;
+            Courbe.GetEndParams(out Start, out End, out Ferme, out Periodic);
+            return Courbe.GetLength3(Start, End);
         }
 
         //========================================================================================
@@ -3709,7 +3760,7 @@ namespace Outils
         /// <param name="index"></param>
         /// <param name="marque"></param>
         /// <returns></returns>
-        public static swSelectType_e eSelect_RecupererTypeObjet(this ModelDoc2 mdl, int index, int marque)
+        public static swSelectType_e eSelect_RecupererTypeObjet(this ModelDoc2 mdl, int index, int marque = -1)
         {
             SelectionMgr SelMgr = mdl.SelectionManager;
             return (swSelectType_e)SelMgr.GetSelectedObjectType3(index, marque);
@@ -3723,7 +3774,7 @@ namespace Outils
         /// <param name="index"></param>
         /// <param name="marque"></param>
         /// <returns></returns>
-        public static T eSelect_RecupererObjet<T>(this ModelDoc2 mdl, int index, int marque)
+        public static T eSelect_RecupererObjet<T>(this ModelDoc2 mdl, int index, int marque = -1)
             where T : class
         {
             SelectionMgr SelMgr = mdl.SelectionManager;
@@ -3734,7 +3785,7 @@ namespace Outils
             return SelMgr.GetSelectedObject6(index, marque) as T;
         }
 
-        public static List<T> eSelect_RecupererListeObjets<T>(this ModelDoc2 mdl, int marque)
+        public static List<T> eSelect_RecupererListeObjets<T>(this ModelDoc2 mdl, int marque = -1)
             where T : class
         {
             List<T> Liste = new List<T>();
@@ -3748,7 +3799,7 @@ namespace Outils
             return Liste;
         }
 
-        public static List<Component2> eSelect_RecupererListeComposants(this ModelDoc2 mdl, int marque)
+        public static List<Component2> eSelect_RecupererListeComposants(this ModelDoc2 mdl, int marque = -1)
         {
             List<Component2> Liste = new List<Component2>();
 
@@ -3768,7 +3819,7 @@ namespace Outils
         /// <param name="index"></param>
         /// <param name="marque"></param>
         /// <returns></returns>
-        public static Component2 eSelect_RecupererComposant(this ModelDoc2 mdl, int index, int marque)
+        public static Component2 eSelect_RecupererComposant(this ModelDoc2 mdl, int index, int marque = -1)
         {
             SelectionMgr SelMgr = mdl.SelectionManager;
             if (SelMgr.GetSelectedObjectCount2(marque) == 0)
@@ -4040,7 +4091,7 @@ namespace Outils
         {
             String materiau = dossier.eProp("Materiau");
 
-            if(String.IsNullOrWhiteSpace(materiau))
+            if (String.IsNullOrWhiteSpace(materiau))
                 materiau = dossier.eProp("Matériau");
 
             return materiau;
