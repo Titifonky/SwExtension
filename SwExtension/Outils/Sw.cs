@@ -3357,6 +3357,17 @@ namespace Outils
             return ListeFaces;
         }
 
+        public static Boolean eFaceEstConnecte(this Face2 face, Face2 faceTest)
+        {
+            foreach (var f in face.eListeDesFacesContigues())
+            {
+                if (f.IsSame(faceTest))
+                    return true;
+            }
+
+            return false;
+        }
+
         public static Face2 eChercherFace(this Component2 cp, String nom)
         {
             ModelDoc2 Mdl = (ModelDoc2)cp.GetModelDoc2();
@@ -3880,6 +3891,19 @@ namespace Outils
             Double pVolume = pProps[3];
 
             return pVolume;
+        }
+
+        /// <summary>
+        /// Centre de gravité du Corps
+        /// </summary>
+        /// <param name="corps"></param>
+        /// <returns></returns>
+        public static Double[] eCdG(this Body2 corps)
+        {
+            Double[] pProps = (Double[])corps.GetMassProperties(1);
+            Double[] pCdG = new Double[] { pProps[0], pProps[1], pProps[2] };
+
+            return pCdG;
         }
 
         public static Boolean eVisible(this Body2 corps)

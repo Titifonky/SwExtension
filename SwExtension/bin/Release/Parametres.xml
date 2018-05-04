@@ -179,4 +179,5 @@
   <Module name="EnregistrerVue" intitule="Enregistrer la vue" />
   <Module name="ActiverRelationAuto" intitule="Activer/Desactiver les relation auto" />
   <Module name="MasquerCorpsVue" intitule="Masquerles corps de la vue" />
+  <Module name="Test2" intitule="Test2" />
 </Parametres>

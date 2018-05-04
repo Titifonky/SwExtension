@@ -16,6 +16,314 @@ namespace Macros
 
     public class Test : BoutonBase
     {
+        private class Barre
+        {
+            public Body2 Corps = null;
+
+            public List<List<Face2>> Liste = new List<List<Face2>>();
+
+            public Barre(Body2 corps)
+            {
+                Corps = corps;
+            }
+
+            private class FaceExt
+            {
+                public Face2 SwFace = null;
+
+                public Vecteur Normale;
+                public Vecteur Vectoriel;
+
+                public Dictionary<Face2, Vecteur> ListeVect = new Dictionary<Face2, Vecteur>();
+                public FaceExt(Face2 swface)
+                {
+                    SwFace = swface;
+
+                    Normale = GetNormal(SwFace);
+
+                    foreach (var e in SwFace.eListeDesArretes())
+                    {
+                        var c = (Curve)e.GetCurve();
+                        if (c.IsLine())
+                        {
+                            var l = e.eListeDesFaces();
+                            l.Remove(SwFace);
+                            var coFace = l[0];
+                            var vec = GetNormal(coFace);
+                        }
+                    }
+                }
+
+                private Vecteur GetNormal(Face2 face)
+                {
+                    Vecteur V = new Vecteur();
+
+                    Boolean Reverse = face.FaceInSurfaceSense();
+                    var S = (Surface)face.GetSurface();
+
+                    switch ((swSurfaceTypes_e)S.Identity())
+                    {
+                        case swSurfaceTypes_e.PLANE_TYPE:
+                            {
+                                WindowLog.Ecrire("Plan");
+                                Double[] Param = S.PlaneParams;
+
+                                if (Reverse)
+                                {
+                                    Param[0] = Param[0] * -1;
+                                    Param[1] = Param[1] * -1;
+                                    Param[2] = Param[2] * -1;
+                                }
+
+                                V = new Vecteur(Param[0], Param[1], Param[2]);
+                            }
+                            break;
+                        case swSurfaceTypes_e.CYLINDER_TYPE:
+                            {
+                                WindowLog.Ecrire("Cylindre");
+
+                                var UV = (Double[])face.GetUVBounds();
+                                var ev = (Double[])S.Evaluate((UV[0] + UV[1]) * 0.5, (UV[2] + UV[3]) * 0.5, 0, 0);
+
+                                if (Reverse)
+                                {
+                                    ev[3] = -ev[3];
+                                    ev[4] = -ev[4];
+                                    ev[5] = -ev[5];
+                                }
+
+                                V = new Vecteur(ev[3], ev[4], ev[5]);
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+
+                    return V;
+                }
+
+                public void Analyser()
+                {
+
+                }
+
+                //public void Analyser()
+                //{
+                //    var ListeFaces = Corps.eListeDesFaces();
+                //    var ListeFonc = Corps.eListeFonctions(null, false);
+                //    foreach (var F in ListeFonc)
+                //    {
+                //        WindowLog.Ecrire(F.Name + " -> " + F.GetTypeName2());
+                //        if (F.GetTypeName2() != "WeldMemberFeat")
+                //        {
+                //            foreach (var f in F.eListeDesFaces())
+                //            {
+                //                ListeFaces.Remove(f);
+                //            }
+                //        }
+
+                //        WindowLog.Ecrire(F.Name + " -> " + F.GetTypeName2());
+                //    }
+
+                //    var SM = Sw.eModeleActif().SketchManager;
+
+                //    FaceBarre LastFace = null;
+
+                //    var ListeTri = new List<List<FaceBarre>>();
+                //    List<FaceBarre> ListeCourante = new List<FaceBarre>();
+
+                //    foreach (var Face in ListeFaces)
+                //    {
+                //        var B = (Body2)Face.GetBody();
+                //        if (B.Name == Corps.Name)
+                //        {
+                //            Surface S = Face.GetSurface();
+
+                //            Boolean Reverse = Face.FaceInSurfaceSense();
+                //            Double[] Point = new Double[3];
+                //            Double[] Normale = new Double[3];
+                //            switch ((swSurfaceTypes_e)S.Identity())
+                //            {
+                //                case swSurfaceTypes_e.PLANE_TYPE:
+                //                    {
+                //                        WindowLog.Ecrire("Plan");
+                //                        Double[] Param = S.PlaneParams;
+
+                //                        if (Reverse)
+                //                        {
+                //                            Param[0] = Param[0] * -1;
+                //                            Param[1] = Param[1] * -1;
+                //                            Param[2] = Param[2] * -1;
+                //                        }
+
+                //                        Point[0] = Param[3]; Point[1] = Param[4]; Point[2] = Param[5];
+                //                        Normale[0] = Param[0]; Normale[1] = Param[1]; Normale[2] = Param[2];
+                //                    }
+                //                    break;
+                //                case swSurfaceTypes_e.CYLINDER_TYPE:
+                //                    {
+                //                        WindowLog.Ecrire("Cylindre");
+                //                        Double[] Param = S.CylinderParams;
+
+                //                        Point[0] = Param[0]; Point[1] = Param[1]; Point[2] = Param[2];
+                //                        Normale = NormaleCylindre(new Double[] { Param[3], Param[4], Param[5] });
+                //                    }
+                //                    break;
+                //                case swSurfaceTypes_e.CONE_TYPE:
+                //                    break;
+                //                case swSurfaceTypes_e.SPHERE_TYPE:
+                //                    break;
+                //                case swSurfaceTypes_e.TORUS_TYPE:
+                //                    break;
+                //                case swSurfaceTypes_e.BSURF_TYPE:
+                //                    break;
+                //                case swSurfaceTypes_e.BLEND_TYPE:
+                //                    break;
+                //                case swSurfaceTypes_e.OFFSET_TYPE:
+                //                    break;
+                //                case swSurfaceTypes_e.EXTRU_TYPE:
+                //                    break;
+                //                case swSurfaceTypes_e.SREV_TYPE:
+                //                    break;
+                //                default:
+                //                    break;
+                //            }
+
+                //            //SM.Insert3DSketch(false);
+                //            //SM.AddToDB = true;
+                //            //SM.DisplayWhenAdded = false;
+
+                //            //SM.CreatePoint(Point[0], Point[1], Point[2]);
+                //            //SM.CreateLine(Point[0], Point[1], Point[2], Point[0] + (Normale[0] * 0.001), Point[1] + (Normale[1] * 0.001), Point[2] + (Normale[2] * 0.001));
+
+                //            //SM.DisplayWhenAdded = true;
+                //            //SM.AddToDB = false;
+                //            //SM.Insert3DSketch(true);
+
+                //            var faceBarre = new FaceBarre(Point, Normale, Face);
+
+                //            if (LastFace.IsRef() && faceBarre.EstCoplanaire(LastFace))
+                //            {
+                //                ListeCourante.Add(faceBarre);
+                //            }
+                //            else
+                //            {
+                //                var Stop = false;
+                //                foreach (var L in ListeTri)
+                //                {
+                //                    foreach (var fb in L)
+                //                    {
+                //                        if (fb.MemeOrigine(faceBarre))
+                //                        {
+                //                            L.Add(faceBarre);
+                //                            ListeCourante = L;
+                //                            Stop = true;
+                //                            break;
+                //                        }
+                //                    }
+                //                    if (Stop) break;
+                //                }
+
+                //                if (!Stop)
+                //                {
+                //                    ListeCourante = new List<FaceBarre>();
+                //                    ListeCourante.Add(faceBarre);
+                //                    ListeTri.Add(ListeCourante);
+                //                }
+                //            }
+
+                //            LastFace = faceBarre;
+                //        }
+
+                //    }
+
+                //    foreach (var liste in ListeTri)
+                //    {
+                //        var l = new List<Face2>();
+                //        Liste.Add(l);
+                //        foreach (var f in liste)
+                //            l.Add(f.Face);
+                //    }
+                //}
+
+                //private class FaceBarre
+                //{
+                //    public Double[] Point = new Double[] { 0, 0, 0 };
+                //    public Double[] Normale = new Double[] { 0, 0, 0 };
+                //    public Face2 Face = null;
+
+                //    public FaceBarre(Double[] point, Double[] normale, Face2 face)
+                //    {
+                //        Point = point; Normale = normale; Face = face;
+                //    }
+
+                //    public Boolean MemeOrigine(FaceBarre faceBarre)
+                //    {
+                //        var Pt = faceBarre.Point;
+                //        var Nl = faceBarre.Normale;
+
+                //        if (Pt[0] == Point[0] && Pt[1] == Point[1] && Pt[2] == Point[2] && Nl[0] == Normale[0] && Nl[1] == Normale[1] && Nl[2] == Normale[2])
+                //            return true;
+
+                //        return false;
+                //    }
+
+                //    public Boolean EstConnecte(FaceBarre f)
+                //    {
+                //        return Face.eFaceEstConnecte(f.Face);
+                //    }
+
+                //    public Boolean EstCoplanaire(FaceBarre f)
+                //    {
+                //        return EstCoplanaire(Point, Normale, f.Point, f.Normale);
+                //    }
+
+                //    private Boolean EstCoplanaire(Double[] pt1, Double[] vec1, Double[] pt2, Double[] vec2)
+                //    {
+
+                //        Point P1 = new Point(pt1);
+                //        Vecteur V1 = new Vecteur(vec1);
+                //        Point P2 = new Point(pt2);
+                //        Vecteur V2 = new Vecteur(vec2);
+
+                //        if (P1.Distance(P2) < 1E-10)
+                //            return true;
+
+                //        Vecteur Vtmp = new Vecteur(P1, P2);
+
+                //        if ((V1.Vectoriel(Vtmp).Norme < 1E-10) && (V2.Vectoriel(Vtmp).Norme < 1E-10))
+                //            return true;
+
+                //        Vecteur Vn1 = (new Vecteur(P1, P2)).Vectoriel(V1);
+                //        Vecteur Vn2 = (new Vecteur(P2, P1)).Vectoriel(V2);
+
+                //        Vecteur Vn = Vn1.Vectoriel(Vn2);
+
+                //        if (Vn.Norme < 1E-10)
+                //            return true;
+
+                //        return false;
+                //    }
+                //}
+
+                //private Double[] NormaleCylindre(Double[] Axe)
+                //{
+                //    Double[] Normale = new Double[] { 0, 0, 0 };
+
+                //    if (Axe[0] == 0 && Axe[1] == 0)
+                //        Normale[0] = 1;
+                //    else
+                //    {
+                //        Normale[0] = Axe[1];
+                //        Normale[1] = -1 * Axe[0];
+                //    }
+
+                //    return Normale;
+                //}
+
+            }
+        }
+
         protected override void Command()
         {
             try
@@ -27,106 +335,42 @@ namespace Macros
                 var Barre = mdl.eSelect_RecupererObjet<Body2>(1);
                 mdl.eEffacerSelection();
 
-                WindowLog.Ecrire("Nom du corps : " + Barre.Name);
-
-                var ListeFoncCorps = Barre.eListeFonctions(null, false);
-
-                var Fonc = ListeFoncCorps[0];
-
                 var SM = mdl.SketchManager;
 
-                SM.Insert3DSketch(false);
-                SM.AddToDB = true;
-                SM.DisplayWhenAdded = false;
+                WindowLog.Ecrire("Nom du corps : " + Barre.Name);
 
-                var ListeFaces = Fonc.eListeDesFaces();
-                ListeFaces.Reverse();
+                var b = new Barre(Barre);
 
-                int i = 0;
-                foreach (var Face in ListeFaces)
+                //b.Analyser();
+
+                WindowLog.Ecrire(b.Liste.Count);
+                foreach (var Liste in b.Liste)
                 {
-                    var B = (Body2)Face.GetBody();
-                    if (B.Name == Barre.Name)
+                    mdl.eEffacerSelection();
+
+                    SM.Insert3DSketch(false);
+                    SM.AddToDB = true;
+                    SM.DisplayWhenAdded = false;
+
+                    foreach (var f in Liste)
                     {
-                        WindowLog.Ecrire("Face " + ++i);
-
-                        Surface S = Face.GetSurface();
-                        switch ((swSurfaceTypes_e)S.Identity())
-                        {
-                            case swSurfaceTypes_e.PLANE_TYPE:
-                                {
-                                    WindowLog.Ecrire("Plan");
-                                    Double[] Param = S.PlaneParams;
-                                    WindowLog.EcrireF("Vect Norm {0} {1} {2}", Param[0], Param[1], Param[2]);
-                                    WindowLog.EcrireF("Origin {0} {1} {2}", Param[3], Param[4], Param[5]);
-                                    SM.CreatePoint(Param[3], Param[4], Param[5]);
-                                    SM.CreateLine(Param[3], Param[4], Param[5], Param[3] + Param[0], Param[4] + Param[1], Param[5] + Param[2]);
-                                }
-                                break;
-                            case swSurfaceTypes_e.CYLINDER_TYPE:
-                                {
-                                    WindowLog.Ecrire("Cylindre");
-                                    Double[] Param = S.CylinderParams;
-                                    WindowLog.EcrireF("Origin {0} {1} {2}", Param[0], Param[1], Param[2]);
-                                    WindowLog.EcrireF("Axe {0} {1} {2}", Param[3], Param[4], Param[5]);
-                                    WindowLog.EcrireF("Rayon {0}", Param[6]);
-
-                                    SM.CreatePoint(Param[0], Param[1], Param[2]);
-                                    var Normale = NormaleCylindre(new Double[] { Param[3], Param[4], Param[5] });
-                                    SM.CreateLine(Param[0], Param[1], Param[2], Param[0] + Normale[0], Param[1] + Normale[1], Param[2] + Normale[2]);
-                                }
-                                break;
-                            case swSurfaceTypes_e.CONE_TYPE:
-                                break;
-                            case swSurfaceTypes_e.SPHERE_TYPE:
-                                break;
-                            case swSurfaceTypes_e.TORUS_TYPE:
-                                break;
-                            case swSurfaceTypes_e.BSURF_TYPE:
-                                break;
-                            case swSurfaceTypes_e.BLEND_TYPE:
-                                break;
-                            case swSurfaceTypes_e.OFFSET_TYPE:
-                                break;
-                            case swSurfaceTypes_e.EXTRU_TYPE:
-                                break;
-                            case swSurfaceTypes_e.SREV_TYPE:
-                                break;
-                            default:
-                                break;
-                        }
-                        //Double[] Params = (Double[])S.GetExtrusionsurfParams();
-                        //if (Params.IsRef())
-                        //{
-                        //    WindowLog.Ecrire("  -" + Params[0] + " - " + Params[1] + " - " + Params[2]);
-                        //}
+                        mdl.eEffacerSelection();
+                        f.eSelectEntite();
+                        SM.SketchUseEdge3(true, false);
                     }
 
+                    SM.DisplayWhenAdded = true;
+                    SM.AddToDB = false;
+                    SM.Insert3DSketch(true);
+
+                    mdl.eEffacerSelection();
                 }
 
-                SM.DisplayWhenAdded = true;
-                SM.AddToDB = false;
-                SM.Insert3DSketch(true);
-
+                mdl.eEffacerSelection();
 
             }
             catch (Exception e) { this.LogMethode(new Object[] { e }); }
 
-        }
-
-        private Double[] NormaleCylindre(Double[] Axe)
-        {
-            Double[] Normale = new Double[] { 0, 0, 0 };
-
-            if (Axe[0] == 0 && Axe[1] == 0)
-                Normale[0] = 1;
-            else
-            {
-                Normale[0] = Axe[1];
-                Normale[1] = -1 * Axe[0];
-            }
-
-            return Normale;
         }
 
         private List<Double> ListePercage(Body2 Barre)

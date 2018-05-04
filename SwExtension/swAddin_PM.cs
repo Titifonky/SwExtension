@@ -127,9 +127,9 @@ namespace SwExtension
                 _Mnu.AjouterCmde("Vr", typeof(CmdVoronoi), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
 
                 _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde("TS", typeof(Test), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
+                _Mnu.AjouterCmde("T1", typeof(Test), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
+                _Mnu.AjouterCmde("T2", typeof(Test2), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
 
-                
 
                 //==================================================================================================
                 _Mnu = _eListeMenu.Add("Dessin", "Dessin Sw");
