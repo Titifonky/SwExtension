@@ -24,14 +24,109 @@ namespace Macros
                 //var DossierExport = mdl.eDossier();
                 //var NomFichier = mdl.eNomSansExt();
 
-                var Corps = mdl.eSelect_RecupererObjet<Body2>(1);
+                var Barre = mdl.eSelect_RecupererObjet<Body2>(1);
                 mdl.eEffacerSelection();
 
-                WindowLog.Ecrire("Nom du corps : " + Corps.Name);
-                var ListeFoncCorps = Corps.eListeFonctions(null, false);
+                WindowLog.Ecrire("Nom du corps : " + Barre.Name);
+
+                var ListeFoncCorps = Barre.eListeFonctions(null, false);
+
+                var Fonc = ListeFoncCorps[0];
+
+                var SM = mdl.SketchManager;
+
+                SM.Insert3DSketch(false);
+                SM.AddToDB = true;
+                SM.DisplayWhenAdded = false;
+
+                var ListeFaces = Fonc.eListeDesFaces();
+                ListeFaces.Reverse();
+
+                int i = 0;
+                foreach (var Face in ListeFaces)
+                {
+                    var B = (Body2)Face.GetBody();
+                    if (B.Name == Barre.Name)
+                    {
+                        WindowLog.Ecrire("Face " + ++i);
+
+                        Surface S = Face.GetSurface();
+                        switch ((swSurfaceTypes_e)S.Identity())
+                        {
+                            case swSurfaceTypes_e.PLANE_TYPE:
+                                {
+                                    WindowLog.Ecrire("Plan");
+                                    Double[] Param = S.PlaneParams;
+                                    WindowLog.EcrireF("Vect Norm {0} {1} {2}", Param[0], Param[1], Param[2]);
+                                    WindowLog.EcrireF("Origin {0} {1} {2}", Param[3], Param[4], Param[5]);
+                                    SM.CreatePoint(Param[3], Param[4], Param[5]);
+                                    SM.CreateLine(Param[3], Param[4], Param[5], Param[3] + Param[0], Param[4] + Param[1], Param[5] + Param[2]);
+                                }
+                                break;
+                            case swSurfaceTypes_e.CYLINDER_TYPE:
+                                {
+                                    WindowLog.Ecrire("Cylindre");
+                                    Double[] Param = S.CylinderParams;
+                                    WindowLog.EcrireF("Origin {0} {1} {2}", Param[0], Param[1], Param[2]);
+                                    WindowLog.EcrireF("Axe {0} {1} {2}", Param[3], Param[4], Param[5]);
+                                    WindowLog.EcrireF("Rayon {0}", Param[6]);
+
+                                    SM.CreatePoint(Param[0], Param[1], Param[2]);
+                                    var Normale = NormaleCylindre(new Double[] { Param[3], Param[4], Param[5] });
+                                    SM.CreateLine(Param[0], Param[1], Param[2], Param[0] + Normale[0], Param[1] + Normale[1], Param[2] + Normale[2]);
+                                }
+                                break;
+                            case swSurfaceTypes_e.CONE_TYPE:
+                                break;
+                            case swSurfaceTypes_e.SPHERE_TYPE:
+                                break;
+                            case swSurfaceTypes_e.TORUS_TYPE:
+                                break;
+                            case swSurfaceTypes_e.BSURF_TYPE:
+                                break;
+                            case swSurfaceTypes_e.BLEND_TYPE:
+                                break;
+                            case swSurfaceTypes_e.OFFSET_TYPE:
+                                break;
+                            case swSurfaceTypes_e.EXTRU_TYPE:
+                                break;
+                            case swSurfaceTypes_e.SREV_TYPE:
+                                break;
+                            default:
+                                break;
+                        }
+                        //Double[] Params = (Double[])S.GetExtrusionsurfParams();
+                        //if (Params.IsRef())
+                        //{
+                        //    WindowLog.Ecrire("  -" + Params[0] + " - " + Params[1] + " - " + Params[2]);
+                        //}
+                    }
+
+                }
+
+                SM.DisplayWhenAdded = true;
+                SM.AddToDB = false;
+                SM.Insert3DSketch(true);
+
+
             }
             catch (Exception e) { this.LogMethode(new Object[] { e }); }
 
+        }
+
+        private Double[] NormaleCylindre(Double[] Axe)
+        {
+            Double[] Normale = new Double[] { 0, 0, 0 };
+
+            if (Axe[0] == 0 && Axe[1] == 0)
+                Normale[0] = 1;
+            else
+            {
+                Normale[0] = Axe[1];
+                Normale[1] = -1 * Axe[0];
+            }
+
+            return Normale;
         }
 
         private List<Double> ListePercage(Body2 Barre)
