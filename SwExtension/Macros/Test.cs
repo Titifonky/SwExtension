@@ -77,26 +77,26 @@ namespace Macros
 
                 }
 
-                var SM = Sw.eModeleActif().SketchManager;
+                //var SM = Sw.eModeleActif().SketchManager;
 
-                foreach (var f in ListeFaceExt)
-                {
-                    if (f.Type == eTypeFace.Plan)
-                    {
-                        SM.Insert3DSketch(false);
-                        SM.AddToDB = true;
-                        SM.DisplayWhenAdded = false;
+                //foreach (var f in ListeFaceExt)
+                //{
+                //    if (f.Type == eTypeFace.Plan)
+                //    {
+                //        SM.Insert3DSketch(false);
+                //        SM.AddToDB = true;
+                //        SM.DisplayWhenAdded = false;
 
-                        var O = f.Origine;
-                        var N = f.Normale;
-                        SM.CreatePoint(O.X, O.Y, O.Z);
-                        SM.CreateLine(O.X, O.Y, O.Z, O.X + (N.X * 0.005), O.Y + (N.Y * 0.005), O.Z + (N.Z * 0.005));
+                //        var O = f.Origine;
+                //        var N = f.Normale;
+                //        SM.CreatePoint(O.X, O.Y, O.Z);
+                //        SM.CreateLine(O.X, O.Y, O.Z, O.X + (N.X * 0.005), O.Y + (N.Y * 0.005), O.Z + (N.Z * 0.005));
 
-                        SM.DisplayWhenAdded = true;
-                        SM.AddToDB = false;
-                        SM.Insert3DSketch(true);
-                    }
-                }
+                //        SM.DisplayWhenAdded = true;
+                //        SM.AddToDB = false;
+                //        SM.Insert3DSketch(true);
+                //    }
+                //}
 
                 var ListeTest = new List<FaceExt>();
                 foreach (var f in ListeFaceExt)
@@ -107,24 +107,17 @@ namespace Macros
 
                 FaceExt fStart;
 
-                int milieu = ListeTest.Count / 2;
+                int milieu = (ListeTest.Count / 2) - 1;
                 fStart = ListeTest[milieu];
                 ListeTest.RemoveAt(milieu);
                 FaceBase = fStart.SwFace;
 
-                WindowLog.Ecrire("Face test -> " + fStart.SwFace.eGetNomEntite(Sw.eModeleActif()));
-                WindowLog.Ecrire("Nb de face : " + ListeTest.Count);
-
                 var DicPlan = new Dictionary<Plan, List<FaceExt>>();
 
-                var i = 0;
                 // On recherche les plans
                 foreach (var f in ListeTest)
                 {
-                    WindowLog.Ecrire("Face " + ++i);
-
                     var test = Orientation(f, fStart);
-                    WindowLog.Ecrire("Orientation " + test);
 
                     if (test == eOrientation.Coplanaire || test == eOrientation.MemeOrigine)
                     {
@@ -137,11 +130,9 @@ namespace Macros
                         {
                             if (p.SontIdentiques(plan, 1E-10, false))
                             {
-                                WindowLog.Ecrire("Sont identiques");
                                 DicPlan[p].Add(f);
                                 Ajouter = false;
                             }
-                            WindowLog.SautDeLigne();
                         }
 
                         if (Ajouter)
@@ -180,14 +171,12 @@ namespace Macros
                     }
                 }
 
-                ListeFaceSection.Add(fStart.SwFace);
-                ListeFaceSection.AddRange(fStart.ListeFace);
+                ListeFaceSection.AddRange(fStart.ListeSwFace);
 
                 PlanSection = Pmax;
                 foreach (var fe in ListeMax)
                 {
-                    ListeFaceSection.Add(fe.SwFace);
-                    ListeFaceSection.AddRange(fe.ListeFace);
+                    ListeFaceSection.AddRange(fe.ListeSwFace);
                     ListeFaceExt.Remove(fe);
                 }
             }
@@ -218,13 +207,15 @@ namespace Macros
                 public Vecteur Direction;
                 public eTypeFace Type = eTypeFace.Inconnu;
 
-                public List<Face2> ListeFace = new List<Face2>();
+                public List<Face2> ListeSwFace = new List<Face2>();
 
                 public FaceExt(Face2 swface)
                 {
                     SwFace = swface;
 
                     Surface = (Surface)SwFace.GetSurface();
+
+                    ListeSwFace.Add(SwFace);
 
                     switch ((swSurfaceTypes_e)Surface.Identity())
                     {
@@ -276,7 +267,7 @@ namespace Macros
                             break;
                     }
 
-                    ListeFace.Add(fe.SwFace);
+                    ListeSwFace.Add(fe.SwFace);
                     return true;
                 }
 
@@ -388,12 +379,12 @@ namespace Macros
 
                 WindowLog.Ecrire(b.ListeFaceSection.Count);
 
-                //foreach (var f in b.ListeFaceSection)
-                //{
-                //    f.eSelectEntite(true);
-                //}
+                foreach (var f in b.ListeFaceSection)
+                {
+                    f.eSelectEntite(true);
+                }
 
-                b.FaceBase.eSelectEntite();
+                //b.FaceBase.eSelectEntite();
 
                 //foreach (var Liste in b.Liste)
                 //{
