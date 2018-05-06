@@ -171,9 +171,11 @@ namespace Macros
                     }
                 }
 
-                ListeFaceSection.AddRange(fStart.ListeSwFace);
+                
 
                 PlanSection = Pmax;
+
+                ListeMax.Add(fStart);
                 foreach (var fe in ListeMax)
                 {
                     ListeFaceSection.AddRange(fe.ListeSwFace);
