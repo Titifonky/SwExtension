@@ -59,7 +59,8 @@ namespace Macros
                 SM.AddToDB = false;
                 SM.Insert3DSketch(true);
 
-
+                if (S.IsSwept())
+                    WindowLog.Ecrire("Extrusion");
 
             }
             catch (Exception e) { this.LogMethode(new Object[] { e }); }

@@ -1,3 +1,4 @@
+using LogDebugging;
 using SolidWorks.Interop.sldworks;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace Outils
             X = tab[0];
             Y = tab[1];
             Z = 0;
-            if(tab.GetLength(0) > 2)
+            if (tab.GetLength(0) > 2)
                 Z = tab[2];
         }
 
@@ -124,6 +125,11 @@ namespace Outils
             Z = pt[2];
         }
 
+        public override string ToString()
+        {
+            return String.Format("X {0} Y {1} Z{2}", X, Y, Z);
+        }
+
     }
 
     public struct Vecteur
@@ -186,6 +192,31 @@ namespace Outils
                 X * v.Y - Y * v.X);
 
             return prod;
+        }
+
+        public Boolean EstColineaire(Vecteur v, Double arrondi, Boolean prendreEnCompteSens = true)
+        {
+            var result = false;
+
+            var v1 = Unitaire();
+            var v2 = v.Unitaire();
+
+            var vn = v1.Vectoriel(v2);
+
+            if (vn.Norme < arrondi)
+            {
+                if (prendreEnCompteSens)
+                {
+                    // Si on aditionne les deux vecteurs et que la norme est supérieur à 0
+                    // c'est qu'ils ne sont pas opposé
+                    if (v1.Compose(v2).Norme > arrondi)
+                        result = true;
+                }
+                else
+                    result = true;
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -263,6 +294,11 @@ namespace Outils
         {
             Vecteur V = new Vecteur(0, Y, Z);
             return V.Angle(this);
+        }
+
+        public override string ToString()
+        {
+            return String.Format("X {0} Y {1} Z{2}", X, Y, Z);
         }
     }
 
@@ -365,6 +401,83 @@ namespace Outils
         }
     }
 
+    public struct Plan
+    {
+        public Point Origine;
+        public Vecteur Normale;
+
+        public Plan(Point a, Vecteur v)
+        {
+            Origine = a;
+            Normale = v;
+            Normale.Normaliser();
+        }
+
+        public void Inverser()
+        {
+            Normale.Inverser();
+        }
+
+        public Plan Inverse()
+        {
+            return new Plan(Origine, Normale.Inverse());
+        }
+
+        public Boolean SurLePlan(Point p, Double arrondi)
+        {
+            var v2 = new Vecteur(Origine, p);
+            v2.Normaliser();
+
+            var val = Math.Abs(Normale.Vectoriel(v2).Norme - 1);
+
+            // Si l'origine est sur le plan
+            if (val < arrondi)
+                return true;
+
+            return false;
+        }
+
+        /// <summary>
+        /// Verifie si deux plans sont identiques
+        /// On peut également vérifier ou non les directions des normales
+        /// </summary>
+        /// <param name="p"></param>
+        /// <param name="prendreEnCompteSensNormale"></param>
+        /// <returns></returns>
+        public Boolean SontIdentiques(Plan p, Double arrondi, Boolean prendreEnCompteSensNormale = true)
+        {
+            var result = false;
+            var normale = p.Normale;
+            var origine = p.Origine;
+            normale.Normaliser();
+
+            // Si les normales sont colinéaires
+            if (normale.EstColineaire(Normale, arrondi, prendreEnCompteSensNormale))
+            {
+                if (Origine.Comparer(origine, arrondi))
+                    result = true;
+
+                // On test si l'origine est sur le plan en calculant le
+                // produit vectoriel de la norme avec le vecteur(Origine, origine)
+                // Si la valeur est égale à 1, ces deux vecteurs sont perpendiculaire
+                var v2 = new Vecteur(Origine, origine);
+                v2.Normaliser();
+
+                var val = Math.Abs(Normale.Vectoriel(v2).Norme - 1);
+
+                if (val < arrondi)
+                    result = true;
+            }
+
+            return result;
+        }
+
+        public override string ToString()
+        {
+            return "O " + Origine.ToString() + "\nN " + Normale.ToString();
+        }
+    }
+
     public class PointComparer : IComparer<Point>
     {
         private ListSortDirection _Dir = ListSortDirection.Ascending;
@@ -373,7 +486,7 @@ namespace Outils
 
         private Func<Double, Double, Boolean> test()
         {
-            if(_Dir == ListSortDirection.Ascending)
+            if (_Dir == ListSortDirection.Ascending)
                 return delegate (Double v1, Double v2) { return v1 > v2; };
 
             return delegate (Double v1, Double v2) { return v1 < v2; };
@@ -381,7 +494,7 @@ namespace Outils
 
         public PointComparer() { }
 
-        public PointComparer(ListSortDirection dir, Func<Point, Double> coordonne )
+        public PointComparer(ListSortDirection dir, Func<Point, Double> coordonne)
         {
             _Dir = dir;
 
