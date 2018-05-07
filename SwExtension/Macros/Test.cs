@@ -21,11 +21,14 @@ namespace Macros
             public Body2 Corps = null;
 
             public Plan PlanSection;
-            public List<ListFaceGeom> ListeFaceSection = null;
-            public List<ListFaceUsinage> ListeFacesUsinageExtremite = new List<ListFaceUsinage>();
-            public List<ListFaceUsinage> ListeFacesUsinageSection = new List<ListFaceUsinage>();
+            public Point ExtremPoint1;
+            public Point ExtremPoint2;
+            public ListFaceGeom FaceSectionExt = null;
+            public List<ListFaceGeom> ListeFaceSectionInt = null;
+            public List<ListFaceUsinage> ListeFaceUsinageExtremite = new List<ListFaceUsinage>();
+            public List<ListFaceUsinage> ListeFaceUsinageSection = new List<ListFaceUsinage>();
 
-            public List<ListFaceGeom> ListeFaceExtremite = null;
+            private List<ListFaceGeom> ListeFaceExtremite = null;
 
             public Barre(Body2 corps)
             {
@@ -41,26 +44,52 @@ namespace Macros
             public void AnalyserPercages()
             {
                 // On recupère les faces issues des fonctions modifiant le corps
-                List<Face2> ListeFaceSectionTmp = new List<Face2>();
+                List<Face2> ListeFaceSection = new List<Face2>();
                 foreach (var Fonc in Corps.eListeFonctions(null))
                 {
                     if (Fonc.GetTypeName2() != "WeldMemberFeat")
-                        ListeFaceSectionTmp.AddRange(Fonc.eListeDesFaces());
+                        ListeFaceSection.AddRange(Fonc.eListeDesFaces());
                 }
 
                 // Recherche des perçages
                 // On ajoute les faces d'extrémité
-                List<Face2> ListeFaceExtTmp = new List<Face2>();
+                List<Face2> ListeFaceExt = new List<Face2>();
                 foreach (var fl in ListeFaceExtremite)
-                    ListeFaceExtTmp.AddRange(fl.ListeFaceSw());
+                    ListeFaceExt.AddRange(fl.ListeFaceSw());
 
-                ListeFaceExtTmp.AddRange(ListeFaceSectionTmp);
+                // On ajoute les faces d'extrémité
+                ListeFaceSection.AddRange(ListeFaceExt);
 
-                // S'il y a des faces d'extremite non usinées
-                ListeFacesUsinageExtremite = TrierFacesConnectees(ListeFaceExtTmp);
+                // On tri les faces connectées
+                ListeFaceUsinageSection = TrierFacesConnectees(ListeFaceSection);
 
-                //ListeFacesUsinageSection = TrierFacesConnectees(ListeFaceSectionTmp);
+                // calcul des caractéristiques de l'usinage
+                foreach (var l in ListeFaceUsinageSection)
+                    l.CalculerDistance(ExtremPoint1, ExtremPoint2);
 
+                // Recherche des usinages d'extrémité
+                foreach (var l in ListeFaceUsinageSection)
+                    l.CalculerDistance(ExtremPoint1, ExtremPoint2);
+
+                var Extrem = ListeFaceUsinageSection[0];
+                foreach (var l in ListeFaceUsinageSection)
+                {
+                    if (Extrem.DistToExtremPoint1 > l.DistToExtremPoint1)
+                        Extrem = l;
+                }
+
+                ListeFaceUsinageSection.Remove(Extrem);
+                ListeFaceUsinageExtremite.Add(Extrem);
+
+                Extrem = ListeFaceUsinageSection[0];
+                foreach (var l in ListeFaceUsinageSection)
+                {
+                    if (Extrem.DistToExtremPoint2 > l.DistToExtremPoint2)
+                        Extrem = l;
+                }
+
+                ListeFaceUsinageSection.Remove(Extrem);
+                ListeFaceUsinageExtremite.Add(Extrem);
             }
 
             private List<ListFaceUsinage> TrierFacesConnectees(List<Face2> listeFace)
@@ -110,15 +139,36 @@ namespace Macros
             {
                 public Boolean Fermer = false;
 
-                public List<Face2> ListeFace = new List<Face2>();
+                public List<Face2> ListeFaces = new List<Face2>();
                 public List<Edge> ListeArretes = new List<Edge>();
                 public int NbFaces = 0;
                 public Double LgUsinage = 0;
 
+                public Double DistToExtremPoint1 = 1E30;
+                public Double DistToExtremPoint2 = 1E30;
+
+                public void CalculerDistance(Point extremPoint1, Point extremPoint2)
+                {
+                    foreach (var f in ListeFaces)
+                    {
+                        {
+                            Double[] res = f.GetClosestPointOn(extremPoint1.X, extremPoint1.Y, extremPoint1.Z);
+                            var dist = extremPoint1.Distance(new Point(res[0], res[1], res[2]));
+                            if (dist < DistToExtremPoint1) DistToExtremPoint1 = dist;
+                        }
+
+                        {
+                            Double[] res = f.GetClosestPointOn(extremPoint2.X, extremPoint2.Y, extremPoint2.Z);
+                            var dist = extremPoint2.Distance(new Point(res[0], res[1], res[2]));
+                            if (dist < DistToExtremPoint2) DistToExtremPoint2 = dist;
+                        }
+                    }
+                }
+
                 // Initialisation avec une face
                 public ListFaceUsinage(Face2 f)
                 {
-                    ListeFace.Add(f);
+                    ListeFaces.Add(f);
                     ListeArretes.AddRange(f.eListeDesArretes());
                 }
 
@@ -127,7 +177,7 @@ namespace Macros
                     var result = UnionArretes(f.eListeDesArretes());
 
                     if (result > 0)
-                        ListeFace.Add(f);
+                        ListeFaces.Add(f);
 
                     if (result == 2)
                         Fermer = true;
@@ -236,11 +286,22 @@ namespace Macros
                     }
                 }
 
-                // Plan de la section
-                PlanSection = Pmax;
+                // Plan de la section et infos
+                {
+                    PlanSection = Pmax;
+                    var v = PlanSection.Normale;
+                    Double X = 0, Y = 0, Z = 0;
+                    Corps.GetExtremePoint(v.X, v.Y, v.Z, out X, out Y, out Z);
+                    ExtremPoint1 = new Point(X, Y, Z);
+                    v.Inverser();
+                    Corps.GetExtremePoint(v.X, v.Y, v.Z, out X, out Y, out Z);
+                    ExtremPoint2 = new Point(X, Y, Z);
+                }
 
                 // Tri des faces section
-                ListeFaceSection = TrierFacesConnectees(ListeMax);
+                ListeFaceSectionInt = TrierFacesConnectees(ListeMax);
+
+
 
                 // Tri des faces extremites
                 // On supprime les faces de la section
@@ -734,7 +795,7 @@ namespace Macros
 
                 var b = new Barre(Barre);
 
-                WindowLog.Ecrire(b.ListeFaceSection.Count);
+                WindowLog.Ecrire(b.ListeFaceSectionInt.Count);
 
                 //foreach (var l in b.ListeFaceExtremite)
                 //{
@@ -756,9 +817,9 @@ namespace Macros
                 //    }
                 //}
 
-                foreach (var l in b.ListeFacesUsinageExtremite)
+                foreach (var l in b.ListeFaceUsinageExtremite)
                 {
-                    foreach (var f in l.ListeFace)
+                    foreach (var f in l.ListeFaces)
                     {
                         f.eSelectEntite(true);
                     }
