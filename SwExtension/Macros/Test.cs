@@ -21,18 +21,163 @@ namespace Macros
             public Body2 Corps = null;
 
             public Plan PlanSection;
-            public List<Face2> ListeFaceSection = new List<Face2>();
+            public List<ListFaceGeom> ListeFaceSection = null;
+            public List<ListFaceUsinage> ListeFacesUsinageExtremite = new List<ListFaceUsinage>();
+            public List<ListFaceUsinage> ListeFacesUsinageSection = new List<ListFaceUsinage>();
 
-            public List<Face2> ListeFaceExtremite1;
-
-            public List<Face2> ListeFaceExtremite2;
-
-            public Face2 FaceBase;
+            public List<ListFaceGeom> ListeFaceExtremite = null;
 
             public Barre(Body2 corps)
             {
                 Corps = corps;
 
+                AnalyserFaces();
+
+                AnalyserPercages();
+            }
+
+            #region ANALYSE DES USINAGES
+
+            public void AnalyserPercages()
+            {
+                // On recupère les faces issues des fonctions modifiant le corps
+                List<Face2> ListeFaceSectionTmp = new List<Face2>();
+                foreach (var Fonc in Corps.eListeFonctions(null))
+                {
+                    if (Fonc.GetTypeName2() != "WeldMemberFeat")
+                        ListeFaceSectionTmp.AddRange(Fonc.eListeDesFaces());
+                }
+
+                // Recherche des perçages
+                // On ajoute les faces d'extrémité
+                List<Face2> ListeFaceExtTmp = new List<Face2>();
+                foreach (var fl in ListeFaceExtremite)
+                    ListeFaceExtTmp.AddRange(fl.ListeFaceSw());
+
+                ListeFaceExtTmp.AddRange(ListeFaceSectionTmp);
+
+                // S'il y a des faces d'extremite non usinées
+                ListeFacesUsinageExtremite = TrierFacesConnectees(ListeFaceExtTmp);
+
+                //ListeFacesUsinageSection = TrierFacesConnectees(ListeFaceSectionTmp);
+
+            }
+
+            private List<ListFaceUsinage> TrierFacesConnectees(List<Face2> listeFace)
+            {
+                List<ListFaceUsinage> ListeFacesUsinage = new List<ListFaceUsinage>();
+
+                if (listeFace.Count > 0)
+                {
+                    List<Face2> ListeFaceTmp = new List<Face2>(listeFace);
+
+                    // S'il y a des faces d'extremite non usinées
+                    if (ListeFaceTmp.Count > 0)
+                    {
+                        ListeFacesUsinage.Add(new ListFaceUsinage(ListeFaceTmp[0]));
+                        ListeFaceTmp.RemoveAt(0);
+
+                        while (ListeFaceTmp.Count > 0)
+                        {
+                            var lst = ListeFacesUsinage.Last();
+
+                            int i = 0;
+                            while (i < ListeFaceTmp.Count)
+                            {
+                                var f = ListeFaceTmp[i];
+
+                                if (lst.AjouterFaceConnectee(f))
+                                {
+                                    ListeFaceTmp.RemoveAt(i);
+                                    i = -1;
+                                }
+                                i++;
+                            }
+
+                            if (ListeFaceTmp.Count > 0)
+                            {
+                                ListeFacesUsinage.Add(new ListFaceUsinage(ListeFaceTmp[0]));
+                                ListeFaceTmp.RemoveAt(0);
+                            }
+                        }
+                    }
+                }
+
+                return ListeFacesUsinage;
+            }
+
+            public class ListFaceUsinage
+            {
+                public Boolean Fermer = false;
+
+                public List<Face2> ListeFace = new List<Face2>();
+                public List<Edge> ListeArretes = new List<Edge>();
+                public int NbFaces = 0;
+                public Double LgUsinage = 0;
+
+                // Initialisation avec une face
+                public ListFaceUsinage(Face2 f)
+                {
+                    ListeFace.Add(f);
+                    ListeArretes.AddRange(f.eListeDesArretes());
+                }
+
+                public Boolean AjouterFaceConnectee(Face2 f)
+                {
+                    var result = UnionArretes(f.eListeDesArretes());
+
+                    if (result > 0)
+                        ListeFace.Add(f);
+
+                    if (result == 2)
+                        Fermer = true;
+
+                    return result > 0;
+                }
+
+                private Double UnionArretes(List<Edge> ListeArretes)
+                {
+                    var ListeTmp = new List<Edge>(ListeArretes);
+                    Double Connection = 0;
+
+                    int i = 0;
+                    while (i < ListeArretes.Count)
+                    {
+                        var Arrete1 = ListeArretes[i];
+
+                        int j = 0;
+                        while (j < ListeTmp.Count)
+                        {
+                            var Arrete2 = ListeTmp[j];
+
+                            if (Arrete1.eIsSame(Arrete2))
+                            {
+                                Connection++;
+
+                                ListeArretes.RemoveAt(i);
+                                ListeTmp.RemoveAt(j);
+                                i--;
+                                break;
+                            }
+
+                            j++;
+                        }
+                        i++;
+                    }
+
+                    if (Connection > 0)
+                        ListeArretes.AddRange(ListeTmp);
+
+                    return Connection;
+                }
+            }
+
+            #endregion
+
+            #region ANALYSE DE LA GEOMETRIE ET RECHERCHE DU PROFIL
+
+            public void AnalyserFaces()
+            {
                 var ListeFaces = Corps.eListeDesFaces();
 
                 // On supprime les faces issues des fonctions appliquées
@@ -46,17 +191,12 @@ namespace Macros
                     }
                 }
 
-                Boolean Extrusion = false;
-
-                List<FaceExt> ListeFaceExt = new List<FaceExt>();
+                List<FaceGeom> ListeFaceExt = new List<FaceGeom>();
 
                 // Tri des faces pour retrouver celles issues de la même
                 foreach (var Face in ListeFaces)
                 {
-                    var faceExt = new FaceExt(Face);
-
-                    if (faceExt.Type != eTypeFace.Plan)
-                        Extrusion = true;
+                    var faceExt = new FaceGeom(Face);
 
                     Boolean Ajouter = true;
 
@@ -77,53 +217,51 @@ namespace Macros
 
                 }
 
-                //var SM = Sw.eModeleActif().SketchManager;
+                // Analyse des faces et recherches du plan de section
 
-                //foreach (var f in ListeFaceExt)
-                //{
-                //    if (f.Type == eTypeFace.Plan)
-                //    {
-                //        SM.Insert3DSketch(false);
-                //        SM.AddToDB = true;
-                //        SM.DisplayWhenAdded = false;
+                var DicPlan = CombinerFaces(ListeFaceExt);
 
-                //        var O = f.Origine;
-                //        var N = f.Normale;
-                //        SM.CreatePoint(O.X, O.Y, O.Z);
-                //        SM.CreateLine(O.X, O.Y, O.Z, O.X + (N.X * 0.005), O.Y + (N.Y * 0.005), O.Z + (N.Z * 0.005));
+                // On recherche le plan qui contient le plus de face
+                Plan Pmax = new Plan();
+                var ListeMax = new List<FaceGeom>();
 
-                //        SM.DisplayWhenAdded = true;
-                //        SM.AddToDB = false;
-                //        SM.Insert3DSketch(true);
-                //    }
-                //}
-
-                var ListeTest = new List<FaceExt>();
-                foreach (var f in ListeFaceExt)
+                foreach (var p in DicPlan.Keys)
                 {
-                    if(f.Type == eTypeFace.Plan)
-                        ListeTest.Add(f);
+                    var l = DicPlan[p];
+                    var feBase = l[0];
+                    if (l.Count > ListeMax.Count)
+                    {
+                        Pmax = p;
+                        ListeMax = l;
+                    }
                 }
 
-                FaceExt fStart;
+                // Plan de la section
+                PlanSection = Pmax;
 
-                int milieu = (ListeTest.Count / 2) - 1;
-                fStart = ListeTest[milieu];
-                ListeTest.RemoveAt(milieu);
-                FaceBase = fStart.SwFace;
+                // Tri des faces section
+                ListeFaceSection = TrierFacesConnectees(ListeMax);
 
-                var DicPlan = new Dictionary<Plan, List<FaceExt>>();
+                // Tri des faces extremites
+                // On supprime les faces de la section
+                foreach (var f in ListeMax)
+                    ListeFaceExt.Remove(f);
 
-                // On recherche les plans
+                ListeFaceExtremite = TrierFacesConnectees(ListeFaceExt);
+            }
+
+            private Dictionary<Plan, List<FaceGeom>> CombinerFaces(List<FaceGeom> listeFaceGeom)
+            {
+                List<FaceGeom> ListeTest = new List<FaceGeom>(listeFaceGeom);
+
+                var DicPlan = new Dictionary<Plan, List<FaceGeom>>();
+
+                // On recherche les cylindre ou extrusion
                 foreach (var f in ListeTest)
                 {
-                    var test = Orientation(f, fStart);
-
-                    if (test == eOrientation.Coplanaire || test == eOrientation.MemeOrigine)
+                    if (f.Type == eTypeFace.Cylindre || f.Type == eTypeFace.Extrusion)
                     {
-                        var vF = (new Vecteur(fStart.Origine, f.Origine)).Compose(f.Normale);
-                        var v = fStart.Normale.Vectoriel(vF);
-                        var plan = new Plan(fStart.Origine, v);
+                        var plan = new Plan(f.Origine, f.Direction);
 
                         var Ajouter = true;
                         foreach (var p in DicPlan.Keys)
@@ -136,51 +274,144 @@ namespace Macros
                         }
 
                         if (Ajouter)
-                            DicPlan.Add(plan, new List<FaceExt>() { f });
+                            DicPlan.Add(plan, new List<FaceGeom>() { f });
                     }
                 }
 
-                // On regarde si des points se retrouve sur des plans
+                FaceGeom depart = null;
+
+                // Choix de la face de départ
+                // S'il y a des faces cylindriques ou extrudées
+                // on les privilégie
+                // Sinon on part sur une face du milieu de la liste.
+                // Attention, erreur possible si la face de depart est une extrémité.
+                if (DicPlan.Count > 0)
+                {
+                    var ltmp = new List<FaceGeom>();
+                    foreach (var l in DicPlan.Values)
+                    {
+                        if (ltmp.Count < l.Count)
+                            ltmp = l;
+                    }
+
+                    depart = ltmp[ltmp.Count / 2];
+                }
+                else
+                {
+                    depart = ListeTest[ListeTest.Count / 2];
+                }
+
+                // On récupère la liste des plans
+                List<FaceGeom> ListePlan = new List<FaceGeom>();
                 foreach (var f in ListeTest)
                 {
-                    var test = Orientation(f, fStart);
-                    if (test == eOrientation.Colineaire)
+                    if (f.Type == eTypeFace.Plan)
+                        ListePlan.Add(f);
+                }
+
+                if (ListePlan.Count > 2)
+                {
+                    // On recherche les plans
+                    foreach (var f in ListePlan)
                     {
-                        foreach (var p in DicPlan.Keys)
+                        var test = Orientation(f, depart);
+
+                        if (test == eOrientation.Coplanaire || test == eOrientation.MemeOrigine)
                         {
-                            if (p.SurLePlan(f.Origine, 1E-10))
+                            // Dans le cas de vecteur normal parallèle, il faut ruser
+                            var vF = (new Vecteur(depart.Origine, f.Origine)).Compose(f.Normale);
+                            var v = depart.Normale.Vectoriel(vF);
+                            var plan = new Plan(depart.Origine, v);
+
+                            var Ajouter = true;
+                            foreach (var p in DicPlan.Keys)
                             {
-                                DicPlan[p].Add(f);
+                                if (p.SontIdentiques(plan, 1E-10, false))
+                                {
+                                    DicPlan[p].Add(f);
+                                    Ajouter = false;
+                                }
                             }
+
+                            if (Ajouter)
+                                DicPlan.Add(plan, new List<FaceGeom>() { depart, f });
+                        }
+                    }
+
+                    // On regarde si des points se retrouve sur des plans
+                    foreach (var f in ListePlan)
+                    {
+                        var test = Orientation(f, depart);
+                        if (test == eOrientation.Colineaire)
+                        {
+                            foreach (var p in DicPlan.Keys)
+                            {
+                                if (p.SurLePlan(f.Origine, 1E-10))
+                                {
+                                    DicPlan[p].Add(f);
+                                }
+                            }
+                        }
+                    }
+
+
+                }
+
+                return DicPlan;
+            }
+
+            private List<ListFaceGeom> TrierFacesConnectees(List<FaceGeom> listeFace)
+            {
+                List<FaceGeom> listeTmp = new List<FaceGeom>(listeFace);
+                List<ListFaceGeom> ListeTri = null;
+
+                if (listeTmp.Count > 0)
+                {
+                    ListeTri = new List<ListFaceGeom>() { new ListFaceGeom(listeTmp[0]) };
+                    listeTmp.RemoveAt(0);
+
+                    while (listeTmp.Count > 0)
+                    {
+                        var l = ListeTri.Last();
+
+                        int i = 0;
+                        while (i < listeTmp.Count)
+                        {
+                            var f = listeTmp[i];
+
+                            if (l.AjouterFaceConnectee(f))
+                            {
+                                listeTmp.RemoveAt(i);
+                                i = -1;
+                            }
+                            i++;
+                        }
+
+                        if (listeTmp.Count > 0)
+                        {
+                            ListeTri.Add(new ListFaceGeom(listeTmp[0]));
+                            listeTmp.RemoveAt(0);
                         }
                     }
                 }
 
-                // On recherche le plan qui contient le plus de face
-                Plan Pmax = new Plan();
-                var ListeMax = new List<FaceExt>();
-
-                WindowLog.Ecrire(DicPlan.Count);
-                foreach (var p in DicPlan.Keys)
+                // On recherche les cylindres uniques
+                // et on les marque comme fermé s'il ont seulement deux boucle
+                foreach (var l in ListeTri)
                 {
-                    var l = DicPlan[p];
-                    if (ListeMax.Count < l.Count)
+                    if (l.ListeFaceGeom.Count == 1)
                     {
-                        Pmax = p;
-                        ListeMax = l;
+                        var f = l.ListeFaceGeom[0];
+                        if (f.ListeSwFace.Count == 1)
+                        {
+                            if (f.SwFace.GetLoopCount() > 1)
+                                l.Fermer = true;
+
+                        }
                     }
                 }
 
-                
-
-                PlanSection = Pmax;
-
-                ListeMax.Add(fStart);
-                foreach (var fe in ListeMax)
-                {
-                    ListeFaceSection.AddRange(fe.ListeSwFace);
-                    ListeFaceExt.Remove(fe);
-                }
+                return ListeTri;
             }
 
             public enum eTypeFace
@@ -199,7 +430,7 @@ namespace Macros
                 MemeOrigine = 4
             }
 
-            public class FaceExt
+            public class FaceGeom
             {
                 public Face2 SwFace = null;
                 private Surface Surface = null;
@@ -207,11 +438,34 @@ namespace Macros
                 public Point Origine;
                 public Vecteur Normale;
                 public Vecteur Direction;
+                public Double Rayon = 0;
                 public eTypeFace Type = eTypeFace.Inconnu;
 
                 public List<Face2> ListeSwFace = new List<Face2>();
 
-                public FaceExt(Face2 swface)
+                public List<Face2> ListeFacesConnectee
+                {
+                    get
+                    {
+                        var liste = new List<Face2>();
+
+                        liste.AddRange(ListeSwFace[0].eListeDesFacesContigues());
+                        for (int i = 1; i < ListeSwFace.Count; i++)
+                        {
+                            var l = ListeSwFace[i].eListeDesFacesContigues();
+
+                            foreach (var f in l)
+                            {
+                                liste.AddIfNotExist(f);
+                            }
+
+                        }
+
+                        return liste;
+                    }
+                }
+
+                public FaceGeom(Face2 swface)
                 {
                     SwFace = swface;
 
@@ -241,11 +495,11 @@ namespace Macros
                     }
                 }
 
-                public Boolean FaceExtIdentique(FaceExt fe, Double arrondi = 1E-10)
+                public Boolean FaceExtIdentique(FaceGeom fe, Double arrondi = 1E-10)
                 {
                     if (Type != fe.Type)
                         return false;
-                    
+
                     if (!Origine.Comparer(fe.Origine, arrondi))
                         return false;
 
@@ -258,7 +512,7 @@ namespace Macros
                                 return false;
                             break;
                         case eTypeFace.Cylindre:
-                            if (!Direction.EstColineaire(fe.Direction, arrondi))
+                            if (!Direction.EstColineaire(fe.Direction, arrondi) || (Math.Abs(Rayon - fe.Rayon) > arrondi))
                                 return false;
                             break;
                         case eTypeFace.Extrusion:
@@ -277,7 +531,7 @@ namespace Macros
                 {
                     Boolean Reverse = SwFace.FaceInSurfaceSense();
 
-                    if(Surface.IsPlane())
+                    if (Surface.IsPlane())
                     {
                         Double[] Param = Surface.PlaneParams;
 
@@ -295,14 +549,26 @@ namespace Macros
 
                 private void GetInfoCylindre()
                 {
-                    Boolean Reverse = SwFace.FaceInSurfaceSense();
-
                     if (Surface.IsCylinder())
                     {
                         Double[] Param = Surface.CylinderParams;
 
                         Origine = new Point(Param[0], Param[1], Param[2]);
                         Direction = new Vecteur(Param[3], Param[4], Param[5]);
+                        Rayon = Param[6];
+
+                        var UV = (Double[])SwFace.GetUVBounds();
+                        Boolean Reverse = SwFace.FaceInSurfaceSense();
+
+                        var ev1 = (Double[])Surface.Evaluate((UV[0] + UV[1]) * 0.5, (UV[2] + UV[3]) * 0.5, 0, 0);
+                        if (Reverse)
+                        {
+                            ev1[3] = -ev1[3];
+                            ev1[4] = -ev1[4];
+                            ev1[5] = -ev1[5];
+                        }
+
+                        Normale = new Vecteur(ev1[3], ev1[4], ev1[5]);
                     }
                 }
 
@@ -319,28 +585,115 @@ namespace Macros
                         Double StartParam = 0, EndParam = 0;
                         Boolean IsClosed = false, IsPeriodic = false;
 
-                        if(C.GetEndParams(out StartParam, out EndParam, out IsClosed, out IsPeriodic))
+                        if (C.GetEndParams(out StartParam, out EndParam, out IsClosed, out IsPeriodic))
                         {
                             Double[] Eval = C.Evaluate(StartParam);
 
                             Origine = new Point(Eval[0], Eval[1], Eval[2]);
                         }
+
+                        var UV = (Double[])SwFace.GetUVBounds();
+                        Boolean Reverse = SwFace.FaceInSurfaceSense();
+
+                        var ev1 = (Double[])Surface.Evaluate((UV[0] + UV[1]) * 0.5, (UV[2] + UV[3]) * 0.5, 0, 0);
+                        if (Reverse)
+                        {
+                            ev1[3] = -ev1[3];
+                            ev1[4] = -ev1[4];
+                            ev1[5] = -ev1[5];
+                        }
+
+                        Normale = new Vecteur(ev1[3], ev1[4], ev1[5]);
                     }
                 }
             }
 
-            public eOrientation Orientation(FaceExt f1, FaceExt f2)
+            public class ListFaceGeom
+            {
+                public Boolean Fermer = false;
+
+                public List<FaceGeom> ListeFaceGeom = new List<FaceGeom>();
+
+                // Initialisation avec une face
+                public ListFaceGeom(FaceGeom f)
+                {
+                    ListeFaceGeom.Add(f);
+                }
+
+                public List<Face2> ListeFaceSw()
+                {
+                    var liste = new List<Face2>();
+
+                    foreach (var fl in ListeFaceGeom)
+                        liste.AddRange(fl.ListeSwFace);
+
+                    return liste;
+                }
+
+                public Boolean AjouterFaceConnectee(FaceGeom f)
+                {
+                    var Ajouter = false;
+                    var Connection = 0;
+
+                    int r = ListeFaceGeom.Count;
+
+                    for (int i = 0; i < r; i++)
+                    {
+                        var l = ListeFaceGeom[i].ListeFacesConnectee;
+
+                        foreach (var swf in f.ListeSwFace)
+                        {
+                            if (l.eContient(swf))
+                            {
+                                if (Ajouter == false)
+                                {
+                                    ListeFaceGeom.Add(f);
+                                    Ajouter = true;
+                                }
+
+                                Connection++;
+                                break;
+                            }
+                        }
+
+                    }
+
+                    if (Connection > 1)
+                        Fermer = true;
+
+                    return Ajouter;
+                }
+            }
+
+            private eOrientation Orientation(FaceGeom f1, FaceGeom f2)
             {
                 var val = eOrientation.Indefini;
                 if (f1.Type == eTypeFace.Plan && f2.Type == eTypeFace.Plan)
                 {
                     val = Orientation(f1.Origine, f1.Normale, f2.Origine, f2.Normale);
                 }
+                else if (f1.Type == eTypeFace.Plan && (f2.Type == eTypeFace.Cylindre || f2.Type == eTypeFace.Extrusion))
+                {
+                    Plan P = new Plan(f2.Origine, f2.Direction);
+                    if (P.SurLePlan(f1.Origine, 1E-10) && P.SurLePlan(f1.Origine.Composer(f1.Normale), 1E-10))
+                    {
+                        val = eOrientation.Coplanaire;
+                    }
+                }
+                else if (f2.Type == eTypeFace.Plan && (f1.Type == eTypeFace.Cylindre || f1.Type == eTypeFace.Extrusion))
+                {
+                    Plan P = new Plan(f1.Origine, f1.Direction);
+                    if (P.SurLePlan(f2.Origine, 1E-10) && P.SurLePlan(f2.Origine.Composer(f2.Normale), 1E-10))
+                    {
+                        val = eOrientation.Coplanaire;
+                    }
+                }
+
 
                 return val;
             }
 
-            public eOrientation Orientation(Point p1, Vecteur v1, Point p2, Vecteur v2)
+            private eOrientation Orientation(Point p1, Vecteur v1, Point p2, Vecteur v2)
             {
                 if (p1.Distance(p2) < 1E-10)
                     return eOrientation.MemeOrigine;
@@ -360,6 +713,8 @@ namespace Macros
 
                 return eOrientation.Indefini;
             }
+
+            #endregion
         }
 
         protected override void Command()
@@ -381,36 +736,49 @@ namespace Macros
 
                 WindowLog.Ecrire(b.ListeFaceSection.Count);
 
-                foreach (var f in b.ListeFaceSection)
-                {
-                    f.eSelectEntite(true);
-                }
-
-                //b.FaceBase.eSelectEntite();
-
-                //foreach (var Liste in b.Liste)
+                //foreach (var l in b.ListeFaceExtremite)
                 //{
-                //    mdl.eEffacerSelection();
-
-                //    SM.Insert3DSketch(false);
-                //    SM.AddToDB = true;
-                //    SM.DisplayWhenAdded = false;
-
-                //    foreach (var f in Liste)
+                //    WindowLog.Ecrire(l.ListeFaceGeom.Count + " -> Fermé : " + l.Fermer);
+                //    foreach (var fs in l.ListeFaceGeom)
                 //    {
-                //        mdl.eEffacerSelection();
-                //        f.eSelectEntite();
-                //        SM.SketchUseEdge3(true, false);
+                //        foreach (var f in fs.ListeSwFace)
+                //        {
+                //            f.eSelectEntite(true);
+                //        }
                 //    }
-
-                //    SM.DisplayWhenAdded = true;
-                //    SM.AddToDB = false;
-                //    SM.Insert3DSketch(true);
-
-                //    mdl.eEffacerSelection();
                 //}
 
+                //foreach (var l in b.ListeFacesUsinageSection)
+                //{
+                //    foreach (var f in l.ListeFace)
+                //    {
+                //        f.eSelectEntite(true);
+                //    }
+                //}
+
+                foreach (var l in b.ListeFacesUsinageExtremite)
+                {
+                    foreach (var f in l.ListeFace)
+                    {
+                        f.eSelectEntite(true);
+                    }
+                }
+
                 //mdl.eEffacerSelection();
+
+                //WindowLog.Ecrire(b.ListeFaceExtremite.Count);
+
+                //foreach (var l in b.ListeFaceExtremite)
+                //{
+                //    WindowLog.Ecrire(l.Liste.Count + " -> Fermé : " + l.Fermer);
+                //    foreach (var fs in l.Liste)
+                //    {
+                //        foreach (var f in fs.ListeSwFace)
+                //        {
+                //            f.eSelectEntite(true);
+                //        }
+                //    }
+                //}
 
             }
             catch (Exception e) { this.LogMethode(new Object[] { e }); }

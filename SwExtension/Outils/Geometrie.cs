@@ -97,7 +97,12 @@ namespace Outils
         {
             X += V.X;
             Y += V.Y;
-            X += V.X;
+            Z += V.Z;
+        }
+
+        public Point Composer(Vecteur V)
+        {
+            return new Point(X + V.X, Y + V.Y, Z + V.Z);
         }
 
         public void Min(Point pt)
