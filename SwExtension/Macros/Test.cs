@@ -41,14 +41,21 @@ namespace Macros
 
             #region ANALYSE DES USINAGES
 
-            public void AnalyserPercages()
+            private void AnalyserPercages()
             {
                 // On recupère les faces issues des fonctions modifiant le corps
                 List<Face2> ListeFaceSection = new List<Face2>();
                 foreach (var Fonc in Corps.eListeFonctions(null))
                 {
                     if (Fonc.GetTypeName2() != "WeldMemberFeat")
-                        ListeFaceSection.AddRange(Fonc.eListeDesFaces());
+                    {
+                        foreach (var f in Fonc.eListeDesFaces())
+                        {
+                            Body2 cF = f.GetBody();
+                            if (cF.eIsSame(Corps))
+                                ListeFaceSection.AddIfNotExist(f);
+                        }
+                    }
                 }
 
                 // Recherche des perçages
@@ -63,14 +70,15 @@ namespace Macros
                 // On tri les faces connectées
                 ListeFaceUsinageSection = TrierFacesConnectees(ListeFaceSection);
 
-                // calcul des caractéristiques de l'usinage
+                // Recherche des usinages d'extrémité et calcul des caractéristiques des usinages
+                // On calcul les distances des faces au points extremes
                 foreach (var l in ListeFaceUsinageSection)
+                {
+                    l.CalculerUsinage(FaceSectionExt);
                     l.CalculerDistance(ExtremPoint1, ExtremPoint2);
+                }
 
-                // Recherche des usinages d'extrémité
-                foreach (var l in ListeFaceUsinageSection)
-                    l.CalculerDistance(ExtremPoint1, ExtremPoint2);
-
+                // Recherche de la face la plus proche du point extreme 1
                 var Extrem = ListeFaceUsinageSection[0];
                 foreach (var l in ListeFaceUsinageSection)
                 {
@@ -78,9 +86,11 @@ namespace Macros
                         Extrem = l;
                 }
 
-                ListeFaceUsinageSection.Remove(Extrem);
+                // On l'ajoute à la liste
                 ListeFaceUsinageExtremite.Add(Extrem);
 
+                // On recherche la face la plus proche du point extrème 2
+                // Elle peut être la même que la précédente
                 Extrem = ListeFaceUsinageSection[0];
                 foreach (var l in ListeFaceUsinageSection)
                 {
@@ -88,8 +98,12 @@ namespace Macros
                         Extrem = l;
                 }
 
-                ListeFaceUsinageSection.Remove(Extrem);
-                ListeFaceUsinageExtremite.Add(Extrem);
+                // On l'ajoute
+                ListeFaceUsinageExtremite.AddIfNotExist(Extrem);
+
+                // On les supprime de la liste des faces de la section
+                foreach (var l in ListeFaceUsinageExtremite)
+                    ListeFaceUsinageSection.Remove(l);
             }
 
             private List<ListFaceUsinage> TrierFacesConnectees(List<Face2> listeFace)
@@ -141,7 +155,17 @@ namespace Macros
 
                 public List<Face2> ListeFaces = new List<Face2>();
                 public List<Edge> ListeArretes = new List<Edge>();
-                public int NbFaces = 0;
+
+                /// <summary>
+                /// Liste des faces exterieur découpées
+                /// </summary>
+                public List<FaceGeom> ListeFaceDecoupe = new List<FaceGeom>();
+
+                /// <summary>
+                /// Liste des arretes des faces exterieures
+                /// </summary>
+                public List<Edge> ListeArreteDecoupe = new List<Edge>();
+
                 public Double LgUsinage = 0;
 
                 public Double DistToExtremPoint1 = 1E30;
@@ -153,23 +177,64 @@ namespace Macros
                     {
                         {
                             Double[] res = f.GetClosestPointOn(extremPoint1.X, extremPoint1.Y, extremPoint1.Z);
-                            var dist = extremPoint1.Distance(new Point(res[0], res[1], res[2]));
+                            var dist = extremPoint1.Distance(new Point(res));
                             if (dist < DistToExtremPoint1) DistToExtremPoint1 = dist;
                         }
 
                         {
                             Double[] res = f.GetClosestPointOn(extremPoint2.X, extremPoint2.Y, extremPoint2.Z);
-                            var dist = extremPoint2.Distance(new Point(res[0], res[1], res[2]));
+                            var dist = extremPoint2.Distance(new Point(res));
                             if (dist < DistToExtremPoint2) DistToExtremPoint2 = dist;
                         }
                     }
                 }
+
+                public void CalculerUsinage(ListFaceGeom faceExt)
+                {
+                    Dictionary<FaceGeom,List<Edge>> ListeArreteExt = new Dictionary<FaceGeom, List<Edge>>();
+
+                    foreach (var fg in faceExt.ListeFaceGeom)
+                    {
+                        var le = new List<Edge>();
+                        var lf = new List<Face2>(fg.ListeSwFace);
+                        ListeArreteExt.Add(fg, le);
+
+                        foreach (var f in lf)
+                            le.AddRange(f.eListeDesArretes());
+                    }
+
+                    foreach (var a in ListeArretes)
+                    {
+                        foreach (var fg in ListeArreteExt.Keys)
+                        {
+                            foreach (var ab in ListeArreteExt[fg])
+                            {
+                                if (ab.eIsSame(a))
+                                {
+                                    ListeFaceDecoupe.Add(fg);
+                                    ListeArreteDecoupe.Add(a);
+                                    LgUsinage += a.eLgArrete();
+                                }
+                            }
+                        }
+                    }
+                }
+
 
                 // Initialisation avec une face
                 public ListFaceUsinage(Face2 f)
                 {
                     ListeFaces.Add(f);
                     ListeArretes.AddRange(f.eListeDesArretes());
+
+                    // Verifie si la face est un cylindre
+                    var cpt = 0;
+
+                    foreach (var loop in f.eListeDesBoucles())
+                        if (loop.IsOuter()) cpt++;
+
+                    if (cpt > 1)
+                        Fermer = true;
                 }
 
                 public Boolean AjouterFaceConnectee(Face2 f)
@@ -177,7 +242,9 @@ namespace Macros
                     var result = UnionArretes(f.eListeDesArretes());
 
                     if (result > 0)
+                    {
                         ListeFaces.Add(f);
+                    }
 
                     if (result == 2)
                         Fermer = true;
@@ -185,9 +252,9 @@ namespace Macros
                     return result > 0;
                 }
 
-                private Double UnionArretes(List<Edge> ListeArretes)
+                private Double UnionArretes(List<Edge> listeArretes)
                 {
-                    var ListeTmp = new List<Edge>(ListeArretes);
+                    var ListeTmp = new List<Edge>(listeArretes);
                     Double Connection = 0;
 
                     int i = 0;
@@ -209,7 +276,6 @@ namespace Macros
                                 i--;
                                 break;
                             }
-
                             j++;
                         }
                         i++;
@@ -226,7 +292,7 @@ namespace Macros
 
             #region ANALYSE DE LA GEOMETRIE ET RECHERCHE DU PROFIL
 
-            public void AnalyserFaces()
+            private void AnalyserFaces()
             {
                 var ListeFaces = Corps.eListeDesFaces();
 
@@ -309,8 +375,98 @@ namespace Macros
                     ListeFaceExt.Remove(f);
 
                 ListeFaceExtremite = TrierFacesConnectees(ListeFaceExt);
+
+                // On recherche la face exterieure
+                // s'il y a plusieurs boucles de surfaces
+                if(ListeFaceSectionInt.Count > 0)
+                {
+                    {
+                        // Si la section n'est composé que de cylindre fermé
+                        Boolean EstUnCylindre = true;
+                        ListFaceGeom Ext = null;
+                        Double RayonMax = 0;
+                        foreach (var fg in ListeFaceSectionInt)
+                        {
+                            if (fg.ListeFaceGeom.Count == 1)
+                            {
+                                var f = fg.ListeFaceGeom[0];
+
+                                if (f.Type == eTypeFace.Cylindre)
+                                {
+                                    if (RayonMax < f.Rayon)
+                                    {
+                                        RayonMax = f.Rayon;
+                                        Ext = fg;
+                                    }
+                                }
+                                else
+                                {
+                                    EstUnCylindre = false;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (EstUnCylindre)
+                        {
+                            FaceSectionExt = Ext;
+                            ListeFaceSectionInt.Remove(Ext);
+                        }
+                        else
+                            FaceSectionExt = null;
+                    }
+
+                    {
+                        // Methode plus longue pour determiner la face exterieur
+                        if (FaceSectionExt == null)
+                        {
+                            // On créer un vecteur perpendiculaire à l'axe du profil
+                            var vect = PlanSection.Normale;
+                            vect = vect.Vectoriel(new Vecteur(1, 0, 0));
+                            if (vect.X == 0)
+                                vect = vect.Vectoriel(new Vecteur(0, 0, 1));
+                            vect.Normaliser();
+
+                            // On récupère le point extreme dans cette direction
+                            Double X = 0, Y = 0, Z = 0;
+                            Corps.GetExtremePoint(vect.X, vect.Y, vect.Z, out X, out Y, out Z);
+                            var Pt = new Point(X, Y, Z);
+
+                            // La liste de face la plus proche est considérée comme la peau exterieur du profil
+                            Double distMin = 1E30;
+                            foreach (var Ext in ListeFaceSectionInt)
+                            {
+                                foreach (var fg in Ext.ListeFaceGeom)
+                                {
+                                    foreach (var f in fg.ListeSwFace)
+                                    {
+                                        Double[] res = f.GetClosestPointOn(Pt.X, Pt.Y, Pt.Z);
+                                        var PtOnSurface = new Point(res);
+
+                                        var dist = Pt.Distance(PtOnSurface);
+                                        if (dist < 1E-6)
+                                        {
+                                            distMin = dist;
+                                            FaceSectionExt = Ext;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (FaceSectionExt.IsRef()) break;
+                            }
+
+                            // On supprime la face exterieur de la liste des faces
+                            ListeFaceSectionInt.Remove(FaceSectionExt);
+                        }
+                    }
+                }
+                else
+                {
+                    FaceSectionExt = ListeFaceSectionInt[0];
+                }
             }
 
+            // FONCTION CRITIQUE
             private Dictionary<Plan, List<FaceGeom>> CombinerFaces(List<FaceGeom> listeFaceGeom)
             {
                 List<FaceGeom> ListeTest = new List<FaceGeom>(listeFaceGeom);
@@ -341,11 +497,19 @@ namespace Macros
 
                 FaceGeom depart = null;
 
+                // =================================================================================
+                // SECTION CRITIQUE
+                // =================================================================================
+                // Le choix de la face de depart conditionne le bon fonctionnement de la macro
+                // Il faut que cette face appartienne au profil et non à une extrémité
+                // =================================================================================
+                // 
                 // Choix de la face de départ
                 // S'il y a des faces cylindriques ou extrudées
                 // on les privilégie
                 // Sinon on part sur une face du milieu de la liste.
                 // Attention, erreur possible si la face de depart est une extrémité.
+
                 if (DicPlan.Count > 0)
                 {
                     var ltmp = new List<FaceGeom>();
@@ -361,6 +525,7 @@ namespace Macros
                 {
                     depart = ListeTest[ListeTest.Count / 2];
                 }
+                // ==================================================================================
 
                 // On récupère la liste des plans
                 List<FaceGeom> ListePlan = new List<FaceGeom>();
@@ -457,7 +622,7 @@ namespace Macros
                 }
 
                 // On recherche les cylindres uniques
-                // et on les marque comme fermé s'il ont seulement deux boucle
+                // et on les marque comme fermé s'ils ont plus de deux boucle
                 foreach (var l in ListeTri)
                 {
                     if (l.ListeFaceGeom.Count == 1)
@@ -465,9 +630,13 @@ namespace Macros
                         var f = l.ListeFaceGeom[0];
                         if (f.ListeSwFace.Count == 1)
                         {
-                            if (f.SwFace.GetLoopCount() > 1)
-                                l.Fermer = true;
+                            var cpt = 0;
 
+                            foreach (var loop in f.SwFace.eListeDesBoucles())
+                                if (loop.IsOuter()) cpt++;
+                            
+                            if(cpt > 1)
+                                l.Fermer = true;
                         }
                     }
                 }
@@ -786,198 +955,30 @@ namespace Macros
                 //var DossierExport = mdl.eDossier();
                 //var NomFichier = mdl.eNomSansExt();
 
-                var Barre = mdl.eSelect_RecupererObjet<Body2>(1);
-                mdl.eEffacerSelection();
+                Body2 Barre = null;
 
-                var SM = mdl.SketchManager;
+                var Face = mdl.eSelect_RecupererObjet<Face2>(1);
+
+                if (Face.IsNull())
+                    Barre = mdl.eSelect_RecupererObjet<Body2>(1);
+                else
+                    Barre = Face.GetBody();
+
+                mdl.eEffacerSelection();
 
                 WindowLog.Ecrire("Nom du corps : " + Barre.Name);
 
                 var b = new Barre(Barre);
 
-                WindowLog.Ecrire(b.ListeFaceSectionInt.Count);
-
-                //foreach (var l in b.ListeFaceExtremite)
-                //{
-                //    WindowLog.Ecrire(l.ListeFaceGeom.Count + " -> Fermé : " + l.Fermer);
-                //    foreach (var fs in l.ListeFaceGeom)
-                //    {
-                //        foreach (var f in fs.ListeSwFace)
-                //        {
-                //            f.eSelectEntite(true);
-                //        }
-                //    }
-                //}
-
-                //foreach (var l in b.ListeFacesUsinageSection)
-                //{
-                //    foreach (var f in l.ListeFace)
-                //    {
-                //        f.eSelectEntite(true);
-                //    }
-                //}
-
-                foreach (var l in b.ListeFaceUsinageExtremite)
+                foreach (var u in b.ListeFaceUsinageSection)
                 {
-                    foreach (var f in l.ListeFaces)
-                    {
-                        f.eSelectEntite(true);
-                    }
+                    WindowLog.Ecrire(u.LgUsinage * 1000);
+                    foreach (var e in u.ListeArreteDecoupe)
+                        e.eSelectEntite(true);
                 }
-
-                //mdl.eEffacerSelection();
-
-                //WindowLog.Ecrire(b.ListeFaceExtremite.Count);
-
-                //foreach (var l in b.ListeFaceExtremite)
-                //{
-                //    WindowLog.Ecrire(l.Liste.Count + " -> Fermé : " + l.Fermer);
-                //    foreach (var fs in l.Liste)
-                //    {
-                //        foreach (var f in fs.ListeSwFace)
-                //        {
-                //            f.eSelectEntite(true);
-                //        }
-                //    }
-                //}
-
             }
             catch (Exception e) { this.LogMethode(new Object[] { e }); }
 
-        }
-
-        private List<Double> ListePercage(Body2 Barre)
-        {
-            Func<List<Edge>, Double> LgPercage = delegate (List<Edge> liste)
-               {
-                   double lg = 0;
-
-                   foreach (var e in liste)
-                   {
-                       lg += e.eLgArrete();
-                   }
-
-                   return lg * 0.5;
-               };
-
-            var ListeListeArretes = new List<List<Edge>>();
-
-            var ListeFoncCorps = Barre.eListeFonctions(null, false);
-
-            if (ListeFoncCorps != null)
-            {
-                ListeFoncCorps.RemoveAt(0);
-
-                var ListeFaces = new List<List<Edge>>();
-
-                foreach (var Fonc in ListeFoncCorps)
-                {
-                    var ListeFoncFace = Fonc.eListeDesFaces();
-
-                    foreach (var Face in ListeFoncFace)
-                    {
-                        var B = (Body2)Face.GetBody();
-                        if (B.Name == Barre.Name)
-                        {
-                            var ListeBoucles = Face.eListeDesBoucles(l =>
-                            {
-                                if (l.IsOuter())
-                                    return true;
-
-                                return false;
-                            });
-
-                            // On ne recupère que les boucles exterieures
-                            var ListeArrete = new List<Edge>();
-                            foreach (var Boucle in ListeBoucles)
-                            {
-                                foreach (var Arrete in Boucle.GetEdges())
-                                {
-                                    ListeArrete.Add(Arrete);
-                                }
-                            }
-
-                            ListeFaces.Add(ListeArrete);
-                        }
-                    }
-                }
-
-                while (ListeFaces.Count > 0)
-                {
-                    var ArreteFace1 = ListeFaces[0];
-                    ListeListeArretes.Add(ArreteFace1);
-                    ListeFaces.RemoveAt(0);
-
-                    int index = 0;
-                    while (index < ListeFaces.Count)
-                    {
-                        var ArreteFace2 = ListeFaces[index];
-                        if (Union(ref ArreteFace1, ref ArreteFace2))
-                        {
-                            ListeFaces.RemoveAt(index);
-                            index = -1;
-                        }
-
-                        index++;
-                    }
-                }
-
-                WindowLog.Ecrire("Nb perçages : " + ListeListeArretes.Count);
-
-                int i = 0;
-                foreach (var liste in ListeListeArretes)
-                {
-                    WindowLog.Ecrire("Boucle " + i + " : " + liste.Count);
-                    liste[0].eSelectEntite(true);
-                }
-            }
-
-            var ListePercage = new List<Double>();
-
-            foreach (var liste in ListeListeArretes)
-            {
-                ListePercage.Add(LgPercage(liste));
-            }
-
-            return ListePercage;
-        }
-
-        private Boolean Union(ref List<Edge> ListeArretes1, ref List<Edge> ListeArretes2)
-        {
-            Boolean Joindre = false;
-
-            int i = 0;
-            while (i < ListeArretes1.Count)
-            {
-                var Arrete1 = ListeArretes1[i];
-
-                int j = 0;
-                while (j < ListeArretes2.Count)
-                {
-                    var Arrete2 = ListeArretes2[j];
-
-                    if (Arrete1.eIsSame(Arrete2))
-                    {
-                        Joindre = true;
-
-                        ListeArretes1.RemoveAt(i);
-                        ListeArretes2.RemoveAt(j);
-                        i--;
-                        break;
-                    }
-
-                    j++;
-                }
-                i++;
-            }
-
-            if (Joindre)
-            {
-                ListeArretes1.AddRange(ListeArretes2);
-                return true;
-            }
-
-            return false;
         }
     }
 
