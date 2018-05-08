@@ -245,18 +245,18 @@ namespace ModuleLaser
                                         Dic.Add(nom, 1);
                                 }
 
-                                String[] Tab = new String[Dic.Count + 7];
+                                String[] Tab = new String[1 + 7];
                                 int i = 0;
                                 Tab[i++] = RefBarre; Tab[i++] = Materiau; Tab[i++] = Profil;
                                 Tab[i++] = Math.Round(Longueur.eToDouble()).ToString();
                                 Tab[i++] = "× " + QuantiteBarre.ToString();
                                 Tab[i++] = Math.Round(analyse.ListeFaceUsinageExtremite[0].LgUsinage, 1).ToString();
                                 Tab[i++] = Math.Round(analyse.ListeFaceUsinageExtremite[1].LgUsinage, 1).ToString();
-
+                                Tab[i] = "";
                                 foreach (var nom in Dic.Keys)
-                                    Tab[i++] = Dic[nom] + "x " + nom;
-
-                                Nomenclature.AjouterLigne(Tab);
+                                    Tab[i] += Dic[nom] + "x " + nom + "   ";
+                                WindowLog.Ecrire(Tab[i]);
+                                Nomenclature.AjouterLigne(Tab[0], Tab[1], Tab[2], Tab[3], Tab[4], Tab[5], Tab[6], Tab[7]);
 
                                 //mdl.ViewZoomtofit2();
                                 //mdl.ShowNamedView2("*Isométrique", 7);

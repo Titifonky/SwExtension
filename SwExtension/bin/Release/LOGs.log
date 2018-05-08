@@ -1,245 +1,319 @@
-12:15:55,406 | 
+14:14:54,102 | 
  
-12:15:55,413 | ====================================================================================================
-12:15:55,413 | |                                                                                                  |
-12:15:55,413 | |                                          DEBUG                                                   |
-12:15:55,413 | |                                                                                                  |
-12:15:55,413 | ====================================================================================================
-12:15:55,413 | 
+14:14:54,114 | ====================================================================================================
+14:14:54,114 | |                                                                                                  |
+14:14:54,114 | |                                          DEBUG                                                   |
+14:14:54,114 | |                                                                                                  |
+14:14:54,114 | ====================================================================================================
+14:14:54,114 | 
  
-12:16:09,025 | 			PageExportBarre..ctor  ->  Est initialisé : True
-12:16:09,082 | 				-> ## 12:16:09     0     0      EXPORTER LES BARRES
-12:16:09,106 | 				-> ## 12:16:09     0     0  ========================
-12:16:09,122 | 				-> ## 12:16:09     0     0  
-12:16:09,151 | 			PageExportBarre.Command  ->  Show
-12:16:09,223 | 				-> ## 12:16:09     0     0  Recherche des materiaux : 
-12:16:09,454 | 				-> ## 12:16:09     0     0   - Acier S235
-12:16:09,472 | 				-> ## 12:16:09     0     0   - Aluminium
-12:16:09,489 | 				-> ## 12:16:09     0     0  
-12:16:09,523 | 				-> ## 12:16:09     1     0  Executé en 0s387
-12:16:09,539 | 				-> ## 12:16:09     1     0  
-12:16:10,974 | 				-> ## 12:16:10     2     1  Dossier :
-E1-ED000-0 - Export barres_X_B - Ind B
-12:16:11,024 | 				-> ## 12:16:11     2     0  
-12:16:11,040 | 				-> ## 12:16:11     2     0  [1/1] Test2
-12:16:11,059 | 				-> ## 12:16:11     2     0  
-12:16:11,076 | 				-> ## 12:16:11     2     0    [1/1] Config : "0" -> ×1
-12:16:11,645 | 				-> 0
-12:16:11,708 | 				-> ## 12:16:11     3     1  
-12:16:11,723 | 				-> ## 12:16:11     3     0      - [1/26] Dossier : "Article-liste-des-pièces-soudées1"
-12:16:11,756 | 				-> ## 12:16:11     3     0      Profil Tube Rc 100x50x3  Materiau Acier S235
-12:16:11,976 | 				-> 0
-12:16:11,976 | 				-> 0
-12:16:11,976 | 				-> 0
-12:16:12,008 | 				-> ## 12:16:12     3     0  
-12:16:12,023 | 				-> ## 12:16:12     3     0      - [4/26] Dossier : "Article-liste-des-pièces-soudées4"
-12:16:12,040 | 				-> ## 12:16:12     3     0      Profil Tube Rc 120x80x4  Materiau Acier S235
-12:16:12,071 | 				-> 0
-12:16:12,092 | 				-> ## 12:16:12     3     0  
-12:16:12,107 | 				-> ## 12:16:12     3     0      - [5/26] Dossier : "Tôle<1>"
-12:16:12,125 | 				-> ## 12:16:12     3     0        Pas de barres
-12:16:12,125 | 				-> 0
-12:16:12,142 | 				-> ## 12:16:12     3     0  
-12:16:12,157 | 				-> ## 12:16:12     3     0      - [6/26] Dossier : "Article-liste-des-pièces-soudées6"
-12:16:12,176 | 				-> ## 12:16:12     3     0      Profil Tube Rc 120x80x4  Materiau Acier S235
-12:16:12,211 | 				-> 0
-12:16:12,249 | 				-> ## 12:16:12     3     0  
-12:16:12,274 | 				-> ## 12:16:12     3     0      - [7/26] Dossier : "Article-liste-des-pièces-soudées7"
-12:16:12,290 | 				-> ## 12:16:12     3     0      Profil Tube Rc 120x80x4  Materiau Acier S235
-12:16:12,320 | 				-> 0
-12:16:12,340 | 				-> ## 12:16:12     3     0  
-12:16:12,357 | 				-> ## 12:16:12     3     0      - [8/26] Dossier : "Article-liste-des-pièces-soudées8"
-12:16:12,390 | 				-> ## 12:16:12     3     0      Profil Profil Test  Materiau Acier S235
-12:16:12,433 | 				-> 0
-12:16:12,433 | 				-> 0
-12:16:12,458 | 				-> ## 12:16:12     3     0  
-12:16:12,475 | 				-> ## 12:16:12     3     0      - [10/26] Dossier : "Article-liste-des-pièces-soudées10"
-12:16:12,508 | 				-> ## 12:16:12     3     0      Profil Tube Rc 120x80x4  Materiau Acier S235
-12:16:12,556 | 				-> 0
-12:16:12,574 | 				-> ## 12:16:12     4     0  
-12:16:12,591 | 				-> ## 12:16:12     4     0      - [11/26] Dossier : "Article-liste-des-pièces-soudées11"
-12:16:12,624 | 				-> ## 12:16:12     4     0      Profil Tube Rc 120x80x4  Materiau Acier S235
-12:16:12,656 | 				-> 0
-12:16:12,674 | 				-> ## 12:16:12     4     0  
-12:16:12,691 | 				-> ## 12:16:12     4     0      - [12/26] Dossier : "Article-liste-des-pièces-soudées12"
-12:16:12,724 | 				-> ## 12:16:12     4     0      Profil IPE 80  Materiau Acier S235
-12:16:12,780 | 				-> 0
-12:16:12,807 | 				-> ## 12:16:12     4     0  
-12:16:12,825 | 				-> ## 12:16:12     4     0      - [13/26] Dossier : "Article-liste-des-pièces-soudées13"
-12:16:12,858 | 				-> ## 12:16:12     4     0      Profil IPE 80  Materiau Acier S235
-12:16:12,891 | 				-> 0
-12:16:12,907 | 				-> ## 12:16:12     4     0  
-12:16:12,925 | 				-> ## 12:16:12     4     0      - [14/26] Dossier : "Article-liste-des-pièces-soudées14"
-12:16:12,958 | 				-> ## 12:16:12     4     0      Profil IPE 80  Materiau Acier S235
-12:16:12,991 | 				-> 0
-12:16:13,008 | 				-> ## 12:16:13     4     0  
-12:16:13,025 | 				-> ## 12:16:13     4     0      - [15/26] Dossier : "Article-liste-des-pièces-soudées15"
-12:16:13,058 | 				-> ## 12:16:13     4     0      Profil Tube Rc 80x60x2  Materiau Acier S235
-12:16:13,090 | 				-> 0
-12:16:13,108 | 				-> ## 12:16:13     4     0  
-12:16:13,125 | 				-> ## 12:16:13     4     0      - [16/26] Dossier : "Article-liste-des-pièces-soudées16"
-12:16:13,158 | 				-> ## 12:16:13     4     0      Profil Carré 90  Materiau Aluminium
-12:16:13,188 | 				-> 0
-12:16:13,188 | 				-> 0
-12:16:13,210 | 				-> ## 12:16:13     4     0  
-12:16:13,245 | 				-> ## 12:16:13     4     0      - [18/26] Dossier : "Article-liste-des-pièces-soudées18"
-12:16:13,276 | 				-> ## 12:16:13     4     0      Profil IPE 140  Materiau Acier S235
-12:16:13,322 | 				-> 0
-12:16:13,342 | 				-> ## 12:16:13     4     0  
-12:16:13,358 | 				-> ## 12:16:13     4     0      - [19/26] Dossier : "Article-liste-des-pièces-soudées19"
-12:16:13,392 | 				-> ## 12:16:13     4     0      Profil IPE 140  Materiau Acier S235
-12:16:13,425 | 				-> 0
-12:16:13,441 | 				-> ## 12:16:13     4     0  
-12:16:13,458 | 				-> ## 12:16:13     4     0      - [20/26] Dossier : "Article-liste-des-pièces-soudées20"
-12:16:13,492 | 				-> ## 12:16:13     4     0      Profil Tube Cr 80x8  Materiau Aluminium
-12:16:13,613 | 				-> 0
-12:16:13,653 | 				-> ## 12:16:13     5     0  
-12:16:13,679 | 				-> ## 12:16:13     5     0      - [21/26] Dossier : "Article-liste-des-pièces-soudées21"
-12:16:13,710 | 				-> ## 12:16:13     5     0      Profil Tube D48.3x2.6  Materiau Acier S235
-12:16:13,713 | 				-> 0
-12:16:13,744 | 				-> ## 12:16:13     5     0  
-12:16:13,777 | 				-> ## 12:16:13     5     0      - [22/26] Dossier : "Article-liste-des-pièces-soudées22"
-12:16:13,810 | 				-> ## 12:16:13     5     0      Profil Tube D48.3x2.6  Materiau Acier S235
-12:16:13,812 | 				-> 0
-12:16:13,843 | 				-> ## 12:16:13     5     0  
-12:16:13,877 | 				-> ## 12:16:13     5     0      - [23/26] Dossier : "Article-liste-des-pièces-soudées23"
-12:16:13,911 | 				-> ## 12:16:13     5     0      Profil Tube D48.3x2.6  Materiau Acier S235
-12:16:13,913 | 				-> 0
-12:16:13,945 | 				-> ## 12:16:13     5     0  
-12:16:13,979 | 				-> ## 12:16:13     5     0      - [24/26] Dossier : "Article-liste-des-pièces-soudées24"
-12:16:14,011 | 				-> ## 12:16:14     5     0      Profil Profil Test  Materiau Acier S235
-12:16:14,047 | 				-> 0
-12:16:14,078 | 				-> ## 12:16:14     5     0  
-12:16:14,120 | 				-> ## 12:16:14     5     0      - [25/26] Dossier : "Article-liste-des-pièces-soudées25"
-12:16:14,144 | 				-> ## 12:16:14     5     0      Profil Profil Test  Materiau Acier S235
-12:16:14,210 | 				-> 0
-12:16:14,227 | 				-> ## 12:16:14     5     0  
-12:16:14,260 | 				-> ## 12:16:14     5     0      - [26/26] Dossier : "Article-liste-des-pièces-soudées26"
-12:16:14,294 | 				-> ## 12:16:14     5     0      Profil Profil Test  Materiau Acier S235
-12:16:14,377 | 				-> ## 12:16:14     5     0  
-12:16:14,383 | 			CmdExportBarre.Command  ->  System.FormatException: L'index (de base zéro) doit être supérieur ou égal à zéro et inférieur à la taille de la liste des arguments.
-   à System.Text.StringBuilder.AppendFormatHelper(IFormatProvider provider, String format, ParamsArray args)
-   à System.String.FormatHelper(IFormatProvider provider, String format, ParamsArray args)
-   à System.String.Format(String format, Object[] args)
-   à ModuleLaser.ModuleExportBarre.CmdExportBarre.InfosBarres.ListeLignes() dans E:\Mes documents\Projets Visual Studio\SwExtension\SwExtension\ModuleLaser\ModuleExportBarre\CmdExportBarre.cs:ligne 1349
-   à ModuleLaser.ModuleExportBarre.CmdExportBarre.Command() dans E:\Mes documents\Projets Visual Studio\SwExtension\SwExtension\ModuleLaser\ModuleExportBarre\CmdExportBarre.cs:ligne 281
-12:16:14,411 | 				-> ## 12:16:14     5     0  
-12:16:14,445 | 				-> ## 12:16:14     5     0  Executé en 3s448
-12:17:04,263 | 			PageExportBarre..ctor  ->  Est initialisé : True
-12:17:04,295 | 				-> ## 12:17:04     0     0      EXPORTER LES BARRES
-12:17:04,309 | 				-> ## 12:17:04     0     0  ========================
-12:17:04,324 | 				-> ## 12:17:04     0     0  
-12:17:04,325 | 			PageExportBarre.Command  ->  Show
-12:17:04,391 | 				-> ## 12:17:04     0     0  Recherche des materiaux : 
-12:17:04,616 | 				-> ## 12:17:04     0     0   - Acier S235
-12:17:04,641 | 				-> ## 12:17:04     0     0   - Aluminium
-12:17:04,658 | 				-> ## 12:17:04     0     0  
-12:17:04,708 | 				-> ## 12:17:04     0     0  Executé en 0s355
-12:17:04,725 | 				-> ## 12:17:04     0     0  
-12:17:05,694 | 				-> ## 12:17:05     1     1  Dossier :
-E1-ED000-0 - Export barres_X_B - Ind A
-12:17:05,725 | 				-> ## 12:17:05     1     0  
-12:17:05,742 | 				-> ## 12:17:05     1     0  [1/1] Test2
-12:17:05,758 | 				-> ## 12:17:05     1     0  
-12:17:05,777 | 				-> ## 12:17:05     2     0    [1/1] Config : "0" -> ×1
-12:17:06,257 | 				-> 0
-12:17:06,275 | 				-> ## 12:17:06     2     0  
-12:17:06,292 | 				-> ## 12:17:06     2     0      - [1/26] Dossier : "Article-liste-des-pièces-soudées1"
-12:17:06,325 | 				-> ## 12:17:06     2     0      Profil Tube Rc 100x50x3  Materiau Acier S235
-12:17:06,493 | 				-> 0
-12:17:06,493 | 				-> 0
-12:17:06,493 | 				-> 0
-12:17:06,532 | 				-> ## 12:17:06     2     0  
-12:17:06,559 | 				-> ## 12:17:06     2     0      - [4/26] Dossier : "Article-liste-des-pièces-soudées4"
-12:17:06,576 | 				-> ## 12:17:06     2     0      Profil Tube Rc 120x80x4  Materiau Acier S235
-12:17:06,606 | 				-> 0
-12:17:06,625 | 				-> ## 12:17:06     2     0  
-12:17:06,642 | 				-> ## 12:17:06     2     0      - [5/26] Dossier : "Tôle<1>"
-12:17:06,662 | 				-> ## 12:17:06     2     0        Pas de barres
-12:17:06,662 | 				-> 0
-12:17:06,698 | 				-> ## 12:17:06     2     0  
-12:17:06,727 | 				-> ## 12:17:06     2     0      - [6/26] Dossier : "Article-liste-des-pièces-soudées6"
-12:17:06,743 | 				-> ## 12:17:06     2     0      Profil Tube Rc 120x80x4  Materiau Acier S235
-12:17:06,778 | 				-> 0
-12:17:06,794 | 				-> ## 12:17:06     3     0  
-12:17:06,809 | 				-> ## 12:17:06     3     0      - [7/26] Dossier : "Article-liste-des-pièces-soudées7"
-12:17:06,826 | 				-> ## 12:17:06     3     0      Profil Tube Rc 120x80x4  Materiau Acier S235
-12:17:06,862 | 				-> 0
-12:17:06,876 | 				-> ## 12:17:06     3     0  
-12:17:06,892 | 				-> ## 12:17:06     3     0      - [8/26] Dossier : "Article-liste-des-pièces-soudées8"
-12:17:06,926 | 				-> ## 12:17:06     3     0      Profil Profil Test  Materiau Acier S235
-12:17:06,962 | 				-> 0
-12:17:06,962 | 				-> 0
-12:17:06,976 | 				-> ## 12:17:06     3     0  
-12:17:06,992 | 				-> ## 12:17:06     3     0      - [10/26] Dossier : "Article-liste-des-pièces-soudées10"
-12:17:07,010 | 				-> ## 12:17:07     3     0      Profil Tube Rc 120x80x4  Materiau Acier S235
-12:17:07,040 | 				-> 0
-12:17:07,059 | 				-> ## 12:17:07     3     0  
-12:17:07,076 | 				-> ## 12:17:07     3     0      - [11/26] Dossier : "Article-liste-des-pièces-soudées11"
-12:17:07,093 | 				-> ## 12:17:07     3     0      Profil Tube Rc 120x80x4  Materiau Acier S235
-12:17:07,126 | 				-> 0
-12:17:07,143 | 				-> ## 12:17:07     3     0  
-12:17:07,160 | 				-> ## 12:17:07     3     0      - [12/26] Dossier : "Article-liste-des-pièces-soudées12"
-12:17:07,199 | 				-> ## 12:17:07     3     0      Profil IPE 80  Materiau Acier S235
-12:17:07,255 | 				-> 0
-12:17:07,277 | 				-> ## 12:17:07     3     0  
-12:17:07,294 | 				-> ## 12:17:07     3     0      - [13/26] Dossier : "Article-liste-des-pièces-soudées13"
-12:17:07,327 | 				-> ## 12:17:07     3     0      Profil IPE 80  Materiau Acier S235
-12:17:07,361 | 				-> 0
-12:17:07,377 | 				-> ## 12:17:07     3     0  
-12:17:07,394 | 				-> ## 12:17:07     3     0      - [14/26] Dossier : "Article-liste-des-pièces-soudées14"
-12:17:07,427 | 				-> ## 12:17:07     3     0      Profil IPE 80  Materiau Acier S235
-12:17:07,461 | 				-> 0
-12:17:07,477 | 				-> ## 12:17:07     3     0  
-12:17:07,494 | 				-> ## 12:17:07     3     0      - [15/26] Dossier : "Article-liste-des-pièces-soudées15"
-12:17:07,529 | 				-> ## 12:17:07     3     0      Profil Tube Rc 80x60x2  Materiau Acier S235
-12:17:07,568 | 				-> 0
-12:17:07,594 | 				-> ## 12:17:07     3     0  
-12:17:07,610 | 				-> ## 12:17:07     3     0      - [16/26] Dossier : "Article-liste-des-pièces-soudées16"
-12:17:07,644 | 				-> ## 12:17:07     3     0      Profil Carré 90  Materiau Aluminium
-12:17:07,673 | 				-> 0
-12:17:07,673 | 				-> 0
-12:17:07,693 | 				-> ## 12:17:07     3     0  
-12:17:07,711 | 				-> ## 12:17:07     3     0      - [18/26] Dossier : "Article-liste-des-pièces-soudées18"
-12:17:07,744 | 				-> ## 12:17:07     3     0      Profil IPE 140  Materiau Acier S235
-12:17:07,781 | 				-> 0
-12:17:07,810 | 				-> ## 12:17:07     4     0  
-12:17:07,827 | 				-> ## 12:17:07     4     0      - [19/26] Dossier : "Article-liste-des-pièces-soudées19"
-12:17:07,861 | 				-> ## 12:17:07     4     0      Profil IPE 140  Materiau Acier S235
-12:17:07,896 | 				-> 0
-12:17:07,911 | 				-> ## 12:17:07     4     0  
-12:17:07,945 | 				-> ## 12:17:07     4     0      - [20/26] Dossier : "Article-liste-des-pièces-soudées20"
-12:17:07,978 | 				-> ## 12:17:07     4     0      Profil Tube Cr 80x8  Materiau Aluminium
-12:17:08,103 | 				-> 0
-12:17:08,141 | 				-> ## 12:17:08     4     0  
-12:17:08,162 | 				-> ## 12:17:08     4     0      - [21/26] Dossier : "Article-liste-des-pièces-soudées21"
-12:17:08,196 | 				-> ## 12:17:08     4     0      Profil Tube D48.3x2.6  Materiau Acier S235
-12:17:08,198 | 				-> 0
-12:17:08,229 | 				-> ## 12:17:08     4     0  
-12:17:08,262 | 				-> ## 12:17:08     4     0      - [22/26] Dossier : "Article-liste-des-pièces-soudées22"
-12:17:08,296 | 				-> ## 12:17:08     4     0      Profil Tube D48.3x2.6  Materiau Acier S235
-12:17:08,298 | 				-> 0
-12:17:08,330 | 				-> ## 12:17:08     4     0  
-12:17:08,371 | 				-> ## 12:17:08     4     0      - [23/26] Dossier : "Article-liste-des-pièces-soudées23"
-12:17:08,396 | 				-> ## 12:17:08     4     0      Profil Tube D48.3x2.6  Materiau Acier S235
-12:17:08,398 | 				-> 0
-12:17:08,429 | 				-> ## 12:17:08     4     0  
-12:17:08,463 | 				-> ## 12:17:08     4     0      - [24/26] Dossier : "Article-liste-des-pièces-soudées24"
-12:17:08,496 | 				-> ## 12:17:08     4     0      Profil Profil Test  Materiau Acier S235
-12:17:08,532 | 				-> 0
-12:17:08,562 | 				-> ## 12:17:08     4     0  
-12:17:08,596 | 				-> ## 12:17:08     4     0      - [25/26] Dossier : "Article-liste-des-pièces-soudées25"
-12:17:08,630 | 				-> ## 12:17:08     4     0      Profil Profil Test  Materiau Acier S235
-12:17:08,696 | 				-> 0
-12:17:08,713 | 				-> ## 12:17:08     4     0  
-12:17:08,746 | 				-> ## 12:17:08     4     0      - [26/26] Dossier : "Article-liste-des-pièces-soudées26"
-12:17:08,780 | 				-> ## 12:17:08     5     0      Profil Profil Test  Materiau Acier S235
-12:17:08,863 | 				-> ## 12:17:08     5     0  
-12:17:08,863 | 			CmdExportBarre.Command  ->  System.FormatException: L'index (de base zéro) doit être supérieur ou égal à zéro et inférieur à la taille de la liste des arguments.
-   à System.Text.StringBuilder.AppendFormatHelper(IFormatProvider provider, String format, ParamsArray args)
-   à System.String.FormatHelper(IFormatProvider provider, String format, ParamsArray args)
-   à System.String.Format(String format, Object[] args)
-   à ModuleLaser.ModuleExportBarre.CmdExportBarre.InfosBarres.ListeLignes() dans E:\Mes documents\Projets Visual Studio\SwExtension\SwExtension\ModuleLaser\ModuleExportBarre\CmdExportBarre.cs:ligne 1349
-   à ModuleLaser.ModuleExportBarre.CmdExportBarre.Command() dans E:\Mes documents\Projets Visual Studio\SwExtension\SwExtension\ModuleLaser\ModuleExportBarre\CmdExportBarre.cs:ligne 281
-12:17:08,896 | 				-> ## 12:17:08     5     0  
-12:17:08,929 | 				-> ## 12:17:08     5     0  Executé en 3s191
+14:15:14,792 | 			PageExportBarre..ctor  ->  Est initialisé : True
+14:15:14,838 | 				-> ## 02:15:14     0     0      EXPORTER LES BARRES
+14:15:14,862 | 				-> ## 02:15:14     0     0  ========================
+14:15:14,895 | 				-> ## 02:15:14     0     0  
+14:15:14,967 | 			PageExportBarre.Command  ->  Show
+14:15:15,111 | 				-> ## 02:15:15     0     0  Recherche des materiaux : 
+14:15:15,627 | 				-> ## 02:15:15     1     1   - Acier S235
+14:15:15,649 | 				-> ## 02:15:15     1     0   - Aluminium
+14:15:15,681 | 				-> ## 02:15:15     1     0  
+14:15:15,748 | 				-> ## 02:15:15     1     0  Executé en 0s829
+14:15:15,783 | 				-> ## 02:15:15     1     0  
+14:15:16,792 | 				-> ## 02:15:16     2     1  Dossier :
+E1-ED000-0 - Export barres_X_B - Ind C
+14:15:16,859 | 				-> ## 02:15:16     2     0  
+14:15:16,893 | 				-> ## 02:15:16     2     0  [1/1] Test2
+14:15:16,926 | 				-> ## 02:15:16     2     0  
+14:15:16,959 | 				-> ## 02:15:16     2     0    [1/1] Config : "0" -> ×1
+14:15:18,255 | 				-> 0
+14:15:18,413 | 				-> ## 02:15:18     4     1  
+14:15:18,437 | 				-> ## 02:15:18     4     0      - [1/26] Dossier : "Article-liste-des-pièces-soudées1"
+14:15:18,501 | 				-> ## 02:15:18     4     0      Profil Tube Rc 100x50x3  Materiau Acier S235
+14:15:19,041 | 				-> ## 02:15:19     4     1   - 4x 1 face - Lg 0.1;1x 4 face - Lg 0.2;1x 4 face - Lg 0.1;
+14:15:19,043 | 				-> 0
+14:15:19,043 | 				-> 0
+14:15:19,043 | 				-> 0
+14:15:19,071 | 				-> ## 02:15:19     4     0  
+14:15:19,104 | 				-> ## 02:15:19     4     0      - [4/26] Dossier : "Article-liste-des-pièces-soudées4"
+14:15:19,136 | 				-> ## 02:15:19     4     0      Profil Tube Rc 120x80x4  Materiau Acier S235
+14:15:19,236 | 				-> ## 02:15:19     4     0   - 
+14:15:19,236 | 				-> 0
+14:15:19,272 | 				-> ## 02:15:19     4     0  
+14:15:19,321 | 				-> ## 02:15:19     5     0      - [5/26] Dossier : "Tôle<1>"
+14:15:19,357 | 				-> ## 02:15:19     5     0        Pas de barres
+14:15:19,358 | 				-> 0
+14:15:19,389 | 				-> ## 02:15:19     5     0  
+14:15:19,423 | 				-> ## 02:15:19     5     0      - [6/26] Dossier : "Article-liste-des-pièces-soudées6"
+14:15:19,456 | 				-> ## 02:15:19     5     0      Profil Tube Rc 120x80x4  Materiau Acier S235
+14:15:19,578 | 				-> ## 02:15:19     5     0   - 
+14:15:19,579 | 				-> 0
+14:15:19,609 | 				-> ## 02:15:19     5     0  
+14:15:19,644 | 				-> ## 02:15:19     5     0      - [7/26] Dossier : "Article-liste-des-pièces-soudées7"
+14:15:19,678 | 				-> ## 02:15:19     5     0      Profil Tube Rc 120x80x4  Materiau Acier S235
+14:15:19,809 | 				-> ## 02:15:19     5     0   - 
+14:15:19,809 | 				-> 0
+14:15:19,846 | 				-> ## 02:15:19     5     0  
+14:15:19,878 | 				-> ## 02:15:19     5     0      - [8/26] Dossier : "Article-liste-des-pièces-soudées8"
+14:15:19,925 | 				-> ## 02:15:19     5     0      Profil Profil Test  Materiau Acier S235
+14:15:20,064 | 				-> ## 02:15:20     5     0   - 
+14:15:20,065 | 				-> 0
+14:15:20,065 | 				-> 0
+14:15:20,097 | 				-> ## 02:15:20     5     0  
+14:15:20,134 | 				-> ## 02:15:20     5     0      - [10/26] Dossier : "Article-liste-des-pièces-soudées10"
+14:15:20,166 | 				-> ## 02:15:20     5     0      Profil Tube Rc 120x80x4  Materiau Acier S235
+14:15:20,282 | 				-> ## 02:15:20     5     0   - 
+14:15:20,282 | 				-> 0
+14:15:20,316 | 				-> ## 02:15:20     6     0  
+14:15:20,350 | 				-> ## 02:15:20     6     0      - [11/26] Dossier : "Article-liste-des-pièces-soudées11"
+14:15:20,384 | 				-> ## 02:15:20     6     0      Profil Tube Rc 120x80x4  Materiau Acier S235
+14:15:20,520 | 				-> ## 02:15:20     6     0   - 
+14:15:20,520 | 				-> 0
+14:15:20,550 | 				-> ## 02:15:20     6     0  
+14:15:20,586 | 				-> ## 02:15:20     6     0      - [12/26] Dossier : "Article-liste-des-pièces-soudées12"
+14:15:20,635 | 				-> ## 02:15:20     6     0      Profil IPE 80  Materiau Acier S235
+14:15:20,837 | 				-> ## 02:15:20     6     0   - 
+14:15:20,837 | 				-> 0
+14:15:20,871 | 				-> ## 02:15:20     6     0  
+14:15:20,903 | 				-> ## 02:15:20     6     0      - [13/26] Dossier : "Article-liste-des-pièces-soudées13"
+14:15:20,936 | 				-> ## 02:15:20     6     0      Profil IPE 80  Materiau Acier S235
+14:15:21,074 | 				-> ## 02:15:21     6     0   - 
+14:15:21,075 | 				-> 0
+14:15:21,116 | 				-> ## 02:15:21     6     0  
+14:15:21,158 | 				-> ## 02:15:21     6     0      - [14/26] Dossier : "Article-liste-des-pièces-soudées14"
+14:15:21,189 | 				-> ## 02:15:21     6     0      Profil IPE 80  Materiau Acier S235
+14:15:21,304 | 				-> ## 02:15:21     7     0   - 
+14:15:21,304 | 				-> 0
+14:15:21,339 | 				-> ## 02:15:21     7     0  
+14:15:21,373 | 				-> ## 02:15:21     7     0      - [15/26] Dossier : "Article-liste-des-pièces-soudées15"
+14:15:21,408 | 				-> ## 02:15:21     7     0      Profil Tube Rc 80x60x2  Materiau Acier S235
+14:15:21,542 | 				-> ## 02:15:21     7     0   - 
+14:15:21,542 | 				-> 0
+14:15:21,575 | 				-> ## 02:15:21     7     0  
+14:15:21,609 | 				-> ## 02:15:21     7     0      - [16/26] Dossier : "Article-liste-des-pièces-soudées16"
+14:15:21,641 | 				-> ## 02:15:21     7     0      Profil Carré 90  Materiau Aluminium
+14:15:21,759 | 				-> ## 02:15:21     7     0   - 5x 8 face - Lg 0.4;
+14:15:21,759 | 				-> 0
+14:15:21,759 | 				-> 0
+14:15:21,794 | 				-> ## 02:15:21     7     0  
+14:15:21,827 | 				-> ## 02:15:21     7     0      - [18/26] Dossier : "Article-liste-des-pièces-soudées18"
+14:15:21,859 | 				-> ## 02:15:21     7     0      Profil IPE 140  Materiau Acier S235
+14:15:22,012 | 				-> ## 02:15:22     7     0   - 
+14:15:22,012 | 				-> 0
+14:15:22,044 | 				-> ## 02:15:22     7     0  
+14:15:22,079 | 				-> ## 02:15:22     7     0      - [19/26] Dossier : "Article-liste-des-pièces-soudées19"
+14:15:22,112 | 				-> ## 02:15:22     7     0      Profil IPE 140  Materiau Acier S235
+14:15:22,227 | 				-> ## 02:15:22     7     0   - 
+14:15:22,228 | 				-> 0
+14:15:22,263 | 				-> ## 02:15:22     7     0  
+14:15:22,295 | 				-> ## 02:15:22     8     0      - [20/26] Dossier : "Article-liste-des-pièces-soudées20"
+14:15:22,329 | 				-> ## 02:15:22     8     0      Profil Tube Cr 80x8  Materiau Aluminium
+14:15:22,670 | 				-> ## 02:15:22     8     0   - 4x 12 face - Lg 0.3;
+14:15:22,670 | 				-> 0
+14:15:22,701 | 				-> ## 02:15:22     8     0  
+14:15:22,733 | 				-> ## 02:15:22     8     0      - [21/26] Dossier : "Article-liste-des-pièces-soudées21"
+14:15:22,767 | 				-> ## 02:15:22     8     0      Profil Tube D48.3x2.6  Materiau Acier S235
+14:15:22,798 | 				-> ## 02:15:22     8     0   - 
+14:15:22,799 | 				-> 0
+14:15:22,833 | 				-> ## 02:15:22     8     0  
+14:15:22,878 | 				-> ## 02:15:22     8     0      - [22/26] Dossier : "Article-liste-des-pièces-soudées22"
+14:15:22,916 | 				-> ## 02:15:22     8     0      Profil Tube D48.3x2.6  Materiau Acier S235
+14:15:22,951 | 				-> ## 02:15:22     8     0   - 
+14:15:22,952 | 				-> 0
+14:15:22,985 | 				-> ## 02:15:22     8     0  
+14:15:23,018 | 				-> ## 02:15:23     8     0      - [23/26] Dossier : "Article-liste-des-pièces-soudées23"
+14:15:23,052 | 				-> ## 02:15:23     8     0      Profil Tube D48.3x2.6  Materiau Acier S235
+14:15:23,086 | 				-> ## 02:15:23     8     0   - 
+14:15:23,086 | 				-> 0
+14:15:23,118 | 				-> ## 02:15:23     8     0  
+14:15:23,151 | 				-> ## 02:15:23     8     0      - [24/26] Dossier : "Article-liste-des-pièces-soudées24"
+14:15:23,204 | 				-> ## 02:15:23     8     0      Profil Profil Test  Materiau Acier S235
+14:15:23,337 | 				-> ## 02:15:23     9     0   - 
+14:15:23,337 | 				-> 0
+14:15:23,370 | 				-> ## 02:15:23     9     0  
+14:15:23,402 | 				-> ## 02:15:23     9     0      - [25/26] Dossier : "Article-liste-des-pièces-soudées25"
+14:15:23,453 | 				-> ## 02:15:23     9     0      Profil Profil Test  Materiau Acier S235
+14:15:23,679 | 				-> ## 02:15:23     9     0   - 
+14:15:23,680 | 				-> 0
+14:15:23,721 | 				-> ## 02:15:23     9     0  
+14:15:23,755 | 				-> ## 02:15:23     9     0      - [26/26] Dossier : "Article-liste-des-pièces-soudées26"
+14:15:23,806 | 				-> ## 02:15:23     9     0      Profil Profil Test  Materiau Acier S235
+14:15:24,009 | 				-> ## 02:15:24     9     0   - 
+14:15:24,040 | 				-> ## 02:15:24     9     0  
+14:15:24,078 | 				-> ## 02:15:24     9     0  Barre ref.                 Materiau      Profil              Lg      Nb     Usinage Ext 1    Usinage Ext 2    Détail des Usinage interne                                  
+14:15:24,121 | 				-> ## 02:15:24     9     0  E1-ED000-0 - Test2-0-1     Acier S235    Tube Rc 100x50x3     281    × 1              0.3              0.5     - 4x 1 face - Lg 0.1;1x 4 face - Lg 0.2;1x 4 face - Lg 0.1;
+14:15:24,157 | 				-> ## 02:15:24     9     0  E1-ED000-0 - Test2-0-2     Acier S235    Tube Rc 120x80x4     357    × 1              0.4              0.4                                                              - 
+14:15:24,192 | 				-> ## 02:15:24     9     0  E1-ED000-0 - Test2-0-4     Acier S235    Tube Rc 120x80x4     596    × 1              0.4              0.4                                                              - 
+14:15:24,227 | 				-> ## 02:15:24     9     0  E1-ED000-0 - Test2-0-5     Acier S235    Tube Rc 120x80x4     648    × 1              0.4              0.4                                                              - 
+14:15:24,259 | 				-> ## 02:15:24     9     0  E1-ED000-0 - Test2-0-6     Acier S235    Profil Test         2109    × 1              1.1              1.1                                                              - 
+14:15:24,291 | 				-> ## 02:15:24    10     0  E1-ED000-0 - Test2-0-7     Acier S235    Tube Rc 120x80x4     169    × 1              0.4              0.4                                                              - 
+14:15:24,325 | 				-> ## 02:15:24    10     0  E1-ED000-0 - Test2-0-8     Acier S235    Tube Rc 120x80x4     138    × 1              0.4              0.4                                                              - 
+14:15:24,372 | 				-> ## 02:15:24    10     0  E1-ED000-0 - Test2-0-9     Acier S235    IPE 80              2097    × 1              0.4              0.4                                                              - 
+14:15:24,410 | 				-> ## 02:15:24    10     0  E1-ED000-0 - Test2-0-10    Acier S235    IPE 80              1730    × 1              0.3              0.3                                                              - 
+14:15:24,443 | 				-> ## 02:15:24    10     0  E1-ED000-0 - Test2-0-11    Acier S235    IPE 80              1106    × 1              0.3              0.3                                                              - 
+14:15:24,477 | 				-> ## 02:15:24    10     0  E1-ED000-0 - Test2-0-12    Acier S235    Tube Rc 80x60x2     1327    × 1              0.3              0.3                                                              - 
+14:15:24,511 | 				-> ## 02:15:24    10     0  E1-ED000-0 - Test2-0-13    Aluminium     Carré 90             875    × 1              0.4              0.4                                           - 5x 8 face - Lg 0.4;
+14:15:24,545 | 				-> ## 02:15:24    10     0  E1-ED000-0 - Test2-0-14    Acier S235    IPE 140              951    × 1              0.6              0.6                                                              - 
+14:15:24,590 | 				-> ## 02:15:24    10     0  E1-ED000-0 - Test2-0-15    Acier S235    IPE 140             1154    × 1              0.6              0.6                                                              - 
+14:15:24,629 | 				-> ## 02:15:24    10     0  E1-ED000-0 - Test2-0-16    Aluminium     Tube Cr 80x8         870    × 1              0.3              0.3                                          - 4x 12 face - Lg 0.3;
+14:15:24,662 | 				-> ## 02:15:24    10     0  E1-ED000-0 - Test2-0-17    Acier S235    Tube D48.3x2.6       951    × 1              0.2              0.2                                                              - 
+14:15:24,695 | 				-> ## 02:15:24    10     0  E1-ED000-0 - Test2-0-18    Acier S235    Tube D48.3x2.6       469    × 1              0.2              0.2                                                              - 
+14:15:24,730 | 				-> ## 02:15:24    10     0  E1-ED000-0 - Test2-0-19    Acier S235    Tube D48.3x2.6       762    × 1              0.2              0.2                                                              - 
+14:15:24,777 | 				-> ## 02:15:24    10     0  E1-ED000-0 - Test2-0-20    Acier S235    Profil Test         1485    × 1              1.1              1.1                                                              - 
+14:15:24,814 | 				-> ## 02:15:24    10     0  E1-ED000-0 - Test2-0-21    Acier S235    Profil Test         1618    × 1              1.1              1.9                                                              - 
+14:15:24,847 | 				-> ## 02:15:24    10     0  E1-ED000-0 - Test2-0-22    Acier S235    Profil Test         1098    × 1              1.9              1.1                                                              - 
+14:15:24,883 | 				-> ## 02:15:24    10     0  
+14:15:24,923 | 				-> ## 02:15:24    10     0  Executé en 8s125
+14:16:13,229 | 			PageExportBarre..ctor  ->  Est initialisé : True
+14:16:13,253 | 				-> ## 02:16:13     0     0      EXPORTER LES BARRES
+14:16:13,284 | 				-> ## 02:16:13     0     0  ========================
+14:16:13,314 | 				-> ## 02:16:13     0     0  
+14:16:13,316 | 			PageExportBarre.Command  ->  Show
+14:16:13,448 | 				-> ## 02:16:13     0     0  Recherche des materiaux : 
+14:16:13,912 | 				-> ## 02:16:13     1     0   - Acier S235
+14:16:13,936 | 				-> ## 02:16:13     1     0   - Aluminium
+14:16:13,968 | 				-> ## 02:16:13     1     0  
+14:16:14,035 | 				-> ## 02:16:14     1     0  Executé en 0s702
+14:16:14,069 | 				-> ## 02:16:14     1     0  
+14:16:15,332 | 				-> ## 02:16:15     2     1  Dossier :
+E1-ED000-0 - Export barres_X_B - Ind D
+14:16:15,381 | 				-> ## 02:16:15     2     0  
+14:16:15,414 | 				-> ## 02:16:15     2     0  [1/1] Test2
+14:16:15,447 | 				-> ## 02:16:15     2     0  
+14:16:15,480 | 				-> ## 02:16:15     2     0    [1/1] Config : "0" -> ×1
+14:16:16,602 | 				-> 0
+14:16:16,634 | 				-> ## 02:16:16     3     1  
+14:16:16,668 | 				-> ## 02:16:16     3     0      - [1/26] Dossier : "Article-liste-des-pièces-soudées1"
+14:16:16,722 | 				-> ## 02:16:16     3     0      Profil Tube Rc 100x50x3  Materiau Acier S235
+14:16:17,368 | 				-> ## 02:16:17     4     1   - 4x 1 face - Lg 0.1;1x 4 face - Lg 0.2;1x 4 face - Lg 0.1;
+14:16:17,368 | 				-> 0
+14:16:17,368 | 				-> 0
+14:16:17,368 | 				-> 0
+14:16:17,394 | 				-> ## 02:16:17     4     0  
+14:16:17,423 | 				-> ## 02:16:17     4     0      - [4/26] Dossier : "Article-liste-des-pièces-soudées4"
+14:16:17,459 | 				-> ## 02:16:17     4     0      Profil Tube Rc 120x80x4  Materiau Acier S235
+14:16:17,576 | 				-> ## 02:16:17     4     0   - 
+14:16:17,576 | 				-> 0
+14:16:17,608 | 				-> ## 02:16:17     4     0  
+14:16:17,641 | 				-> ## 02:16:17     4     0      - [5/26] Dossier : "Tôle<1>"
+14:16:17,676 | 				-> ## 02:16:17     4     0        Pas de barres
+14:16:17,676 | 				-> 0
+14:16:17,710 | 				-> ## 02:16:17     4     0  
+14:16:17,743 | 				-> ## 02:16:17     5     0      - [6/26] Dossier : "Article-liste-des-pièces-soudées6"
+14:16:17,785 | 				-> ## 02:16:17     5     0      Profil Tube Rc 120x80x4  Materiau Acier S235
+14:16:17,893 | 				-> ## 02:16:17     5     0   - 
+14:16:17,893 | 				-> 0
+14:16:17,928 | 				-> ## 02:16:17     5     0  
+14:16:17,964 | 				-> ## 02:16:17     5     0      - [7/26] Dossier : "Article-liste-des-pièces-soudées7"
+14:16:17,995 | 				-> ## 02:16:17     5     0      Profil Tube Rc 120x80x4  Materiau Acier S235
+14:16:18,114 | 				-> ## 02:16:18     5     0   - 
+14:16:18,115 | 				-> 0
+14:16:18,148 | 				-> ## 02:16:18     5     0  
+14:16:18,180 | 				-> ## 02:16:18     5     0      - [8/26] Dossier : "Article-liste-des-pièces-soudées8"
+14:16:18,217 | 				-> ## 02:16:18     5     0      Profil Profil Test  Materiau Acier S235
+14:16:18,350 | 				-> ## 02:16:18     5     0   - 
+14:16:18,351 | 				-> 0
+14:16:18,351 | 				-> 0
+14:16:18,384 | 				-> ## 02:16:18     5     0  
+14:16:18,422 | 				-> ## 02:16:18     5     0      - [10/26] Dossier : "Article-liste-des-pièces-soudées10"
+14:16:18,452 | 				-> ## 02:16:18     5     0      Profil Tube Rc 120x80x4  Materiau Acier S235
+14:16:18,567 | 				-> ## 02:16:18     5     0   - 
+14:16:18,567 | 				-> 0
+14:16:18,605 | 				-> ## 02:16:18     5     0  
+14:16:18,638 | 				-> ## 02:16:18     5     0      - [11/26] Dossier : "Article-liste-des-pièces-soudées11"
+14:16:18,672 | 				-> ## 02:16:18     5     0      Profil Tube Rc 120x80x4  Materiau Acier S235
+14:16:18,786 | 				-> ## 02:16:18     6     0   - 
+14:16:18,786 | 				-> 0
+14:16:18,823 | 				-> ## 02:16:18     6     0  
+14:16:18,870 | 				-> ## 02:16:18     6     0      - [12/26] Dossier : "Article-liste-des-pièces-soudées12"
+14:16:18,922 | 				-> ## 02:16:18     6     0      Profil IPE 80  Materiau Acier S235
+14:16:19,109 | 				-> ## 02:16:19     6     0   - 
+14:16:19,109 | 				-> 0
+14:16:19,141 | 				-> ## 02:16:19     6     0  
+14:16:19,174 | 				-> ## 02:16:19     6     0      - [13/26] Dossier : "Article-liste-des-pièces-soudées13"
+14:16:19,208 | 				-> ## 02:16:19     6     0      Profil IPE 80  Materiau Acier S235
+14:16:19,325 | 				-> ## 02:16:19     6     0   - 
+14:16:19,325 | 				-> 0
+14:16:19,367 | 				-> ## 02:16:19     6     0  
+14:16:19,409 | 				-> ## 02:16:19     6     0      - [14/26] Dossier : "Article-liste-des-pièces-soudées14"
+14:16:19,441 | 				-> ## 02:16:19     6     0      Profil IPE 80  Materiau Acier S235
+14:16:19,559 | 				-> ## 02:16:19     6     0   - 
+14:16:19,559 | 				-> 0
+14:16:19,593 | 				-> ## 02:16:19     6     0  
+14:16:19,627 | 				-> ## 02:16:19     6     0      - [15/26] Dossier : "Article-liste-des-pièces-soudées15"
+14:16:19,660 | 				-> ## 02:16:19     6     0      Profil Tube Rc 80x60x2  Materiau Acier S235
+14:16:19,777 | 				-> ## 02:16:19     7     0   - 
+14:16:19,777 | 				-> 0
+14:16:19,818 | 				-> ## 02:16:19     7     0  
+14:16:19,846 | 				-> ## 02:16:19     7     0      - [16/26] Dossier : "Article-liste-des-pièces-soudées16"
+14:16:19,878 | 				-> ## 02:16:19     7     0      Profil Carré 90  Materiau Aluminium
+14:16:19,978 | 				-> ## 02:16:19     7     0   - 5x 8 face - Lg 0.4;
+14:16:19,978 | 				-> 0
+14:16:19,978 | 				-> 0
+14:16:20,013 | 				-> ## 02:16:20     7     0  
+14:16:20,044 | 				-> ## 02:16:20     7     0      - [18/26] Dossier : "Article-liste-des-pièces-soudées18"
+14:16:20,080 | 				-> ## 02:16:20     7     0      Profil IPE 140  Materiau Acier S235
+14:16:20,214 | 				-> ## 02:16:20     7     0   - 
+14:16:20,214 | 				-> 0
+14:16:20,248 | 				-> ## 02:16:20     7     0  
+14:16:20,300 | 				-> ## 02:16:20     7     0      - [19/26] Dossier : "Article-liste-des-pièces-soudées19"
+14:16:20,332 | 				-> ## 02:16:20     7     0      Profil IPE 140  Materiau Acier S235
+14:16:20,448 | 				-> ## 02:16:20     7     0   - 
+14:16:20,448 | 				-> 0
+14:16:20,484 | 				-> ## 02:16:20     7     0  
+14:16:20,516 | 				-> ## 02:16:20     7     0      - [20/26] Dossier : "Article-liste-des-pièces-soudées20"
+14:16:20,550 | 				-> ## 02:16:20     7     0      Profil Tube Cr 80x8  Materiau Aluminium
+14:16:20,920 | 				-> ## 02:16:20     8     0   - 4x 12 face - Lg 0.3;
+14:16:20,920 | 				-> 0
+14:16:20,952 | 				-> ## 02:16:20     8     0  
+14:16:20,986 | 				-> ## 02:16:20     8     0      - [21/26] Dossier : "Article-liste-des-pièces-soudées21"
+14:16:21,020 | 				-> ## 02:16:21     8     0      Profil Tube D48.3x2.6  Materiau Acier S235
+14:16:21,053 | 				-> ## 02:16:21     8     0   - 
+14:16:21,054 | 				-> 0
+14:16:21,097 | 				-> ## 02:16:21     8     0  
+14:16:21,135 | 				-> ## 02:16:21     8     0      - [22/26] Dossier : "Article-liste-des-pièces-soudées22"
+14:16:21,168 | 				-> ## 02:16:21     8     0      Profil Tube D48.3x2.6  Materiau Acier S235
+14:16:21,204 | 				-> ## 02:16:21     8     0   - 
+14:16:21,219 | 				-> 0
+14:16:21,253 | 				-> ## 02:16:21     8     0  
+14:16:21,286 | 				-> ## 02:16:21     8     0      - [23/26] Dossier : "Article-liste-des-pièces-soudées23"
+14:16:21,322 | 				-> ## 02:16:21     8     0      Profil Tube D48.3x2.6  Materiau Acier S235
+14:16:21,353 | 				-> ## 02:16:21     8     0   - 
+14:16:21,353 | 				-> 0
+14:16:21,386 | 				-> ## 02:16:21     8     0  
+14:16:21,422 | 				-> ## 02:16:21     8     0      - [24/26] Dossier : "Article-liste-des-pièces-soudées24"
+14:16:21,469 | 				-> ## 02:16:21     8     0      Profil Profil Test  Materiau Acier S235
+14:16:21,596 | 				-> ## 02:16:21     8     0   - 
+14:16:21,596 | 				-> 0
+14:16:21,624 | 				-> ## 02:16:21     8     0  
+14:16:21,657 | 				-> ## 02:16:21     8     0      - [25/26] Dossier : "Article-liste-des-pièces-soudées25"
+14:16:21,706 | 				-> ## 02:16:21     8     0      Profil Profil Test  Materiau Acier S235
+14:16:21,907 | 				-> ## 02:16:21     9     0   - 
+14:16:21,907 | 				-> 0
+14:16:21,942 | 				-> ## 02:16:21     9     0  
+14:16:21,976 | 				-> ## 02:16:21     9     0      - [26/26] Dossier : "Article-liste-des-pièces-soudées26"
+14:16:22,043 | 				-> ## 02:16:22     9     0      Profil Profil Test  Materiau Acier S235
+14:16:22,265 | 				-> ## 02:16:22     9     0   - 
+14:16:22,293 | 				-> ## 02:16:22     9     0  
+14:16:22,332 | 				-> ## 02:16:22     9     0  Barre ref.                 Materiau      Profil              Lg      Nb     Usinage Ext 1    Usinage Ext 2    Détail des Usinage interne                                  
+14:16:22,361 | 				-> ## 02:16:22     9     0  E1-ED000-0 - Test2-0-1     Acier S235    Tube Rc 100x50x3     281    × 1              0.3              0.5     - 4x 1 face - Lg 0.1;1x 4 face - Lg 0.2;1x 4 face - Lg 0.1;
+14:16:22,394 | 				-> ## 02:16:22     9     0  E1-ED000-0 - Test2-0-2     Acier S235    Tube Rc 120x80x4     357    × 1              0.4              0.4                                                              - 
+14:16:22,438 | 				-> ## 02:16:22     9     0  E1-ED000-0 - Test2-0-4     Acier S235    Tube Rc 120x80x4     596    × 1              0.4              0.4                                                              - 
+14:16:22,479 | 				-> ## 02:16:22     9     0  E1-ED000-0 - Test2-0-5     Acier S235    Tube Rc 120x80x4     648    × 1              0.4              0.4                                                              - 
+14:16:22,513 | 				-> ## 02:16:22     9     0  E1-ED000-0 - Test2-0-6     Acier S235    Profil Test         2109    × 1              1.1              1.1                                                              - 
+14:16:22,545 | 				-> ## 02:16:22     9     0  E1-ED000-0 - Test2-0-7     Acier S235    Tube Rc 120x80x4     169    × 1              0.4              0.4                                                              - 
+14:16:22,579 | 				-> ## 02:16:22     9     0  E1-ED000-0 - Test2-0-8     Acier S235    Tube Rc 120x80x4     138    × 1              0.4              0.4                                                              - 
+14:16:22,614 | 				-> ## 02:16:22     9     0  E1-ED000-0 - Test2-0-9     Acier S235    IPE 80              2097    × 1              0.4              0.4                                                              - 
+14:16:22,657 | 				-> ## 02:16:22     9     0  E1-ED000-0 - Test2-0-10    Acier S235    IPE 80              1730    × 1              0.3              0.3                                                              - 
+14:16:22,697 | 				-> ## 02:16:22     9     0  E1-ED000-0 - Test2-0-11    Acier S235    IPE 80              1106    × 1              0.3              0.3                                                              - 
+14:16:22,732 | 				-> ## 02:16:22    10     0  E1-ED000-0 - Test2-0-12    Acier S235    Tube Rc 80x60x2     1327    × 1              0.3              0.3                                                              - 
+14:16:22,766 | 				-> ## 02:16:22    10     0  E1-ED000-0 - Test2-0-13    Aluminium     Carré 90             875    × 1              0.4              0.4                                           - 5x 8 face - Lg 0.4;
+14:16:22,799 | 				-> ## 02:16:22    10     0  E1-ED000-0 - Test2-0-14    Acier S235    IPE 140              951    × 1              0.6              0.6                                                              - 
+14:16:22,831 | 				-> ## 02:16:22    10     0  E1-ED000-0 - Test2-0-15    Acier S235    IPE 140             1154    × 1              0.6              0.6                                                              - 
+14:16:22,878 | 				-> ## 02:16:22    10     0  E1-ED000-0 - Test2-0-16    Aluminium     Tube Cr 80x8         870    × 1              0.3              0.3                                          - 4x 12 face - Lg 0.3;
+14:16:22,915 | 				-> ## 02:16:22    10     0  E1-ED000-0 - Test2-0-17    Acier S235    Tube D48.3x2.6       951    × 1              0.2              0.2                                                              - 
+14:16:22,950 | 				-> ## 02:16:22    10     0  E1-ED000-0 - Test2-0-18    Acier S235    Tube D48.3x2.6       469    × 1              0.2              0.2                                                              - 
+14:16:22,982 | 				-> ## 02:16:22    10     0  E1-ED000-0 - Test2-0-19    Acier S235    Tube D48.3x2.6       762    × 1              0.2              0.2                                                              - 
+14:16:23,017 | 				-> ## 02:16:23    10     0  E1-ED000-0 - Test2-0-20    Acier S235    Profil Test         1485    × 1              1.1              1.1                                                              - 
+14:16:23,065 | 				-> ## 02:16:23    10     0  E1-ED000-0 - Test2-0-21    Acier S235    Profil Test         1618    × 1              1.1              1.9                                                              - 
+14:16:23,100 | 				-> ## 02:16:23    10     0  E1-ED000-0 - Test2-0-22    Acier S235    Profil Test         1098    × 1              1.9              1.1                                                              - 
+14:16:23,137 | 				-> ## 02:16:23    10     0  
+14:16:23,166 | 				-> ## 02:16:23    10     0  Executé en 7s806
