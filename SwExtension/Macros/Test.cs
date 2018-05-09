@@ -381,7 +381,13 @@ namespace Macros
                     // Tri des faces section
                     ListeFaceSectionInt = TrierFacesConnectees(ListeMax);
 
-
+                    foreach (var l in ListeFaceSectionInt)
+                    {
+                        foreach (var f in l.ListeFaceSw())
+                        {
+                            f.eSelectEntite(true);
+                        }
+                    }
 
                     // Tri des faces extremites
                     // On supprime les faces de la section

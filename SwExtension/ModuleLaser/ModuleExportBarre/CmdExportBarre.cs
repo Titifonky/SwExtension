@@ -762,6 +762,7 @@ namespace ModuleLaser
                                 {
                                     // On créer un vecteur perpendiculaire à l'axe du profil
                                     var vect = PlanSection.Normale;
+
                                     if (vect.X == 0)
                                         vect = vect.Vectoriel(new Vecteur(1, 0, 0));
                                     else
