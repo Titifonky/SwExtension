@@ -127,6 +127,8 @@
     <Parametre name="NumeroterDossier" intitule="Numeroter les dossier" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="ComposantExterne" intitule="Exporter les barres externes au dossier du modèle" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="TypeExport" intitule="Format :" tip="" type="Outils.eTypeFichierExport">ParasolidBinary</Parametre>
+    <Parametre name="ListerUsinages" intitule="Lister les usinages" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="ExporterBarres" intitule="Exporter les barres" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="CreerPdf3D" intitule="Créer les pdf 3D des barres" tip="" type="System.Boolean">True</Parametre>
   </Module>
   <Module name="RenommerToutesFeuilles" intitule="Renommer toutes les feuilles">
