@@ -321,6 +321,8 @@ namespace Macros
                         }
                     }
 
+
+
                     List<FaceGeom> ListeFaceExt = new List<FaceGeom>();
 
                     // Tri des faces pour retrouver celles issues de la même
