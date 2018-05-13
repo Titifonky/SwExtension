@@ -238,7 +238,7 @@ namespace ModuleLaser
 
                                 foreach (var u in analyse.ListeFaceUsinageSection)
                                 {
-                                    String nom = u.ListeFaceDecoupe.Count + " face - Lg " + Math.Round(u.LgUsinage * 1000, 1);
+                                    String nom = u.ListeFaceDecoupe.Count + " face - Lg " + Math.Round(u.LgUsinage, 1);
                                     if(Dic.ContainsKey(nom))
                                         Dic[nom] += 1;
                                     else
@@ -250,11 +250,11 @@ namespace ModuleLaser
                                 Tab[i++] = RefBarre; Tab[i++] = Materiau; Tab[i++] = Profil;
                                 Tab[i++] = Math.Round(Longueur.eToDouble()).ToString();
                                 Tab[i++] = "× " + QuantiteBarre.ToString();
-                                Tab[i++] = Math.Round(analyse.ListeFaceUsinageExtremite[0].LgUsinage * 1000, 1).ToString();
-                                Tab[i++] = Math.Round(analyse.ListeFaceUsinageExtremite[1].LgUsinage * 1000, 1).ToString();
+                                Tab[i++] = Math.Round(analyse.ListeFaceUsinageExtremite[0].LgUsinage, 1).ToString();
+                                Tab[i++] = Math.Round(analyse.ListeFaceUsinageExtremite[1].LgUsinage, 1).ToString();
                                 Tab[i] = "";
                                 foreach (var nom in Dic.Keys)
-                                    Tab[i] += Dic[nom] + "x [" + nom + "]   ";
+                                    Tab[i] += Dic[nom] + "x " + nom + "   ";
                                 WindowLog.Ecrire(Tab[i]);
                                 Nomenclature.AjouterLigne(Tab[0], Tab[1], Tab[2], Tab[3], Tab[4], Tab[5], Tab[6], Tab[7]);
 
@@ -486,9 +486,7 @@ namespace ModuleLaser
                                 {
                                     if (ab.eIsSame(a))
                                     {
-                                        if(!ListeFaceDecoupe.Contains(fg))
-                                            ListeFaceDecoupe.Add(fg);
-
+                                        ListeFaceDecoupe.Add(fg);
                                         ListeArreteDecoupe.Add(a);
                                         LgUsinage += a.eLgArrete();
                                     }
