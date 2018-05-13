@@ -31,6 +31,8 @@ namespace ModuleLaser
 
             private Parametre AfficherListe;
 
+
+
             public PageListeDebit()
             {
                 try
@@ -123,6 +125,7 @@ namespace ModuleLaser
                     _Option_ListeBarres = G.AjouterOption("Liste des barres");
                     _Option_ListeDebit.OnCheck += delegate (Object sender) { TypeSortie = eTypeSortie.ListeDebit; };
                     _Option_ListeBarres.OnCheck += delegate (Object sender) { TypeSortie = eTypeSortie.ListeBarre; };
+                    _Option_ListeDebit.IsChecked = true;
 
                     _Texte_LgBarre = G.AjouterTexteBox(LgBarre, true);
 

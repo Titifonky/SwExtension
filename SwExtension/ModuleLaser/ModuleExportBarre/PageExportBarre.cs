@@ -5,6 +5,7 @@ using SwExtension;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 
 namespace ModuleLaser
 {
@@ -24,7 +25,8 @@ namespace ModuleLaser
             private Parametre TypeExport;
 
             private Parametre NumeroterDossier;
-
+            private Parametre ExporterBarres;
+            private Parametre ListerUsinages;
             private Parametre CreerPdf3D;
 
             public PageExportBarre()
@@ -37,6 +39,8 @@ namespace ModuleLaser
                     ComposantsExterne = _Config.AjouterParam("ComposantExterne", false, "Exporter les barres externes au dossier du modèle");
                     TypeExport = _Config.AjouterParam("TypeExport", eTypeFichierExport.ParasolidBinary, "Format :");
 
+                    ListerUsinages = _Config.AjouterParam("ListerUsinages", false, "Lister les usinages");
+                    ExporterBarres = _Config.AjouterParam("ExporterBarres", false, "Exporter les barres");
                     CreerPdf3D = _Config.AjouterParam("CreerPdf3D", false, "Créer les pdf 3D des barres");
 
                     OnCalque += Calque;
@@ -52,9 +56,11 @@ namespace ModuleLaser
             private CtrlTextBox _Texte_Quantite;
             private CtrlCheckBox _CheckBox_ComposantsExterne;
             private CtrlCheckBox _CheckBox_PrendreEnCompteTole;
+            private CtrlCheckBox _CheckBox_ExporterBarres;
             private CtrlEnumComboBox<eTypeFichierExport, Intitule> _EnumComboBox_TypeExport;
             private CtrlCheckBox _CheckBox_ForcerMateriau;
             private CtrlTextComboBox _TextComboBox_ForcerMateriau;
+            private CtrlCheckBox _CheckBox_ListerUsinages;
             private CtrlCheckBox _CheckBox_CreerPdf3D;
             private CtrlCheckBox _CheckBox_ReinitialiserNoDossier;
 
@@ -102,13 +108,20 @@ namespace ModuleLaser
                     _CheckBox_PrendreEnCompteTole = G.AjouterCheckBox(PrendreEnCompteTole);
                     _CheckBox_PrendreEnCompteTole.OnIsCheck += delegate (Object sender, Boolean value) { Rechercher_Materiaux(); };
 
+                    _CheckBox_ExporterBarres = G.AjouterCheckBox(ExporterBarres);
                     _EnumComboBox_TypeExport = G.AjouterEnumComboBox<eTypeFichierExport, Intitule>(TypeExport);
                     _EnumComboBox_TypeExport.FiltrerEnum = eTypeFichierExport.Parasolid |
                                                             eTypeFichierExport.ParasolidBinary |
                                                             eTypeFichierExport.STEP;
-                    _CheckBox_CreerPdf3D = G.AjouterCheckBox(CreerPdf3D);
 
+                    _CheckBox_CreerPdf3D = G.AjouterCheckBox(CreerPdf3D);
+                    _CheckBox_ExporterBarres.OnIsCheck += _CheckBox_CreerPdf3D.IsEnable;
+                    _CheckBox_ExporterBarres.OnIsCheck += _EnumComboBox_TypeExport.IsEnable;
+                    _CheckBox_ExporterBarres.ApplyParam();
+
+                    _CheckBox_ListerUsinages = G.AjouterCheckBox(ListerUsinages);
                     _CheckBox_ReinitialiserNoDossier = G.AjouterCheckBox("Reinitialiser les n° de dossier");
+                    
 
                 }
                 catch (Exception e)
@@ -163,8 +176,13 @@ namespace ModuleLaser
                 Cmd.ComposantsExterne = _CheckBox_ComposantsExterne.IsChecked;
                 Cmd.RefFichier = _Texte_RefFichier.Text;
                 Cmd.ReinitialiserNoDossier = _CheckBox_ReinitialiserNoDossier.IsChecked;
+                Cmd.ExporterBarres = _CheckBox_ExporterBarres.IsChecked;
+                Cmd.ListerUsinages = _CheckBox_ListerUsinages.IsChecked;
 
                 Cmd.Executer();
+
+                if (File.Exists(Cmd.CheminNomenclature))
+                    System.Diagnostics.Process.Start(Cmd.CheminNomenclature);
             }
         }
     }
