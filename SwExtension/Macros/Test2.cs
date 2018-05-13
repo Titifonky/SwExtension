@@ -24,31 +24,16 @@ namespace Macros
                 //var DossierExport = mdl.eDossier();
                 //var NomFichier = mdl.eNomSansExt();
 
-                var Liste = mdl.eSelect_RecupererListeObjets<Face2>();
-                var Face1 = Liste[0];
-                var Face2 = Liste[1];
-                //Body2 Corps = Face.GetBody();
+                var F = mdl.eSelect_RecupererObjet<Feature>(1);
                 mdl.eEffacerSelection();
 
-                Byte[] id1 = mdl.Extension.GetPersistReference(Face1);
-                Byte[] id2 = mdl.Extension.GetPersistReference(Face2);
-                String s = "";
-                for (int i = 0; i < Math.Max(id1.Length, id2.Length); i++)
+                var def = (StructuralMemberFeatureData)F.GetDefinition();
+                WindowLog.Ecrire(def.WeldmentProfilePath);
+                WindowLog.Ecrire(def.ConfigurationName);
+                foreach (var sf in F.eListeSousFonction())
                 {
-                    if (i < id1.Length && i < id2.Length)
-                    {
-                        if (id1[i] == id2[i])
-                            s += "|";
-                        else
-                            s += "[" + id1[i] + "|" + id2[i] + "]";
-                    }
-                    else if (i < id1.Length)
-                        s += "1[" + id1[i] + "]";
-                    else if (i < id2.Length)
-                        s += "2[" + id2[i] + "]";
+                    WindowLog.Ecrire(sf.GetTypeName2());
                 }
-
-                WindowLog.Ecrire(s);
 
                 //var SM = mdl.SketchManager;
 
