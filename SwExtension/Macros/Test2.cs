@@ -24,16 +24,75 @@ namespace Macros
                 //var DossierExport = mdl.eDossier();
                 //var NomFichier = mdl.eNomSansExt();
 
-                var F = mdl.eSelect_RecupererObjet<Feature>(1);
+                //var F = mdl.eSelect_RecupererObjet<Feature>(1);
+                //mdl.eEffacerSelection();
+
+                //var def = (StructuralMemberFeatureData)F.GetDefinition();
+                //WindowLog.Ecrire(def.WeldmentProfilePath);
+                //WindowLog.Ecrire(def.ConfigurationName);
+                //foreach (var sf in F.eListeSousFonction())
+                //{
+                //    WindowLog.Ecrire(sf.GetTypeName2());
+                //}
+
+                var sel = mdl.eSelect_RecupererObjet<Face2>(1);
+                Body2 corps = null;
+                if (sel.IsRef())
+                    corps = sel.GetBody();
+                else
+                    corps = mdl.eSelect_RecupererObjet<Body2>(1);
+
                 mdl.eEffacerSelection();
 
-                var def = (StructuralMemberFeatureData)F.GetDefinition();
-                WindowLog.Ecrire(def.WeldmentProfilePath);
-                WindowLog.Ecrire(def.ConfigurationName);
-                foreach (var sf in F.eListeSousFonction())
+                var SM = mdl.SketchManager;
+
+                SM.Insert3DSketch(false);
+                SM.AddToDB = true;
+                SM.DisplayWhenAdded = false;
+
+                foreach (var Face in corps.eListeDesFaces())
                 {
-                    WindowLog.Ecrire(sf.GetTypeName2());
+                    var S = (Surface)Face.GetSurface();
+
+                    var UV = (Double[])Face.GetUVBounds();
+
+                    Boolean Reverse = Face.FaceInSurfaceSense();
+
+                    var ev1 = (Double[])S.Evaluate((UV[0] + UV[1]) * 0.5, (UV[2] + UV[3]) * 0.5, 0, 0);
+
+                    Vecteur Vn = new Vecteur(ev1[3], ev1[4], ev1[5]);
+                    if (Reverse)
+                        Vn.Inverser();
+
+                    Vn.Normaliser();
+                    Vn.Multiplier(0.01);
+
+                    Point Pt = new Point();
+
+                    if (S.IsPlane())
+                    {
+                        Double[] Param = S.PlaneParams;
+
+                        Pt = new Point(Param[3], Param[4], Param[5]);
+                    }
+                    else if (S.IsCylinder())
+                    {
+                        Double[] Param = S.CylinderParams;
+
+                        Pt = new Point(Param[0], Param[1], Param[2]);
+                    }
+                    else
+                        continue;
+
+                    SM.CreatePoint(Pt.X, Pt.Y, Pt.Z);
+                    SM.CreateLine(Pt.X, Pt.Y, Pt.Z, Pt.X + Vn.X, Pt.Y + Vn.Y, Pt.Z + Vn.Z);
                 }
+
+                SM.DisplayWhenAdded = true;
+                SM.AddToDB = false;
+                SM.Insert3DSketch(true);
+
+
 
                 //var SM = mdl.SketchManager;
 
@@ -65,21 +124,6 @@ namespace Macros
             }
             catch (Exception e) { this.LogMethode(new Object[] { e }); }
 
-        }
-
-        private Double[] NormaleCylindre(Double[] Axe)
-        {
-            Double[] Normale = new Double[] { 0, 0, 0 };
-
-            if (Axe[0] == 0 && Axe[1] == 0)
-                Normale[0] = 1;
-            else
-            {
-                Normale[0] = Axe[1];
-                Normale[1] = -1 * Axe[0];
-            }
-
-            return Normale;
         }
     }
 }
