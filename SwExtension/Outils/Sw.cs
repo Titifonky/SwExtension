@@ -3894,6 +3894,19 @@ namespace Outils
         }
 
         /// <summary>
+        /// Renvoi le point extreme dans la direction donnée
+        /// </summary>
+        /// <param name="corps"></param>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        public static Point ePointExtreme(this Body2 corps, Vecteur direction)
+        {
+            Double oX = 0, oY = 0, oZ = 0;
+            corps.GetExtremePoint(direction.X, direction.Y, direction.Z, out oX, out oY, out oZ);
+            return new Point(oX, oY, oZ);
+        }
+
+        /// <summary>
         /// Centre de gravité du Corps
         /// </summary>
         /// <param name="corps"></param>

@@ -36,12 +36,12 @@ namespace Macros
                 //    WindowLog.Ecrire(sf.GetTypeName2());
                 //}
 
-                var sel = mdl.eSelect_RecupererObjet<Face2>(1);
-                Body2 corps = null;
-                if (sel.IsRef())
-                    corps = sel.GetBody();
+                var Face = mdl.eSelect_RecupererObjet<Face2>(1);
+                Body2 Corps = null;
+                if (Face.IsRef())
+                    Corps = Face.GetBody();
                 else
-                    corps = mdl.eSelect_RecupererObjet<Body2>(1);
+                    Corps = mdl.eSelect_RecupererObjet<Body2>(1);
 
                 mdl.eEffacerSelection();
 
@@ -50,22 +50,19 @@ namespace Macros
                 SM.Insert3DSketch(false);
                 SM.AddToDB = true;
                 SM.DisplayWhenAdded = false;
+
+                List<Vecteur> ListeDir = new List<Vecteur>();
+                ListeDir.Add(new Vecteur(1, 0, 0));
+                ListeDir.Add(new Vecteur(-1, 0, 0));
+                ListeDir.Add(new Vecteur(0, 1, 0));
+                ListeDir.Add(new Vecteur(0, -1, 0));
+                ListeDir.Add(new Vecteur(0, 0, 1));
+                ListeDir.Add(new Vecteur(0, 0, -1));
+
+                foreach (var v in ListeDir)
                 {
-
-                    var MasseProp = mdl.Extension.CreateMassProperty();
-                    MasseProp.UseSystemUnits = true;
-                    MasseProp.AddBodies(ObjectArrayToDispatchWrapperArray(new Object[] { corps }));
-
-                    var vCoM = new Point((double[])MasseProp.CenterOfMass);
-                    //vCoM.Multiplier(0.001);
-                    var vPrinAoIx = new Vecteur((double[])MasseProp.PrincipleAxesOfInertia[0]);
-                    var vPrinAoIy = new Vecteur((double[])MasseProp.PrincipleAxesOfInertia[1]);
-                    var vPrinAoIz = new Vecteur((double[])MasseProp.PrincipleAxesOfInertia[2]);
-
-                    SM.CreatePoint(vCoM.X, vCoM.Y, vCoM.Z);
-                    SM.CreateLine(vCoM.X, vCoM.Y, vCoM.Z, vCoM.X + vPrinAoIx.X, vCoM.Y + vPrinAoIx.Y, vCoM.Z + vPrinAoIx.Z);
-                    SM.CreateLine(vCoM.X, vCoM.Y, vCoM.Z, vCoM.X + vPrinAoIy.X, vCoM.Y + vPrinAoIy.Y, vCoM.Z + vPrinAoIy.Z);
-                    SM.CreateLine(vCoM.X, vCoM.Y, vCoM.Z, vCoM.X + vPrinAoIz.X, vCoM.Y + vPrinAoIz.Y, vCoM.Z + vPrinAoIz.Z);
+                    var Pt = Corps.ePointExtreme(v);
+                    SM.CreatePoint(Pt.X, Pt.Y, Pt.Z);
                 }
 
                 //{
@@ -146,19 +143,7 @@ namespace Macros
 
         }
 
-        public DispatchWrapper[] ObjectArrayToDispatchWrapperArray(object[] Objects)
-        {
-            int ArraySize = 0;
-            ArraySize = Objects.GetUpperBound(0);
-            DispatchWrapper[] d = new DispatchWrapper[ArraySize + 1];
-            int ArrayIndex = 0;
-            for (ArrayIndex = 0; ArrayIndex <= ArraySize; ArrayIndex++)
-            {
-                d[ArrayIndex] = new DispatchWrapper(Objects[ArrayIndex]);
-            }
-            return d;
 
-        }
 
     }
 }
