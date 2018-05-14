@@ -6,6 +6,7 @@ using SwExtension;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace Macros
@@ -49,44 +50,63 @@ namespace Macros
                 SM.Insert3DSketch(false);
                 SM.AddToDB = true;
                 SM.DisplayWhenAdded = false;
-
-                foreach (var Face in corps.eListeDesFaces())
                 {
-                    var S = (Surface)Face.GetSurface();
 
-                    var UV = (Double[])Face.GetUVBounds();
+                    var MasseProp = mdl.Extension.CreateMassProperty();
+                    MasseProp.UseSystemUnits = true;
+                    MasseProp.AddBodies(ObjectArrayToDispatchWrapperArray(new Object[] { corps }));
 
-                    Boolean Reverse = Face.FaceInSurfaceSense();
+                    var vCoM = new Point((double[])MasseProp.CenterOfMass);
+                    //vCoM.Multiplier(0.001);
+                    var vPrinAoIx = new Vecteur((double[])MasseProp.PrincipleAxesOfInertia[0]);
+                    var vPrinAoIy = new Vecteur((double[])MasseProp.PrincipleAxesOfInertia[1]);
+                    var vPrinAoIz = new Vecteur((double[])MasseProp.PrincipleAxesOfInertia[2]);
 
-                    var ev1 = (Double[])S.Evaluate((UV[0] + UV[1]) * 0.5, (UV[2] + UV[3]) * 0.5, 0, 0);
-
-                    Vecteur Vn = new Vecteur(ev1[3], ev1[4], ev1[5]);
-                    if (Reverse)
-                        Vn.Inverser();
-
-                    Vn.Normaliser();
-                    Vn.Multiplier(0.01);
-
-                    Point Pt = new Point();
-
-                    if (S.IsPlane())
-                    {
-                        Double[] Param = S.PlaneParams;
-
-                        Pt = new Point(Param[3], Param[4], Param[5]);
-                    }
-                    else if (S.IsCylinder())
-                    {
-                        Double[] Param = S.CylinderParams;
-
-                        Pt = new Point(Param[0], Param[1], Param[2]);
-                    }
-                    else
-                        continue;
-
-                    SM.CreatePoint(Pt.X, Pt.Y, Pt.Z);
-                    SM.CreateLine(Pt.X, Pt.Y, Pt.Z, Pt.X + Vn.X, Pt.Y + Vn.Y, Pt.Z + Vn.Z);
+                    SM.CreatePoint(vCoM.X, vCoM.Y, vCoM.Z);
+                    SM.CreateLine(vCoM.X, vCoM.Y, vCoM.Z, vCoM.X + vPrinAoIx.X, vCoM.Y + vPrinAoIx.Y, vCoM.Z + vPrinAoIx.Z);
+                    SM.CreateLine(vCoM.X, vCoM.Y, vCoM.Z, vCoM.X + vPrinAoIy.X, vCoM.Y + vPrinAoIy.Y, vCoM.Z + vPrinAoIy.Z);
+                    SM.CreateLine(vCoM.X, vCoM.Y, vCoM.Z, vCoM.X + vPrinAoIz.X, vCoM.Y + vPrinAoIz.Y, vCoM.Z + vPrinAoIz.Z);
                 }
+
+                //{
+                //    foreach (var Face in corps.eListeDesFaces())
+                //    {
+                //        var S = (Surface)Face.GetSurface();
+
+                //        var UV = (Double[])Face.GetUVBounds();
+
+                //        Boolean Reverse = Face.FaceInSurfaceSense();
+
+                //        var ev1 = (Double[])S.Evaluate((UV[0] + UV[1]) * 0.5, (UV[2] + UV[3]) * 0.5, 0, 0);
+
+                //        Vecteur Vn = new Vecteur(ev1[3], ev1[4], ev1[5]);
+                //        if (Reverse)
+                //            Vn.Inverser();
+
+                //        Vn.Normaliser();
+                //        Vn.Multiplier(0.01);
+
+                //        Point Pt = new Point();
+
+                //        if (S.IsPlane())
+                //        {
+                //            Double[] Param = S.PlaneParams;
+
+                //            Pt = new Point(Param[3], Param[4], Param[5]);
+                //        }
+                //        else if (S.IsCylinder())
+                //        {
+                //            Double[] Param = S.CylinderParams;
+
+                //            Pt = new Point(Param[0], Param[1], Param[2]);
+                //        }
+                //        else
+                //            continue;
+
+                //        SM.CreatePoint(Pt.X, Pt.Y, Pt.Z);
+                //        SM.CreateLine(Pt.X, Pt.Y, Pt.Z, Pt.X + Vn.X, Pt.Y + Vn.Y, Pt.Z + Vn.Z);
+                //    }
+                //}
 
                 SM.DisplayWhenAdded = true;
                 SM.AddToDB = false;
@@ -125,5 +145,20 @@ namespace Macros
             catch (Exception e) { this.LogMethode(new Object[] { e }); }
 
         }
+
+        public DispatchWrapper[] ObjectArrayToDispatchWrapperArray(object[] Objects)
+        {
+            int ArraySize = 0;
+            ArraySize = Objects.GetUpperBound(0);
+            DispatchWrapper[] d = new DispatchWrapper[ArraySize + 1];
+            int ArrayIndex = 0;
+            for (ArrayIndex = 0; ArrayIndex <= ArraySize; ArrayIndex++)
+            {
+                d[ArrayIndex] = new DispatchWrapper(Objects[ArrayIndex]);
+            }
+            return d;
+
+        }
+
     }
 }

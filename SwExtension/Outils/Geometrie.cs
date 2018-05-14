@@ -119,6 +119,13 @@ namespace Outils
             Z = Math.Max(Z, pt.Z);
         }
 
+        public void Multiplier(Double n)
+        {
+            X *= n;
+            Y *= n;
+            Z *= n;
+        }
+
         public void MultiplyTransfom(MathTransform trans)
         {
             MathUtility Mu = App.Sw.GetMathUtility();
