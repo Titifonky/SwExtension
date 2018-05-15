@@ -36,34 +36,80 @@ namespace Macros
                 //    WindowLog.Ecrire(sf.GetTypeName2());
                 //}
 
+                //var Face = mdl.eSelect_RecupererObjet<Face2>(1);
+
+                //Byte[] Tab = mdl.Extension.GetPersistReference3(Face);
+                //String S = System.Text.Encoding.Default.GetString(Tab);
+                //Log.Message(S);
+
                 var Face = mdl.eSelect_RecupererObjet<Face2>(1);
-                Body2 Corps = null;
-                if (Face.IsRef())
-                    Corps = Face.GetBody();
-                else
-                    Corps = mdl.eSelect_RecupererObjet<Body2>(1);
+                Body2 Corps = Face.GetBody();
 
                 mdl.eEffacerSelection();
 
-                var SM = mdl.SketchManager;
+                List<Face2> ListeFaceExt = new List<Face2>();
 
-                SM.Insert3DSketch(false);
-                SM.AddToDB = true;
-                SM.DisplayWhenAdded = false;
-
-                List<Vecteur> ListeDir = new List<Vecteur>();
-                ListeDir.Add(new Vecteur(1, 0, 0));
-                ListeDir.Add(new Vecteur(-1, 0, 0));
-                ListeDir.Add(new Vecteur(0, 1, 0));
-                ListeDir.Add(new Vecteur(0, -1, 0));
-                ListeDir.Add(new Vecteur(0, 0, 1));
-                ListeDir.Add(new Vecteur(0, 0, -1));
-
-                foreach (var v in ListeDir)
+                foreach (var f in Corps.eListeDesFaces())
                 {
-                    var Pt = Corps.ePointExtreme(v);
-                    SM.CreatePoint(Pt.X, Pt.Y, Pt.Z);
+                    Byte[] Tab = mdl.Extension.GetPersistReference3(f);
+                    String S = System.Text.Encoding.Default.GetString(Tab);
+
+                    int Pos_moSideFace = S.IndexOf("moSideFace3IntSurfIdRep_c");
+
+                    int Pos_moFromSkt = S.IndexOf("moFromSktEntSurfIdRep_c");
+                    int Pos_moFromSkt3Int = S.IndexOf("moFromSktEnt3IntSurfIdRep_c");
+
+                    if (Pos_moFromSkt == -1)
+                        Pos_moFromSkt = Pos_moFromSkt3Int;
+                    else if (Pos_moFromSkt != -1 && Pos_moFromSkt3Int != -1)
+                        Pos_moFromSkt = Math.Min(Pos_moFromSkt, Pos_moFromSkt3Int);
+                    
+                    int Pos_moEndFace = S.IndexOf("moEndFaceSurfIdRep_c");
+                    int Pos_moEndFace3Int = S.IndexOf("moEndFace3IntSurfIdRep_c");
+
+                    if (Pos_moEndFace == -1)
+                        Pos_moEndFace = Pos_moEndFace3Int;
+                    else if (Pos_moEndFace != -1 && Pos_moEndFace3Int != -1)
+                        Pos_moEndFace = Math.Min(Pos_moEndFace, Pos_moEndFace3Int);
+
+                    Log.Message(S);
+                    Log.MessageF("Side {0} From {1} End {2}", Pos_moSideFace, Pos_moFromSkt, Pos_moEndFace);
+
+                    if (Pos_moSideFace != -1 && (Pos_moEndFace == -1 || Pos_moSideFace < Pos_moEndFace) && (Pos_moFromSkt == -1 || Pos_moSideFace < Pos_moFromSkt))
+                        ListeFaceExt.Add(f);
                 }
+
+                foreach (var f in ListeFaceExt)
+                    f.eSelectEntite(true);
+
+                //var Face = mdl.eSelect_RecupererObjet<Face2>(1);
+                //Body2 Corps = null;
+                //if (Face.IsRef())
+                //    Corps = Face.GetBody();
+                //else
+                //    Corps = mdl.eSelect_RecupererObjet<Body2>(1);
+
+                //mdl.eEffacerSelection();
+
+                //var SM = mdl.SketchManager;
+
+                //SM.Insert3DSketch(false);
+                //SM.AddToDB = true;
+                //SM.DisplayWhenAdded = false;
+
+                //List<Vecteur> ListeDir = new List<Vecteur>();
+                //ListeDir.Add(new Vecteur(1, 0, 0));
+                //ListeDir.Add(new Vecteur(-1, 0, 0));
+                //ListeDir.Add(new Vecteur(0, 1, 0));
+                //ListeDir.Add(new Vecteur(0, -1, 0));
+                //ListeDir.Add(new Vecteur(0, 0, 1));
+                //ListeDir.Add(new Vecteur(0, 0, -1));
+
+                //foreach (var v in ListeDir)
+                //{
+                //    var Pt = Corps.ePointExtreme(v);
+                //    SM.CreatePoint(Pt.X, Pt.Y, Pt.Z);
+                //}
 
                 //{
                 //    foreach (var Face in corps.eListeDesFaces())
@@ -105,9 +151,9 @@ namespace Macros
                 //    }
                 //}
 
-                SM.DisplayWhenAdded = true;
-                SM.AddToDB = false;
-                SM.Insert3DSketch(true);
+                //SM.DisplayWhenAdded = true;
+                //SM.AddToDB = false;
+                //SM.Insert3DSketch(true);
 
 
 

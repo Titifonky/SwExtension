@@ -134,6 +134,14 @@ namespace LogDebugging
             Write("\t\t\t\t-> " + message.ToString());
         }
 
+        internal static void MessageF(string Message, params Object[] objs)
+        {
+            if (!_Actif)
+                return;
+
+            Write("\t\t\t\t-> " + String.Format(Message, objs));
+        }
+
         internal static void LogMethode(this Object O, Object[] Message, [CallerMemberName] String methode = "")
         {
             if (!_Actif)
