@@ -56,134 +56,19 @@ namespace Macros
 
                     int Pos_moSideFace = S.IndexOf("moSideFace3IntSurfIdRep_c");
 
-                    int Pos_moFromSkt = S.IndexOf("moFromSktEntSurfIdRep_c");
-                    int Pos_moFromSkt3Int = S.IndexOf("moFromSktEnt3IntSurfIdRep_c");
+                    int Pos_moFromSkt = Math.Min(S.Position("moFromSktEntSurfIdRep_c"), S.Position("moFromSktEnt3IntSurfIdRep_c"));
 
-                    if (Pos_moFromSkt == -1)
-                        Pos_moFromSkt = Pos_moFromSkt3Int;
-                    else if (Pos_moFromSkt != -1 && Pos_moFromSkt3Int != -1)
-                        Pos_moFromSkt = Math.Min(Pos_moFromSkt, Pos_moFromSkt3Int);
-                    
-                    int Pos_moEndFace = S.IndexOf("moEndFaceSurfIdRep_c");
-                    int Pos_moEndFace3Int = S.IndexOf("moEndFace3IntSurfIdRep_c");
-
-                    if (Pos_moEndFace == -1)
-                        Pos_moEndFace = Pos_moEndFace3Int;
-                    else if (Pos_moEndFace != -1 && Pos_moEndFace3Int != -1)
-                        Pos_moEndFace = Math.Min(Pos_moEndFace, Pos_moEndFace3Int);
+                    int Pos_moEndFace = Math.Min(S.Position("moEndFaceSurfIdRep_c"), S.Position("moEndFace3IntSurfIdRep_c"));
 
                     Log.Message(S);
                     Log.MessageF("Side {0} From {1} End {2}", Pos_moSideFace, Pos_moFromSkt, Pos_moEndFace);
 
-                    if (Pos_moSideFace != -1 && (Pos_moEndFace == -1 || Pos_moSideFace < Pos_moEndFace) && (Pos_moFromSkt == -1 || Pos_moSideFace < Pos_moFromSkt))
+                    if (Pos_moSideFace != -1 && Pos_moSideFace < Pos_moEndFace && Pos_moSideFace < Pos_moFromSkt)
                         ListeFaceExt.Add(f);
                 }
 
                 foreach (var f in ListeFaceExt)
                     f.eSelectEntite(true);
-
-                //var Face = mdl.eSelect_RecupererObjet<Face2>(1);
-                //Body2 Corps = null;
-                //if (Face.IsRef())
-                //    Corps = Face.GetBody();
-                //else
-                //    Corps = mdl.eSelect_RecupererObjet<Body2>(1);
-
-                //mdl.eEffacerSelection();
-
-                //var SM = mdl.SketchManager;
-
-                //SM.Insert3DSketch(false);
-                //SM.AddToDB = true;
-                //SM.DisplayWhenAdded = false;
-
-                //List<Vecteur> ListeDir = new List<Vecteur>();
-                //ListeDir.Add(new Vecteur(1, 0, 0));
-                //ListeDir.Add(new Vecteur(-1, 0, 0));
-                //ListeDir.Add(new Vecteur(0, 1, 0));
-                //ListeDir.Add(new Vecteur(0, -1, 0));
-                //ListeDir.Add(new Vecteur(0, 0, 1));
-                //ListeDir.Add(new Vecteur(0, 0, -1));
-
-                //foreach (var v in ListeDir)
-                //{
-                //    var Pt = Corps.ePointExtreme(v);
-                //    SM.CreatePoint(Pt.X, Pt.Y, Pt.Z);
-                //}
-
-                //{
-                //    foreach (var Face in corps.eListeDesFaces())
-                //    {
-                //        var S = (Surface)Face.GetSurface();
-
-                //        var UV = (Double[])Face.GetUVBounds();
-
-                //        Boolean Reverse = Face.FaceInSurfaceSense();
-
-                //        var ev1 = (Double[])S.Evaluate((UV[0] + UV[1]) * 0.5, (UV[2] + UV[3]) * 0.5, 0, 0);
-
-                //        Vecteur Vn = new Vecteur(ev1[3], ev1[4], ev1[5]);
-                //        if (Reverse)
-                //            Vn.Inverser();
-
-                //        Vn.Normaliser();
-                //        Vn.Multiplier(0.01);
-
-                //        Point Pt = new Point();
-
-                //        if (S.IsPlane())
-                //        {
-                //            Double[] Param = S.PlaneParams;
-
-                //            Pt = new Point(Param[3], Param[4], Param[5]);
-                //        }
-                //        else if (S.IsCylinder())
-                //        {
-                //            Double[] Param = S.CylinderParams;
-
-                //            Pt = new Point(Param[0], Param[1], Param[2]);
-                //        }
-                //        else
-                //            continue;
-
-                //        SM.CreatePoint(Pt.X, Pt.Y, Pt.Z);
-                //        SM.CreateLine(Pt.X, Pt.Y, Pt.Z, Pt.X + Vn.X, Pt.Y + Vn.Y, Pt.Z + Vn.Z);
-                //    }
-                //}
-
-                //SM.DisplayWhenAdded = true;
-                //SM.AddToDB = false;
-                //SM.Insert3DSketch(true);
-
-
-
-                //var SM = mdl.SketchManager;
-
-                //var UV = (Double[])Face.GetUVBounds();
-
-                //var S = (Surface)Face.GetSurface();
-
-                //Boolean Reverse = Face.FaceInSurfaceSense();
-
-                //var ev1 = (Double[])S.Evaluate((UV[0] + UV[1]) * 0.5, (UV[2] + UV[3]) * 0.5, 0, 0);
-                //if (Reverse)
-                //{
-                //    ev1[3] = -ev1[3];
-                //    ev1[4] = -ev1[4];
-                //    ev1[5] = -ev1[5];
-                //}
-
-                //SM.Insert3DSketch(false);
-                //SM.AddToDB = true;
-                //SM.DisplayWhenAdded = false;
-
-                //SM.CreatePoint(ev1[0], ev1[1], ev1[2]);
-                //SM.CreateLine(ev1[0], ev1[1], ev1[2], ev1[0] + ev1[3], ev1[1] + ev1[4], ev1[2] + ev1[5]);
-
-                //SM.DisplayWhenAdded = true;
-                //SM.AddToDB = false;
-                //SM.Insert3DSketch(true);
-
             }
             catch (Exception e) { this.LogMethode(new Object[] { e }); }
 

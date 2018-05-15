@@ -171,6 +171,15 @@ namespace Outils
 
             return (sb.ToString().Normalize(NormalizationForm.FormC));
         }
+
+        public static int Position(this string s, String cherche)
+        {
+            var p = s.IndexOf(cherche);
+            if (p == -1)
+                return int.MaxValue;
+
+            return p;
+        }
     }
 
     public class WindowsStringComparer : IComparer<string>
