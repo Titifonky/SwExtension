@@ -234,7 +234,7 @@ namespace ModuleLaser
 
                                 if (ListerUsinages)
                                 {
-                                    var analyse = new AnalyseBarre(Barre);
+                                    var analyse = new AnalyseBarre(Barre, mdl);
 
                                     Dictionary<String, Double> Dic = new Dictionary<string, double>();
 
@@ -248,7 +248,11 @@ namespace ModuleLaser
                                     }
 
                                     Liste.Add(Math.Round(analyse.ListeFaceUsinageExtremite[0].LgUsinage * 1000, 1).ToString());
-                                    Liste.Add(Math.Round(analyse.ListeFaceUsinageExtremite[1].LgUsinage * 1000, 1).ToString());
+
+                                    if (analyse.ListeFaceUsinageExtremite.Count > 1)
+                                        Liste.Add(Math.Round(analyse.ListeFaceUsinageExtremite[1].LgUsinage * 1000, 1).ToString());
+                                    else
+                                        Liste.Add("");
 
                                     foreach (var nom in Dic.Keys)
                                         Liste.Add(Dic[nom] + "x [ " + nom + " ]");
@@ -297,6 +301,8 @@ namespace ModuleLaser
             {
                 public Body2 Corps = null;
 
+                public ModelDoc2 Mdl = null;
+
                 public Plan PlanSection;
                 public Point ExtremPoint1;
                 public Point ExtremPoint2;
@@ -305,11 +311,10 @@ namespace ModuleLaser
                 public List<ListFaceUsinage> ListeFaceUsinageExtremite = new List<ListFaceUsinage>();
                 public List<ListFaceUsinage> ListeFaceUsinageSection = new List<ListFaceUsinage>();
 
-                private List<ListFaceGeom> ListeFaceExtremite = null;
-
-                public AnalyseBarre(Body2 corps)
+                public AnalyseBarre(Body2 corps, ModelDoc2 mdl)
                 {
                     Corps = corps;
+                    Mdl = mdl;
 
                     AnalyserFaces();
 
@@ -321,16 +326,7 @@ namespace ModuleLaser
                 private void AnalyserPercages()
                 {
                     // On recupère les faces issues des fonctions modifiant le corps
-                    List<Face2> ListeFaceSection = new List<Face2>();
-                    foreach (var Fonc in Corps.eListeFonctions(null))
-                    {
-                        foreach (var f in Fonc.eListeDesFaces())
-                        {
-                            Body2 cF = f.GetBody();
-                            if (cF.eIsSame(Corps))
-                                ListeFaceSection.AddIfNotExist(f);
-                        }
-                    }
+                    List<Face2> ListeFaceSection = Corps.eListeDesFaces();
 
                     // Supprimer les faces de la section ext
                     foreach (var f in FaceSectionExt.ListeFaceSw())
@@ -342,22 +338,6 @@ namespace ModuleLaser
                         foreach (var f in l.ListeFaceSw())
                             ListeFaceSection.Remove(f);
                     }
-
-                    // Supprimer les faces des extrémités
-                    foreach (var l in ListeFaceExtremite)
-                    {
-                        foreach (var f in l.ListeFaceSw())
-                            ListeFaceSection.Remove(f);
-                    }
-
-                    // Recherche des perçages
-                    // On ajoute les faces d'extrémité
-                    List<Face2> ListeFaceExt = new List<Face2>();
-                    foreach (var fl in ListeFaceExtremite)
-                        ListeFaceExt.AddRange(fl.ListeFaceSw());
-
-                    // On ajoute les faces d'extrémité
-                    ListeFaceSection.AddRange(ListeFaceExt);
 
                     // On tri les faces connectées
                     ListeFaceUsinageSection = TrierFacesConnectees(ListeFaceSection);
@@ -588,29 +568,16 @@ namespace ModuleLaser
                 {
                     try
                     {
-                        var ListeFaces = Corps.eListeDesFaces();
-
-                        // On supprime les faces issues des fonctions appliquées
-                        // sur la barre
-                        foreach (var Fonc in Corps.eListeFonctions(null))
-                        {
-                            if (!Fonc.IsBase2())
-                            {
-                                foreach (var f in Fonc.eListeDesFaces())
-                                    ListeFaces.Remove(f);
-                            }
-                        }
-
-                        List<FaceGeom> ListeFaceExt = new List<FaceGeom>();
+                        List<FaceGeom> ListeFaceCorps = new List<FaceGeom>();
 
                         // Tri des faces pour retrouver celles issues de la même
-                        foreach (var Face in ListeFaces)
+                        foreach (var Face in Corps.eListeDesFaces())
                         {
                             var faceExt = new FaceGeom(Face);
 
                             Boolean Ajouter = true;
 
-                            foreach (var f in ListeFaceExt)
+                            foreach (var f in ListeFaceCorps)
                             {
                                 // Si elles sont identiques, la face "faceExt" est ajoutée à la liste
                                 // de face de "f"
@@ -623,32 +590,16 @@ namespace ModuleLaser
 
                             // S'il n'y avait pas de face identique, on l'ajoute.
                             if (Ajouter)
-                                ListeFaceExt.Add(faceExt);
+                                ListeFaceCorps.Add(faceExt);
 
                         }
 
-                        // Analyse des faces et recherches du plan de section
-
-                        var DicPlan = CombinerFaces(ListeFaceExt);
-
-                        // On recherche le plan qui contient le plus de face
-                        Plan Pmax = new Plan();
-                        var ListeMax = new List<FaceGeom>();
-
-                        foreach (var p in DicPlan.Keys)
-                        {
-                            var l = DicPlan[p];
-                            var feBase = l[0];
-                            if (l.Count > ListeMax.Count)
-                            {
-                                Pmax = p;
-                                ListeMax = l;
-                            }
-                        }
+                        List<FaceGeom> ListeFaceGeom = new List<FaceGeom>();
+                        PlanSection = RechercherFaceProfil(ListeFaceCorps, ref ListeFaceGeom);
+                        ListeFaceSectionInt = TrierFacesConnectees(ListeFaceGeom);
 
                         // Plan de la section et infos
                         {
-                            PlanSection = Pmax;
                             var v = PlanSection.Normale;
                             Double X = 0, Y = 0, Z = 0;
                             Corps.GetExtremePoint(v.X, v.Y, v.Z, out X, out Y, out Z);
@@ -658,57 +609,11 @@ namespace ModuleLaser
                             ExtremPoint2 = new Point(X, Y, Z);
                         }
 
-                        // Tri des faces section
-                        ListeFaceSectionInt = TrierFacesConnectees(ListeMax);
-
-
-
-                        // Tri des faces extremites
-                        // On supprime les faces de la section
-                        foreach (var f in ListeMax)
-                            ListeFaceExt.Remove(f);
-
-                        // =================================================================================
-
-                        ListeFaceExtremite = TrierFacesConnectees(ListeFaceExt);
-
-                        var lstTmp = new List<ListFaceGeom>();
-                        lstTmp.AddRange(ListeFaceExtremite);
-                        ListeFaceExtremite.Clear();
-
-                        // Recherche des faces d'extrémité
-                        // On calcul les distances des faces au points extremes
-                        foreach (var l in lstTmp)
-                            l.CalculerDistance(ExtremPoint1, ExtremPoint2);
-
-                        // Recherche de la face la plus proche du point extreme 1
-                        var Extrem = lstTmp[0];
-                        foreach (var l in lstTmp)
-                        {
-                            if (Extrem.DistToExtremPoint1 > l.DistToExtremPoint1)
-                                Extrem = l;
-                        }
-
-                        // On l'ajoute à la liste
-                        ListeFaceExtremite.Add(Extrem);
-
-                        // On recherche la face la plus proche du point extrème 2
-                        // Elle peut être la même que la précédente
-                        Extrem = lstTmp[0];
-                        foreach (var l in lstTmp)
-                        {
-                            if (Extrem.DistToExtremPoint2 > l.DistToExtremPoint2)
-                                Extrem = l;
-                        }
-
-                        // On l'ajoute
-                        ListeFaceExtremite.AddIfNotExist(Extrem);
-
                         // =================================================================================
 
                         // On recherche la face exterieure
                         // s'il y a plusieurs boucles de surfaces
-                        if (ListeFaceSectionInt.Count > 0)
+                        if (ListeFaceSectionInt.Count > 1)
                         {
                             {
                                 // Si la section n'est composé que de cylindre fermé
@@ -751,7 +656,7 @@ namespace ModuleLaser
                                 if (FaceSectionExt == null)
                                 {
                                     // On créer un vecteur perpendiculaire à l'axe du profil
-                                    var vect = PlanSection.Normale;
+                                    var vect = this.PlanSection.Normale;
 
                                     if (vect.X == 0)
                                         vect = vect.Vectoriel(new Vecteur(1, 0, 0));
@@ -796,134 +701,76 @@ namespace ModuleLaser
                         else
                         {
                             FaceSectionExt = ListeFaceSectionInt[0];
+                            ListeFaceSectionInt.RemoveAt(0);
                         }
                     }
                     catch (Exception e) { this.LogMethode(new Object[] { e }); }
 
                 }
 
-                // FONCTION CRITIQUE
-                private Dictionary<Plan, List<FaceGeom>> CombinerFaces(List<FaceGeom> listeFaceGeom)
+                private Plan RechercherFaceProfil(List<FaceGeom> listeFaceGeom, ref List<FaceGeom> faceExt)
                 {
-                    List<FaceGeom> ListeTest = new List<FaceGeom>(listeFaceGeom);
-
-                    var DicPlan = new Dictionary<Plan, List<FaceGeom>>();
-
+                    Plan? p = null;
                     try
                     {
-                        // On recherche les cylindre ou extrusion
-                        foreach (var f in ListeTest)
+                        // On recherche les faces de la section
+                        foreach (var fg in listeFaceGeom)
                         {
-                            if (f.Type == eTypeFace.Cylindre || f.Type == eTypeFace.Extrusion)
+                            if (EstUneFaceProfil(fg))
                             {
-                                var plan = new Plan(f.Origine, f.Direction);
+                                faceExt.Add(fg);
 
-                                var Ajouter = true;
-                                foreach (var p in DicPlan.Keys)
+                                // Si c'est un cylindre ou une extrusion, on recupère le plan
+                                if ((p == null) && (fg.Type == eTypeFace.Cylindre || fg.Type == eTypeFace.Extrusion))
+                                    p = new Plan(fg.Origine, fg.Direction);
+                            }
+                        }
+
+                        // S'il n'y a que des faces plane, il faut calculer le plan de la section
+                        // a partir de deux plan non parallèle
+                        if (p == null)
+                        {
+                            Vecteur? v1 = null;
+                            foreach (var fg in faceExt)
+                            {
+                                if (v1 == null)
+                                    v1 = fg.Normale;
+                                else
                                 {
-                                    if (p.SontIdentiques(plan, 1E-10, false))
-                                    {
-                                        DicPlan[p].Add(f);
-                                        Ajouter = false;
-                                    }
+                                    var vtmp = ((Vecteur)v1).Vectoriel(fg.Normale);
+                                    if (Math.Abs(vtmp.Norme) > 1E-8)
+                                        p = new Plan(fg.Origine, vtmp);
                                 }
 
-                                if (Ajouter)
-                                    DicPlan.Add(plan, new List<FaceGeom>() { f });
                             }
-                        }
-
-                        FaceGeom depart = null;
-
-                        // =================================================================================
-                        // SECTION CRITIQUE
-                        // =================================================================================
-                        // Le choix de la face de depart conditionne le bon fonctionnement de la macro
-                        // Il faut que cette face appartienne au profil et non à une extrémité
-                        // =================================================================================
-                        // 
-                        // Choix de la face de départ
-                        // S'il y a des faces cylindriques ou extrudées
-                        // on les privilégie
-                        // Sinon on part sur une face du milieu de la liste.
-                        // Attention, erreur possible si la face de depart est une extrémité.
-
-                        if (DicPlan.Count > 0)
-                        {
-                            var ltmp = new List<FaceGeom>();
-                            foreach (var l in DicPlan.Values)
-                            {
-                                if (ltmp.Count < l.Count)
-                                    ltmp = l;
-                            }
-
-                            depart = ltmp[ltmp.Count / 2];
-                        }
-                        else
-                        {
-                            depart = ListeTest[ListeTest.Count / 2];
-                        }
-                        // ==================================================================================
-
-                        // On récupère la liste des plans
-                        List<FaceGeom> ListePlan = new List<FaceGeom>();
-                        foreach (var f in ListeTest)
-                        {
-                            if (f.Type == eTypeFace.Plan)
-                                ListePlan.Add(f);
-                        }
-
-                        if (ListePlan.Count > 2)
-                        {
-                            // On recherche les plans
-                            foreach (var f in ListePlan)
-                            {
-                                var test = Orientation(f, depart);
-
-                                if (test == eOrientation.Coplanaire || test == eOrientation.MemeOrigine)
-                                {
-                                    // Dans le cas de vecteur normal parallèle, il faut ruser
-                                    var vF = (new Vecteur(depart.Origine, f.Origine)).Compose(f.Normale);
-                                    var v = depart.Normale.Vectoriel(vF);
-                                    var plan = new Plan(depart.Origine, v);
-
-                                    var Ajouter = true;
-                                    foreach (var p in DicPlan.Keys)
-                                    {
-                                        if (p.SontIdentiques(plan, 1E-10, false))
-                                        {
-                                            DicPlan[p].Add(f);
-                                            Ajouter = false;
-                                        }
-                                    }
-
-                                    if (Ajouter)
-                                        DicPlan.Add(plan, new List<FaceGeom>() { depart, f });
-                                }
-                            }
-
-                            // On regarde si des points se retrouve sur des plans
-                            foreach (var f in ListePlan)
-                            {
-                                var test = Orientation(f, depart);
-                                if (test == eOrientation.Colineaire)
-                                {
-                                    foreach (var p in DicPlan.Keys)
-                                    {
-                                        if (p.SurLePlan(f.Origine, 1E-10))
-                                        {
-                                            DicPlan[p].Add(f);
-                                        }
-                                    }
-                                }
-                            }
-
-
                         }
                     }
                     catch (Exception e) { this.LogMethode(new Object[] { e }); }
 
-                    return DicPlan;
+                    return (Plan)p;
+                }
+
+                private Boolean EstUneFaceProfil(FaceGeom fg)
+                {
+                    foreach (var f in fg.ListeSwFace)
+                    {
+                        Byte[] Tab = Mdl.Extension.GetPersistReference3(f);
+                        String S = System.Text.Encoding.Default.GetString(Tab);
+
+                        int Pos_moSideFace = S.IndexOf("moSideFace3IntSurfIdRep_c");
+
+                        int Pos_moFromSkt = Math.Min(S.Position("moFromSktEntSurfIdRep_c"), S.Position("moFromSktEnt3IntSurfIdRep_c"));
+
+                        int Pos_moEndFace = Math.Min(S.Position("moEndFaceSurfIdRep_c"), S.Position("moEndFace3IntSurfIdRep_c"));
+
+                        //Log.Message(S);
+                        //Log.MessageF("Side {0} From {1} End {2}", Pos_moSideFace, Pos_moFromSkt, Pos_moEndFace);
+
+                        if (Pos_moSideFace != -1 && Pos_moSideFace < Pos_moEndFace && Pos_moSideFace < Pos_moFromSkt)
+                            return true;
+                    }
+
+                    return false;
                 }
 
                 private List<ListFaceGeom> TrierFacesConnectees(List<FaceGeom> listeFace)
@@ -1028,7 +875,6 @@ namespace ModuleLaser
                                 {
                                     liste.AddIfNotExist(f);
                                 }
-
                             }
 
                             return liste;
@@ -1400,9 +1246,10 @@ namespace ModuleLaser
 
                 public List<String> ListeLignes()
                 {
+
                     List<String> Liste = new List<string>();
 
-                    if (_TitreColonnes.Count != 0)
+                    if (_TitreColonnes.Count > 0)
                     {
                         String formatTitre = "";
 
@@ -1414,15 +1261,15 @@ namespace ModuleLaser
                         Liste.Add(String.Format(formatTitre, _TitreColonnes.ToArray()));
                     }
 
-                    if (Count != 0)
+                    if (Count > 0)
                     {
-
                         String format = "";
 
                         for (int i = 0; i < _DimColonnes.Count; i++)
                         {
                             String Sign = "";
-                            if (Char.IsLetter(this[0][i].Trim()[0]))
+                            var l = this[0];
+                            if (i < l.Count && Char.IsLetter(l[i].Trim()[0]))
                                 Sign = "-";
 
                             format += "{" + i.ToString() + "," + Sign + _DimColonnes[i] + "}    ";
