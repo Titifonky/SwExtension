@@ -171,6 +171,22 @@ namespace Outils
 
             return (sb.ToString().Normalize(NormalizationForm.FormC));
         }
+
+        /// <summary>
+        /// Renvoi la position d'un texte dans un autre comme String.IndexOf
+        /// Mais retourne la valeur int.MaxValue si le texte n'est pas trouvé
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="cherche"></param>
+        /// <returns></returns>
+        public static int Position(this string s, String cherche)
+        {
+            var p = s.IndexOf(cherche);
+            if (p == -1)
+                return int.MaxValue;
+
+            return p;
+        }
     }
 
     public class WindowsStringComparer : IComparer<string>
