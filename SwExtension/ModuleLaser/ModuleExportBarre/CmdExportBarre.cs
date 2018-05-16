@@ -53,6 +53,8 @@ namespace ModuleLaser
                 {
                     HashMateriaux = new HashSet<string>(ListeMateriaux);
 
+                    eTypeCorps Filtre = PrendreEnCompteTole ? eTypeCorps.Barre | eTypeCorps.Tole : eTypeCorps.Barre;
+
                     if (MdlBase.TypeDoc() == eTypeDoc.Piece)
                     {
                         Component2 CpRacine = MdlBase.eComposantRacine();
@@ -80,12 +82,8 @@ namespace ModuleLaser
                             MdlBase.ShowConfiguration2(nomConfigBase);
                         }
 
-                        DicQte.Add(CpRacine.eKeyAvecConfig());
+                        DicQte.Ajouter(CpRacine.eKeyAvecConfig());
                     }
-
-                    eTypeCorps Filtre = PrendreEnCompteTole ? eTypeCorps.Barre | eTypeCorps.Tole : eTypeCorps.Barre;
-
-
 
                     // Si c'est un assemblage, on liste les composants
                     if (MdlBase.TypeDoc() == eTypeDoc.Assemblage)
@@ -110,24 +108,16 @@ namespace ModuleLaser
                                         if (!HashMateriaux.Contains(Materiau))
                                             continue;
 
-                                        DicQte.Add(c.eKeyAvecConfig());
+                                        DicQte.Ajouter(c.eKeyAvecConfig());
 
                                         if (DicConfig.ContainsKey(c.eKeySansConfig()))
                                         {
-                                            List<String> l = DicConfig[c.eKeySansConfig()];
-                                            if (l.Contains(c.eNomConfiguration()))
-                                                return false;
-                                            else
-                                            {
-                                                l.Add(c.eNomConfiguration());
-                                                return true;
-                                            }
+                                            DicConfig[c.eKeySansConfig()].AddIfNotExist(c.eNomConfiguration());
+                                            return false;
                                         }
-                                        else
-                                        {
-                                            DicConfig.Add(c.eKeySansConfig(), new List<string>() { c.eNomConfiguration() });
-                                            return true;
-                                        }
+
+                                        DicConfig.Add(c.eKeySansConfig(), new List<string>() { c.eNomConfiguration() });
+                                        return true;
                                     }
                                 }
 

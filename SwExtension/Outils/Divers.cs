@@ -85,7 +85,7 @@ namespace Outils
         /// <param name="dic"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static Boolean Add<TKey>(this Dictionary<TKey, int> dic, TKey key)
+        public static Boolean Ajouter<TKey>(this Dictionary<TKey, int> dic, TKey key)
         {
             if (!dic.ContainsKey(key))
             {

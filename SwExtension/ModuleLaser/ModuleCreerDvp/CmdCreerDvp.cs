@@ -68,7 +68,7 @@ namespace ModuleLaser.ModuleCreerDvp
 
                     DicConfig.Add(CpRacine.eKeySansConfig(), ListeConfig);
 
-                    DicQte.Add(CpRacine.eKeyAvecConfig());
+                    DicQte.Ajouter(CpRacine.eKeyAvecConfig());
                 }
 
                 // Si c'est un assemblage, on liste les composants
@@ -91,7 +91,7 @@ namespace ModuleLaser.ModuleCreerDvp
                                 if (!HashMateriaux.Contains(Materiau))
                                     continue;
 
-                                DicQte.Add(c.eKeyAvecConfig());
+                                DicQte.Ajouter(c.eKeyAvecConfig());
 
                                 if (DicConfig.ContainsKey(c.eKeySansConfig()))
                                 {

@@ -79,7 +79,7 @@ namespace ModuleLaser
                             MdlBase.ShowConfiguration2(nomConfigBase);
                         }
 
-                        DicQte.Add(CpRacine.eKeyAvecConfig());
+                        DicQte.Ajouter(CpRacine.eKeyAvecConfig());
                     }
 
                     eTypeCorps Filtre = PrendreEnCompteTole ? eTypeCorps.Barre | eTypeCorps.Tole : eTypeCorps.Barre;
@@ -109,7 +109,7 @@ namespace ModuleLaser
                                         if (!HashMateriaux.Contains(Materiau))
                                             continue;
 
-                                        DicQte.Add(c.eKeyAvecConfig());
+                                        DicQte.Ajouter(c.eKeyAvecConfig());
 
                                         if (DicConfig.ContainsKey(c.eKeySansConfig()))
                                         {
