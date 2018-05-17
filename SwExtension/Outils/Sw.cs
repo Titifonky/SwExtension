@@ -2470,10 +2470,6 @@ namespace Outils
             return null;
         }
 
-        /// <summary>
-        /// Renvoi la fonction du dossier contenant les corps.
-        /// </summary>
-        /// <returns></returns>
         public static Feature eDossierListeDesPiecesSoudees(this PartDoc piece)
         {
             Feature pFonction = piece.FirstFeature();
@@ -2481,10 +2477,6 @@ namespace Outils
             return pFonction.eDossierListeDesPiecesSoudees();
         }
 
-        /// <summary>
-        /// Renvoi la fonction du dossier contenant les corps.
-        /// </summary>
-        /// <returns></returns>
         public static Feature eDossierListeDesPiecesSoudees(this Component2 composant)
         {
             if (composant.TypeDoc() != eTypeDoc.Piece)
@@ -2501,79 +2493,8 @@ namespace Outils
             return pFonction.eDossierListeDesPiecesSoudees();
         }
 
-        /// <summary>
-        /// Retourne la liste des dossiers.
-        /// Opération très chronophage
-        /// </summary>
-        /// <param name="piece"></param>
-        /// <returns>Liste des dossiers</returns>
-        private static List<BodyFolder> eListeDesDossiersDePiecesSoudees(this Feature Fonction, Predicate<BodyFolder> filtre)
+        public static void eParcourirFonctionsDePiecesSoudees(this Feature Fonction, Action<Feature> action)
         {
-            List<BodyFolder> Liste = new List<BodyFolder>();
-
-            Fonction.eListeDesFonctionsDePiecesSoudees(
-                f =>
-                {
-                    BodyFolder dossier = f.GetSpecificFeature2();
-                    if (filtre.IsNull() || filtre(dossier))
-                    {
-                        Liste.Add(dossier);
-                    }
-                    return false;
-                }
-                );
-
-            return Liste;
-        }
-
-        /// <summary>
-        /// Retourne la liste des dossiers.
-        /// Opération très chronophage
-        /// </summary>
-        /// <param name="piece"></param>
-        /// <returns>Liste des dossiers</returns>
-        public static List<BodyFolder> eListeDesDossiersDePiecesSoudees(this PartDoc piece)
-        {
-            return piece.eListeDesDossiersDePiecesSoudees(null);
-        }
-
-        /// <summary>
-        /// Retourne la liste des dossiers.
-        /// Opération très chronophage
-        /// </summary>
-        /// <param name="piece"></param>
-        /// <returns>Liste des dossiers</returns>
-        public static List<BodyFolder> eListeDesDossiersDePiecesSoudees(this PartDoc piece, Predicate<BodyFolder> filtre)
-        {
-            return piece.eDossierListeDesPiecesSoudees().eListeDesDossiersDePiecesSoudees(filtre);
-        }
-
-        /// <summary>
-        /// Retourne la liste des dossiers.
-        /// Opération très chronophage
-        /// </summary>
-        /// <param name="composant"></param>
-        /// <returns>Liste des dossiers</returns>
-        public static List<BodyFolder> eListeDesDossiersDePiecesSoudees(this Component2 composant)
-        {
-            return composant.eListeDesDossiersDePiecesSoudees(null);
-        }
-
-        /// <summary>
-        /// Retourne la liste des dossiers.
-        /// Opération très chronophage
-        /// </summary>
-        /// <param name="composant"></param>
-        /// <returns>Liste des dossiers</returns>
-        public static List<BodyFolder> eListeDesDossiersDePiecesSoudees(this Component2 composant, Predicate<BodyFolder> filtre)
-        {
-            return composant.eDossierListeDesPiecesSoudees().eListeDesDossiersDePiecesSoudees(filtre);
-        }
-
-        private static List<Feature> eListeDesFonctionsDePiecesSoudees(this Feature Fonction, Predicate<Feature> filtre)
-        {
-            List<Feature> Liste = new List<Feature>();
-
             Feature f = Fonction;
 
             if (f.IsRef())
@@ -2582,24 +2503,57 @@ namespace Outils
 
                 while (f.IsRef())
                 {
-                    if (f.GetTypeName2() == FeatureType.swTnCutListFolder)
-                    {
-                        if (filtre.IsNull() || filtre(f))
-                        {
-                            Liste.Add(f);
-                        }
-                    }
+                    action(f);
+
+                    f.eParcourirFonctionsDePiecesSoudees(action);
 
                     f = f.GetNextSubFeature();
                 }
             }
+        }
+
+        public static List<BodyFolder> eListeDesDossiersDePiecesSoudees(this Feature Fonction, Predicate<BodyFolder> filtre = null)
+        {
+            List<BodyFolder> Liste = new List<BodyFolder>();
+
+            Fonction.eParcourirFonctionsDePiecesSoudees(
+                f =>
+                {
+                    if (f.GetTypeName2() == FeatureType.swTnCutListFolder)
+                    {
+                        BodyFolder dossier = f.GetSpecificFeature2();
+                        if ((dossier.GetBodyCount() > 0) && (filtre.IsNull() || filtre(dossier)))
+                            Liste.Add(dossier);
+                    }
+                }
+                );
 
             return Liste;
         }
 
-        public static List<Feature> eListeDesFonctionsDePiecesSoudees(this PartDoc piece)
+        public static List<BodyFolder> eListeDesDossiersDePiecesSoudees(this PartDoc piece, Predicate<BodyFolder> filtre = null)
         {
-            return piece.eListeDesFonctionsDePiecesSoudees(null);
+            return piece.eDossierListeDesPiecesSoudees().eListeDesDossiersDePiecesSoudees(filtre);
+        }
+
+        public static List<BodyFolder> eListeDesDossiersDePiecesSoudees(this Component2 composant, Predicate<BodyFolder> filtre = null)
+        {
+            return composant.eDossierListeDesPiecesSoudees().eListeDesDossiersDePiecesSoudees(filtre);
+        }
+
+        public static List<Feature> eListeDesFonctionsDePiecesSoudees(this Feature Fonction, Predicate<Feature> filtre = null)
+        {
+            List<Feature> Liste = new List<Feature>();
+
+            Fonction.eParcourirFonctionsDePiecesSoudees(
+                f =>
+                {
+                    if ((f.GetTypeName2() == FeatureType.swTnCutListFolder) && (filtre.IsNull() || filtre(f)))
+                        Liste.Add(f);
+                }
+                );
+
+            return Liste;
         }
 
         public static List<Feature> eListeDesFonctionsDePiecesSoudees(this PartDoc piece, Predicate<Feature> filtre)
@@ -2607,91 +2561,49 @@ namespace Outils
             return piece.eDossierListeDesPiecesSoudees().eListeDesFonctionsDePiecesSoudees(filtre);
         }
 
-        public static List<Feature> eListeDesFonctionsDePiecesSoudees(this Component2 composant)
-        {
-            return composant.eListeDesFonctionsDePiecesSoudees(null);
-        }
-
-        public static List<Feature> eListeDesFonctionsDePiecesSoudees(this Component2 composant, Predicate<Feature> filtre)
+        public static List<Feature> eListeDesFonctionsDePiecesSoudees(this Component2 composant, Predicate<Feature> filtre = null)
         {
             return composant.eDossierListeDesPiecesSoudees().eListeDesFonctionsDePiecesSoudees(filtre);
         }
 
-        /// <summary>
-        /// Renvoi la liste des dossiers de pièces soudées. Utilise la fonction ModelDoc2
-        /// </summary>
-        /// <param name="piece"></param>
-        /// <param name="filtre"></param>
-        /// <returns></returns>
-        private static ListPID<Feature> eListePIDdesFonctionsDePiecesSoudees(this Feature Fonction, ModelDoc2 mdl, Predicate<Feature> filtre)
+        public static ListPID<Feature> eListePIDdesFonctionsDePiecesSoudees(this Feature Fonction, ModelDoc2 mdl, Predicate<Feature> filtre = null)
         {
             ListPID<Feature> Liste = new ListPID<Feature>(mdl);
 
-            Feature f = Fonction;
-
-            if (f.IsRef())
-            {
-                f = f.GetFirstSubFeature();
-
-                while (f.IsRef())
+            Fonction.eParcourirFonctionsDePiecesSoudees(
+                f =>
                 {
-                    if (f.GetTypeName2() == FeatureType.swTnCutListFolder)
-                    {
-                        if (filtre.IsNull() || filtre(f))
-                        {
-                            Liste.Add(f);
-                        }
-                    }
-
-                    f = f.GetNextSubFeature();
+                    if ((f.GetTypeName2() == FeatureType.swTnCutListFolder) && (filtre.IsNull() || filtre(f)))
+                        Liste.Add(f);
                 }
-            }
+                );
 
             return Liste;
         }
 
-        /// <summary>
-        /// Renvoi la liste des dossiers de pièces soudées. Utilise la fonction ModelDoc2
-        /// </summary>
-        /// <param name="piece"></param>
-        /// <param name="filtre"></param>
-        /// <returns></returns>
-        public static ListPID<Feature> eListePIDdesFonctionsDePiecesSoudees(this PartDoc piece)
-        {
-            return piece.eListePIDdesFonctionsDePiecesSoudees(null);
-        }
-
-        /// <summary>
-        /// Renvoi la liste des dossiers de pièces soudées. Utilise la fonction ModelDoc2
-        /// </summary>
-        /// <param name="piece"></param>
-        /// <param name="filtre"></param>
-        /// <returns></returns>
-        public static ListPID<Feature> eListePIDdesFonctionsDePiecesSoudees(this PartDoc piece, Predicate<Feature> filtre)
+        public static ListPID<Feature> eListePIDdesFonctionsDePiecesSoudees(this PartDoc piece, Predicate<Feature> filtre = null)
         {
             return piece.eDossierListeDesPiecesSoudees().eListePIDdesFonctionsDePiecesSoudees(piece.eModelDoc2(), filtre);
         }
 
-        /// <summary>
-        /// Renvoi la liste des dossiers de pièces soudées. Utilise la fonction ModelDoc2
-        /// </summary>
-        /// <param name="composant"></param>
-        /// <param name="filtre"></param>
-        /// <returns></returns>
-        public static ListPID<Feature> eListePIDdesFonctionsDePiecesSoudees(this Component2 composant)
-        {
-            return composant.eListePIDdesFonctionsDePiecesSoudees(null);
-        }
-
-        /// <summary>
-        /// Renvoi la liste des dossiers de pièces soudées. Utilise la fonction ModelDoc2
-        /// </summary>
-        /// <param name="composant"></param>
-        /// <param name="filtre"></param>
-        /// <returns></returns>
-        public static ListPID<Feature> eListePIDdesFonctionsDePiecesSoudees(this Component2 composant, Predicate<Feature> filtre)
+        public static ListPID<Feature> eListePIDdesFonctionsDePiecesSoudees(this Component2 composant, Predicate<Feature> filtre = null)
         {
             return composant.eDossierListeDesPiecesSoudees().eListePIDdesFonctionsDePiecesSoudees(composant.eModelDoc2(), filtre);
+        }
+
+        public static ListPID<Feature> eListePIDdesFonctionsDeSousEnsembleDePiecesSoudees(this Feature Fonction, ModelDoc2 mdl)
+        {
+            ListPID<Feature> Liste = new ListPID<Feature>(mdl);
+
+            Fonction.eParcourirFonctionsDePiecesSoudees(
+                f =>
+                {
+                    if (f.GetTypeName2() == FeatureType.swTnSubWeldFolder)
+                        Liste.Add(f);
+                }
+                );
+
+            return Liste;
         }
 
         public static SolidWorks.Interop.sldworks.Attribute eRecupererAttribut(this ModelDoc2 mdl, String nomAtt)

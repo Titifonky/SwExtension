@@ -878,41 +878,66 @@ namespace Macros
             try
             {
                 ModelDoc2 mdl = App.ModelDoc2;
-                //var DossierExport = mdl.eDossier();
-                //var NomFichier = mdl.eNomSansExt();
-
-                Body2 Barre = null;
-
-                var Face = mdl.eSelect_RecupererObjet<Face2>(1);
-
-                if (Face.IsNull())
-                    Barre = mdl.eSelect_RecupererObjet<Body2>(1);
-                else
-                    Barre = Face.GetBody();
-
-                mdl.eEffacerSelection();
-
-                WindowLog.Ecrire("Nom du corps : " + Barre.Name);
-
-                var b = new AnalyseBarre(Barre, mdl);
-
-                foreach (var u in b.ListeFaceUsinageExtremite)
+                ListPID<Feature> ListeSE = mdl.ePartDoc().eDossierListeDesPiecesSoudees().eListePIDdesFonctionsDeSousEnsembleDePiecesSoudees(mdl);
+                for (int noD = 0; noD < ListeSE.Count; noD++)
                 {
-                    WindowLog.Ecrire(u.LgUsinage * 1000);
-                    foreach (var e in u.ListeArreteDecoupe)
-                        e.eSelectEntite(true);
+                    Feature f = ListeSE[noD];
+                    WindowLog.Ecrire("---- " + f.Name);
+                    ListPID<Feature> ListeDossierSf = f.eListePIDdesFonctionsDePiecesSoudees(mdl);
+                    WindowLog.Ecrire("Nb Elements : " + ListeDossierSf.Count);
+                    for (int noSD = 0; noSD < ListeDossierSf.Count; noSD++)
+                    {
+                        Feature fs = ListeDossierSf[noSD];
+                        BodyFolder dossier = fs.GetSpecificFeature2();
+                        WindowLog.Ecrire("   " + fs.Name + " -> Corps : " + dossier.GetBodyCount());
+                    }
                 }
 
-                //foreach (var u in b.ListeFaceUsinageSection)
-                //{
-                //    WindowLog.Ecrire(u.LgUsinage * 1000);
-                //    foreach (var e in u.ListeArreteDecoupe)
-                //        e.eSelectEntite(true);
-                //}
-            }
+                }
             catch (Exception e) { this.LogMethode(new Object[] { e }); }
 
         }
+
+        //protected override void Command()
+        //{
+        //    try
+        //    {
+        //        ModelDoc2 mdl = App.ModelDoc2;
+        //        //var DossierExport = mdl.eDossier();
+        //        //var NomFichier = mdl.eNomSansExt();
+
+        //        Body2 Barre = null;
+
+        //        var Face = mdl.eSelect_RecupererObjet<Face2>(1);
+
+        //        if (Face.IsNull())
+        //            Barre = mdl.eSelect_RecupererObjet<Body2>(1);
+        //        else
+        //            Barre = Face.GetBody();
+
+        //        mdl.eEffacerSelection();
+
+        //        WindowLog.Ecrire("Nom du corps : " + Barre.Name);
+
+        //        var b = new AnalyseBarre(Barre, mdl);
+
+        //        foreach (var u in b.ListeFaceUsinageExtremite)
+        //        {
+        //            WindowLog.Ecrire(u.LgUsinage * 1000);
+        //            foreach (var e in u.ListeArreteDecoupe)
+        //                e.eSelectEntite(true);
+        //        }
+
+        //        //foreach (var u in b.ListeFaceUsinageSection)
+        //        //{
+        //        //    WindowLog.Ecrire(u.LgUsinage * 1000);
+        //        //    foreach (var e in u.ListeArreteDecoupe)
+        //        //        e.eSelectEntite(true);
+        //        //}
+        //    }
+        //    catch (Exception e) { this.LogMethode(new Object[] { e }); }
+
+        //}
     }
 
     //public class Test : BoutonBase
