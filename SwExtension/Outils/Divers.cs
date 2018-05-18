@@ -35,6 +35,13 @@ namespace Outils
             return list[list.Count - 1];
         }
 
+        public static T Pop<T>(this List<T> list)
+        {
+            T val = list[0];
+            list.RemoveAt(0);
+            return val;
+        }
+
         public static KeyValuePair<TKey, TValue> KeyValuePair<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key)
         {
             return new KeyValuePair<TKey, TValue>(key, dictionary[key]);
