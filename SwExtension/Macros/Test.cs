@@ -18,45 +18,41 @@ namespace Macros
     public class Test : BoutonBase
     {
 
+        //protected override void Command()
+        //{
+        //    try
+        //    {
+        //        ModelDoc2 mdl = App.ModelDoc2;
+
+        //        List<Face2> Liste = mdl.eSelect_RecupererListeObjets<Face2>();
+
+        //        if (Liste[0].IsSame(Liste[1]))
+        //            WindowLog.Ecrire("Identique");
+        //        else
+        //            WindowLog.Ecrire("Différentes");
+
+        //    }
+        //    catch (Exception e) { this.LogMethode(new Object[] { e }); }
+
+        //}
+
         protected override void Command()
         {
             try
             {
                 ModelDoc2 mdl = App.ModelDoc2;
-                if(mdl.TypeDoc() == eTypeDoc.Assemblage)
-                {
-                    var ListeComp = mdl.eComposantRacine().eRecListeComposant(null, null, true);
-                    List<Body2> ListeCorps = new List<Body2>();
-                    foreach (var Comp in ListeComp)
-                        ListeCorps.AddRange(Comp.eListeCorps());
+                List<Face2> ListeFaces = mdl.eSelect_RecupererListeObjets<Face2>();
 
-                    var CorpsBase = ListeCorps.Pop();
-                    WindowLog.Ecrire(CorpsBase.Name);
+                Body2 CorpsBase = ListeFaces[0].GetBody();
+                Body2 CorpsTest = ListeFaces[1].GetBody();
+                WindowLog.Ecrire(CorpsBase.Name);
 
-                    foreach (var c in ListeCorps)
-                    {
-                        int erreur;
-                        DispatchWrapper[] arrBodiesIn = new DispatchWrapper[1];
-                        object[] Bodies = new object[1];
-                        Bodies[0] = c;
-                        arrBodiesIn[0] = new DispatchWrapper(Bodies[0]);
-
-                        Object[] result = CorpsBase.MatchedBoolean4((int)swBodyOperationType_e.SWBODYINTERSECT, (arrBodiesIn), 0, null, null, 1E-5, out erreur);
-                        swBodyOperationError_e e = (swBodyOperationError_e)erreur;
-                        WindowLog.Ecrire("Erreur : " + e);
-
-                        if (result.IsNull()) continue;
-
-                        foreach (var r in result)
-                        {
-                            Body2 b = r as Body2;
-                            if (b.IsRef())
-                                WindowLog.Ecrire("  - " + b.Name);
-                            else
-                                WindowLog.Ecrire("  - " + "Pas d'objet");
-                        }
-                    }
-                }
+                MathTransform mt = null;
+                Boolean r = CorpsBase.GetCoincidenceTransform2((Object)CorpsTest, out mt);
+                if (r == true)
+                    WindowLog.Ecrire("Coincidence : " + CorpsBase.Name + " et " + CorpsTest.Name);
+                else
+                    WindowLog.Ecrire("Ne coincide pas : " + CorpsBase.Name + " et " + CorpsTest.Name);
 
             }
             catch (Exception e) { this.LogMethode(new Object[] { e }); }
