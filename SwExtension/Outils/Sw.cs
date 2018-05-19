@@ -2556,7 +2556,7 @@ namespace Outils
             return Liste;
         }
 
-        public static List<Feature> eListeDesFonctionsDePiecesSoudees(this PartDoc piece, Predicate<Feature> filtre)
+        public static List<Feature> eListeDesFonctionsDePiecesSoudees(this PartDoc piece, Predicate<Feature> filtre = null)
         {
             return piece.eDossierListeDesPiecesSoudees().eListeDesFonctionsDePiecesSoudees(filtre);
         }

@@ -17,47 +17,70 @@ namespace Macros
 
     public class Test : BoutonBase
     {
+        protected override void Command()
+        {
+            try
+            {
+                ModelDoc2 mdl = App.ModelDoc2;
+
+                // Create attribute 
+                var AttributeDef = (AttributeDef) App.Sw.DefineAttribute("TestRefDossier");
+                var r = AttributeDef.AddParameter("Ref", (int)swParamType_e.swParamTypeInteger, 1, 0);
+                r = AttributeDef.Register();
+                int i = 0;
+                foreach (var cfg in mdl.eListeNomConfiguration())
+                {
+                    mdl.ShowConfiguration2(cfg);
+                    mdl.EditRebuild3();
+                    var ListeFdossier = mdl.ePartDoc().eListeDesFonctionsDePiecesSoudees();
+                    foreach (var f in ListeFdossier)
+                    {
+                        WindowLog.Ecrire(f.Name);
+                        var n = "RefDossier-" + ++i;
+                        var swAttribute = AttributeDef.CreateInstance5(mdl, f,n , 0, (int)swInConfigurationOpts_e.swThisConfiguration);
+
+                        if (swAttribute.IsRef())
+                        {
+                            WindowLog.Ecrire("  Attribut crée : " + n);
+                            swAttribute.IncludeInLibraryFeature = true;
+                            var swParameter = (Parameter)swAttribute.GetParameter("Ref");
+                            if (swParameter.IsRef())
+                            {
+                                swParameter.SetDoubleValue2(i, (int)swSetValueInConfiguration_e.swSetValue_InThisConfiguration, "");
+                                WindowLog.Ecrire("  Attribut crée, val : " + i);
+                            }
+                        }
+                    }
+                }
+
+
+            }
+            catch (Exception e) { this.LogMethode(new Object[] { e }); }
+
+        }
 
         //protected override void Command()
         //{
         //    try
         //    {
         //        ModelDoc2 mdl = App.ModelDoc2;
+        //        List<Face2> ListeFaces = mdl.eSelect_RecupererListeObjets<Face2>();
 
-        //        List<Face2> Liste = mdl.eSelect_RecupererListeObjets<Face2>();
+        //        Body2 CorpsBase = ListeFaces[0].GetBody();
+        //        Body2 CorpsTest = ListeFaces[1].GetBody();
+        //        WindowLog.Ecrire(CorpsBase.Name);
 
-        //        if (Liste[0].IsSame(Liste[1]))
-        //            WindowLog.Ecrire("Identique");
+        //        MathTransform mt = null;
+        //        Boolean r = CorpsBase.GetCoincidenceTransform2((Object)CorpsTest, out mt);
+        //        if (r == true)
+        //            WindowLog.Ecrire("Coincidence : " + CorpsBase.Name + " et " + CorpsTest.Name);
         //        else
-        //            WindowLog.Ecrire("Différentes");
+        //            WindowLog.Ecrire("Ne coincide pas : " + CorpsBase.Name + " et " + CorpsTest.Name);
 
         //    }
         //    catch (Exception e) { this.LogMethode(new Object[] { e }); }
 
         //}
-
-        protected override void Command()
-        {
-            try
-            {
-                ModelDoc2 mdl = App.ModelDoc2;
-                List<Face2> ListeFaces = mdl.eSelect_RecupererListeObjets<Face2>();
-
-                Body2 CorpsBase = ListeFaces[0].GetBody();
-                Body2 CorpsTest = ListeFaces[1].GetBody();
-                WindowLog.Ecrire(CorpsBase.Name);
-
-                MathTransform mt = null;
-                Boolean r = CorpsBase.GetCoincidenceTransform2((Object)CorpsTest, out mt);
-                if (r == true)
-                    WindowLog.Ecrire("Coincidence : " + CorpsBase.Name + " et " + CorpsTest.Name);
-                else
-                    WindowLog.Ecrire("Ne coincide pas : " + CorpsBase.Name + " et " + CorpsTest.Name);
-
-            }
-            catch (Exception e) { this.LogMethode(new Object[] { e }); }
-
-        }
 
         //protected override void Command()
         //{
