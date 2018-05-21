@@ -23,37 +23,18 @@ namespace Macros
             {
                 ModelDoc2 mdl = App.ModelDoc2;
 
-                // Create attribute 
-                var AttributeDef = (AttributeDef) App.Sw.DefineAttribute("TestRefDossier");
-                var r = AttributeDef.AddParameter("Ref", (int)swParamType_e.swParamTypeInteger, 1, 0);
-                r = AttributeDef.Register();
-                int i = 0;
-                foreach (var cfg in mdl.eListeNomConfiguration())
-                {
-                    mdl.ShowConfiguration2(cfg);
-                    mdl.EditRebuild3();
-                    var ListeFdossier = mdl.ePartDoc().eListeDesFonctionsDePiecesSoudees();
-                    foreach (var f in ListeFdossier)
-                    {
-                        WindowLog.Ecrire(f.Name);
-                        var n = "RefDossier-" + ++i;
-                        var swAttribute = AttributeDef.CreateInstance5(mdl, f,n , 0, (int)swInConfigurationOpts_e.swThisConfiguration);
+                Feature f = mdl.eSelect_RecupererObjet<Feature>();
+                if (f.IsNull()) return;
 
-                        if (swAttribute.IsRef())
-                        {
-                            WindowLog.Ecrire("  Attribut crée : " + n);
-                            swAttribute.IncludeInLibraryFeature = true;
-                            var swParameter = (Parameter)swAttribute.GetParameter("Ref");
-                            if (swParameter.IsRef())
-                            {
-                                swParameter.SetDoubleValue2(i, (int)swSetValueInConfiguration_e.swSetValue_InThisConfiguration, "");
-                                WindowLog.Ecrire("  Attribut crée, val : " + i);
-                            }
-                        }
-                    }
-                }
+                f.ResetPropertyExtension();
 
+                int test = 1;
 
+                WindowLog.EcrireF("Propriété ajouté : {0}", f.AddPropertyExtension((Object)test));
+
+                int r = f.GetPropertyExtension(0);
+
+                WindowLog.EcrireF("Propriété : {0}", r);
             }
             catch (Exception e) { this.LogMethode(new Object[] { e }); }
 

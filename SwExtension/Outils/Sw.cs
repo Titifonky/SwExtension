@@ -1193,6 +1193,11 @@ namespace Outils
             }
         }
 
+        public ModelDoc2 Modele
+        {
+            get { return _Mdl; }
+        }
+
         public void Maj(ref T swObjet)
         {
             int Err = 0;
@@ -3566,6 +3571,19 @@ namespace Outils
             return f.Select2(ajouter, marque);
         }
 
+        public static Boolean eSelect(this Body2 c, Boolean ajouter = false)
+        {
+            return c.Select2(ajouter, null);
+        }
+
+        public static Boolean eSelect(this Body2 c, ModelDoc2 mdl, int marque, Boolean ajouter = false)
+        {
+            SelectionMgr SelMgr = mdl.SelectionManager;
+            SelectData SelData = SelMgr.CreateSelectData();
+            SelData.Mark = marque;
+            return c.Select2(ajouter, SelData);
+        }
+
         /// <summary>
         /// Selectionner un composant.
         /// Ne fonctionne pas pendant l'edition d'un PropertyManagerPage
@@ -3683,7 +3701,7 @@ namespace Outils
         /// <param name="index"></param>
         /// <param name="marque"></param>
         /// <returns></returns>
-        public static swSelectType_e eSelect_RecupererTypeObjet(this ModelDoc2 mdl, int index, int marque = -1)
+        public static swSelectType_e eSelect_RecupererTypeObjet(this ModelDoc2 mdl, int index = 1, int marque = -1)
         {
             SelectionMgr SelMgr = mdl.SelectionManager;
             return (swSelectType_e)SelMgr.GetSelectedObjectType3(index, marque);
@@ -3697,7 +3715,7 @@ namespace Outils
         /// <param name="index"></param>
         /// <param name="marque"></param>
         /// <returns></returns>
-        public static T eSelect_RecupererObjet<T>(this ModelDoc2 mdl, int index, int marque = -1)
+        public static T eSelect_RecupererObjet<T>(this ModelDoc2 mdl, int index = 1, int marque = -1)
             where T : class
         {
             SelectionMgr SelMgr = mdl.SelectionManager;
@@ -3742,7 +3760,7 @@ namespace Outils
         /// <param name="index"></param>
         /// <param name="marque"></param>
         /// <returns></returns>
-        public static Component2 eSelect_RecupererComposant(this ModelDoc2 mdl, int index, int marque = -1)
+        public static Component2 eSelect_RecupererComposant(this ModelDoc2 mdl, int index = 1, int marque = -1)
         {
             SelectionMgr SelMgr = mdl.SelectionManager;
             if (SelMgr.GetSelectedObjectCount2(marque) == 0)
@@ -3829,6 +3847,13 @@ namespace Outils
             Double[] pCdG = new Double[] { pProps[0], pProps[1], pProps[2] };
 
             return pCdG;
+        }
+
+        public static Boolean eEstSemblable(this Body2 corps, Body2 corpsTest)
+        {
+            MathTransform mt = null;
+            Boolean result = corps.GetCoincidenceTransform2((Object)corpsTest, out mt);
+            return result;
         }
 
         public static Boolean eVisible(this Body2 corps)

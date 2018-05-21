@@ -81,6 +81,7 @@ namespace SwExtension
                 _Mnu.AjouterCmde("Eb", typeof(PageExportBarre));
                 //_Mnu.AjouterCmde("En", typeof(PageExportBarreN));
                 _Mnu.AjouterCmde("Ld", typeof(PageListeDebit));
+                _Mnu.AjouterCmde("Si", typeof(BoutonSelectionnerCorpsIdentiques));
 
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde("Ip", typeof(PageInsererPercage));

@@ -1246,52 +1246,59 @@ namespace ModuleLaser
 
                 public List<String> ListeLignes()
                 {
-
                     List<String> Liste = new List<string>();
 
-                    if (_TitreColonnes.Count > 0)
+                    try
                     {
-                        String formatTitre = "";
-
-                        for (int i = 0; i < _TitreColonnes.Count; i++)
-                            formatTitre += "{" + i.ToString() + ",-" + _DimColonnes[i] + "}    ";
-
-                        formatTitre = formatTitre.Trim();
-
-                        Liste.Add(String.Format(formatTitre, _TitreColonnes.ToArray()));
-                    }
-
-                    if (Count > 0)
-                    {
-                        String format = "";
-
-                        for (int i = 0; i < _DimColonnes.Count; i++)
+                        if (_TitreColonnes.Count > 0)
                         {
-                            String Sign = "";
-                            var l = this[0];
-                            if (i < l.Count && Char.IsLetter(l[i].Trim()[0]))
-                                Sign = "-";
+                            String formatTitre = "";
 
-                            format += "{" + i.ToString() + "," + Sign + _DimColonnes[i] + "}    ";
+                            for (int i = 0; i < _TitreColonnes.Count; i++)
+                                formatTitre += "{" + i.ToString() + ",-" + _DimColonnes[i] + "}    ";
+
+                            formatTitre = formatTitre.Trim();
+
+                            Liste.Add(String.Format(formatTitre, _TitreColonnes.ToArray()));
                         }
 
-                        format = format.Trim();
-
-                        foreach (List<String> ligne in this)
+                        if (Count > 0)
                         {
-                            String[] t = new String[_DimColonnes.Count];
+                            String format = "";
 
                             for (int i = 0; i < _DimColonnes.Count; i++)
                             {
-                                if (i < ligne.Count)
-                                    t[i] = ligne[i];
-                                else
-                                    t[i] = "";
+                                String Sign = "";
+                                var l = this[0];
+                                
+                                if (i < l.Count && l[i].Trim().Count() > 0 && Char.IsLetter(l[i].Trim()[0]))
+                                    Sign = "-";
+
+                                format += "{" + i.ToString() + "," + Sign + _DimColonnes[i] + "}    ";
                             }
 
-                            Liste.Add(String.Format(format, t));
+                            format = format.Trim();
+
+                            foreach (List<String> ligne in this)
+                            {
+                                String[] t = new String[_DimColonnes.Count];
+
+                                for (int i = 0; i < _DimColonnes.Count; i++)
+                                {
+                                    if (i < ligne.Count)
+                                        t[i] = ligne[i];
+                                    else
+                                        t[i] = "";
+                                }
+
+
+                                Liste.Add(String.Format(format, t));
+
+                            }
                         }
                     }
+                    catch (Exception e)
+                    { this.LogMethode(new Object[] { e }); }
 
                     return Liste;
                 }

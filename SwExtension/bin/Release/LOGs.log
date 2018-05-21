@@ -1,104 +1,74 @@
-22:28:17,001 | 
+12:00:58,444 | 
  
-22:28:17,079 | ====================================================================================================
-22:28:17,079 | |                                                                                                  |
-22:28:17,079 | |                                          DEBUG                                                   |
-22:28:17,079 | |                                                                                                  |
-22:28:17,079 | ====================================================================================================
-22:28:17,079 | 
+12:00:58,450 | ====================================================================================================
+12:00:58,450 | |                                                                                                  |
+12:00:58,450 | |                                          DEBUG                                                   |
+12:00:58,450 | |                                                                                                  |
+12:00:58,450 | ====================================================================================================
+12:00:58,450 | 
  
-22:29:52,324 | 				-> ## 10:29:52     0     0      TEST
-22:29:52,355 | 				-> ## 10:29:52     0     0  ========================
-22:29:52,371 | 				-> ## 10:29:52     0     0  
-22:30:25,001 | 				-> ## 10:30:25    33    33  Article-liste-des-pièces-soudées1
-22:30:25,173 | 				-> ## 10:30:25    33     0    Attribut crée : RefDossier-1
-22:30:25,236 | 				-> ## 10:30:25    33     0    Attribut crée, val : 1
-22:30:25,267 | 				-> ## 10:30:25    33     0  Article-liste-des-pièces-soudées8
-22:30:25,298 | 				-> ## 10:30:25    33     0    Attribut crée : RefDossier-2
-22:30:25,361 | 				-> ## 10:30:25    33     0    Attribut crée, val : 2
-22:30:25,392 | 				-> ## 10:30:25    33     0  Article-liste-des-pièces-soudées9
-22:30:25,423 | 				-> ## 10:30:25    33     0    Attribut crée : RefDossier-3
-22:30:25,454 | 				-> ## 10:30:25    33     0    Attribut crée, val : 3
-22:30:25,486 | 				-> ## 10:30:25    34     0  Article-liste-des-pièces-soudées15
-22:30:25,517 | 				-> ## 10:30:25    34     0    Attribut crée : RefDossier-4
-22:30:25,548 | 				-> ## 10:30:25    34     0    Attribut crée, val : 4
-22:30:25,579 | 				-> ## 10:30:25    34     0  Article-liste-des-pièces-soudées16
-22:30:25,611 | 				-> ## 10:30:25    34     0    Attribut crée : RefDossier-5
-22:30:25,642 | 				-> ## 10:30:25    34     0    Attribut crée, val : 5
-22:30:25,689 | 				-> ## 10:30:25    34     0  Article-liste-des-pièces-soudées2
-22:30:25,720 | 				-> ## 10:30:25    34     0    Attribut crée : RefDossier-6
-22:30:25,751 | 				-> ## 10:30:25    34     0    Attribut crée, val : 6
-22:30:25,783 | 				-> ## 10:30:25    34     0  Article-liste-des-pièces-soudées3
-22:30:25,814 | 				-> ## 10:30:25    34     0    Attribut crée : RefDossier-7
-22:30:25,845 | 				-> ## 10:30:25    34     0    Attribut crée, val : 7
-22:30:25,876 | 				-> ## 10:30:25    34     0  Article-liste-des-pièces-soudées4
-22:30:25,923 | 				-> ## 10:30:25    34     0    Attribut crée : RefDossier-8
-22:30:25,954 | 				-> ## 10:30:25    34     0    Attribut crée, val : 8
-22:30:25,986 | 				-> ## 10:30:25    34     0  Article-liste-des-pièces-soudées5
-22:30:26,017 | 				-> ## 10:30:26    34     0    Attribut crée : RefDossier-9
-22:30:26,064 | 				-> ## 10:30:26    34     0    Attribut crée, val : 9
-22:30:26,095 | 				-> ## 10:30:26    34     0  Article-liste-des-pièces-soudées6
-22:30:26,126 | 				-> ## 10:30:26    34     0    Attribut crée : RefDossier-10
-22:30:26,158 | 				-> ## 10:30:26    34     0    Attribut crée, val : 10
-22:30:26,189 | 				-> ## 10:30:26    34     0  Article-liste-des-pièces-soudées7
-22:30:26,220 | 				-> ## 10:30:26    34     0    Attribut crée : RefDossier-11
-22:30:26,251 | 				-> ## 10:30:26    34     0    Attribut crée, val : 11
-22:30:26,298 | 				-> ## 10:30:26    34     0  Article-liste-des-pièces-soudées10
-22:30:26,329 | 				-> ## 10:30:26    34     0    Attribut crée : RefDossier-12
-22:30:26,361 | 				-> ## 10:30:26    34     0    Attribut crée, val : 12
-22:30:26,392 | 				-> ## 10:30:26    34     0  Article-liste-des-pièces-soudées11
-22:30:26,439 | 				-> ## 10:30:26    34     0    Attribut crée : RefDossier-13
-22:30:26,470 | 				-> ## 10:30:26    34     0    Attribut crée, val : 13
-22:30:26,501 | 				-> ## 10:30:26    35     0  Article-liste-des-pièces-soudées12
-22:30:26,533 | 				-> ## 10:30:26    35     0    Attribut crée : RefDossier-14
-22:30:26,564 | 				-> ## 10:30:26    35     0    Attribut crée, val : 14
-22:30:26,595 | 				-> ## 10:30:26    35     0  Article-liste-des-pièces-soudées13
-22:30:26,626 | 				-> ## 10:30:26    35     0    Attribut crée : RefDossier-15
-22:30:26,658 | 				-> ## 10:30:26    35     0    Attribut crée, val : 15
-22:30:31,424 | 				-> ## 10:30:31    39     5  Article-liste-des-pièces-soudées1
-22:30:31,455 | 				-> ## 10:30:31    39     0    Attribut crée : RefDossier-16
-22:30:31,486 | 				-> ## 10:30:31    40     0    Attribut crée, val : 16
-22:30:31,517 | 				-> ## 10:30:31    40     0  Article-liste-des-pièces-soudées8
-22:30:31,564 | 				-> ## 10:30:31    40     0    Attribut crée : RefDossier-17
-22:30:31,596 | 				-> ## 10:30:31    40     0    Attribut crée, val : 17
-22:30:31,627 | 				-> ## 10:30:31    40     0  Article-liste-des-pièces-soudées9
-22:30:31,658 | 				-> ## 10:30:31    40     0    Attribut crée : RefDossier-18
-22:30:31,690 | 				-> ## 10:30:31    40     0    Attribut crée, val : 18
-22:30:31,736 | 				-> ## 10:30:31    40     0  Article-liste-des-pièces-soudées15
-22:30:31,783 | 				-> ## 10:30:31    40     0    Attribut crée : RefDossier-19
-22:30:31,815 | 				-> ## 10:30:31    40     0    Attribut crée, val : 19
-22:30:31,846 | 				-> ## 10:30:31    40     0  Article-liste-des-pièces-soudées16
-22:30:31,877 | 				-> ## 10:30:31    40     0    Attribut crée : RefDossier-20
-22:30:31,908 | 				-> ## 10:30:31    40     0    Attribut crée, val : 20
-22:30:31,940 | 				-> ## 10:30:31    40     0  Article-liste-des-pièces-soudées2
-22:30:31,986 | 				-> ## 10:30:31    40     0    Attribut crée : RefDossier-21
-22:30:32,018 | 				-> ## 10:30:32    40     0    Attribut crée, val : 21
-22:30:32,049 | 				-> ## 10:30:32    40     0  Article-liste-des-pièces-soudées3
-22:30:32,080 | 				-> ## 10:30:32    40     0    Attribut crée : RefDossier-22
-22:30:32,111 | 				-> ## 10:30:32    40     0    Attribut crée, val : 22
-22:30:32,143 | 				-> ## 10:30:32    40     0  Article-liste-des-pièces-soudées4
-22:30:32,190 | 				-> ## 10:30:32    40     0    Attribut crée : RefDossier-23
-22:30:32,221 | 				-> ## 10:30:32    40     0    Attribut crée, val : 23
-22:30:32,252 | 				-> ## 10:30:32    40     0  Article-liste-des-pièces-soudées5
-22:30:32,283 | 				-> ## 10:30:32    40     0    Attribut crée : RefDossier-24
-22:30:32,315 | 				-> ## 10:30:32    40     0    Attribut crée, val : 24
-22:30:32,346 | 				-> ## 10:30:32    40     0  Article-liste-des-pièces-soudées6
-22:30:32,393 | 				-> ## 10:30:32    40     0    Attribut crée : RefDossier-25
-22:30:32,440 | 				-> ## 10:30:32    40     0    Attribut crée, val : 25
-22:30:32,471 | 				-> ## 10:30:32    40     0  Article-liste-des-pièces-soudées7
-22:30:32,502 | 				-> ## 10:30:32    41     0    Attribut crée : RefDossier-26
-22:30:32,533 | 				-> ## 10:30:32    41     0    Attribut crée, val : 26
-22:30:32,561 | 				-> ## 10:30:32    41     0  Article-liste-des-pièces-soudées10
-22:30:32,592 | 				-> ## 10:30:32    41     0    Attribut crée : RefDossier-27
-22:30:32,639 | 				-> ## 10:30:32    41     0    Attribut crée, val : 27
-22:30:32,670 | 				-> ## 10:30:32    41     0  Article-liste-des-pièces-soudées11
-22:30:32,717 | 				-> ## 10:30:32    41     0    Attribut crée : RefDossier-28
-22:30:32,748 | 				-> ## 10:30:32    41     0    Attribut crée, val : 28
-22:30:32,780 | 				-> ## 10:30:32    41     0  Article-liste-des-pièces-soudées12
-22:30:32,811 | 				-> ## 10:30:32    41     0    Attribut crée : RefDossier-29
-22:30:32,858 | 				-> ## 10:30:32    41     0    Attribut crée, val : 29
-22:30:32,889 | 				-> ## 10:30:32    41     0  Article-liste-des-pièces-soudées13
-22:30:32,920 | 				-> ## 10:30:32    41     0    Attribut crée : RefDossier-30
-22:30:32,952 | 				-> ## 10:30:32    41     0    Attribut crée, val : 30
-22:30:32,998 | 				-> ## 10:30:32    41     0  Executé en 40s
-22:30:33,045 | 				-> ## 10:30:33    41     0  
+12:03:21,848 | 				-> ## 12:03:21     0     0      TEST
+12:03:21,875 | 				-> ## 12:03:21     0     0  ========================
+12:03:21,891 | 				-> ## 12:03:21     0     0  
+12:03:21,908 | 				-> ## 12:03:21     0     0  Executé en 0s3
+12:03:21,924 | 				-> ## 12:03:21     0     0  
+12:03:23,893 | 				-> ## 12:03:23     0     0      TEST2
+12:03:23,908 | 				-> ## 12:03:23     0     0  ========================
+12:03:23,924 | 				-> ## 12:03:23     0     0  
+12:03:27,616 | 				-> ## 12:03:27     4     4  Nb de corps unique : 53
+12:03:27,641 | 				-> ## 12:03:27     4     0  Article-liste-des-pièces-soudées1 : 12
+12:03:27,657 | 				-> ## 12:03:27     4     0  Article-liste-des-pièces-soudées2 : 3
+12:03:27,674 | 				-> ## 12:03:27     4     0  Article-liste-des-pièces-soudées8 : 1
+12:03:27,691 | 				-> ## 12:03:27     4     0  Article-liste-des-pièces-soudées17 : 3
+12:03:27,708 | 				-> ## 12:03:27     4     0  Article-liste-des-pièces-soudées18 : 3
+12:03:27,725 | 				-> ## 12:03:27     4     0  Article-liste-des-pièces-soudées1 : 2
+12:03:27,741 | 				-> ## 12:03:27     4     0  Article-liste-des-pièces-soudées5 : 1
+12:03:27,758 | 				-> ## 12:03:27     4     0  Article-liste-des-pièces-soudées12 : 3
+12:03:27,775 | 				-> ## 12:03:27     4     0  Article-liste-des-pièces-soudées1 : 2
+12:03:27,792 | 				-> ## 12:03:27     4     0  Article-liste-des-pièces-soudées5 : 1
+12:03:27,809 | 				-> ## 12:03:27     4     0  Article-liste-des-pièces-soudées10 : 1
+12:03:27,825 | 				-> ## 12:03:27     4     0  Article-liste-des-pièces-soudées11 : 1
+12:03:27,842 | 				-> ## 12:03:27     4     0  Article-liste-des-pièces-soudées17 : 1
+12:03:27,859 | 				-> ## 12:03:27     4     0  Article-liste-des-pièces-soudées18 : 1
+12:03:27,876 | 				-> ## 12:03:27     4     0  Article-liste-des-pièces-soudées8 : 1
+12:03:27,892 | 				-> ## 12:03:27     4     0  Article-liste-des-pièces-soudées9 : 1
+12:03:27,909 | 				-> ## 12:03:27     4     0  Article-liste-des-pièces-soudées8 : 1
+12:03:27,925 | 				-> ## 12:03:27     4     0  Article-liste-des-pièces-soudées1 : 4
+12:03:27,943 | 				-> ## 12:03:27     4     0  Article-liste-des-pièces-soudées7 : 1
+12:03:27,959 | 				-> ## 12:03:27     4     0  Article-liste-des-pièces-soudées12 : 1
+12:03:27,976 | 				-> ## 12:03:27     4     0  Article-liste-des-pièces-soudées24 : 2
+12:03:27,993 | 				-> ## 12:03:27     4     0  Article-liste-des-pièces-soudées33 : 1
+12:03:28,009 | 				-> ## 12:03:28     4     0  Article-liste-des-pièces-soudées34 : 1
+12:03:28,026 | 				-> ## 12:03:28     4     0  Article-liste-des-pièces-soudées1 : 2
+12:03:28,043 | 				-> ## 12:03:28     4     0  Article-liste-des-pièces-soudées5 : 1
+12:03:28,060 | 				-> ## 12:03:28     4     0  Article-liste-des-pièces-soudées11 : 1
+12:03:28,077 | 				-> ## 12:03:28     4     0  Article-liste-des-pièces-soudées17 : 1
+12:03:28,093 | 				-> ## 12:03:28     4     0  Article-liste-des-pièces-soudées18 : 1
+12:03:28,110 | 				-> ## 12:03:28     4     0  Article-liste-des-pièces-soudées1 : 2
+12:03:28,127 | 				-> ## 12:03:28     4     0  Article-liste-des-pièces-soudées5 : 1
+12:03:28,143 | 				-> ## 12:03:28     4     0  Article-liste-des-pièces-soudées10 : 1
+12:03:28,161 | 				-> ## 12:03:28     4     0  Article-liste-des-pièces-soudées11 : 1
+12:03:28,275 | 				-> ## 12:03:28     4     0  Article-liste-des-pièces-soudées17 : 1
+12:03:28,294 | 				-> ## 12:03:28     4     0  Article-liste-des-pièces-soudées18 : 1
+12:03:28,310 | 				-> ## 12:03:28     4     0  Article-liste-des-pièces-soudées1 : 4
+12:03:28,327 | 				-> ## 12:03:28     4     0  Article-liste-des-pièces-soudées2 : 1
+12:03:28,344 | 				-> ## 12:03:28     4     0  Article-liste-des-pièces-soudées8 : 1
+12:03:28,361 | 				-> ## 12:03:28     4     0  Article-liste-des-pièces-soudées10 : 1
+12:03:28,377 | 				-> ## 12:03:28     5     0  Article-liste-des-pièces-soudées17 : 1
+12:03:28,394 | 				-> ## 12:03:28     5     0  Article-liste-des-pièces-soudées18 : 1
+12:03:28,427 | 				-> ## 12:03:28     5     0  Article-liste-des-pièces-soudées1 : 4
+12:03:28,461 | 				-> ## 12:03:28     5     0  Article-liste-des-pièces-soudées2 : 1
+12:03:28,495 | 				-> ## 12:03:28     5     0  Article-liste-des-pièces-soudées8 : 1
+12:03:28,528 | 				-> ## 12:03:28     5     0  Article-liste-des-pièces-soudées10 : 1
+12:03:28,561 | 				-> ## 12:03:28     5     0  Article-liste-des-pièces-soudées17 : 1
+12:03:28,595 | 				-> ## 12:03:28     5     0  Article-liste-des-pièces-soudées18 : 1
+12:03:28,628 | 				-> ## 12:03:28     5     0  Article-liste-des-pièces-soudées2 : 1
+12:03:28,662 | 				-> ## 12:03:28     5     0  Article-liste-des-pièces-soudées3 : 1
+12:03:28,694 | 				-> ## 12:03:28     5     0  Article-liste-des-pièces-soudées4 : 1
+12:03:28,728 | 				-> ## 12:03:28     5     0  Article-liste-des-pièces-soudées5 : 1
+12:03:28,761 | 				-> ## 12:03:28     5     0  Article-liste-des-pièces-soudées6 : 1
+12:03:28,796 | 				-> ## 12:03:28     5     0  Article-liste-des-pièces-soudées7 : 1
+12:03:28,828 | 				-> ## 12:03:28     5     0  Article-liste-des-pièces-soudées8 : 1
+12:03:28,862 | 				-> ## 12:03:28     5     0  Nb total de corps : 86
+12:03:28,895 | 				-> ## 12:03:28     5     0  Executé en 4s937
+12:03:28,928 | 				-> ## 12:03:28     5     0  
