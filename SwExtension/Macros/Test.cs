@@ -21,20 +21,55 @@ namespace Macros
         {
             try
             {
-                ModelDoc2 mdl = App.ModelDoc2;
+                ModelDoc2 MdlBase = App.ModelDoc2;
 
-                Feature f = mdl.eSelect_RecupererObjet<Feature>();
-                if (f.IsNull()) return;
+                var ComposantsExterne = true;
+                //var HashMateriaux = new HashSet<string>() { };
 
-                f.ResetPropertyExtension();
+                var dic = MdlBase.eComposantRacine().eDenombrerComposant(
+                    c =>
+                    {
+                        if ((ComposantsExterne || c.eEstDansLeDossier(MdlBase)) && !c.IsHidden(true) && !c.ExcludeFromBOM && (c.TypeDoc() == eTypeDoc.Piece))
+                        {
+                            if (!c.eNomConfiguration().eEstConfigPliee())
+                                return false;
 
-                int test = 1;
+                            foreach (Body2 corps in c.eListeCorps())
+                            {
+                                if (corps.eTypeDeCorps() == eTypeCorps.Tole)
+                                {
+                                    //String Materiau = corps.eGetMateriauCorpsOuComp(c);
 
-                WindowLog.EcrireF("Propriété ajouté : {0}", f.AddPropertyExtension((Object)test));
+                                    //if (HashMateriaux.Contains(Materiau))
+                                    return true;
+                                }
+                            }
 
-                int r = f.GetPropertyExtension(0);
+                            return true;
+                        }
+                        return false;
+                    }
+                    ,
+                    // On ne parcourt pas les assemblages exclus
+                    c =>
+                    {
+                        if (c.ExcludeFromBOM)
+                            return false;
 
-                WindowLog.EcrireF("Propriété : {0}", r);
+                        return true;
+                    }
+                    );
+
+                foreach (var mdl in dic.Keys)
+                {
+                    WindowLog.EcrireF("{0}", mdl.eNomAvecExt());
+                    var dicCfg = dic[mdl];
+                    foreach (var cfg in dicCfg.Keys)
+                    {
+                        var nb = dicCfg[cfg];
+                        WindowLog.EcrireF("   {0} Nb : {1}", cfg, nb);
+                    }
+                }
             }
             catch (Exception e) { this.LogMethode(new Object[] { e }); }
 

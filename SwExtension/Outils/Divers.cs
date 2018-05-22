@@ -68,6 +68,26 @@ namespace Outils
         }
 
         /// <summary>
+        /// Ajoute la clé ou un à la valeur
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="dic"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static Boolean AddIfNotExistOrPlus<TKey>(this SortedDictionary<TKey, int> dic, TKey key)
+        {
+            if (!dic.ContainsKey(key))
+            {
+                dic.Add(key, 1);
+                return true;
+            }
+            else
+                dic[key]++;
+
+            return false;
+        }
+
+        /// <summary>
         /// Ajoute 1 à la valeur si la clé existe
         /// </summary>
         /// <typeparam name="TKey"></typeparam>

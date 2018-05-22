@@ -27,13 +27,9 @@ namespace ModuleLaser.ModuleCreerDvp
         public int TailleInscription = 5;
         public String FormatInscription = "<Nom_Piece>-<Nom_Config>-<No_Dossier>";
 
-        private HashSet<String> HashMateriaux;
-        private Dictionary<String, int> DicQte = new Dictionary<string, int>();
-        private Dictionary<String, List<String>> DicConfig = new Dictionary<String, List<String>>();
-        private List<Component2> ListeCp = new List<Component2>();
         private Dictionary<String, DrawingDoc> DicDessins = new Dictionary<string, DrawingDoc>();
 
-        private List<String> DicErreur = new List<String> ();
+        private List<String> DicErreur = new List<String>();
 
         private String DossierDVP = "";
 
@@ -50,87 +46,73 @@ namespace ModuleLaser.ModuleCreerDvp
 
                 CreerDossierDVP();
 
-                HashMateriaux = new HashSet<string>(ListeMateriaux);
+                SortedDictionary<ModelDoc2, SortedDictionary<String, int>> dic = new SortedDictionary<ModelDoc2, SortedDictionary<string, int>>();
+                HashSet<String> HashMateriaux = new HashSet<string>(ListeMateriaux);
 
                 if (MdlBase.TypeDoc() == eTypeDoc.Piece)
                 {
-                    Component2 CpRacine = MdlBase.eComposantRacine();
-                    ListeCp.Add(CpRacine);
-
-                    if (!CpRacine.eNomConfiguration().eEstConfigPliee())
+                    var ConfigActive = MdlBase.eNomConfigActive();
+                    if (!ConfigActive.eEstConfigPliee())
                     {
                         WindowLog.Ecrire("Pas de configuration valide," +
                                             "\r\n le nom de la config doit être composée exclusivement de chiffres");
                         return;
                     }
-
-                    List<String> ListeConfig = new List<String>() { CpRacine.eNomConfiguration() };
-
-                    DicConfig.Add(CpRacine.eKeySansConfig(), ListeConfig);
-
-                    DicQte.Ajouter(CpRacine.eKeyAvecConfig());
+                    var tmpdic = new SortedDictionary<string, int>();
+                    tmpdic.Add(ConfigActive, 1);
+                    dic.Add(MdlBase, tmpdic);
                 }
-
-                // Si c'est un assemblage, on liste les composants
-                if (MdlBase.TypeDoc() == eTypeDoc.Assemblage)
-                    ListeCp = MdlBase.eRecListeComposant(
-                    c =>
-                    {
-                        if ((ComposantsExterne || c.eEstDansLeDossier(MdlBase)) && !c.IsHidden(true) && !c.ExcludeFromBOM && (c.TypeDoc() == eTypeDoc.Piece))
+                else
+                {
+                    dic = MdlBase.eComposantRacine().eDenombrerComposant(
+                        c =>
                         {
-                            if (!c.eNomConfiguration().eEstConfigPliee() || DicQte.Plus(c.eKeyAvecConfig()))
+                            if ((ComposantsExterne || c.eEstDansLeDossier(MdlBase)) && 
+                            !c.IsHidden(true) && 
+                            !c.ExcludeFromBOM && 
+                            (c.TypeDoc() == eTypeDoc.Piece))
+                            {
+                                if (!c.eNomConfiguration().eEstConfigPliee())
+                                    return false;
+
+                                var LstDossier = c.eListeDesDossiersDePiecesSoudees();
+                                foreach (var dossier in LstDossier)
+                                {
+                                    if (!dossier.eEstExclu() &&
+                                    dossier.eTypeDeDossier() == eTypeCorps.Tole &&
+                                    HashMateriaux.Contains(dossier.eGetMateriau()))
+                                    {
+                                        return true;
+                                    }
+                                }
+                            }
+                            return false;
+                        },
+                        // On ne parcourt pas les assemblages exclus
+                        c =>
+                        {
+                            if (c.ExcludeFromBOM)
                                 return false;
 
-                            foreach (Body2 corps in c.eListeCorps())
-                            {
-                                if (corps.eTypeDeCorps() != eTypeCorps.Tole)
-                                    continue;
-
-                                String Materiau = corps.eGetMateriauCorpsOuComp(c);
-                                
-                                if (!HashMateriaux.Contains(Materiau))
-                                    continue;
-
-                                DicQte.Ajouter(c.eKeyAvecConfig());
-
-                                if (DicConfig.ContainsKey(c.eKeySansConfig()))
-                                {
-                                    DicConfig[c.eKeySansConfig()].AddIfNotExist(c.eNomConfiguration());
-                                    return false;
-                                }
-
-                                DicConfig.Add(c.eKeySansConfig(), new List<string>() { c.eNomConfiguration() });
-                                return true;
-                            }
+                            return true;
                         }
+                        );
+                }
 
-                        return false;
-                    },
-                    null,
-                    true
-                );
-
-                // On multiplie les quantites
-                DicQte.Multiplier(Quantite);
-
-                for (int noCp = 0; noCp < ListeCp.Count; noCp++)
+                int MdlPct = 0;
+                foreach(var mdl in dic.Keys)
                 {
-                    var Cp = ListeCp[noCp];
-                    ModelDoc2 mdl = Cp.eModelDoc2();
                     mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
 
-                    var ListeNomConfigs = DicConfig[Cp.eKeySansConfig()];
-                    ListeNomConfigs.Sort(new WindowsStringComparer());
-
                     WindowLog.SautDeLigne();
-                    WindowLog.EcrireF("[{1}/{2}] {0}", Cp.eNomSansExt(), noCp + 1, ListeCp.Count);
+                    WindowLog.EcrireF("[{1}/{2}] {0}", mdl.eNomSansExt(), ++MdlPct, dic.Count);
 
-                    for (int noCfg = 0; noCfg < ListeNomConfigs.Count; noCfg++)
+                    int CfgPct = 0;
+                    foreach (var NomConfigPliee in dic[mdl].Keys)
                     {
-                        var NomConfigPliee = ListeNomConfigs[noCfg];
-                        int QuantiteCfg = DicQte[Cp.eKeyAvecConfig(NomConfigPliee)];
+                        int QuantiteCfg = dic[mdl][NomConfigPliee] * Quantite;
                         WindowLog.SautDeLigne();
-                        WindowLog.EcrireF("  [{2}/{3}] Config : \"{0}\" -> ×{1}", NomConfigPliee, QuantiteCfg, noCfg + 1, ListeNomConfigs.Count);
+                        WindowLog.EcrireF("  [{2}/{3}] Config : \"{0}\" -> ×{1}", NomConfigPliee, QuantiteCfg, ++CfgPct, dic[mdl].Count);
                         mdl.ShowConfiguration2(NomConfigPliee);
                         mdl.EditRebuild3();
                         PartDoc Piece = mdl.ePartDoc();
@@ -165,10 +147,17 @@ namespace ModuleLaser.ModuleCreerDvp
 
                             Materiau = ForcerMateriau.IsRefAndNotEmpty(Materiau);
 
-                            int QuantiteTole = QuantiteCfg * dossier.GetBodyCount();
+                            int QuantiteTole = QuantiteCfg * dossier.eNbCorps();
                             Double Epaisseur = Tole.eEpaisseur();
-                            
+
                             String NoDossier = dossier.eProp(CONSTANTES.NO_DOSSIER);
+
+                            if (NoDossier.IsNull() || String.IsNullOrWhiteSpace(NoDossier))
+                            {
+                                WindowLog.Ecrire("Pas de no de dossier");
+                                return;
+                            }
+
                             String NomConfigDepliee = Sw.eNomConfigDepliee(NomConfigPliee, NoDossier);
                             String RefQuantite = mdl.RefPiece("<Nom_Piece>-<Nom_Config>-<No_Dossier>", NomConfigPliee, NoDossier);
                             String RefGravure = mdl.RefPiece(FormatInscription, NomConfigPliee, NoDossier);
@@ -187,7 +176,7 @@ namespace ModuleLaser.ModuleCreerDvp
                             }
                             else if (!mdl.ShowConfiguration2(NomConfigDepliee))
                             {
-                                DicErreur.Add(Cp.eNomSansExt() + " -> cfg : " + NomConfigPliee + " - No : " + NoDossier + " = " + NomConfigDepliee);
+                                DicErreur.Add(mdl.eNomSansExt() + " -> cfg : " + NomConfigPliee + " - No : " + NoDossier + " = " + NomConfigDepliee);
                                 WindowLog.EcrireF("La configuration n'éxiste pas");
                                 continue;
                             }
@@ -211,9 +200,111 @@ namespace ModuleLaser.ModuleCreerDvp
                         NouvelleLigne = true;
                     }
 
-                    if (Cp.GetPathName() != MdlBase.GetPathName())
+                    if (mdl.GetPathName() != MdlBase.GetPathName())
                         App.Sw.CloseDoc(mdl.GetPathName());
                 }
+
+                //for (int noCp = 0; noCp < ListeCp.Count; noCp++)
+                //{
+                //    var Cp = ListeCp[noCp];
+                //    ModelDoc2 mdl = Cp.eModelDoc2();
+                //    mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
+
+                //    var ListeNomConfigs = DicConfig[Cp.eKeySansConfig()];
+                //    ListeNomConfigs.Sort(new WindowsStringComparer());
+
+                //    WindowLog.SautDeLigne();
+                //    WindowLog.EcrireF("[{1}/{2}] {0}", Cp.eNomSansExt(), noCp + 1, ListeCp.Count);
+
+                //    for (int noCfg = 0; noCfg < ListeNomConfigs.Count; noCfg++)
+                //    {
+                //        var NomConfigPliee = ListeNomConfigs[noCfg];
+                //        int QuantiteCfg = DicQte[Cp.eKeyAvecConfig(NomConfigPliee)];
+                //        WindowLog.SautDeLigne();
+                //        WindowLog.EcrireF("  [{2}/{3}] Config : \"{0}\" -> ×{1}", NomConfigPliee, QuantiteCfg, noCfg + 1, ListeNomConfigs.Count);
+                //        mdl.ShowConfiguration2(NomConfigPliee);
+                //        mdl.EditRebuild3();
+                //        PartDoc Piece = mdl.ePartDoc();
+
+                //        ListPID<Feature> ListeDossier = Piece.eListePIDdesFonctionsDePiecesSoudees(null);
+
+                //        for (int noD = 0; noD < ListeDossier.Count; noD++)
+                //        {
+                //            Feature f = ListeDossier[noD];
+                //            BodyFolder dossier = f.GetSpecificFeature2();
+
+                //            if (dossier.eEstExclu() || dossier.IsNull() || (dossier.GetBodyCount() == 0)) continue;
+
+                //            WindowLog.SautDeLigne();
+                //            WindowLog.EcrireF("    - [{1}/{2}] Dossier : \"{0}\"", f.Name, noD + 1, ListeDossier.Count);
+
+                //            Body2 Tole = dossier.eCorpsDeTolerie();
+
+                //            if (Tole.IsNull())
+                //            {
+                //                WindowLog.Ecrire("      Pas de tole");
+                //                continue;
+                //            }
+
+                //            String Materiau = Tole.eGetMateriauCorpsOuPiece(Piece, NomConfigPliee);
+
+                //            if (!HashMateriaux.Contains(Materiau))
+                //            {
+                //                WindowLog.Ecrire("      Pas de tole");
+                //                continue;
+                //            }
+
+                //            Materiau = ForcerMateriau.IsRefAndNotEmpty(Materiau);
+
+                //            int QuantiteTole = QuantiteCfg * dossier.GetBodyCount();
+                //            Double Epaisseur = Tole.eEpaisseur();
+
+                //            String NoDossier = dossier.eProp(CONSTANTES.NO_DOSSIER);
+                //            String NomConfigDepliee = Sw.eNomConfigDepliee(NomConfigPliee, NoDossier);
+                //            String RefQuantite = mdl.RefPiece("<Nom_Piece>-<Nom_Config>-<No_Dossier>", NomConfigPliee, NoDossier);
+                //            String RefGravure = mdl.RefPiece(FormatInscription, NomConfigPliee, NoDossier);
+
+                //            WindowLog.EcrireF("      Ep {0} / Materiau {1}", Epaisseur, Materiau);
+                //            WindowLog.EcrireF("          Config {0}", NomConfigDepliee);
+
+                //            if (ConvertirEsquisse)
+                //            {
+                //                if (!mdl.eListeNomConfiguration().Contains(NomConfigDepliee))
+                //                    mdl.CreerConfigDepliee(NomConfigDepliee, NomConfigPliee);
+
+                //                WindowLog.EcrireF("          Configuration crée : {0}", NomConfigDepliee);
+                //                mdl.ShowConfiguration2(NomConfigDepliee);
+                //                Tole.DeplierTole(mdl, NomConfigDepliee);
+                //            }
+                //            else if (!mdl.ShowConfiguration2(NomConfigDepliee))
+                //            {
+                //                DicErreur.Add(Cp.eNomSansExt() + " -> cfg : " + NomConfigPliee + " - No : " + NoDossier + " = " + NomConfigDepliee);
+                //                WindowLog.EcrireF("La configuration n'éxiste pas");
+                //                continue;
+                //            }
+
+                //            mdl.EditRebuild3();
+
+                //            DrawingDoc dessin = CreerPlan(Materiau, Epaisseur);
+                //            dessin.eModelDoc2().eActiver();
+                //            Sheet Feuille = dessin.eFeuilleActive();
+
+                //            View v = CreerVueToleDvp(dessin, Feuille, Piece, NomConfigDepliee, RefQuantite, RefGravure, Materiau, QuantiteTole, Epaisseur);
+
+                //            if (ConvertirEsquisse)
+                //            {
+                //                mdl.ShowConfiguration2(NomConfigPliee);
+                //                mdl.EditRebuild3();
+                //                mdl.DeleteConfiguration2(NomConfigDepliee);
+                //            }
+                //        }
+
+                //        NouvelleLigne = true;
+                //    }
+
+                //    if (Cp.GetPathName() != MdlBase.GetPathName())
+                //        App.Sw.CloseDoc(mdl.GetPathName());
+                //}
 
                 foreach (DrawingDoc dessin in DicDessins.Values)
                 {
@@ -234,7 +325,7 @@ namespace ModuleLaser.ModuleCreerDvp
                 {
                     WindowLog.SautDeLigne();
 
-                    WindowLog.Ecrire("Liste des erreurs :" );
+                    WindowLog.Ecrire("Liste des erreurs :");
                     foreach (var item in DicErreur)
                         WindowLog.Ecrire(" - " + item);
 

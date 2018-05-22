@@ -183,4 +183,5 @@
   <Module name="MasquerCorpsVue" intitule="Masquerles corps de la vue" />
   <Module name="Test2" intitule="Test2" />
   <Module name="SelectionnerCorpsIdentiques" intitule="Selectionner les corps identiques" />
+  <Module name="NumeroterDossier" intitule="Numeroter les dossiers" />
 </Parametres>

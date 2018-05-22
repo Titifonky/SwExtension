@@ -83,8 +83,7 @@ namespace ModuleLaser
         /// Numerote les dossier à partir de noDossierDepart
         /// </summary>
         /// <param name="comp"></param>
-        /// <param name="reinitialiserNoDossier"></param>
-        /// <param name="noDossierDepart"></param>
+        /// <param name="MajListeDesDossiersDePiecesSoudees"></param>
         /// <returns>Retourne la liste des dossiers et le no</returns>
         public static Dictionary<String, int> eNumeroterDossier(this Component2 comp, Boolean MajListeDesDossiersDePiecesSoudees = false)
         {
@@ -101,8 +100,7 @@ namespace ModuleLaser
         /// Numerote les dossier à partir de noDossierDepart
         /// </summary>
         /// <param name="piece"></param>
-        /// <param name="reinitialiserNoDossier"></param>
-        /// <param name="noDossierDepart"></param>
+        /// <param name="MajListeDesDossiersDePiecesSoudees"></param>
         /// <returns>Retourne la liste des dossiers et le no</returns>
         public static Dictionary<String, int> eNumeroterDossier(this PartDoc piece, Boolean MajListeDesDossiersDePiecesSoudees = false)
         {

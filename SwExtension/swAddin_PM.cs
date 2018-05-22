@@ -11,6 +11,7 @@ using ModuleLaser.ModuleCreerDvp;
 using ModuleLaser.ModuleExportBarre;
 using ModuleLaser.ModuleExportBarreN;
 using ModuleLaser.ModuleListeDebit;
+using ModuleLaser;
 using ModuleLierLesConfigurations;
 using ModuleListerMateriaux;
 using ModuleListerPercage;
@@ -74,6 +75,19 @@ namespace SwExtension
                 _Mnu.AjouterCmde("Co", typeof(PageContraindreComposant));
 
                 _Mnu.NouveauGroupe();
+                _Mnu.AjouterCmde("Ip", typeof(PageInsererPercage));
+                _Mnu.AjouterCmde("Ep", typeof(PageEmpreinte));
+
+                _Mnu.NouveauGroupe();
+                _Mnu.AjouterCmde("Si", typeof(BoutonSelectionnerCorpsIdentiques));
+                _Mnu.AjouterCmde("Lm", typeof(PageListerMateriaux));
+                _Mnu.AjouterCmde("Lc", typeof(PageListerConfigComp));
+                _Mnu.AjouterCmde("Lp", typeof(PageListerPercage));
+
+                //==================================================================================================
+                _Mnu = _eListeMenu.Add("Laser", "Fonctions pour le débit laser");
+
+                _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde("Cd", typeof(PageCreerConfigDvp));
                 _Mnu.AjouterCmde("Dv", typeof(PageCreerDvp));
 
@@ -81,16 +95,9 @@ namespace SwExtension
                 _Mnu.AjouterCmde("Eb", typeof(PageExportBarre));
                 //_Mnu.AjouterCmde("En", typeof(PageExportBarreN));
                 _Mnu.AjouterCmde("Ld", typeof(PageListeDebit));
-                _Mnu.AjouterCmde("Si", typeof(BoutonSelectionnerCorpsIdentiques));
 
                 _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde("Ip", typeof(PageInsererPercage));
-                _Mnu.AjouterCmde("Ep", typeof(PageEmpreinte));
-
-                _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde("Lm", typeof(PageListerMateriaux));
-                _Mnu.AjouterCmde("Lc", typeof(PageListerConfigComp));
-                _Mnu.AjouterCmde("Lp", typeof(PageListerPercage));
+                _Mnu.AjouterCmde("Nd", typeof(BoutonNumeroterDossier));
 
                 //==================================================================================================
                 _Mnu = _eListeMenu.Add("Escalier", "Fonctions d'aide à la création d'escalier");

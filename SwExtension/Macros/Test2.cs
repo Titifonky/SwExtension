@@ -58,12 +58,10 @@ namespace Macros
                                 Ajoute = true;
                                 break;
                             }
-
                         }
 
                         if (Ajoute == false)
                         {
-                            var FonctionPID = new SwObjectPID<Feature>(fDossier, comp.eModelDoc2());
                             DicCorpsTest.Add(Corps, new Tuple<string, String>(MateriauCorps, fDossier.Name));
                             DicDossier.Add(Corps, new Tuple<String, int>(fDossier.Name, Dossier.eNbCorps()));
                         }

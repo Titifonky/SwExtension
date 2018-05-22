@@ -92,6 +92,7 @@
     <Compile Include="Macros\Test2.cs" />
     <Compile Include="Macros\Test.cs" />
     <Compile Include="ModuleEmpreinte\PageEmpreinte - Copier.cs" />
+    <Compile Include="ModuleLaser\BoutonNumeroterDossier.cs" />
     <Compile Include="ModuleLaser\ModuleExportBarreN\CmdExportBarreN.cs" />
     <Compile Include="ModuleLaser\ModuleExportBarreN\PageExportBarreN.cs" />
     <Compile Include="ModuleLaser\ModuleListeDebit\CmdListeDebit.cs" />

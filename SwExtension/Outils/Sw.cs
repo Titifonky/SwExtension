@@ -1325,7 +1325,7 @@ namespace Outils
         }
     }
 
-    public class CompareComponent2 : IEqualityComparer<Component2>
+    public class EqualCompareComponent2 : IEqualityComparer<Component2>
     {
         bool IEqualityComparer<Component2>.Equals(Component2 x, Component2 y)
         {
@@ -1343,6 +1343,33 @@ namespace Outils
             return Ext.GetPersistReference3(obj);
         }
     }
+
+    public class EqualCompareModelDoc2 : IEqualityComparer<ModelDoc2>
+    {
+        bool IEqualityComparer<ModelDoc2>.Equals(ModelDoc2 x, ModelDoc2 y)
+        {
+            if (x.GetPathName().ToUpperInvariant() == y.GetPathName().ToUpperInvariant())
+                return true;
+
+            return false;
+        }
+
+        int IEqualityComparer<ModelDoc2>.GetHashCode(ModelDoc2 obj)
+        {
+            return obj.GetPathName().GetHashCode();
+        }
+    }
+
+    public class CompareModelDoc2 : IComparer<ModelDoc2>
+    {
+        private WindowsStringComparer sc = new WindowsStringComparer();
+
+        int IComparer<ModelDoc2>.Compare(ModelDoc2 x, ModelDoc2 y)
+        {
+            return sc.Compare(x.eNomAvecExt(), y.eNomAvecExt());
+        }
+    }
+
 
     public static class App
     {
@@ -1376,7 +1403,7 @@ namespace Outils
 
         public static String eKeyAvecConfig(this Component2 cp, String nomConfig)
         {
-            return cp.GetPathName() + "_" + nomConfig;
+            return cp.GetPathName() + "__" + nomConfig;
         }
 
         //========================================================================================
@@ -2184,7 +2211,7 @@ namespace Outils
         /// <param name="filtreAdd"></param>
         /// <param name="premiereOccurence"></param>
         /// <returns>Renvoi true si la fonction a trouvée la première occurence, sinon false</returns>
-        private static Boolean eRecListeComposantBase(this Component2 cp, ref List<Component2> Liste, Predicate<Component2> filtreAdd, Predicate<Component2> filtreRec, Boolean premiereOccurence)
+        public static Boolean eRecListeComposantBase(this Component2 cp, ref List<Component2> Liste, Predicate<Component2> filtreAdd, Predicate<Component2> filtreRec, Boolean premiereOccurence)
         {
             Object[] ChildComp = (Object[])cp.GetChildren();
 
@@ -2211,6 +2238,28 @@ namespace Outils
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Parcours de façon recursive les composants
+        /// </summary>
+        /// <param name="cp"></param>
+        /// <param name="filtreApp"></param>
+        public static void eRecParcourirComposantBase(this Component2 cp, Action<Component2> filtreApp, Predicate<Component2> filtreRec)
+        {
+            Object[] ChildComp = (Object[])cp.GetChildren();
+
+            if (ChildComp.IsNull())
+                return;
+
+            foreach (Component2 Cp in ChildComp)
+            {
+                if (filtreApp.IsRef())
+                    filtreApp(Cp);
+
+                if (!Cp.IsSuppressed() && Cp.TypeDoc() == eTypeDoc.Assemblage && filtreRec.IsRef() && filtreRec(Cp))
+                    Cp.eRecParcourirComposantBase(filtreApp, filtreRec);
+            }
         }
 
         /// <summary>
@@ -2312,6 +2361,39 @@ namespace Outils
             }
 
             return n;
+        }
+
+        public static SortedDictionary<ModelDoc2, SortedDictionary<String, int>> eDenombrerComposant(this Component2 cp, Predicate<Component2> filtre = null, Predicate<Component2> filtreRec = null)
+        {
+            SortedDictionary<ModelDoc2, SortedDictionary<String, int>> Dic = new SortedDictionary<ModelDoc2, SortedDictionary<string, int>>(new CompareModelDoc2());
+
+            if (cp.TypeDoc() == eTypeDoc.Assemblage)
+                cp.eRecParcourirComposantBase(
+                    c =>
+                    {
+                        if (!c.IsSuppressed() && filtre(c))
+                        {
+                            var mdl = c.eModelDoc2();
+                            var cfg = c.eNomConfiguration();
+
+                            if (Dic.ContainsKey(mdl))
+                            {
+                                var dicCfg = Dic[mdl];
+                                dicCfg.AddIfNotExistOrPlus(cfg);
+                            }
+                            else
+                            {
+                                SortedDictionary<string, int> dicCfg = new SortedDictionary<string, int>(new WindowsStringComparer());
+                                dicCfg.Add(cfg, 1);
+                                Dic.Add(mdl, dicCfg);
+                            }
+                        }
+                    }
+                    ,
+                    filtreRec
+                    );
+
+            return Dic;
         }
 
         //========================================================================================
