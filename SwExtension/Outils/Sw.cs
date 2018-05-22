@@ -2245,7 +2245,7 @@ namespace Outils
         /// </summary>
         /// <param name="cp"></param>
         /// <param name="filtreApp"></param>
-        public static void eRecParcourirComposantBase(this Component2 cp, Action<Component2> filtreApp, Predicate<Component2> filtreRec)
+        public static void eRecParcourirComposantBase(this Component2 cp, Action<Component2> filtreApp, Predicate<Component2> filtreRec = null)
         {
             Object[] ChildComp = (Object[])cp.GetChildren();
 
@@ -2257,7 +2257,7 @@ namespace Outils
                 if (filtreApp.IsRef())
                     filtreApp(Cp);
 
-                if (!Cp.IsSuppressed() && Cp.TypeDoc() == eTypeDoc.Assemblage && filtreRec.IsRef() && filtreRec(Cp))
+                if (!Cp.IsSuppressed() && Cp.TypeDoc() == eTypeDoc.Assemblage && (filtreRec.IsNull() || filtreRec(Cp)))
                     Cp.eRecParcourirComposantBase(filtreApp, filtreRec);
             }
         }

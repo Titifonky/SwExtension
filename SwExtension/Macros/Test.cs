@@ -4,10 +4,6 @@ using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using SwExtension;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Windows.Forms;
 
 namespace Macros
 {
@@ -17,59 +13,35 @@ namespace Macros
 
     public class Test : BoutonBase
     {
+        public static int index = -1;
+
         protected override void Command()
         {
             try
             {
                 ModelDoc2 MdlBase = App.ModelDoc2;
 
-                var ComposantsExterne = true;
-                //var HashMateriaux = new HashSet<string>() { };
+                var f = MdlBase.eSelect_RecupererObjet<Face2>();
 
-                var dic = MdlBase.eComposantRacine().eDenombrerComposant(
-                    c =>
-                    {
-                        if ((ComposantsExterne || c.eEstDansLeDossier(MdlBase)) && !c.IsHidden(true) && !c.ExcludeFromBOM && (c.TypeDoc() == eTypeDoc.Piece))
-                        {
-                            if (!c.eNomConfiguration().eEstConfigPliee())
-                                return false;
+                MdlBase.eEffacerSelection();
 
-                            foreach (Body2 corps in c.eListeCorps())
-                            {
-                                if (corps.eTypeDeCorps() == eTypeCorps.Tole)
-                                {
-                                    //String Materiau = corps.eGetMateriauCorpsOuComp(c);
+                Body2 b = f.GetBody();
 
-                                    //if (HashMateriaux.Contains(Materiau))
-                                    return true;
-                                }
-                            }
+                String val = "Test";
 
-                            return true;
-                        }
-                        return false;
-                    }
-                    ,
-                    // On ne parcourt pas les assemblages exclus
-                    c =>
-                    {
-                        if (c.ExcludeFromBOM)
-                            return false;
-
-                        return true;
-                    }
-                    );
-
-                foreach (var mdl in dic.Keys)
+                if(index == -1)
                 {
-                    WindowLog.EcrireF("{0}", mdl.eNomAvecExt());
-                    var dicCfg = dic[mdl];
-                    foreach (var cfg in dicCfg.Keys)
-                    {
-                        var nb = dicCfg[cfg];
-                        WindowLog.EcrireF("   {0} Nb : {1}", cfg, nb);
-                    }
+                    index = b.AddPropertyExtension2(val);
+                    WindowLog.EcrireF("Ajoute {0}", val);
                 }
+                else
+                {
+                    WindowLog.EcrireF("Index {0}", index);
+                    Object r = b.GetPropertyExtension2(index - 1);
+                    WindowLog.EcrireF("Resultat {0}", r);
+                }
+
+
             }
             catch (Exception e) { this.LogMethode(new Object[] { e }); }
 

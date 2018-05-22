@@ -1,4 +1,5 @@
-﻿using Outils;
+﻿using LogDebugging;
+using Outils;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using System;
@@ -304,6 +305,72 @@ namespace ModuleLaser
             }
 
             return ListeMateriaux;
+        }
+
+        /// <summary>
+        /// renvoi la liste des modeles avec la liste des configurations et les quantites
+        /// </summary>
+        /// <param name="mdlBase"></param>
+        /// <param name="composantsExterne"></param>
+        /// <param name="materiaux"></param>
+        /// <param name="filtreTypeCorps"></param>
+        /// <returns></returns>
+        public static SortedDictionary<ModelDoc2, SortedDictionary<String, int>> DenombrerComposants(this ModelDoc2 mdlBase, Boolean composantsExterne, HashSet<String> materiaux, eTypeCorps filtreTypeCorps)
+        {
+            SortedDictionary<ModelDoc2, SortedDictionary<String, int>> dic = new SortedDictionary<ModelDoc2, SortedDictionary<string, int>>();
+
+            if (mdlBase.TypeDoc() == eTypeDoc.Piece)
+            {
+                var ConfigActive = mdlBase.eNomConfigActive();
+                if (!ConfigActive.eEstConfigPliee())
+                {
+                    WindowLog.Ecrire("Pas de configuration valide," +
+                                        "\r\n le nom de la config doit être composée exclusivement de chiffres");
+                    return dic;
+                }
+                var tmpdic = new SortedDictionary<string, int>();
+                tmpdic.Add(ConfigActive, 1);
+                dic.Add(mdlBase, tmpdic);
+            }
+            else
+            {
+                dic = mdlBase.eComposantRacine().eDenombrerComposant(
+                c =>
+                {
+                    if ((composantsExterne || c.eEstDansLeDossier(mdlBase)) &&
+                    !c.IsHidden(true) &&
+                    !c.ExcludeFromBOM &&
+                    (c.TypeDoc() == eTypeDoc.Piece))
+                    {
+                        if (!c.eNomConfiguration().eEstConfigPliee())
+                            return false;
+
+                        var LstDossier = c.eListeDesDossiersDePiecesSoudees();
+                        foreach (var dossier in LstDossier)
+                        {
+                            if (!dossier.eEstExclu() &&
+                            filtreTypeCorps.HasFlag(dossier.eTypeDeDossier()) &&
+                            materiaux.Contains(dossier.eGetMateriau()))
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                }
+                ,
+                // On ne parcourt pas les assemblages exclus
+                c =>
+                {
+                    if (c.ExcludeFromBOM)
+                        return false;
+
+                    return true;
+                }
+                );
+            }
+
+            return dic;
         }
     }
 }

@@ -45,61 +45,10 @@ namespace ModuleLaser.ModuleExportBarre
 
             try
             {
-                SortedDictionary<ModelDoc2, SortedDictionary<String, int>> dic = new SortedDictionary<ModelDoc2, SortedDictionary<string, int>>();
+                eTypeCorps Filtre = PrendreEnCompteTole ? eTypeCorps.Barre | eTypeCorps.Tole : eTypeCorps.Barre;
                 HashSet<String> HashMateriaux = new HashSet<string>(ListeMateriaux);
 
-                eTypeCorps Filtre = PrendreEnCompteTole ? eTypeCorps.Barre | eTypeCorps.Tole : eTypeCorps.Barre;
-
-                if (MdlBase.TypeDoc() == eTypeDoc.Piece)
-                {
-                    var ConfigActive = MdlBase.eNomConfigActive();
-                    if (!ConfigActive.eEstConfigPliee())
-                    {
-                        WindowLog.Ecrire("Pas de configuration valide," +
-                                            "\r\n le nom de la config doit être composée exclusivement de chiffres");
-                        return;
-                    }
-                    var tmpdic = new SortedDictionary<string, int>();
-                    tmpdic.Add(ConfigActive, 1);
-                    dic.Add(MdlBase, tmpdic);
-                }
-                else
-                {
-                    dic = MdlBase.eComposantRacine().eDenombrerComposant(
-                    c =>
-                    {
-                        if ((ComposantsExterne || c.eEstDansLeDossier(MdlBase)) &&
-                        !c.IsHidden(true) &&
-                        !c.ExcludeFromBOM &&
-                        (c.TypeDoc() == eTypeDoc.Piece))
-                        {
-                            if (!c.eNomConfiguration().eEstConfigPliee())
-                                return false;
-
-                            var LstDossier = c.eListeDesDossiersDePiecesSoudees();
-                            foreach (var dossier in LstDossier)
-                            {
-                                if (!dossier.eEstExclu() &&
-                                Filtre.HasFlag(dossier.eTypeDeDossier()) &&
-                                HashMateriaux.Contains(dossier.eGetMateriau()))
-                                {
-                                    return true;
-                                }
-                            }
-                        }
-                        return false;
-                    }
-                    ,
-                    // On ne parcourt pas les assemblages exclus
-                    c =>
-                    {
-                        if (c.ExcludeFromBOM)
-                            return false;
-
-                        return true;
-                    }
-                    );
-                }
+                var dic = MdlBase.DenombrerComposants(ComposantsExterne, HashMateriaux, Filtre);
 
                 if (ListerUsinages)
                     Nomenclature.TitreColonnes("Barre ref.", "Materiau", "Profil", "Lg", "Nb", "Usinage Ext 1", "Usinage Ext 2", "Détail des Usinage interne");
@@ -128,13 +77,13 @@ namespace ModuleLaser.ModuleExportBarre
 
                         for (int noD = 0; noD < ListeDossier.Count; noD++)
                         {
-                            Feature f = ListeDossier[noD];
-                            BodyFolder dossier = f.GetSpecificFeature2();
+                            Feature fDossier = ListeDossier[noD];
+                            BodyFolder dossier = fDossier.GetSpecificFeature2();
 
                             if (dossier.eEstExclu() || dossier.IsNull() || (dossier.GetBodyCount() == 0)) continue;
 
                             WindowLog.SautDeLigne();
-                            WindowLog.EcrireF("    - [{1}/{2}] Dossier : \"{0}\"", f.Name, noD + 1, ListeDossier.Count);
+                            WindowLog.EcrireF("    - [{1}/{2}] Dossier : \"{0}\"", fDossier.Name, noD + 1, ListeDossier.Count);
 
                             Body2 Barre = dossier.ePremierCorps();
 
@@ -157,13 +106,7 @@ namespace ModuleLaser.ModuleExportBarre
 
                             Materiau = ForcerMateriau.IsRefAndNotEmpty(Materiau);
 
-                            String NoDossier = dossier.eProp(CONSTANTES.NO_DOSSIER);
-
-                            if (NoDossier.IsNull() || String.IsNullOrWhiteSpace(NoDossier))
-                            {
-                                WindowLog.Ecrire("      Pas de no de dossier");
-                                return;
-                            }
+                            String NoDossier = fDossier.Name;
 
                             int QuantiteBarre = QuantiteCfg * dossier.eNbCorps();
 

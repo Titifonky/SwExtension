@@ -22,52 +22,58 @@ namespace Macros
             try
             {
                 ModelDoc2 mdl = App.ModelDoc2;
-                var DicCorpsTest = new Dictionary<Body2, Tuple<String, String>>();
+                var DicCorpsTest = new Dictionary<Tuple<Body2, String>, String>();
                 var DicDossier = new Dictionary<Body2, Tuple<String, int>>();
 
-                foreach (var comp in mdl.eComposantRacine().eRecListeComposant())
-                {
-                    var ListefDossier = comp.eListeDesFonctionsDePiecesSoudees();
+                int indice = 1;
 
-                    for (int i = 0; i < ListefDossier.Count; i++)
+                mdl.eComposantRacine().eRecParcourirComposantBase(
+                    comp =>
                     {
-                        Feature fDossier = ListefDossier[i];
-                        BodyFolder Dossier = fDossier.GetSpecificFeature2();
-                        if (Dossier.IsNull() || Dossier.eNbCorps() == 0 || Dossier.eEstExclu() || !Dossier.eEstUnDossierDeBarres())
-                            continue;
+                        var ListefDossier = comp.eListeDesFonctionsDePiecesSoudees();
 
-                        var Corps = Dossier.ePremierCorps();
-                        if (Corps.IsNull()) continue;
-
-                        var MateriauCorps = Corps.eGetMateriauCorpsOuComp(comp);
-
-                        Boolean Ajoute = false;
-                        foreach (var CorpsTest in DicCorpsTest.Keys)
+                        for (int i = 0; i < ListefDossier.Count; i++)
                         {
-                            var MateriauCorpsTest = DicCorpsTest[CorpsTest].Item1;
-                            if (MateriauCorps != MateriauCorpsTest) continue;
+                            Feature fDossier = ListefDossier[i];
+                            BodyFolder Dossier = fDossier.GetSpecificFeature2();
+                            if (Dossier.IsNull() || Dossier.eNbCorps() == 0 || Dossier.eEstExclu() || !(Dossier.eEstUnDossierDeBarres() || Dossier.eEstUnDossierDeToles()))
+                                continue;
 
-                            if (Corps.eEstSemblable(CorpsTest))
+                            var Corps = Dossier.ePremierCorps();
+                            if (Corps.IsNull()) continue;
+
+                            var MateriauCorps = Corps.eGetMateriauCorpsOuComp(comp);
+
+                            Boolean Ajoute = false;
+                            foreach (var CorpsTest in DicCorpsTest.Keys)
                             {
-                                var t = DicDossier[CorpsTest];
+                                var MateriauCorpsTest = CorpsTest.Item2;
+                                if (MateriauCorps != MateriauCorpsTest) continue;
 
-                                var nb = t.Item2 + Dossier.eNbCorps();
+                                if (Corps.eEstSemblable(CorpsTest.Item1))
+                                {
+                                    var t = DicDossier[CorpsTest.Item1];
 
-                                DicDossier[CorpsTest] = new Tuple<String, int>(t.Item1, nb);
+                                    var nb = t.Item2 + Dossier.eNbCorps();
 
-                                Ajoute = true;
-                                break;
+                                    DicDossier[CorpsTest.Item1] = new Tuple<String, int>(t.Item1, nb);
+
+                                    fDossier.Name = DicCorpsTest[CorpsTest];
+                                    Ajoute = true;
+                                    break;
+                                }
+                            }
+
+                            if (Ajoute == false)
+                            {
+                                fDossier.Name = "P" + (indice++).ToString();
+
+                                DicCorpsTest.Add(new Tuple<Body2, String>(Corps, MateriauCorps), fDossier.Name);
+                                DicDossier.Add(Corps, new Tuple<String, int>(fDossier.Name, Dossier.eNbCorps()));
                             }
                         }
-
-                        if (Ajoute == false)
-                        {
-                            DicCorpsTest.Add(Corps, new Tuple<string, String>(MateriauCorps, fDossier.Name));
-                            DicDossier.Add(Corps, new Tuple<String, int>(fDossier.Name, Dossier.eNbCorps()));
-                        }
                     }
-
-                }
+                    );
 
                 WindowLog.EcrireF("Nb de corps unique : {0}", DicDossier.Count);
                 int nbtt = 0;
