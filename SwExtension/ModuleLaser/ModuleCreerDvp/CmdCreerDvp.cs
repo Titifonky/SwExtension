@@ -99,6 +99,8 @@ namespace ModuleLaser.ModuleCreerDvp
                         );
                 }
 
+
+
                 int MdlPct = 0;
                 foreach(var mdl in dic.Keys)
                 {
