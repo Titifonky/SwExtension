@@ -1,7 +1,6 @@
 ﻿using LogDebugging;
 using Outils;
 using SolidWorks.Interop.sldworks;
-using SolidWorks.Interop.swconst;
 using SwExtension;
 using System;
 using System.Collections.Generic;
@@ -13,9 +12,19 @@ namespace Macros
         ModuleNom("NumeroterDossier")]
     public class BoutonNumeroterDossier : BoutonBase
     {
-        private static AttributeDef AttDef = null;
-        private const String ATTRIBUT_LASER_REF = "LaserRef";
-        private const String ATTRIBUT_PARAM_REF = "Ref";
+        private int indice = 1;
+
+        private String GenRepereDossier
+        {
+            get
+            {
+                var r = "P" + (indice++).ToString();
+
+                //while (mdl.FeatureManager.IsNameUsed((int)swNameType_e.swFeatureName, r))
+
+                return r;
+            }
+        }
 
         protected override void Command()
         {
@@ -23,8 +32,6 @@ namespace Macros
             {
                 ModelDoc2 mdlBase = App.ModelDoc2;
                 var ListeCorps = new List<Corps>();
-
-                int indice = 1;
 
                 if (mdlBase.TypeDoc() == eTypeDoc.Piece)
                 {
@@ -40,6 +47,18 @@ namespace Macros
                 }
                 else
                 {
+                    var init = 1;
+                    mdlBase.eComposantRacine().eRecParcourirComposantBase(
+                        comp =>
+                        {
+                            foreach (var fDossier in comp.eListeDesFonctionsDePiecesSoudees())
+                            {
+                                if (fDossier.Name.StartsWith("P"))
+                                    fDossier.Name = "X" + (init++).ToString();
+                            }
+                        }
+                        );
+
                     mdlBase.eComposantRacine().eRecParcourirComposantBase(
                         comp =>
                         {
@@ -63,7 +82,11 @@ namespace Macros
                                     {
                                         CorpsTest.Nb += Dossier.eNbCorps();
                                         CorpsTest.AjouterModele(comp);
-                                        fDossier.Name = CorpsTest.Repere;
+                                        NommerDossier(fDossier, CorpsTest.Repere);
+
+                                        if(fDossier.Name.Trim() != CorpsTest.Repere)
+                                            WindowLog.EcrireF("Erreur {0}-{1} : {2}->{3}", comp.Name2, comp.eNomConfiguration(), fDossier.Name, CorpsTest.Repere);
+
                                         Ajoute = true;
                                         break;
                                     }
@@ -71,10 +94,15 @@ namespace Macros
 
                                 if (Ajoute == false)
                                 {
-                                    fDossier.Name = "P" + (indice++).ToString();
+                                    var rep = GenRepereDossier;
+                                    NommerDossier(fDossier, rep);
+
+                                    if (fDossier.Name.Trim() != rep)
+                                        WindowLog.EcrireF("  Erreur {0}-{1} : {2}->{3}", comp.Name2, comp.eNomConfiguration(), fDossier.Name, rep);
+
                                     var corps = new Corps(SwCorps, MateriauCorps);
                                     corps.Nb = Dossier.eNbCorps();
-                                    corps.Repere = fDossier.Name;
+                                    corps.Repere = rep;
                                     corps.AjouterModele(comp);
                                     ListeCorps.Add(corps);
                                 }
@@ -103,71 +131,22 @@ namespace Macros
 
                     WindowLog.EcrireF("Nb total de corps : {0}", nbtt);
                 }
-
-                //if (AttDef.IsNull())
-                //{
-                //    AttDef = App.Sw.DefineAttribute(ATTRIBUT_LASER_REF);
-                //    AttDef.AddParameter(ATTRIBUT_PARAM_REF, (int)swParamType_e.swParamTypeString, 0, 0);
-                //    AttDef.Register();
-                //}
-
-                //var ListeComp = mdlBase.eComposantRacine().eRecListeComposant(c => { return c.TypeDoc() == eTypeDoc.Piece; }, null, true);
-
-                //foreach (var comp in ListeComp)
-                //{
-                //    var ListefDossier = comp.eListeDesFonctionsDePiecesSoudees();
-
-                //    for (int i = 0; i < ListefDossier.Count; i++)
-                //    {
-                //        Feature fDossier = ListefDossier[i];
-                //        BodyFolder Dossier = fDossier.GetSpecificFeature2();
-                //        if (Dossier.IsNull() || Dossier.eNbCorps() == 0 || Dossier.eEstExclu() || !(Dossier.eEstUnDossierDeBarres() || Dossier.eEstUnDossierDeToles()))
-                //            continue;
-
-                //        CustomPropertyManager PM = Dossier.GetFeature().CustomPropertyManager;
-                //        PM.Delete2(CONSTANTES.NO_DOSSIER);
-                //    }
-                //}
-
-                //int noDossierMax = 1;
-
-                //HashSet<String> DicDossier = new HashSet<string>();
-
-                //foreach (var comp in ListeComp)
-                //{
-                //    WindowLog.EcrireF("{0}", comp.Name2);
-
-                //    ModelDoc2 mdl = comp.eModelDoc2();
-                //    mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
-
-                //    var ListefDossier = mdl.ePartDoc().eListeDesFonctionsDePiecesSoudees();
-
-                //    for (int i = 0; i < ListefDossier.Count; i++)
-                //    {
-                //        Feature fDossier = ListefDossier[i];
-                //        BodyFolder Dossier = fDossier.GetSpecificFeature2();
-                //        if (Dossier.IsNull() || Dossier.eNbCorps() == 0 || Dossier.eEstExclu() || !(Dossier.eEstUnDossierDeBarres() || Dossier.eEstUnDossierDeToles()))
-                //            continue;
-
-                //        CustomPropertyManager PM = Dossier.GetFeature().CustomPropertyManager;
-                //        var ClefDossier = comp.eNomSansExt() + "-" + fDossier.Name;
-
-                //        // Si la propriete existe, on récupère la valeur
-                //        if (!DicDossier.Contains(ClefDossier))
-                //        {
-                //            WindowLog.EcrireF("  {0} -> {1}", fDossier.Name, noDossierMax);
-                //            PM.ePropAdd(CONSTANTES.NO_DOSSIER, noDossierMax++);
-                //            DicDossier.Add(ClefDossier);
-                //        }  
-                //    }
-
-                //    if (comp.GetPathName() != mdlBase.GetPathName())
-                //        App.Sw.CloseDoc(mdl.GetPathName());
-                //}
-
-
             }
             catch (Exception e) { this.LogMethode(new Object[] { e }); }
+        }
+
+        // On rajoute des espaces au nom pour remedier au problèmes
+        // des corps identiques dans des dossiers différents
+        private void NommerDossier(Feature f, String rep)
+        {
+            int Boucle = 0;
+            var rtmp = rep;
+            f.Name = rtmp;
+            while((f.Name != rtmp) && (Boucle++ < 15))
+            {
+                rtmp += " ";
+                f.Name = rtmp;
+            }
         }
 
         private class Corps

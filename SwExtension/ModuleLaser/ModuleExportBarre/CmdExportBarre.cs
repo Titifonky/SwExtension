@@ -22,7 +22,6 @@ namespace ModuleLaser.ModuleExportBarre
         public Boolean ComposantsExterne = false;
         public String RefFichier = "";
 
-        public Boolean ReinitialiserNoDossier = false;
         public Boolean MajListePiecesSoudees = false;
         public String ForcerMateriau = null;
 
@@ -48,7 +47,7 @@ namespace ModuleLaser.ModuleExportBarre
                 eTypeCorps Filtre = PrendreEnCompteTole ? eTypeCorps.Barre | eTypeCorps.Tole : eTypeCorps.Barre;
                 HashSet<String> HashMateriaux = new HashSet<string>(ListeMateriaux);
 
-                var dic = MdlBase.DenombrerComposants(ComposantsExterne, HashMateriaux, Filtre);
+                var dic = MdlBase.DenombrerDossiers(ComposantsExterne, HashMateriaux, Filtre);
 
                 if (ListerUsinages)
                     Nomenclature.TitreColonnes("Barre ref.", "Materiau", "Profil", "Lg", "Nb", "Usinage Ext 1", "Usinage Ext 2", "Détail des Usinage interne");
@@ -66,56 +65,37 @@ namespace ModuleLaser.ModuleExportBarre
                     int CfgPct = 0;
                     foreach (var NomConfigPliee in dic[mdl].Keys)
                     {
-                        int QuantiteCfg = dic[mdl][NomConfigPliee] * Quantite;
                         WindowLog.SautDeLigne();
-                        WindowLog.EcrireF("  [{2}/{3}] Config : \"{0}\" -> ×{1}", NomConfigPliee, QuantiteCfg, ++CfgPct, dic[mdl].Count);
+                        WindowLog.EcrireF("  [{1}/{2}] Config : \"{0}\"", NomConfigPliee, ++CfgPct, dic[mdl].Count);
                         mdl.ShowConfiguration2(NomConfigPliee);
                         mdl.EditRebuild3();
                         PartDoc Piece = mdl.ePartDoc();
 
-                        ListPID<Feature> ListeDossier = Piece.eListePIDdesFonctionsDePiecesSoudees(null);
-
-                        for (int noD = 0; noD < ListeDossier.Count; noD++)
+                        var ListeDossier = dic[mdl][NomConfigPliee];
+                        int DrPct = 0;
+                        foreach (var t in ListeDossier)
                         {
-                            Feature fDossier = ListeDossier[noD];
+                            var nomDossier = t.Key;
+                            var QuantiteBarre = t.Value * Quantite;
+
+                            Feature fDossier = Piece.FeatureByName(nomDossier);
                             BodyFolder dossier = fDossier.GetSpecificFeature2();
-
-                            if (dossier.eEstExclu() || dossier.IsNull() || (dossier.GetBodyCount() == 0)) continue;
-
-                            WindowLog.SautDeLigne();
-                            WindowLog.EcrireF("    - [{1}/{2}] Dossier : \"{0}\"", fDossier.Name, noD + 1, ListeDossier.Count);
-
                             Body2 Barre = dossier.ePremierCorps();
 
                             String Profil = dossier.eProp(CONSTANTES.PROFIL_NOM);
                             String Longueur = dossier.eProp(CONSTANTES.PROFIL_LONGUEUR);
 
-                            if (String.IsNullOrWhiteSpace(Profil) || String.IsNullOrWhiteSpace(Longueur))
-                            {
-                                WindowLog.Ecrire("      Pas de barres");
-                                continue;
-                            }
-
                             String Materiau = Barre.eGetMateriauCorpsOuPiece(Piece, NomConfigPliee);
-
-                            if (!HashMateriaux.Contains(Materiau))
-                            {
-                                WindowLog.Ecrire("      Materiau exclu");
-                                continue;
-                            }
 
                             Materiau = ForcerMateriau.IsRefAndNotEmpty(Materiau);
 
-                            String NoDossier = fDossier.Name;
+                            String NomFichierBarre = ConstruireNomFichierBarre(nomDossier, QuantiteBarre);
 
-                            int QuantiteBarre = QuantiteCfg * dossier.eNbCorps();
+                            WindowLog.SautDeLigne();
+                            WindowLog.EcrireF("    - [{1}/{2}] Dossier : \"{0}\" x{3}", nomDossier, ++DrPct, ListeDossier.Count, QuantiteBarre);
+                            WindowLog.EcrireF("              Profil {0}  Materiau {1}", Profil, Materiau);
 
-                            String RefBarre = ConstruireRefBarre(mdl, NomConfigPliee, NoDossier);
-                            String NomFichierBarre = ConstruireNomFichierBarre(RefBarre, QuantiteBarre);
-
-                            WindowLog.EcrireF("    Profil {0}  Materiau {1}", Profil, Materiau);
-
-                            List<String> Liste = new List<String>() { RefBarre, Materiau, Profil, Math.Round(Longueur.eToDouble()).ToString(), "× " + QuantiteBarre.ToString() };
+                            List<String> Liste = new List<String>() { nomDossier, Materiau, Profil, Math.Round(Longueur.eToDouble()).ToString(), "× " + QuantiteBarre.ToString() };
 
                             if (ListerUsinages)
                             {

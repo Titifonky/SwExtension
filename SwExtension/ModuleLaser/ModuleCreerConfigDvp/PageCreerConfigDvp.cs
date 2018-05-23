@@ -30,7 +30,6 @@ namespace ModuleLaser.ModuleCreerConfigDvp
         {
             SupprimerLesAnciennesConfigs = _Config.AjouterParam("SupprimerLesAnciennesConfigs", false, "Supprimer les anciennes configs dvp");
             ReconstuireLesConfigs = _Config.AjouterParam("ReconstuireLesConfig", false, "Reconstruire toutes les configs dvp");
-            NumeroterDossier = _Config.AjouterParam("NumeroterDossier", true, "Numeroter les dossier");
             ToutesLesConfigurations = _Config.AjouterParam("ToutesLesConfigurations", false, "Appliquer à toutes les configs", "Creer les configs dvp pour toutes les configs pliées de chaque composants, même celles non utilisées dans le modele");
             MasquerEsquisses = _Config.AjouterParam("MasquerEsquisses", false, "Masquer toutes les esquisses");
             SupprimerFonctions = _Config.AjouterParam("SupprimerFonctions", false, "Supprimer les fonctions", "Supprimer les fonctions correspondant au motif donné");
@@ -44,7 +43,6 @@ namespace ModuleLaser.ModuleCreerConfigDvp
         private CtrlCheckBox _CheckBox_ReconstuireLesConfigs;
         private CtrlCheckBox _CheckBox_ToutesLesConfigurations;
         private CtrlCheckBox _CheckBox_MasquerEsquisses;
-        private CtrlCheckBox _CheckBox_ReinitialiserNoDossier;
         private GroupeAvecCheckBox _GroupeAvecCheckBox;
         private CtrlTextBox _TextBox_NomFonctionSupprimer;
 
@@ -72,8 +70,6 @@ namespace ModuleLaser.ModuleCreerConfigDvp
 
                 G = _Calque.AjouterGroupe("Options");
                 _CheckBox_MasquerEsquisses = G.AjouterCheckBox(MasquerEsquisses);
-                _CheckBox_ReinitialiserNoDossier = G.AjouterCheckBox("Reinitialiser les n° de dossier");
-                _CheckBox_ReinitialiserNoDossier.OnCheck += _CheckBox_ToutesLesConfigurations.Check;
 
                 _GroupeAvecCheckBox = _Calque.AjouterGroupeAvecCheckBox(SupprimerFonctions);
                 _TextBox_NomFonctionSupprimer = _GroupeAvecCheckBox.AjouterTexteBox(NomFonctionSupprimer);
@@ -95,7 +91,6 @@ namespace ModuleLaser.ModuleCreerConfigDvp
             Cmd.SupprimerLesAnciennesConfigs = _CheckBox_SupprimerLesAnciennesConfigs.IsChecked;
             Cmd.ReconstuireLesConfigs = _CheckBox_ReconstuireLesConfigs.IsChecked;
             Cmd.MasquerEsquisses = _CheckBox_MasquerEsquisses.IsChecked;
-            Cmd.ReinitialiserNoDossier = _CheckBox_ReinitialiserNoDossier.IsChecked;
             Cmd.ToutesLesConfigurations = _CheckBox_ToutesLesConfigurations.IsChecked;
             Cmd.SupprimerFonctions = _GroupeAvecCheckBox.IsChecked;
             Cmd.NomFonctionSupprimer = _TextBox_NomFonctionSupprimer.Text;

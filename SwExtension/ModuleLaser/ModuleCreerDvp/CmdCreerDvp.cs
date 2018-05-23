@@ -49,7 +49,7 @@ namespace ModuleLaser.ModuleCreerDvp
                 eTypeCorps Filtre = eTypeCorps.Tole;
                 HashSet<String> HashMateriaux = new HashSet<string>(ListeMateriaux);
 
-                var dic = MdlBase.DenombrerComposants(ComposantsExterne, HashMateriaux, Filtre);
+                var dic = MdlBase.DenombrerDossiers(ComposantsExterne, HashMateriaux, Filtre);
 
                 int MdlPct = 0;
                 foreach(var mdl in dic.Keys)
@@ -62,51 +62,34 @@ namespace ModuleLaser.ModuleCreerDvp
                     int CfgPct = 0;
                     foreach (var NomConfigPliee in dic[mdl].Keys)
                     {
-                        int QuantiteCfg = dic[mdl][NomConfigPliee] * Quantite;
                         WindowLog.SautDeLigne();
-                        WindowLog.EcrireF("  [{2}/{3}] Config : \"{0}\" -> ×{1}", NomConfigPliee, QuantiteCfg, ++CfgPct, dic[mdl].Count);
+                        WindowLog.EcrireF("  [{1}/{2}] Config : \"{0}\"", NomConfigPliee, ++CfgPct, dic[mdl].Count);
                         mdl.ShowConfiguration2(NomConfigPliee);
                         mdl.EditRebuild3();
                         PartDoc Piece = mdl.ePartDoc();
 
-                        ListPID<Feature> ListeDossier = Piece.eListePIDdesFonctionsDePiecesSoudees(null);
-
-                        for (int noD = 0; noD < ListeDossier.Count; noD++)
+                        var ListeDossier = dic[mdl][NomConfigPliee];
+                        int DrPct = 0;
+                        foreach (var t in ListeDossier)
                         {
-                            Feature fDossier = ListeDossier[noD];
+                            var nomDossier = t.Key;
+                            var QuantiteTole = t.Value * Quantite;
+
+                            Feature fDossier = Piece.FeatureByName(nomDossier);
                             BodyFolder dossier = fDossier.GetSpecificFeature2();
-
-                            if (dossier.eEstExclu() || dossier.IsNull() || (dossier.GetBodyCount() == 0)) continue;
-
-                            WindowLog.SautDeLigne();
-                            WindowLog.EcrireF("    - [{1}/{2}] Dossier : \"{0}\"", fDossier.Name, noD + 1, ListeDossier.Count);
-
                             Body2 Tole = dossier.eCorpsDeTolerie();
 
-                            if (Tole.IsNull())
-                            {
-                                WindowLog.Ecrire("      Pas de tole");
-                                continue;
-                            }
+                            WindowLog.SautDeLigne();
+                            WindowLog.EcrireF("    - [{1}/{2}] Dossier : \"{0}\" x{3}", nomDossier, ++DrPct, ListeDossier.Count, QuantiteTole);
 
                             String Materiau = Tole.eGetMateriauCorpsOuPiece(Piece, NomConfigPliee);
 
-                            if (!HashMateriaux.Contains(Materiau))
-                            {
-                                WindowLog.Ecrire("      Pas de tole");
-                                continue;
-                            }
-
                             Materiau = ForcerMateriau.IsRefAndNotEmpty(Materiau);
 
-                            int QuantiteTole = QuantiteCfg * dossier.eNbCorps();
                             Double Epaisseur = Tole.eEpaisseur();
-
-                            String NoDossier = fDossier.Name;
-
-                            String NomConfigDepliee = Sw.eNomConfigDepliee(NomConfigPliee, NoDossier);
-                            String RefQuantite = mdl.RefPiece("<Nom_Piece>-<Nom_Config>-<No_Dossier>", NomConfigPliee, NoDossier);
-                            String RefGravure = mdl.RefPiece(FormatInscription, NomConfigPliee, NoDossier);
+                            String NomConfigDepliee = Sw.eNomConfigDepliee(NomConfigPliee, nomDossier);
+                            String RefQuantite = nomDossier;
+                            String RefGravure = nomDossier;
 
                             WindowLog.EcrireF("      Ep {0} / Materiau {1}", Epaisseur, Materiau);
                             WindowLog.EcrireF("          Config {0}", NomConfigDepliee);
@@ -122,7 +105,7 @@ namespace ModuleLaser.ModuleCreerDvp
                             }
                             else if (!mdl.ShowConfiguration2(NomConfigDepliee))
                             {
-                                DicErreur.Add(mdl.eNomSansExt() + " -> cfg : " + NomConfigPliee + " - No : " + NoDossier + " = " + NomConfigDepliee);
+                                DicErreur.Add(mdl.eNomSansExt() + " -> cfg : " + NomConfigPliee + " - No : " + nomDossier + " = " + NomConfigDepliee);
                                 WindowLog.EcrireF("La configuration n'éxiste pas");
                                 continue;
                             }

@@ -24,7 +24,6 @@ namespace ModuleLaser
             private Parametre ComposantsExterne;
             private Parametre TypeExport;
 
-            private Parametre NumeroterDossier;
             private Parametre ExporterBarres;
             private Parametre ListerUsinages;
             private Parametre CreerPdf3D;
@@ -35,7 +34,6 @@ namespace ModuleLaser
                 {
                     PropQuantite = _Config.AjouterParam("PropQuantite", CONSTANTES.PROPRIETE_QUANTITE, "Propriete \"Quantite\"", "Recherche cette propriete");
                     PrendreEnCompteTole = _Config.AjouterParam("PrendreEnCompteTole", true, "Prendre en compte les tôles");
-                    NumeroterDossier = _Config.AjouterParam("NumeroterDossier", true, "Numeroter les dossier");
                     ComposantsExterne = _Config.AjouterParam("ComposantExterne", false, "Exporter les barres externes au dossier du modèle");
                     TypeExport = _Config.AjouterParam("TypeExport", eTypeFichierExport.ParasolidBinary, "Format :");
 
@@ -62,7 +60,6 @@ namespace ModuleLaser
             private CtrlTextComboBox _TextComboBox_ForcerMateriau;
             private CtrlCheckBox _CheckBox_ListerUsinages;
             private CtrlCheckBox _CheckBox_CreerPdf3D;
-            private CtrlCheckBox _CheckBox_ReinitialiserNoDossier;
 
             protected void Calque()
             {
@@ -120,7 +117,6 @@ namespace ModuleLaser
                     _CheckBox_ExporterBarres.ApplyParam();
 
                     _CheckBox_ListerUsinages = G.AjouterCheckBox(ListerUsinages);
-                    _CheckBox_ReinitialiserNoDossier = G.AjouterCheckBox("Reinitialiser les n° de dossier");
                     
 
                 }
@@ -161,8 +157,6 @@ namespace ModuleLaser
 
             protected void RunOkCommand()
             {
-                NumeroterDossier.SetValeur<Boolean>(false);
-
                 CmdExportBarre Cmd = new CmdExportBarre();
 
                 Cmd.MdlBase = App.Sw.ActiveDoc;
@@ -175,7 +169,6 @@ namespace ModuleLaser
                 Cmd.PrendreEnCompteTole = _CheckBox_PrendreEnCompteTole.IsChecked;
                 Cmd.ComposantsExterne = _CheckBox_ComposantsExterne.IsChecked;
                 Cmd.RefFichier = _Texte_RefFichier.Text;
-                Cmd.ReinitialiserNoDossier = _CheckBox_ReinitialiserNoDossier.IsChecked;
                 Cmd.ExporterBarres = _CheckBox_ExporterBarres.IsChecked;
                 Cmd.ListerUsinages = _CheckBox_ListerUsinages.IsChecked;
 

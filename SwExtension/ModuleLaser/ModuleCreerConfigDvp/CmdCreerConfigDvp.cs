@@ -27,28 +27,10 @@ namespace ModuleLaser.ModuleCreerConfigDvp
         public Boolean ToutesLesConfigurations
         {
             get { return _ToutesLesConfigurations; }
-            set
-            {
-                if (ReinitialiserNoDossier)
-                    _ToutesLesConfigurations = true;
-                else
-                    _ToutesLesConfigurations = value;
-            }
+            set { _ToutesLesConfigurations = value; }
         }
         public Boolean MasquerEsquisses = false;
 
-        private Boolean _ReinitialiserNoDossier = false;
-        public Boolean ReinitialiserNoDossier
-        {
-            get { return _ReinitialiserNoDossier; }
-            set
-            {
-                _ReinitialiserNoDossier = value;
-
-                if (value)
-                    _ToutesLesConfigurations = true;
-            }
-        }
         public Boolean MajListePiecesSoudees = false;
         public Boolean SupprimerFonctions = false;
         public String NomFonctionSupprimer = "";
@@ -77,16 +59,6 @@ namespace ModuleLaser.ModuleCreerConfigDvp
                         return;
                     }
 
-                    if (ReinitialiserNoDossier)
-                    {
-                        foreach (var cfg in ListeConfig)
-                        {
-                            MdlBase.ShowConfiguration2(cfg);
-                            MdlBase.eComposantRacine().eEffacerNoDossier();
-                        }
-                        MdlBase.ShowConfiguration2(nomConfigBase);
-                    }
-
                     DicConfig.Add(MdlBase.eComposantRacine().eKeySansConfig(), ListeConfig);
                 }
 
@@ -102,14 +74,10 @@ namespace ModuleLaser.ModuleCreerConfigDvp
 
                                 if (DicConfig.ContainsKey(c.eKeySansConfig()))
                                 {
-                                    if (DicConfig[c.eKeySansConfig()].AddIfNotExist(c.eNomConfiguration()) && ReinitialiserNoDossier)
-                                        c.eEffacerNoDossier();
+                                    DicConfig[c.eKeySansConfig()].AddIfNotExist(c.eNomConfiguration());
 
                                     return false;
                                 }
-
-                                if (ReinitialiserNoDossier)
-                                    c.eEffacerNoDossier();
 
                                 DicConfig.Add(c.eKeySansConfig(), new List<string>() { c.eNomConfiguration() });
                                 return true;
@@ -180,10 +148,7 @@ namespace ModuleLaser.ModuleCreerConfigDvp
 
                             var pidTole = new SwObjectPID<Body2>(Tole, MdlBase);
 
-                            String NoDossier = dossier.eProp(CONSTANTES.NO_DOSSIER);
-
-                            if (NoDossier.IsNull() || String.IsNullOrWhiteSpace(NoDossier))
-                                NoDossier = Piece.eNumeroterDossier(MajListePiecesSoudees)[dossier.eNom()].ToString();
+                            String NoDossier = dossier.eNom();
 
                             String NomConfigDepliee = Sw.eNomConfigDepliee(NomConfigPliee, NoDossier);
 
