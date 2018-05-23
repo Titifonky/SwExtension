@@ -4,6 +4,7 @@ using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using SwExtension;
 using System;
+using System.Collections.Generic;
 
 namespace Macros
 {
@@ -13,22 +14,16 @@ namespace Macros
 
     public class Test : BoutonBase
     {
-        public static int ID = 0;
 
         protected override void Command()
         {
-            try
-            {
-                ModelDoc2 MdlBase = App.ModelDoc2;
+            ModelDoc2 mdl = App.ModelDoc2;
 
-                var f = MdlBase.eSelect_RecupererObjet<Feature>();
+            var Face = mdl.eSelect_RecupererObjet<Face2>(1);
 
-                WindowLog.Ecrire(f.GetID());
-
-
-            }
-            catch (Exception e) { this.LogMethode(new Object[] { e }); }
-
+            Byte[] Tab = mdl.Extension.GetPersistReference3(Face);
+            String S = System.Text.Encoding.Default.GetString(Tab);
+            Log.Message(S);
         }
 
         //protected override void Command()

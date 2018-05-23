@@ -624,14 +624,15 @@ namespace ModuleLaser.ModuleExportBarre
 
                     int Pos_moSideFace = S.IndexOf("moSideFace3IntSurfIdRep_c");
 
+                    int Pos_moVertexRef = S.Position("moVertexRef");
+
+                    int Pos_moDerivedSurfIdRep = S.Position("moDerivedSurfIdRep_c");
+
                     int Pos_moFromSkt = Math.Min(S.Position("moFromSktEntSurfIdRep_c"), S.Position("moFromSktEnt3IntSurfIdRep_c"));
 
                     int Pos_moEndFace = Math.Min(S.Position("moEndFaceSurfIdRep_c"), S.Position("moEndFace3IntSurfIdRep_c"));
 
-                    //Log.Message(S);
-                    //Log.MessageF("Side {0} From {1} End {2}", Pos_moSideFace, Pos_moFromSkt, Pos_moEndFace);
-
-                    if (Pos_moSideFace != -1 && Pos_moSideFace < Pos_moEndFace && Pos_moSideFace < Pos_moFromSkt)
+                    if (Pos_moSideFace != -1 && Pos_moSideFace < Pos_moEndFace && Pos_moSideFace < Pos_moFromSkt && Pos_moSideFace < Pos_moVertexRef && Pos_moSideFace < Pos_moDerivedSurfIdRep)
                         return true;
                 }
 

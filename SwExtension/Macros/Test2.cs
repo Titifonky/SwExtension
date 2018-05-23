@@ -22,68 +22,38 @@ namespace Macros
             try
             {
                 ModelDoc2 mdl = App.ModelDoc2;
-                var DicCorpsTest = new Dictionary<Tuple<Body2, String>, String>();
-                var DicDossier = new Dictionary<Body2, Tuple<String, int>>();
 
-                int indice = 1;
+                var Face = mdl.eSelect_RecupererObjet<Face2>(1);
+                Body2 Corps = Face.GetBody();
 
-                mdl.eComposantRacine().eRecParcourirComposantBase(
-                    comp =>
-                    {
-                        var ListefDossier = comp.eListeDesFonctionsDePiecesSoudees();
+                mdl.eEffacerSelection();
 
-                        for (int i = 0; i < ListefDossier.Count; i++)
-                        {
-                            Feature fDossier = ListefDossier[i];
-                            BodyFolder Dossier = fDossier.GetSpecificFeature2();
-                            if (Dossier.IsNull() || Dossier.eNbCorps() == 0 || Dossier.eEstExclu() || !(Dossier.eEstUnDossierDeBarres() || Dossier.eEstUnDossierDeToles()))
-                                continue;
+                List<Face2> ListeFaceExt = new List<Face2>();
 
-                            var Corps = Dossier.ePremierCorps();
-                            if (Corps.IsNull()) continue;
-
-                            var MateriauCorps = Corps.eGetMateriauCorpsOuComp(comp);
-
-                            Boolean Ajoute = false;
-                            foreach (var CorpsTest in DicCorpsTest.Keys)
-                            {
-                                var MateriauCorpsTest = CorpsTest.Item2;
-                                if (MateriauCorps != MateriauCorpsTest) continue;
-
-                                if (Corps.eEstSemblable(CorpsTest.Item1))
-                                {
-                                    var t = DicDossier[CorpsTest.Item1];
-
-                                    var nb = t.Item2 + Dossier.eNbCorps();
-
-                                    DicDossier[CorpsTest.Item1] = new Tuple<String, int>(t.Item1, nb);
-
-                                    fDossier.Name = DicCorpsTest[CorpsTest];
-                                    Ajoute = true;
-                                    break;
-                                }
-                            }
-
-                            if (Ajoute == false)
-                            {
-                                fDossier.Name = "P" + (indice++).ToString();
-
-                                DicCorpsTest.Add(new Tuple<Body2, String>(Corps, MateriauCorps), fDossier.Name);
-                                DicDossier.Add(Corps, new Tuple<String, int>(fDossier.Name, Dossier.eNbCorps()));
-                            }
-                        }
-                    }
-                    );
-
-                WindowLog.EcrireF("Nb de corps unique : {0}", DicDossier.Count);
-                int nbtt = 0;
-                foreach (var t in DicDossier.Values)
+                foreach (var f in Corps.eListeDesFaces())
                 {
-                    nbtt += t.Item2;
-                    WindowLog.EcrireF("{0} : {1}", t.Item1, t.Item2);
+                    Byte[] Tab = mdl.Extension.GetPersistReference3(f);
+                    String S = System.Text.Encoding.Default.GetString(Tab);
+
+                    int Pos_moSideFace = S.IndexOf("moSideFace3IntSurfIdRep_c");
+
+                    int Pos_moVertexRef = S.Position("moVertexRef");
+
+                    int Pos_moDerivedSurfIdRep = S.Position("moDerivedSurfIdRep_c");
+
+                    int Pos_moFromSkt = Math.Min(S.Position("moFromSktEntSurfIdRep_c"), S.Position("moFromSktEnt3IntSurfIdRep_c"));
+
+                    int Pos_moEndFace = Math.Min(S.Position("moEndFaceSurfIdRep_c"), S.Position("moEndFace3IntSurfIdRep_c"));
+
+                    if (Pos_moSideFace != -1 && Pos_moSideFace < Pos_moEndFace && Pos_moSideFace < Pos_moFromSkt && Pos_moSideFace < Pos_moVertexRef && Pos_moSideFace < Pos_moDerivedSurfIdRep)
+                        ListeFaceExt.Add(f);
+
+                    Log.Message(S);
+                    Log.MessageF("Side {0} From {1} End {2}", Pos_moSideFace, Pos_moFromSkt, Pos_moEndFace);
                 }
 
-                WindowLog.EcrireF("Nb total de corps : {0}", nbtt);
+                foreach (var f in ListeFaceExt)
+                    f.eSelectEntite(true);
             }
             catch (Exception e) { this.LogMethode(new Object[] { e }); }
 
