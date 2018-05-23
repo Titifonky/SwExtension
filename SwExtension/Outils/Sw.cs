@@ -1135,7 +1135,7 @@ namespace Outils
         internal const String ARTICLE_LISTE_DES_PIECES_SOUDEES = "Article-liste-des-pièces-soudées";
         internal const String EPAISSEUR_DE_TOLE = "Epaisseur de la tôle";
         internal const String NO_DOSSIER = "NoDossier";
-        internal const String REF_DOSSIER = "Ref";
+        internal const String REF_DOSSIER = "RefDossier";
         internal const String NO_CONFIG = "NoConfigPliee";
         internal const String NOM_ELEMENT = "Element";
         internal const String PROFIL_NOM = "Profil";
