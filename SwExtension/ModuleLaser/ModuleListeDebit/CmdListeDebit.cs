@@ -81,9 +81,7 @@ namespace ModuleLaser
 
                                 Materiau = ForcerMateriau.IsRefAndNotEmpty(Materiau);
 
-                                String RefBarre = dossier.eNom().Trim();
-
-                                listeElement.AjouterElement(QuantiteBarre, RefBarre, Materiau, Profil, Longueur, A, B);
+                                listeElement.AjouterElement(QuantiteBarre, nomDossier, Materiau, Profil, Longueur, A, B);
                             }
                         }
                     }
