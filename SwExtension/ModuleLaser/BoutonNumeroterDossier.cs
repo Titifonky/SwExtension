@@ -84,6 +84,11 @@ namespace Macros
                                 {
                                     if(fDossier.Name.StartsWith("P"))
                                         fDossier.Name = fDossier.Name + "___XX";
+
+                                    CustomPropertyManager PM = fDossier.CustomPropertyManager;
+
+                                    var r = String.Format("SW-CutListItemName@@@{0}@{1}", fDossier.Name, comp.eModelDoc2().eNomAvecExt());
+                                    PM.ePropAdd(CONSTANTES.REF_DOSSIER, "");
                                 }
                             }
                         },
