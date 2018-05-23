@@ -1129,7 +1129,7 @@ namespace Outils
 
     internal static class CONSTANTES
     {
-        internal const String CONFIG_DEPLIEE_PATTERN = "^([0-9]+)(SM-FLAT-PATTERN)([0-9]+)$";
+        internal const String CONFIG_DEPLIEE_PATTERN = "^([0-9]+)(SM-FLAT-PATTERN)((.)+)$";
         internal const String CONFIG_DEPLIEE = "SM-FLAT-PATTERN";
         internal const String CONFIG_PLIEE_PATTERN = @"^\d+$";
         internal const String ARTICLE_LISTE_DES_PIECES_SOUDEES = "Article-liste-des-pièces-soudées";
@@ -4326,14 +4326,14 @@ namespace Outils
             return null;
         }
 
-        public static String eNomConfigDepliee(String nomConfigPliee, String noDossier)
+        public static String eNomConfigDepliee(String nomConfigPliee, String refDossier)
         {
-            return nomConfigPliee + CONSTANTES.CONFIG_DEPLIEE + noDossier;
+            return nomConfigPliee + CONSTANTES.CONFIG_DEPLIEE + refDossier;
         }
 
         public static String eNomConfigDepliee(String nomConfigPliee, BodyFolder dossier)
         {
-            String no = dossier.eProp(CONSTANTES.NO_DOSSIER);
+            String no = dossier.eProp(CONSTANTES.REF_DOSSIER);
             if (String.IsNullOrWhiteSpace(no))
                 return null;
 

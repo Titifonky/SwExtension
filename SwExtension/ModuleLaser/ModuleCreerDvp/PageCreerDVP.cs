@@ -24,8 +24,8 @@ namespace ModuleLaser.ModuleCreerDvp
         private Parametre ComposantsExterne;
         private Parametre InscrireNomTole;
         private Parametre TailleInscription;
-        private Parametre FormatInscription;
-        private List<String> ChampsInscription = new List<string>() { "<Nom_Piece>", "<Nom_Config>", "<No_Dossier>" };
+        //private Parametre FormatInscription;
+        //private List<String> ChampsInscription = new List<string>() { "<Nom_Piece>", "<Nom_Config>", "<No_Dossier>" };
         private Parametre FermerPlan;
         private Parametre OrienterDvp;
         private Parametre OrientationDvp;
@@ -40,7 +40,7 @@ namespace ModuleLaser.ModuleCreerDvp
                 AfficherNotePliage = _Config.AjouterParam("AfficherNotePliage", true, "Afficher les notes de pliage");
                 InscrireNomTole = _Config.AjouterParam("InscrireNomTole", true, "Inscrire la réf du dvp sur la tole");
                 TailleInscription = _Config.AjouterParam("TailleInscription", 5, "Ht des inscriptions en mm", "Ht des inscriptions en mm");
-                FormatInscription = _Config.AjouterParam("FormatInscription", String.Join("-", ChampsInscription), "Format :", "Format de l'inscription à graver");
+                //FormatInscription = _Config.AjouterParam("FormatInscription", String.Join("-", ChampsInscription), "Format :", "Format de l'inscription à graver");
 
                 ComposantsExterne = _Config.AjouterParam("ComposantExterne", false, "Créer les dvp des composants externe au dossier du modèle");
                 OrienterDvp = _Config.AjouterParam("OrienterDvp", false, "Orienter les dvps");
@@ -63,8 +63,8 @@ namespace ModuleLaser.ModuleCreerDvp
         private CtrlTextBox _Texte_RefFichier;
         private CtrlTextBox _Texte_Quantite;
         private CtrlTextBox _Texte_TailleInscription;
-        private CtrlTextBox _Texte_FormatInscription;
-        private CtrlLabel _Label_InfoFormat;
+        //private CtrlTextBox _Texte_FormatInscription;
+        //private CtrlLabel _Label_InfoFormat;
 
         private CtrlCheckBox _CheckBox_ComposantsExterne;
         private CtrlCheckBox _CheckBox_AfficherLignePliage;
@@ -134,16 +134,16 @@ namespace ModuleLaser.ModuleCreerDvp
                 _Texte_TailleInscription = G.AjouterTexteBox(TailleInscription, false);
                 _Texte_TailleInscription.ValiderTexte += ValiderTextIsInteger;
                 _Texte_TailleInscription.StdIndent();
-                _Texte_FormatInscription = G.AjouterTexteBox(FormatInscription, true);
-                _Texte_FormatInscription.StdIndent();
-                _Label_InfoFormat = G.AjouterLabel(String.Join(" ", ChampsInscription));
-                _Label_InfoFormat.StdIndent();
+                //_Texte_FormatInscription = G.AjouterTexteBox(FormatInscription, true);
+                //_Texte_FormatInscription.StdIndent();
+                //_Label_InfoFormat = G.AjouterLabel(String.Join(" ", ChampsInscription));
+                //_Label_InfoFormat.StdIndent();
 
 
                 _CheckBox_InscrireNomTole.OnIsCheck += _Texte_TailleInscription.IsEnable;
-                _CheckBox_InscrireNomTole.OnIsCheck += _Texte_FormatInscription.IsEnable;
+                //_CheckBox_InscrireNomTole.OnIsCheck += _Texte_FormatInscription.IsEnable;
                 _Texte_TailleInscription.IsEnabled = _CheckBox_InscrireNomTole.IsChecked;
-                _Texte_FormatInscription.IsEnabled = _CheckBox_InscrireNomTole.IsChecked;
+                //_Texte_FormatInscription.IsEnabled = _CheckBox_InscrireNomTole.IsChecked;
 
 
 
@@ -215,7 +215,7 @@ namespace ModuleLaser.ModuleCreerDvp
             Cmd.ComposantsExterne = _CheckBox_ComposantsExterne.IsChecked;
             Cmd.RefFichier = _Texte_RefFichier.Text.Trim();
             Cmd.TailleInscription = _Texte_TailleInscription.Text.eToInteger();
-            Cmd.FormatInscription = _Texte_FormatInscription.Text;
+            //Cmd.FormatInscription = _Texte_FormatInscription.Text;
 
             Cmd.Executer();
         }

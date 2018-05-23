@@ -41,67 +41,30 @@ namespace ModuleLaser.ModuleCreerConfigDvp
         {
             try
             {
-                List<Component2> ListeCp = new List<Component2>();
-                Dictionary<String, List<String>> DicConfig = new Dictionary<String, List<String>>();
                 int NbDvp = 0;
 
-                if (MdlBase.TypeDoc() == eTypeDoc.Piece)
+                var dic = MdlBase.ListerComposants(false, eTypeCorps.Tole);
+
+                int MdlPct = 0;
+                foreach (var mdl in dic.Keys)
                 {
-                    ListeCp.Add(MdlBase.eComposantRacine());
-
-                    List<String> ListeConfig = new List<String>() { MdlBase.eNomConfigActive().eEstConfigPliee() ? MdlBase.eNomConfigActive() : "" };
-                    if (ToutesLesConfigurations)
-                        ListeConfig = MdlBase.eListeNomConfiguration(eTypeConfig.Pliee);
-
-                    if (ListeConfig.Count == 0)
-                    {
-                        WindowLog.Ecrire("Pas de configuration de tole pliee");
-                        return;
-                    }
-
-                    DicConfig.Add(MdlBase.eComposantRacine().eKeySansConfig(), ListeConfig);
-                }
-
-                // Si c'est un assemblage, on liste les composants
-                if (MdlBase.TypeDoc() == eTypeDoc.Assemblage)
-                    ListeCp = MdlBase.eRecListeComposant(
-                        c =>
-                        {
-                            if (!c.IsHidden(true) && (c.TypeDoc() == eTypeDoc.Piece))
-                            {
-                                if (!c.eNomConfiguration().eEstConfigPliee())
-                                    return false;
-
-                                if (DicConfig.ContainsKey(c.eKeySansConfig()))
-                                {
-                                    DicConfig[c.eKeySansConfig()].AddIfNotExist(c.eNomConfiguration());
-
-                                    return false;
-                                }
-
-                                DicConfig.Add(c.eKeySansConfig(), new List<string>() { c.eNomConfiguration() });
-                                return true;
-                            }
-
-                            return false;
-                        },
-                        null,
-                        true);
-
-                for (int noCp = 0; noCp < ListeCp.Count; noCp++)
-                {
-                    var Cp = ListeCp[noCp];
                     WindowLog.SautDeLigne();
-                    WindowLog.EcrireF("[{2}/{3}] {0}{1}", Cp.eNomSansExt(), !ToutesLesConfigurations ? " \"" + Cp.eNomConfiguration() + "\" " : "", noCp + 1, ListeCp.Count);
+                    WindowLog.EcrireF("[{1}/{2}] {0}", mdl.eNomSansExt(), ++MdlPct, dic.Count);
 
-                    ModelDoc2 mdl = Cp.eModelDoc2();
                     mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
+                    var cfgActive = mdl.eNomConfigActive();
 
-                    List<String> ListeNomConfigs = DicConfig[Cp.eKeySansConfig()];
+                    var ListeNomConfigs = dic[mdl];
                     if (ToutesLesConfigurations)
-                        ListeNomConfigs = Cp.eModelDoc2().eListeNomConfiguration((String c) => { return c.eEstConfigPliee(); });
+                        mdl.eParcourirConfiguration(
+                            (String c) =>
+                            {
+                                if (c.eEstConfigPliee())
+                                    ListeNomConfigs.Add(c);
 
-                    ListeNomConfigs.Sort(new WindowsStringComparer());
+                                return false;
+                            }
+                            );
 
                     if (MasquerEsquisses)
                         cmdMasquerEsquisses(mdl);
@@ -117,11 +80,11 @@ namespace ModuleLaser.ModuleCreerConfigDvp
                             c.eRenommerEtatAffichage();
                     }
 
-                    for (int noCfg = 0; noCfg < ListeNomConfigs.Count; noCfg++)
+                    int CfgPct = 0;
+                    foreach (var NomConfigPliee in ListeNomConfigs)
                     {
-                        var NomConfigPliee = ListeNomConfigs[noCfg];
                         WindowLog.SautDeLigne();
-                        WindowLog.EcrireF("  [{1}/{2}] Config : \"{0}\"", NomConfigPliee, noCfg + 1, ListeNomConfigs.Count);
+                        WindowLog.EcrireF("  [{1}/{2}] Config : \"{0}\"", NomConfigPliee, CfgPct++, ListeNomConfigs.Count);
                         mdl.ShowConfiguration2(NomConfigPliee);
                         mdl.EditRebuild3();
 
@@ -185,7 +148,7 @@ namespace ModuleLaser.ModuleCreerConfigDvp
                             }
                             catch (Exception e)
                             {
-                                DicErreur.Add(Cp.eNomSansExt() + " -> cfg : " + NomConfigPliee + " - No : " + NoDossier + " = " + NomConfigDepliee);
+                                DicErreur.Add(mdl.eNomSansExt() + " -> cfg : " + NomConfigPliee + " - No : " + NoDossier + " = " + NomConfigDepliee);
                                 WindowLog.Ecrire("Erreur de depliage");
                                 this.LogMethode(new Object[] { e });
                             }
@@ -206,10 +169,10 @@ namespace ModuleLaser.ModuleCreerConfigDvp
                         }
                     }
 
-                    Cp.eModelDoc2().ShowConfiguration2(Cp.eNomConfiguration());
+                    mdl.ShowConfiguration2(cfgActive);
                     WindowLog.SautDeLigne();
 
-                    if (Cp.GetPathName() != MdlBase.GetPathName())
+                    if (mdl.GetPathName() != MdlBase.GetPathName())
                         App.Sw.CloseDoc(mdl.GetPathName());
                 }
 

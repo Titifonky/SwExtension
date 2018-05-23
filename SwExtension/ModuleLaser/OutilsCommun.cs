@@ -309,7 +309,86 @@ namespace ModuleLaser
         }
 
         /// <summary>
-        /// renvoi la liste des modeles avec la liste des configurations, des dossiers et les quantites
+        /// Renvoi la liste unique des modeles et configurations
+        /// </summary>
+        /// <param name="mdlBase"></param>
+        /// <param name="composantsExterne"></param>
+        /// <param name="filtreTypeCorps"></param>
+        /// <returns></returns>
+        public static SortedDictionary<ModelDoc2, SortedSet<String>> ListerComposants(this ModelDoc2 mdlBase, Boolean composantsExterne, eTypeCorps filtreTypeCorps)
+        {
+            SortedDictionary<ModelDoc2, SortedSet<String>> dic = new SortedDictionary<ModelDoc2, SortedSet<String>>(new CompareModelDoc2());
+
+            if (mdlBase.TypeDoc() == eTypeDoc.Piece)
+            {
+                var ConfigActive = mdlBase.eNomConfigActive();
+                if (!ConfigActive.eEstConfigPliee())
+                {
+                    WindowLog.Ecrire("Pas de configuration valide," +
+                                        "\r\n le nom de la config doit être composée exclusivement de chiffres");
+                    return dic;
+                }
+                var Piece = mdlBase.ePartDoc();
+                var lcfg = new SortedSet<String>(new WindowsStringComparer());
+                dic.Add(mdlBase, lcfg);
+                foreach (var dossier in Piece.eListeDesDossiersDePiecesSoudees())
+                {
+                    if (!dossier.eEstExclu() &&
+                        filtreTypeCorps.HasFlag(dossier.eTypeDeDossier()))
+                    {
+                        lcfg.Add(ConfigActive);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                mdlBase.eComposantRacine().eRecParcourirComposantBase(
+                        comp =>
+                        {
+                            var mdl = comp.eModelDoc2();
+                            var cfg = comp.eNomConfiguration();
+                            if (dic.ContainsKey(mdl))
+                                if (dic[mdl].Contains(cfg))
+                                    return;
+
+                            foreach (var fDossier in comp.eListeDesFonctionsDePiecesSoudees())
+                            {
+                                BodyFolder SwDossier = fDossier.GetSpecificFeature2();
+                                if (SwDossier.IsRef() ||
+                                SwDossier.eNbCorps() > 0 ||
+                                !SwDossier.eEstExclu() ||
+                                filtreTypeCorps.HasFlag(SwDossier.eTypeDeDossier()))
+                                {
+                                    if (dic.ContainsKey(mdl))
+                                        dic[mdl].Add(cfg);
+                                    else
+                                    {
+                                        var lcfg = new SortedSet<String>(new WindowsStringComparer());
+                                        lcfg.Add(cfg);
+                                        dic.Add(mdl, lcfg);
+                                    }
+                                    break;
+                                }
+                            }
+                        },
+                        // On ne parcourt pas les assemblages exclus
+                        c =>
+                        {
+                            if (c.ExcludeFromBOM)
+                                return false;
+
+                            return true;
+                        }
+                        );
+            }
+
+            return dic;
+        }
+
+        /// <summary>
+        /// Renvoi la liste des modeles avec la liste des configurations, des dossiers
+        /// et les quantites de chaque dossier dans l'assemblage
         /// </summary>
         /// <param name="mdlBase"></param>
         /// <param name="composantsExterne"></param>
@@ -335,7 +414,7 @@ namespace ModuleLaser
                 {
                     if (!dossier.eEstExclu() &&
                         filtreTypeCorps.HasFlag(dossier.eTypeDeDossier()) &&
-                        listeMateriaux.Contains(dossier.eGetMateriau()))
+                        (listeMateriaux.IsNull() || listeMateriaux.Contains(dossier.eGetMateriau())))
                     {
                         dicDossier.Add(dossier.eNom().Trim(), dossier.eNbCorps());
                     }
@@ -359,7 +438,7 @@ namespace ModuleLaser
                                 SwDossier.eNbCorps() == 0 ||
                                 SwDossier.eEstExclu() ||
                                 !filtreTypeCorps.HasFlag(SwDossier.eTypeDeDossier()) ||
-                                !listeMateriaux.Contains(SwDossier.eGetMateriau())
+                                !(listeMateriaux.IsRef()?listeMateriaux.Contains(SwDossier.eGetMateriau()):true)
                                 )
                                     continue;
 
