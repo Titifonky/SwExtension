@@ -111,9 +111,9 @@ namespace ModuleLaser.ModuleCreerConfigDvp
 
                             var pidTole = new SwObjectPID<Body2>(Tole, MdlBase);
 
-                            String NoDossier = dossier.eNom();
+                            String NomDossier = dossier.eNom().Trim();
 
-                            String NomConfigDepliee = Sw.eNomConfigDepliee(NomConfigPliee, NoDossier);
+                            String NomConfigDepliee = Sw.eNomConfigDepliee(NomConfigPliee, NomDossier);
 
                             WindowLog.EcrireF("        cfg : \"{0}\"", NomConfigDepliee);
 
@@ -148,7 +148,7 @@ namespace ModuleLaser.ModuleCreerConfigDvp
                             }
                             catch (Exception e)
                             {
-                                DicErreur.Add(mdl.eNomSansExt() + " -> cfg : " + NomConfigPliee + " - No : " + NoDossier + " = " + NomConfigDepliee);
+                                DicErreur.Add(mdl.eNomSansExt() + " -> cfg : " + NomConfigPliee + " - No : " + NomDossier + " = " + NomConfigDepliee);
                                 WindowLog.Ecrire("Erreur de depliage");
                                 this.LogMethode(new Object[] { e });
                             }

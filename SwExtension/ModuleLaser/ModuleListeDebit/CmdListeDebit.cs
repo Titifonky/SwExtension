@@ -1,6 +1,7 @@
 using LogDebugging;
 using Outils;
 using SolidWorks.Interop.sldworks;
+using SolidWorks.Interop.swconst;
 using SwExtension;
 using System;
 using System.Collections.Generic;
@@ -27,18 +28,11 @@ namespace ModuleLaser
             public String RefFichier = "";
 
             public eTypeSortie TypeSortie = eTypeSortie.ListeDebit;
-            public Boolean ReinitialiserNoDossier = false;
-            public Boolean MajListePiecesSoudees = false;
             public String ForcerMateriau = null;
 
             public String CheminFichier { get; private set; }
 
             public int LgBarre = 6000;
-
-            private HashSet<String> HashMateriaux;
-            private Dictionary<String, int> DicQte = new Dictionary<string, int>();
-            private Dictionary<String, List<String>> DicConfig = new Dictionary<String, List<String>>();
-            private List<Component2> ListeCp = new List<Component2>();
 
             private ListeElement listeElement;
 
@@ -50,178 +44,47 @@ namespace ModuleLaser
                 {
                     listeElement = new ListeElement(LgBarre);
 
-                    HashMateriaux = new HashSet<string>(ListeMateriaux);
-
-                    if (MdlBase.TypeDoc() == eTypeDoc.Piece)
-                    {
-                        Component2 CpRacine = MdlBase.eComposantRacine();
-                        ListeCp.Add(CpRacine);
-
-                        if (!CpRacine.eNomConfiguration().eEstConfigPliee())
-                        {
-                            WindowLog.Ecrire("Pas de configuration valide," +
-                                                "\r\n le nom de la config doit être composée exclusivement de chiffres");
-                            return null;
-                        }
-
-                        List<String> ListeConfig = new List<String>() { CpRacine.eNomConfiguration() };
-
-                        DicConfig.Add(CpRacine.eKeySansConfig(), ListeConfig);
-
-                        if (ReinitialiserNoDossier)
-                        {
-                            var nomConfigBase = MdlBase.eNomConfigActive();
-                            foreach (var cfg in ListeConfig)
-                            {
-                                MdlBase.ShowConfiguration2(cfg);
-                                MdlBase.eComposantRacine().eEffacerNoDossier();
-                            }
-                            MdlBase.ShowConfiguration2(nomConfigBase);
-                        }
-
-                        DicQte.Ajouter(CpRacine.eKeyAvecConfig());
-                    }
-
                     eTypeCorps Filtre = PrendreEnCompteTole ? eTypeCorps.Barre | eTypeCorps.Tole : eTypeCorps.Barre;
+                    HashSet<String> HashMateriaux = new HashSet<string>(ListeMateriaux);
 
-                    // Si c'est un assemblage, on liste les composants
-                    if (MdlBase.TypeDoc() == eTypeDoc.Assemblage)
-                        ListeCp = MdlBase.eRecListeComposant(
-                        c =>
-                        {
+                    var dic = MdlBase.DenombrerDossiers(ComposantsExterne, HashMateriaux, Filtre);
 
-                            if ((ComposantsExterne || c.eEstDansLeDossier(MdlBase)) && !c.IsHidden(true) && !c.ExcludeFromBOM && (c.TypeDoc() == eTypeDoc.Piece))
-                            {
-
-                                if (!c.eNomConfiguration().eEstConfigPliee() || DicQte.Plus(c.eKeyAvecConfig()))
-                                    return false;
-
-                                if (ReinitialiserNoDossier)
-                                    c.eEffacerNoDossier();
-
-                                var LstDossier = c.eListeDesDossiersDePiecesSoudees();
-                                foreach (var dossier in LstDossier)
-                                {
-                                    if (!dossier.eEstExclu() && Filtre.HasFlag(dossier.eTypeDeDossier()))
-                                    {
-                                        String Materiau = dossier.eGetMateriau();
-
-                                        if (!HashMateriaux.Contains(Materiau))
-                                            continue;
-
-                                        DicQte.Ajouter(c.eKeyAvecConfig());
-
-                                        if (DicConfig.ContainsKey(c.eKeySansConfig()))
-                                        {
-                                            List<String> l = DicConfig[c.eKeySansConfig()];
-                                            if (l.Contains(c.eNomConfiguration()))
-                                                return false;
-                                            else
-                                            {
-                                                l.Add(c.eNomConfiguration());
-                                                return true;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            DicConfig.Add(c.eKeySansConfig(), new List<string>() { c.eNomConfiguration() });
-                                            return true;
-                                        }
-                                    }
-                                }
-
-                                // Ancienne méthode pour lister les matériaux.
-                                // Bug avec les barres fractionnées ou ajustées.
-                                // Elles ne sont pas reconnues comme des barres.
-                                //foreach (Body2 corps in c.eListeCorps())
-                                //{
-                                //    if (Filtre.HasFlag(corps.eTypeDeCorps()))
-                                //    {
-                                //        String Materiau = corps.eGetMateriauCorpsOuComp(c);
-
-                                //        if (!HashMateriaux.Contains(Materiau))
-                                //            continue;
-
-                                //        DicQte.Add(c.eKeyAvecConfig());
-
-                                //        if (DicConfig.ContainsKey(c.eKeySansConfig()))
-                                //        {
-                                //            List<String> l = DicConfig[c.eKeySansConfig()];
-                                //            if (l.Contains(c.eNomConfiguration()))
-                                //                return false;
-                                //            else
-                                //            {
-                                //                l.Add(c.eNomConfiguration());
-                                //                return true;
-                                //            }
-                                //        }
-                                //        else
-                                //        {
-                                //            DicConfig.Add(c.eKeySansConfig(), new List<string>() { c.eNomConfiguration() });
-                                //            return true;
-                                //        }
-                                //    }
-                                //}
-                            }
-
-                            return false;
-                        },
-                        null,
-                        true
-                    );
-
-                    // On multiplie les quantites
-                    DicQte.Multiplier(Quantite);
-
-                    for (int noCp = 0; noCp < ListeCp.Count; noCp++)
+                    foreach (var mdl in dic.Keys)
                     {
-                        var Comp = ListeCp[noCp];
-                        var NomConfigPliee = Comp.eNomConfiguration();
+                        mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
 
-                        ModelDoc2 mdl = Comp.eModelDoc2();
-                        mdl.ShowConfiguration2(NomConfigPliee);
-
-                        if (ReinitialiserNoDossier)
-                            mdl.ePartDoc().eReinitialiserNoDossierMax();
-
-                        int QuantiteCfg = DicQte[Comp.eKeyAvecConfig(NomConfigPliee)];
-
-                        List<Feature> ListeDossier = mdl.ePartDoc().eListeDesFonctionsDePiecesSoudees(null);
-
-                        for (int noD = 0; noD < ListeDossier.Count; noD++)
+                        foreach (var NomConfigPliee in dic[mdl].Keys)
                         {
-                            Feature f = ListeDossier[noD];
-                            BodyFolder dossier = f.GetSpecificFeature2();
+                            mdl.ShowConfiguration2(NomConfigPliee);
+                            mdl.EditRebuild3();
+                            PartDoc Piece = mdl.ePartDoc();
 
-                            if (dossier.eEstExclu() || dossier.IsNull() || (dossier.GetBodyCount() == 0) || dossier.eEstExclu()) continue;
+                            var ListeDossier = dic[mdl][NomConfigPliee];
+                            foreach (var t in ListeDossier)
+                            {
+                                var nomDossier = t.Key;
+                                var QuantiteBarre = t.Value * Quantite;
 
-                            String Profil = dossier.eProp(CONSTANTES.PROFIL_NOM);
-                            Double Longueur = dossier.eProp(CONSTANTES.PROFIL_LONGUEUR).eToDouble();
-                            Double A = dossier.eProp(CONSTANTES.PROFIL_ANGLE1).eToDouble();
-                            Double B = dossier.eProp(CONSTANTES.PROFIL_ANGLE2).eToDouble();
+                                Feature fDossier = Piece.FeatureByName(nomDossier);
+                                BodyFolder dossier = fDossier.GetSpecificFeature2();
 
-                            if (String.IsNullOrWhiteSpace(Profil) || (Longueur == 0)) continue;
+                                String Profil = dossier.eProp(CONSTANTES.PROFIL_NOM);
+                                Double Longueur = dossier.eProp(CONSTANTES.PROFIL_LONGUEUR).eToDouble();
+                                Double A = dossier.eProp(CONSTANTES.PROFIL_ANGLE1).eToDouble();
+                                Double B = dossier.eProp(CONSTANTES.PROFIL_ANGLE2).eToDouble();
 
-                            Body2 Barre = dossier.ePremierCorps();
-                            String Materiau = Barre.eGetMateriauCorpsOuComp(Comp);
+                                if (String.IsNullOrWhiteSpace(Profil) || (Longueur == 0)) continue;
 
-                            if(Comp.IsRoot())
-                                Materiau = Barre.eGetMateriauCorpsOuPiece(mdl.ePartDoc(), NomConfigPliee);
+                                var Materiau = dossier.ePremierCorps().eGetMateriauCorpsOuPiece(Piece, NomConfigPliee);
 
-                            if (!HashMateriaux.Contains(Materiau)) continue;
+                                if (!HashMateriaux.Contains(Materiau)) continue;
 
-                            Materiau = ForcerMateriau.IsRefAndNotEmpty(Materiau);
+                                Materiau = ForcerMateriau.IsRefAndNotEmpty(Materiau);
 
-                            String noDossier = dossier.eProp(CONSTANTES.NO_DOSSIER);
+                                String RefBarre = dossier.eNom().Trim();
 
-                            if (noDossier.IsNull() || String.IsNullOrWhiteSpace(noDossier))
-                                noDossier = Comp.eNumeroterDossier(MajListePiecesSoudees)[dossier.eNom()].ToString();
-
-                            int QuantiteBarre = QuantiteCfg * dossier.GetBodyCount();
-
-                            String RefBarre = ConstruireRefBarre(mdl, NomConfigPliee, noDossier);
-
-                            listeElement.AjouterElement(QuantiteBarre, RefBarre, Materiau, Profil, Longueur, A, B);
+                                listeElement.AjouterElement(QuantiteBarre, RefBarre, Materiau, Profil, Longueur, A, B);
+                            }
                         }
                     }
 

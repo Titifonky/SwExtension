@@ -25,7 +25,6 @@ namespace ModuleLaser
             private Parametre PrendreEnCompteTole;
 
             private Parametre ComposantsExterne;
-            private Parametre NumeroterDossier;
 
             private Parametre LgBarre;
 
@@ -40,7 +39,6 @@ namespace ModuleLaser
                     PropQuantite = _Config.AjouterParam("PropQuantite", CONSTANTES.PROPRIETE_QUANTITE, "Propriete \"Quantite\"", "Recherche cette propriete");
                     PrendreEnCompteTole = _Config.AjouterParam("PrendreEnCompteTole", true, "Prendre en compte les tôles");
                     ComposantsExterne = _Config.AjouterParam("ComposantExterne", false, "Prendre en compte les composants externe au dossier du modèle");
-                    NumeroterDossier = _Config.AjouterParam("NumeroterDossier", true, "Numeroter les dossier");
                     LgBarre = _Config.AjouterParam("LgBarre", 6000, "Lg d'une barre");
                     AfficherListe = _Config.AjouterParam("AfficherListe", true, "Afficher la liste après execution");
 
@@ -66,7 +64,6 @@ namespace ModuleLaser
             private CtrlCheckBox _CheckBox_PrendreEnCompteTole;
             private CtrlCheckBox _CheckBox_ForcerMateriau;
             private CtrlTextComboBox _TextComboBox_ForcerMateriau;
-            private CtrlCheckBox _CheckBox_ReinitialiserNoDossier;
             private CtrlOption _Option_ListeDebit;
             private CtrlOption _Option_ListeBarres;
             private CtrlTextBox _Texte_LgBarre;
@@ -132,7 +129,6 @@ namespace ModuleLaser
                     _CheckBox_PrendreEnCompteTole = G.AjouterCheckBox(PrendreEnCompteTole);
                     _CheckBox_PrendreEnCompteTole.OnIsCheck += delegate (Object sender, Boolean value) { Rechercher_Materiaux(); };
 
-                    _CheckBox_ReinitialiserNoDossier = G.AjouterCheckBox("Reinitialiser les n° de dossier");
                     _CheckBox_AfficherListe = G.AjouterCheckBox(AfficherListe);
 
                     ListeGroupe2.Add(_Calque.AjouterGroupe("Lg des barres"));
@@ -306,7 +302,6 @@ namespace ModuleLaser
                 Cmd.PrendreEnCompteTole = _CheckBox_PrendreEnCompteTole.IsChecked;
                 Cmd.ComposantsExterne = _CheckBox_ComposantsExterne.IsChecked;
                 Cmd.RefFichier = _Texte_RefFichier.Text;
-                Cmd.ReinitialiserNoDossier = _CheckBox_ReinitialiserNoDossier.IsChecked;
                 Cmd.LgBarre = _Texte_LgBarre.Text.eToInteger();
 
                 ListeLgProfil = Cmd.Analyser();
@@ -353,8 +348,6 @@ namespace ModuleLaser
 
             protected void RunOkCommand()
             {
-                NumeroterDossier.SetValeur<Boolean>(false);
-
                 if (!ChargerCmd())
                     SauverLg();
 

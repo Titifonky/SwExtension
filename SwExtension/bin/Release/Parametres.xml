@@ -136,7 +136,6 @@
     <Parametre name="PropQuantite" intitule="Propriete &quot;Quantite&quot;" tip="Recherche cette propriete" type="System.String">Quantite</Parametre>
     <Parametre name="PrendreEnCompteTole" intitule="Prendre en compte les tôles" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="ComposantExterne" intitule="Prendre en compte les composants externe au dossier du modèle" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="NumeroterDossier" intitule="Numeroter les dossier" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="LgBarre" intitule="Lg d'une barre" tip="" type="System.Int32">12000</Parametre>
     <Parametre name="AfficherListe" intitule="Afficher la liste après execution" tip="" type="System.Boolean">True</Parametre>
   </Module>
