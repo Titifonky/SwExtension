@@ -3444,6 +3444,11 @@ namespace Outils
 
         //========================================================================================
 
+        public static Byte[] eGetPersistId(this Feature f, ModelDoc2 mdl)
+        {
+            return mdl.Extension.GetPersistReference3(f);
+        }
+
         public static Boolean eIsSame(this Object obj1, Object obj2)
         {
             if (App.Sw.IsSame(obj1, obj2) == (int)swObjectEquality.swObjectSame)

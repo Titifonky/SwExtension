@@ -20,7 +20,6 @@ namespace ModuleLaser.ModuleCreerConfigDvp
     {
         private Parametre SupprimerLesAnciennesConfigs;
         private Parametre ReconstuireLesConfigs;
-        private Parametre NumeroterDossier;
         private Parametre ToutesLesConfigurations;
         private Parametre MasquerEsquisses;
         private Parametre SupprimerFonctions;
@@ -83,8 +82,6 @@ namespace ModuleLaser.ModuleCreerConfigDvp
 
         protected void RunOkCommand()
         {
-            NumeroterDossier.SetValeur<Boolean>(false);
-
             CmdCreerConfigDvp Cmd = new CmdCreerConfigDvp();
             Cmd.MdlBase = App.ModelDoc2;
 

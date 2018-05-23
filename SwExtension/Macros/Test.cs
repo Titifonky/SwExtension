@@ -13,7 +13,7 @@ namespace Macros
 
     public class Test : BoutonBase
     {
-        public static int index = -1;
+        public static int ID = 0;
 
         protected override void Command()
         {
@@ -21,25 +21,9 @@ namespace Macros
             {
                 ModelDoc2 MdlBase = App.ModelDoc2;
 
-                var f = MdlBase.eSelect_RecupererObjet<Face2>();
+                var f = MdlBase.eSelect_RecupererObjet<Feature>();
 
-                MdlBase.eEffacerSelection();
-
-                Body2 b = f.GetBody();
-
-                String val = "Test";
-
-                if(index == -1)
-                {
-                    index = b.AddPropertyExtension2(val);
-                    WindowLog.EcrireF("Ajoute {0}", val);
-                }
-                else
-                {
-                    WindowLog.EcrireF("Index {0}", index);
-                    Object r = b.GetPropertyExtension2(index - 1);
-                    WindowLog.EcrireF("Resultat {0}", r);
-                }
+                WindowLog.Ecrire(f.GetID());
 
 
             }
