@@ -1110,9 +1110,9 @@ namespace ModuleLaser.ModuleExportBarre
                 Add(new List<string>(Valeurs));
             }
 
-            public List<String> ListeLignes()
+            public SortedSet<String> ListeLignes()
             {
-                List<String> Liste = new List<string>();
+                SortedSet<String> Liste = new SortedSet<String>(new WindowsStringComparer());
 
                 try
                 {
