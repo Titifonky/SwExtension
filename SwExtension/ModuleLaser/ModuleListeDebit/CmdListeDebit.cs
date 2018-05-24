@@ -336,11 +336,13 @@ namespace ModuleLaser
                             int nbEle = 0;
                             double Lg = ListProf[0].Lg;
 
+                            String format = "\r\n  {0,-30} {1,8:0.0}mm {2,5}";
+
                             foreach (var ele in ListProf)
                             {
                                 if (ele.Lg != Lg)
                                 {
-                                    text += String.Format("\r\n  {0,-10} {1,6:0.0}mm ×{2}", Prof, Lg, nbEle);
+                                    text += String.Format(format, Prof, Lg, "×" + nbEle);
                                     nbEle = 1;
                                     Lg = ele.Lg;
                                 }
@@ -348,7 +350,7 @@ namespace ModuleLaser
                                     nbEle += 1;
                             }
 
-                            text += String.Format("\r\n  {0,10} {1,6:0.0}mm ×{2}", Prof, Lg, nbEle);
+                            text += String.Format(format, Prof, Lg, "×" + nbEle);
                         }
                     }
 
