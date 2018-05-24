@@ -10,7 +10,7 @@ using ModuleLaser.ModuleCreerConfigDvp;
 using ModuleLaser.ModuleCreerDvp;
 using ModuleLaser.ModuleExportBarre;
 using ModuleLaser.ModuleListeDebit;
-using ModuleLaser;
+using ModuleLaser.ModuleNumeroterDossier;
 using ModuleLierLesConfigurations;
 using ModuleListerMateriaux;
 using ModuleListerPercage;
@@ -95,7 +95,7 @@ namespace SwExtension
                 _Mnu.AjouterCmde("Ld", typeof(PageListeDebit));
 
                 _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde("Nd", typeof(BoutonNumeroterDossier));
+                _Mnu.AjouterCmde("Nd", typeof(PageNumeroterDossier));
 
                 //==================================================================================================
                 _Mnu = _eListeMenu.Add("Escalier", "Fonctions d'aide à la création d'escalier");

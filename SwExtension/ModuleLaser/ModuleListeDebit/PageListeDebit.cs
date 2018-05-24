@@ -30,8 +30,6 @@ namespace ModuleLaser
 
             private Parametre AfficherListe;
 
-
-
             public PageListeDebit()
             {
                 try

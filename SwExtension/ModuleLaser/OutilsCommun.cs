@@ -270,7 +270,8 @@ namespace ModuleLaser
                             {
                                 if (!dossier.eEstExclu() && TypeCorps.HasFlag(dossier.eTypeDeDossier()))
                                 {
-                                    String Materiau = dossier.eGetMateriau();
+                                    //String Materiau = dossier.eGetMateriau();
+                                    String Materiau = dossier.ePremierCorps().eGetMateriauCorpsOuComp(c);
 
                                     ListeMateriaux.AddIfNotExist(Materiau);
                                 }
@@ -346,6 +347,8 @@ namespace ModuleLaser
                 mdlBase.eComposantRacine().eRecParcourirComposantBase(
                         comp =>
                         {
+                            if (comp.IsSuppressed() || comp.ExcludeFromBOM) return;
+
                             var mdl = comp.eModelDoc2();
                             var cfg = comp.eNomConfiguration();
                             if (dic.ContainsKey(mdl))
@@ -431,6 +434,8 @@ namespace ModuleLaser
                 mdlBase.eComposantRacine().eRecParcourirComposantBase(
                         comp =>
                         {
+                            if (comp.IsSuppressed() || comp.ExcludeFromBOM) return;
+
                             foreach (var fDossier in comp.eListeDesFonctionsDePiecesSoudees())
                             {
                                 BodyFolder SwDossier = fDossier.GetSpecificFeature2();

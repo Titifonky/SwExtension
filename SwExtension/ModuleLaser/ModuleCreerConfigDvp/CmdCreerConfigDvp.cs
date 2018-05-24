@@ -84,7 +84,7 @@ namespace ModuleLaser.ModuleCreerConfigDvp
                     foreach (var NomConfigPliee in ListeNomConfigs)
                     {
                         WindowLog.SautDeLigne();
-                        WindowLog.EcrireF("  [{1}/{2}] Config : \"{0}\"", NomConfigPliee, CfgPct++, ListeNomConfigs.Count);
+                        WindowLog.EcrireF("  [{1}/{2}] Config : \"{0}\"", NomConfigPliee, ++CfgPct, ListeNomConfigs.Count);
                         mdl.ShowConfiguration2(NomConfigPliee);
                         mdl.EditRebuild3();
 
@@ -101,8 +101,7 @@ namespace ModuleLaser.ModuleCreerConfigDvp
                             BodyFolder dossier = f.GetSpecificFeature2();
 
                             if (dossier.eEstExclu() || dossier.IsNull() || (dossier.GetBodyCount() == 0)) continue;
-
-                            WindowLog.EcrireF("    - [{1}/{2}] Dossier : \"{0}\"", f.Name, noD + 1, ListeDossier.Count);
+                            
 
                             Body2 Tole = dossier.eCorpsDeTolerie();
 
@@ -115,7 +114,7 @@ namespace ModuleLaser.ModuleCreerConfigDvp
 
                             String NomConfigDepliee = Sw.eNomConfigDepliee(NomConfigPliee, NomDossier);
 
-                            WindowLog.EcrireF("        cfg : \"{0}\"", NomConfigDepliee);
+                            WindowLog.EcrireF("    - [{1}/{2}] Dossier : \"{0}\" -> {3}", f.Name, noD + 1, ListeDossier.Count, NomConfigDepliee);
 
                             Configuration CfgDepliee = null;
 

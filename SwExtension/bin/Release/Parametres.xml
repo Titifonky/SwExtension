@@ -19,8 +19,8 @@
     <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">D:\Projet\E144 - Ville d'Arras\ED379 - Pole educatif Val de Scarpe\1\4.3.1 Garde-corps\Plans Développées\DWG - Ind A</Parametre>
   </Module>
   <Module name="ExportPdf" intitule="Exporter en Pdf">
-    <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="SelectionnerDossier" intitule="Selectionner un dossier" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="SelectionnerDossier" intitule="Selectionner un dossier" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="ToutesLesFeuilles" intitule="Toutes les feuilles" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="FormatExport" intitule="Format" tip="" type="Outils.eTypeFichierExport">PDF</Parametre>
     <Parametre name="ExporterEnCouleur" intitule="Exporter en couleur" tip="" type="System.Boolean">True</Parametre>
@@ -36,8 +36,8 @@
   </Module>
   <Module name="CreerConfigDvp" intitule="Creer les config. dvp">
     <Parametre name="SupprimerLesAnciennesConfigs" intitule="Supprimer les anciennes configs dvp" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="ReconstuireLesConfig" intitule="Reconstruire toutes les configs dvp" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="ToutesLesConfigurations" intitule="Appliquer à toutes les configs" tip="Creer les configs dvp pour toutes les configs pliées de chaque composants, même celles non utilisées dans le modele" type="System.Boolean">True</Parametre>
+    <Parametre name="ReconstuireLesConfig" intitule="Reconstruire toutes les configs dvp" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="ToutesLesConfigurations" intitule="Appliquer à toutes les configs" tip="Creer les configs dvp pour toutes les configs pliées de chaque composants, même celles non utilisées dans le modele" type="System.Boolean">False</Parametre>
     <Parametre name="MasquerEsquisses" intitule="Masquer toutes les esquisses" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="SupprimerFonctions" intitule="Supprimer les fonctions" tip="Supprimer les fonctions correspondant au motif donné" type="System.Boolean">False</Parametre>
     <Parametre name="NomFonctionSupprimer" intitule="Nom des fonctions à supprimer (Regex)" tip="" type="System.String">^S_</Parametre>
@@ -179,5 +179,7 @@
   <Module name="MasquerCorpsVue" intitule="Masquerles corps de la vue" />
   <Module name="Test2" intitule="Test2" />
   <Module name="SelectionnerCorpsIdentiques" intitule="Selectionner les corps identiques" />
-  <Module name="NumeroterDossier" intitule="Numeroter les dossiers" />
+  <Module name="NumeroterDossier" intitule="Numeroter les dossiers">
+    <Parametre name="CombinerCorpsIdentiques" intitule="Combiner les corps identiques" tip="" type="System.Boolean">False</Parametre>
+  </Module>
 </Parametres>

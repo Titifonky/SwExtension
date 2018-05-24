@@ -114,7 +114,7 @@ namespace ModuleLaser.ModuleCreerDvp
                             dessin.eModelDoc2().eActiver();
                             Sheet Feuille = dessin.eFeuilleActive();
 
-                            View v = CreerVueToleDvp(dessin, Feuille, Piece, NomConfigDepliee, nomDossier, Materiau, QuantiteTole, Epaisseur);
+                            View v = CreerVueToleDvp(dessin, Feuille, Piece, NomConfigDepliee, NomConfigPliee + "-" + nomDossier, Materiau, QuantiteTole, Epaisseur);
 
                             if (ConvertirEsquisse)
                             {
