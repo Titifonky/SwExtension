@@ -55,12 +55,13 @@ namespace ModuleLaser.ModuleCreerConfigDvp
                     var cfgActive = mdl.eNomConfigActive();
 
                     var ListeNomConfigs = dic[mdl];
+
                     if (ToutesLesConfigurations)
                         mdl.eParcourirConfiguration(
                             (String c) =>
                             {
                                 if (c.eEstConfigPliee())
-                                    ListeNomConfigs.Add(c);
+                                    ListeNomConfigs.Add(c, 1);
 
                                 return false;
                             }
@@ -81,7 +82,7 @@ namespace ModuleLaser.ModuleCreerConfigDvp
                     }
 
                     int CfgPct = 0;
-                    foreach (var NomConfigPliee in ListeNomConfigs)
+                    foreach (var NomConfigPliee in ListeNomConfigs.Keys)
                     {
                         WindowLog.SautDeLigne();
                         WindowLog.EcrireF("  [{1}/{2}] Config : \"{0}\"", NomConfigPliee, ++CfgPct, ListeNomConfigs.Count);
@@ -100,6 +101,8 @@ namespace ModuleLaser.ModuleCreerConfigDvp
                             var f = ListeDossier[noD];
                             BodyFolder dossier = f.GetSpecificFeature2();
 
+                            var RefDossier = dossier.eProp(CONSTANTES.REF_DOSSIER);
+
                             if (dossier.eEstExclu() || dossier.IsNull() || (dossier.GetBodyCount() == 0)) continue;
                             
 
@@ -110,9 +113,7 @@ namespace ModuleLaser.ModuleCreerConfigDvp
 
                             var pidTole = new SwObjectPID<Body2>(Tole, MdlBase);
 
-                            String NomDossier = dossier.eNom().Trim();
-
-                            String NomConfigDepliee = Sw.eNomConfigDepliee(NomConfigPliee, NomDossier);
+                            String NomConfigDepliee = Sw.eNomConfigDepliee(NomConfigPliee, RefDossier);
 
                             WindowLog.EcrireF("    - [{1}/{2}] Dossier : \"{0}\" -> {3}", f.Name, noD + 1, ListeDossier.Count, NomConfigDepliee);
 
@@ -147,7 +148,7 @@ namespace ModuleLaser.ModuleCreerConfigDvp
                             }
                             catch (Exception e)
                             {
-                                DicErreur.Add(mdl.eNomSansExt() + " -> cfg : " + NomConfigPliee + " - No : " + NomDossier + " = " + NomConfigDepliee);
+                                DicErreur.Add(mdl.eNomSansExt() + " -> cfg : " + NomConfigPliee + " - No : " + RefDossier + " = " + NomConfigDepliee);
                                 WindowLog.Ecrire("Erreur de depliage");
                                 this.LogMethode(new Object[] { e });
                             }

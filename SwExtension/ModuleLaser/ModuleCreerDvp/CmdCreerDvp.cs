@@ -72,22 +72,25 @@ namespace ModuleLaser.ModuleCreerDvp
                         int DrPct = 0;
                         foreach (var t in ListeDossier)
                         {
-                            var nomDossier = t.Key;
+                            var NomDossier = t.Key;
                             var QuantiteTole = t.Value * Quantite;
 
-                            Feature fDossier = Piece.FeatureByName(nomDossier);
+                            Feature fDossier = Piece.FeatureByName(NomDossier);
                             BodyFolder dossier = fDossier.GetSpecificFeature2();
+
+                            var RefDossier = dossier.eProp(CONSTANTES.REF_DOSSIER);
+
                             Body2 Tole = dossier.eCorpsDeTolerie();
 
                             WindowLog.SautDeLigne();
-                            WindowLog.EcrireF("    - [{1}/{2}] Dossier : \"{0}\" x{3}", nomDossier, ++DrPct, ListeDossier.Count, QuantiteTole);
+                            WindowLog.EcrireF("    - [{1}/{2}] Dossier : \"{0}\" x{3}", RefDossier, ++DrPct, ListeDossier.Count, QuantiteTole);
 
                             String Materiau = Tole.eGetMateriauCorpsOuPiece(Piece, NomConfigPliee);
 
                             Materiau = ForcerMateriau.IsRefAndNotEmpty(Materiau);
 
                             Double Epaisseur = Tole.eEpaisseur();
-                            String NomConfigDepliee = Sw.eNomConfigDepliee(NomConfigPliee, nomDossier);
+                            String NomConfigDepliee = Sw.eNomConfigDepliee(NomConfigPliee, RefDossier);
 
                             WindowLog.EcrireF("      Ep {0} / Materiau {1}", Epaisseur, Materiau);
                             WindowLog.EcrireF("          Config {0}", NomConfigDepliee);
@@ -103,7 +106,7 @@ namespace ModuleLaser.ModuleCreerDvp
                             }
                             else if (!mdl.ShowConfiguration2(NomConfigDepliee))
                             {
-                                DicErreur.Add(mdl.eNomSansExt() + " -> cfg : " + NomConfigPliee + " - No : " + nomDossier + " = " + NomConfigDepliee);
+                                DicErreur.Add(mdl.eNomSansExt() + " -> cfg : " + NomConfigPliee + " - No : " + RefDossier + " = " + NomConfigDepliee);
                                 WindowLog.EcrireF("La configuration n'éxiste pas");
                                 continue;
                             }
@@ -114,7 +117,7 @@ namespace ModuleLaser.ModuleCreerDvp
                             dessin.eModelDoc2().eActiver();
                             Sheet Feuille = dessin.eFeuilleActive();
 
-                            View v = CreerVueToleDvp(dessin, Feuille, Piece, NomConfigDepliee, NomConfigPliee + "-" + nomDossier, Materiau, QuantiteTole, Epaisseur);
+                            View v = CreerVueToleDvp(dessin, Feuille, Piece, NomConfigDepliee, RefDossier, Materiau, QuantiteTole, Epaisseur);
 
                             if (ConvertirEsquisse)
                             {

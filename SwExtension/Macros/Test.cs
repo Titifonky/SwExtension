@@ -14,16 +14,75 @@ namespace Macros
 
     public class Test : BoutonBase
     {
+        String cheminbloc = "E:\\Mes documents\\SolidWorks\\2018\\Blocs\\Macro\\REPERAGE_DOSSIER.sldblk";
+        String NomEsquisse = "REPERAGE_DOSSIER";
 
         protected override void Command()
         {
             ModelDoc2 mdl = App.ModelDoc2;
 
-            var Face = mdl.eSelect_RecupererObjet<Face2>(1);
+            var F = EsquisseRepere(mdl);
 
-            Byte[] Tab = mdl.Extension.GetPersistReference3(Face);
-            String S = System.Text.Encoding.Default.GetString(Tab);
-            Log.Message(S);
+            DisplayDimension dd = F.GetFirstDisplayDimension();
+            while (dd.IsRef())
+            {
+                Dimension d = dd.GetDimension2(0);
+                WindowLog.Ecrire(d.Name);
+                dd = F.GetNextDisplayDimension(dd);
+            }
+        }
+
+        private Feature EsquisseRepere(ModelDoc2 mdl)
+        {
+            Feature Esquisse = mdl.eChercherFonction(fc => { return fc.Name == NomEsquisse; });
+
+            if (Esquisse.IsNull())
+            {
+                Feature Plan = mdl.eListeFonctions(fc => { return fc.GetTypeName2() == FeatureType.swTnRefPlane; })[1];
+
+                Plan.eSelect();
+
+                var SM = mdl.SketchManager;
+
+                SM.InsertSketch(true);
+                SM.AddToDB = false;
+                SM.DisplayWhenAdded = true;
+
+                Esquisse = mdl.Extension.GetLastFeatureAdded();
+
+                MathUtility Mu = App.Sw.GetMathUtility();
+                MathPoint mp = Mu.CreatePoint(new double[] { 0, 0, 0 });
+
+                var def = SM.MakeSketchBlockFromFile(mp, cheminbloc, false, 1, 0);
+
+                if (def.IsNull())
+                {
+                    var TabDef = (Object[])SM.GetSketchBlockDefinitions();
+                    foreach (SketchBlockDefinition blocdef in TabDef)
+                    {
+                        if (blocdef.FileName == cheminbloc)
+                        {
+                            def = blocdef;
+                            break;
+                        }
+                    }
+                }
+
+                var Tab = (Object[])def.GetInstances();
+                var ins = (SketchBlockInstance)Tab[0];
+                SM.ExplodeSketchBlockInstance(ins);
+
+                SM.AddToDB = false;
+                SM.DisplayWhenAdded = true;
+                SM.InsertSketch(true);
+
+                Esquisse.Name = NomEsquisse;
+                Esquisse.eSelect();
+                mdl.BlankSketch();
+                mdl.eEffacerSelection();
+            }
+
+            return Esquisse;
         }
 
         //protected override void Command()

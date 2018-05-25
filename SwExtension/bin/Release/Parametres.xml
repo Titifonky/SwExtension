@@ -180,6 +180,6 @@
   <Module name="Test2" intitule="Test2" />
   <Module name="SelectionnerCorpsIdentiques" intitule="Selectionner les corps identiques" />
   <Module name="NumeroterDossier" intitule="Numeroter les dossiers">
-    <Parametre name="CombinerCorpsIdentiques" intitule="Combiner les corps identiques" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="CombinerCorpsIdentiques" intitule="Combiner les corps identiques des différents modèles" tip="" type="System.Boolean">True</Parametre>
   </Module>
 </Parametres>

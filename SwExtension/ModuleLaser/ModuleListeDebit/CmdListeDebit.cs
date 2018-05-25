@@ -61,11 +61,12 @@ namespace ModuleLaser
                             var ListeDossier = dic[mdl][NomConfigPliee];
                             foreach (var t in ListeDossier)
                             {
-                                var nomDossier = t.Key;
+                                var NomDossier = t.Key;
                                 var QuantiteBarre = t.Value * Quantite;
 
-                                Feature fDossier = Piece.FeatureByName(nomDossier);
+                                Feature fDossier = Piece.FeatureByName(NomDossier);
                                 BodyFolder dossier = fDossier.GetSpecificFeature2();
+                                var RefDossier = dossier.eProp(CONSTANTES.REF_DOSSIER);
 
                                 String Profil = dossier.eProp(CONSTANTES.PROFIL_NOM);
                                 Double Longueur = dossier.eProp(CONSTANTES.PROFIL_LONGUEUR).eToDouble();
@@ -80,7 +81,7 @@ namespace ModuleLaser
 
                                 Materiau = ForcerMateriau.IsRefAndNotEmpty(Materiau);
 
-                                listeElement.AjouterElement(QuantiteBarre, nomDossier, Materiau, Profil, Longueur, A, B);
+                                listeElement.AjouterElement(QuantiteBarre, RefDossier, Materiau, Profil, Longueur, A, B);
                             }
                         }
                     }

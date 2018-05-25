@@ -316,9 +316,9 @@ namespace ModuleLaser
         /// <param name="composantsExterne"></param>
         /// <param name="filtreTypeCorps"></param>
         /// <returns></returns>
-        public static SortedDictionary<ModelDoc2, SortedSet<String>> ListerComposants(this ModelDoc2 mdlBase, Boolean composantsExterne, eTypeCorps filtreTypeCorps)
+        public static SortedDictionary<ModelDoc2, SortedDictionary<String, int>> ListerComposants(this ModelDoc2 mdlBase, Boolean composantsExterne, eTypeCorps filtreTypeCorps)
         {
-            SortedDictionary<ModelDoc2, SortedSet<String>> dic = new SortedDictionary<ModelDoc2, SortedSet<String>>(new CompareModelDoc2());
+            SortedDictionary<ModelDoc2, SortedDictionary<String, int>> dic = new SortedDictionary<ModelDoc2, SortedDictionary<String, int>>(new CompareModelDoc2());
 
             if (mdlBase.TypeDoc() == eTypeDoc.Piece)
             {
@@ -330,14 +330,14 @@ namespace ModuleLaser
                     return dic;
                 }
                 var Piece = mdlBase.ePartDoc();
-                var lcfg = new SortedSet<String>(new WindowsStringComparer());
+                var lcfg = new SortedDictionary<String, int>(new WindowsStringComparer());
                 dic.Add(mdlBase, lcfg);
                 foreach (var dossier in Piece.eListeDesDossiersDePiecesSoudees())
                 {
                     if (!dossier.eEstExclu() &&
                         filtreTypeCorps.HasFlag(dossier.eTypeDeDossier()))
                     {
-                        lcfg.Add(ConfigActive);
+                        lcfg.Add(ConfigActive, 1);
                         break;
                     }
                 }
@@ -352,8 +352,11 @@ namespace ModuleLaser
                             var mdl = comp.eModelDoc2();
                             var cfg = comp.eNomConfiguration();
                             if (dic.ContainsKey(mdl))
-                                if (dic[mdl].Contains(cfg))
+                                if (dic[mdl].ContainsKey(cfg))
+                                {
+                                    dic[mdl][cfg] += 1;
                                     return;
+                                }
 
                             foreach (var fDossier in comp.eListeDesFonctionsDePiecesSoudees())
                             {
@@ -364,11 +367,11 @@ namespace ModuleLaser
                                 filtreTypeCorps.HasFlag(SwDossier.eTypeDeDossier()))
                                 {
                                     if (dic.ContainsKey(mdl))
-                                        dic[mdl].Add(cfg);
+                                        dic[mdl].Add(cfg, 1);
                                     else
                                     {
-                                        var lcfg = new SortedSet<String>(new WindowsStringComparer());
-                                        lcfg.Add(cfg);
+                                        var lcfg = new SortedDictionary<String, int>(new WindowsStringComparer());
+                                        lcfg.Add(cfg, 1);
                                         dic.Add(mdl, lcfg);
                                     }
                                     break;
@@ -419,7 +422,7 @@ namespace ModuleLaser
                         filtreTypeCorps.HasFlag(dossier.eTypeDeDossier()) &&
                         (listeMateriaux.IsNull() || listeMateriaux.Contains(dossier.eGetMateriau())))
                     {
-                        dicDossier.Add(dossier.eNom().Trim(), dossier.eNbCorps());
+                        dicDossier.Add(dossier.eNom(), dossier.eNbCorps());
                     }
                 }
 

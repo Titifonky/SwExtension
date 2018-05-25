@@ -75,11 +75,14 @@ namespace ModuleLaser.ModuleExportBarre
                         int DrPct = 0;
                         foreach (var t in ListeDossier)
                         {
-                            var nomDossier = t.Key;
+                            var NomDossier = t.Key;
                             var QuantiteBarre = t.Value * Quantite;
 
-                            Feature fDossier = Piece.FeatureByName(nomDossier);
+                            Feature fDossier = Piece.FeatureByName(NomDossier);
                             BodyFolder dossier = fDossier.GetSpecificFeature2();
+
+                            var RefDossier = dossier.eProp(CONSTANTES.REF_DOSSIER);
+
                             Body2 Barre = dossier.ePremierCorps();
 
                             String Profil = dossier.eProp(CONSTANTES.PROFIL_NOM);
@@ -89,13 +92,13 @@ namespace ModuleLaser.ModuleExportBarre
 
                             Materiau = ForcerMateriau.IsRefAndNotEmpty(Materiau);
 
-                            String NomFichierBarre = ConstruireNomFichierBarre(nomDossier, QuantiteBarre);
+                            String NomFichierBarre = ConstruireNomFichierBarre(RefDossier, QuantiteBarre);
 
                             WindowLog.SautDeLigne();
-                            WindowLog.EcrireF("    - [{1}/{2}] Dossier : \"{0}\" x{3}", nomDossier, ++DrPct, ListeDossier.Count, QuantiteBarre);
+                            WindowLog.EcrireF("    - [{1}/{2}] Dossier : \"{0}\" x{3}", RefDossier, ++DrPct, ListeDossier.Count, QuantiteBarre);
                             WindowLog.EcrireF("              Profil {0}  Materiau {1}", Profil, Materiau);
 
-                            List<String> Liste = new List<String>() { nomDossier, Materiau, Profil, Math.Round(Longueur.eToDouble()).ToString(), "× " + QuantiteBarre.ToString() };
+                            List<String> Liste = new List<String>() { RefDossier, Materiau, Profil, Math.Round(Longueur.eToDouble()).ToString(), "× " + QuantiteBarre.ToString() };
 
                             if (ListerUsinages)
                             {
