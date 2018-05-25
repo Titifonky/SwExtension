@@ -61,10 +61,10 @@ namespace ModuleLaser
                             var ListeDossier = dic[mdl][NomConfigPliee];
                             foreach (var t in ListeDossier)
                             {
-                                var NomDossier = t.Key;
+                                var IdDossier = t.Key;
                                 var QuantiteBarre = t.Value * Quantite;
 
-                                Feature fDossier = Piece.FeatureByName(NomDossier);
+                                Feature fDossier = Piece.FeatureById(IdDossier);
                                 BodyFolder dossier = fDossier.GetSpecificFeature2();
                                 var RefDossier = dossier.eProp(CONSTANTES.REF_DOSSIER);
 

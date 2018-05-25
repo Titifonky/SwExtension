@@ -197,13 +197,15 @@ namespace ModuleLaser
                     SM.InsertSketch(true);
 
                     Esquisse.Name = NomEsquisse;
-                    Esquisse.eSelect();
-                    mdl.BlankSketch();
+                    
                     mdl.eEffacerSelection();
 
                     Esquisse.SetSuppression2((int)swFeatureSuppressionAction_e.swUnSuppressFeature, (int)swInConfigurationOpts_e.swAllConfiguration, null);
                 }
 
+                Esquisse.eSelect();
+                mdl.BlankSketch();
+                Esquisse.SetUIState((int)swUIStates_e.swIsHiddenInFeatureMgr, true);
                 return Esquisse;
             }
 

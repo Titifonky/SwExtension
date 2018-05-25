@@ -10,163 +10,6 @@ namespace ModuleLaser
 {
     public static class OutilsCommun
     {
-        private const String ATTRIBUT_INDEX_DOSSIER = "NoDossierPiecesSoudees";
-        private const String ATTRIBUT_PARAM_INDEXMAX = "Index";
-
-        private static AttributeDef AttDef = null;
-
-        public static Parameter eAttributNoDossier(this Component2 cp)
-        {
-            return cp.ePartDoc().eAttributNoDossier();
-        }
-
-        /// <summary>
-        /// Retourne l'attribut NoDossier
-        /// </summary>
-        /// <param name="piece"></param>
-        /// <returns></returns>
-        public static Parameter eAttributNoDossier(this PartDoc piece)
-        {
-            if (AttDef.IsNull())
-            {
-                AttDef = App.Sw.DefineAttribute(ATTRIBUT_INDEX_DOSSIER);
-                AttDef.AddParameter(ATTRIBUT_PARAM_INDEXMAX, (int)swParamType_e.swParamTypeInteger, 0, 0);
-                AttDef.Register();
-            }
-
-            // Recherche de l'attribut dans la piece
-            SolidWorks.Interop.sldworks.Attribute Att = null;
-            ModelDoc2 mdl = piece.eModelDoc2();
-            Parameter P = null;
-            Feature F = mdl.eChercherFonction(f => { return f.Name == ATTRIBUT_INDEX_DOSSIER; });
-            if (F.IsRef())
-            {
-                Att = F.GetSpecificFeature2();
-
-                P = (Parameter)Att.GetParameter(ATTRIBUT_PARAM_INDEXMAX);
-
-                if (P.IsNull())
-                {
-                    Att.Delete(false);
-                    Att = null;
-                }
-            }
-
-            if (Att.IsNull())
-            {
-                Att = AttDef.CreateInstance5(mdl, null, ATTRIBUT_INDEX_DOSSIER, 1, (int)swInConfigurationOpts_e.swAllConfiguration);
-                P = (Parameter)Att.GetParameter(ATTRIBUT_PARAM_INDEXMAX);
-            }
-
-            return P;
-        }
-
-        /// <summary>
-        /// Met l'attribut NoDossier à 0
-        /// </summary>
-        /// <param name="piece"></param>
-        public static void eReinitialiserNoDossierMax(this PartDoc piece)
-        {
-            // On récupère la valeur du parametre
-            Parameter P = eAttributNoDossier(piece);
-            P.SetDoubleValue2(0, (int)swInConfigurationOpts_e.swAllConfiguration, "");
-        }
-
-        /// <summary>
-        /// Met l'attribut NoDossier à 0
-        /// </summary>
-        /// <param name="cp"></param>
-        public static void eReinitialiserNoDossierMax(this Component2 cp)
-        {
-            cp.ePartDoc().eReinitialiserNoDossierMax();
-        }
-
-        /// <summary>
-        /// Numerote les dossier à partir de noDossierDepart
-        /// </summary>
-        /// <param name="comp"></param>
-        /// <param name="MajListeDesDossiersDePiecesSoudees"></param>
-        /// <returns>Retourne la liste des dossiers et le no</returns>
-        public static Dictionary<String, int> eNumeroterDossier(this Component2 comp, Boolean MajListeDesDossiersDePiecesSoudees = false)
-        {
-            if (MajListeDesDossiersDePiecesSoudees)
-                comp.eMajListeDesPiecesSoudees();
-
-            List<BodyFolder> listeDossier = comp.eListeDesDossiersDePiecesSoudees();
-            Parameter Param = eAttributNoDossier(comp);
-
-            return eFonctionNumeroterDossier(Param, listeDossier);
-        }
-
-        /// <summary>
-        /// Numerote les dossier à partir de noDossierDepart
-        /// </summary>
-        /// <param name="piece"></param>
-        /// <param name="MajListeDesDossiersDePiecesSoudees"></param>
-        /// <returns>Retourne la liste des dossiers et le no</returns>
-        public static Dictionary<String, int> eNumeroterDossier(this PartDoc piece, Boolean MajListeDesDossiersDePiecesSoudees = false)
-        {
-            if (MajListeDesDossiersDePiecesSoudees)
-                piece.eMajListeDesPiecesSoudees();
-
-            List<BodyFolder> listeDossier = piece.eListeDesDossiersDePiecesSoudees();
-            Parameter Param = eAttributNoDossier(piece);
-
-            return eFonctionNumeroterDossier(Param, listeDossier);
-        }
-
-        private static Dictionary<String, int> eFonctionNumeroterDossier(Parameter P, List<BodyFolder> listeDossier)
-        {
-            Dictionary<String, int> Dic = new Dictionary<string, int>();
-            int pNoDossier = 0;
-            int pNoDossierMax = (int)P.GetDoubleValue();
-
-            foreach (BodyFolder dossier in listeDossier)
-            {
-                if (dossier.GetBodyCount() == 0) continue;
-
-                CustomPropertyManager PM = dossier.GetFeature().CustomPropertyManager;
-
-                // Si la propriete existe, on récupère la valeur
-                if (PM.ePropExiste(CONSTANTES.NO_DOSSIER))
-                {
-                    String val, result; Boolean wasResolved;
-                    PM.Get5(CONSTANTES.NO_DOSSIER, false, out val, out result, out wasResolved);
-                    pNoDossier = result.eToInteger();
-                    pNoDossierMax = Math.Max(pNoDossierMax, pNoDossier);
-                }
-                else
-                {
-                    pNoDossier = ++pNoDossierMax;
-                    PM.ePropAdd(CONSTANTES.NO_DOSSIER, pNoDossier);
-                }
-
-                Dic.AddIfNotExist(dossier.eNom(), pNoDossier);
-            }
-
-            // On met à jour le parametre
-            P.SetDoubleValue2(pNoDossierMax, (int)swInConfigurationOpts_e.swAllConfiguration, "");
-
-            return Dic;
-        }
-
-        public static void eEffacerNoDossier(this Component2 cp)
-        {
-            cp.eReinitialiserNoDossierMax();
-
-            var liste = cp.eListeDesDossiersDePiecesSoudees();
-            if (liste.IsNullOrEmpty()) return;
-
-            foreach (BodyFolder dossier in liste)
-            {
-                if (dossier.GetBodyCount() == 0) continue;
-
-                CustomPropertyManager PM = dossier.GetFeature().CustomPropertyManager;
-
-                PM.Delete2(CONSTANTES.NO_DOSSIER);
-            }
-        }
-
         public static Configuration CreerConfigDepliee(this ModelDoc2 mdl, String NomConfigDepliee, String NomConfigPliee)
         {
             return mdl.ConfigurationManager.AddConfiguration(NomConfigDepliee, NomConfigDepliee, "", 0, NomConfigPliee, "");
@@ -401,9 +244,9 @@ namespace ModuleLaser
         /// <param name="listeMateriaux"></param>
         /// <param name="filtreTypeCorps"></param>
         /// <returns></returns>
-        public static SortedDictionary<ModelDoc2, SortedDictionary<String, SortedDictionary<String, int>>> DenombrerDossiers(this ModelDoc2 mdlBase, Boolean composantsExterne, HashSet<String> listeMateriaux, eTypeCorps filtreTypeCorps)
+        public static SortedDictionary<ModelDoc2, SortedDictionary<String, SortedDictionary<int, int>>> DenombrerDossiers(this ModelDoc2 mdlBase, Boolean composantsExterne, HashSet<String> listeMateriaux, eTypeCorps filtreTypeCorps)
         {
-            SortedDictionary<ModelDoc2, SortedDictionary<String, SortedDictionary<String, int>>> dic = new SortedDictionary<ModelDoc2, SortedDictionary<String, SortedDictionary<String, int>>>(new CompareModelDoc2());
+            SortedDictionary<ModelDoc2, SortedDictionary<String, SortedDictionary<int, int>>> dic = new SortedDictionary<ModelDoc2, SortedDictionary<String, SortedDictionary<int, int>>>(new CompareModelDoc2());
 
             if (mdlBase.TypeDoc() == eTypeDoc.Piece)
             {
@@ -415,18 +258,18 @@ namespace ModuleLaser
                     return dic;
                 }
                 var Piece = mdlBase.ePartDoc();
-                var dicDossier = new SortedDictionary<String, int>(new WindowsStringComparer());
+                var dicDossier = new SortedDictionary<int, int>();
                 foreach (var dossier in Piece.eListeDesDossiersDePiecesSoudees())
                 {
                     if (!dossier.eEstExclu() &&
                         filtreTypeCorps.HasFlag(dossier.eTypeDeDossier()) &&
                         (listeMateriaux.IsNull() || listeMateriaux.Contains(dossier.eGetMateriau())))
                     {
-                        dicDossier.Add(dossier.eNom(), dossier.eNbCorps());
+                        dicDossier.Add(dossier.GetFeature().GetID(), dossier.eNbCorps());
                     }
                 }
 
-                var dicConfig = new SortedDictionary<String, SortedDictionary<String, int>>(new WindowsStringComparer());
+                var dicConfig = new SortedDictionary<String, SortedDictionary<int, int>>(new WindowsStringComparer());
                 dicConfig.Add(ConfigActive, dicDossier);
                 dic.Add(mdlBase, dicConfig);
             }
@@ -453,10 +296,10 @@ namespace ModuleLaser
                                 Boolean Ajoute = false;
                                 foreach (var DossierTest in ListeDossiers)
                                 {
-                                    if (SwDossier.eNom().Trim() == DossierTest.Repere)
+                                    var RefDossier = SwDossier.eProp(CONSTANTES.REF_DOSSIER);
+                                    if (RefDossier == DossierTest.Repere)
                                     {
                                         DossierTest.Nb += SwDossier.eNbCorps();
-                                        DossierTest.AjouterModele(comp);
                                         Ajoute = true;
                                         break;
                                     }
@@ -464,9 +307,9 @@ namespace ModuleLaser
 
                                 if (Ajoute == false)
                                 {
-                                    var dossier = new Dossier(SwDossier.eNom().Trim());
+                                    var RefDossier = SwDossier.eProp(CONSTANTES.REF_DOSSIER);
+                                    var dossier = new Dossier(RefDossier, comp.eModelDoc2(), comp.eNomConfiguration(), fDossier.GetID());
                                     dossier.Nb = SwDossier.eNbCorps();
-                                    dossier.AjouterModele(comp);
                                     ListeDossiers.Add(dossier);
                                 }
                             }
@@ -483,33 +326,28 @@ namespace ModuleLaser
 
                 foreach (var dossier in ListeDossiers)
                 {
-                    var t = dossier.ListeModele.First();
-                    var mdl = t.Key;
-                    var cfg = t.Value.First();
-                    var rep = dossier.Repere;
-                    var nb = dossier.Nb;
-                    if(dic.ContainsKey(mdl))
+                    if(dic.ContainsKey(dossier.Mdl))
                     {
-                        var lcfg = dic[mdl];
-                        if(lcfg.ContainsKey(cfg))
+                        var lcfg = dic[dossier.Mdl];
+                        if(lcfg.ContainsKey(dossier.Config))
                         {
-                            var ldossier = lcfg[cfg];
-                            ldossier.Add(rep, nb);
+                            var ldossier = lcfg[dossier.Config];
+                            ldossier.Add(dossier.Id, dossier.Nb);
                         }
                         else
                         {
-                            var ldossier = new SortedDictionary<String, int>(new WindowsStringComparer());
-                            ldossier.Add(rep, nb);
-                            lcfg.Add(cfg, ldossier);
+                            var ldossier = new SortedDictionary<int, int>();
+                            ldossier.Add(dossier.Id, dossier.Nb);
+                            lcfg.Add(dossier.Config, ldossier);
                         }
                     }
                     else
                     {
-                        var ldossier = new SortedDictionary<String, int>(new WindowsStringComparer());
-                        ldossier.Add(rep, nb);
-                        var lcfg = new SortedDictionary<String, SortedDictionary<String, int>>(new WindowsStringComparer());
-                        lcfg.Add(cfg, ldossier);
-                        dic.Add(mdl, lcfg);
+                        var ldossier = new SortedDictionary<int, int>();
+                        ldossier.Add(dossier.Id, dossier.Nb);
+                        var lcfg = new SortedDictionary<String, SortedDictionary<int, int>>(new WindowsStringComparer());
+                        lcfg.Add(dossier.Config, ldossier);
+                        dic.Add(dossier.Mdl, lcfg);
                     }
                 }
             }
@@ -519,34 +357,18 @@ namespace ModuleLaser
 
         private class Dossier
         {
+            public int Id;
             public String Repere;
-            public SortedDictionary<ModelDoc2, SortedSet<String>> ListeModele = new SortedDictionary<ModelDoc2, SortedSet<string>>(new CompareModelDoc2());
+            public ModelDoc2 Mdl;
+            public String Config;
             public int Nb = 0;
 
-            public Dossier(String repere)
+            public Dossier(String repere, ModelDoc2 mdl, String config, int id)
             {
                 Repere = repere;
-            }
-
-            public void AjouterModele(ModelDoc2 mdl, String config)
-            {
-                if (ListeModele.ContainsKey(mdl))
-                {
-                    var l = ListeModele[mdl];
-                    if (!l.Contains(config))
-                        l.Add(config);
-                }
-                else
-                {
-                    var l = new SortedSet<String>(new WindowsStringComparer());
-                    l.Add(config);
-                    ListeModele.Add(mdl, l);
-                }
-            }
-
-            public void AjouterModele(Component2 comp)
-            {
-                AjouterModele(comp.eModelDoc2(), comp.eNomConfiguration());
+                Mdl = mdl;
+                Config = config;
+                Id = id;
             }
         }
     }
