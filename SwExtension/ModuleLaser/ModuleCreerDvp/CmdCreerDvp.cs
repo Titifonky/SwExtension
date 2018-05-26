@@ -6,6 +6,7 @@ using SwExtension;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 
 namespace ModuleLaser.ModuleCreerDvp
 {
@@ -189,7 +190,9 @@ namespace ModuleLaser.ModuleCreerDvp
             else
             {
                 z = new eZone();
-                z.PointMin.X = JeuEntreVue; z.PointMin.Y = 0.02;
+                var e = feuille.eEnveloppeDesVues();
+                
+                z.PointMin.X = JeuEntreVue; z.PointMin.Y = e.PointMax.Y + JeuEntreVue;
                 z.PointMax.X = z.PointMin.X; z.PointMax.Y = z.PointMin.Y;
                 DicPoint.Add(feuille.GetName(), z);
             }
@@ -233,6 +236,25 @@ namespace ModuleLaser.ModuleCreerDvp
 
             if (DicDessins.ContainsKey(Fichier))
                 return DicDessins[Fichier];
+
+            var di = new DirectoryInfo(DossierDVP);
+            var NomFichierExt = Fichier + eTypeDoc.Dessin.GetEnumInfo<ExtFichier>();
+            foreach (var f in di.GetFiles())
+            {
+                if(f.Name.ToUpper() == NomFichierExt.ToUpper())
+                {
+                    int Erreur = 0, Warning = 0;
+                    DrawingDoc dessin = App.Sw.OpenDoc6(Path.Combine(DossierDVP, NomFichierExt), 
+                        (int)swDocumentTypes_e.swDocDRAWING,
+                        (int)swOpenDocOptions_e.swOpenDocOptions_Silent, 
+                        "", 
+                        ref Erreur,
+                        ref Warning).eDrawingDoc();
+                    DicDessins.Add(Fichier, dessin);
+
+                    return dessin;
+                }
+            }
 
             DrawingDoc Dessin = Sw.eCreerDocument(DossierDVP, Fichier, eTypeDoc.Dessin, CONSTANTES.MODELE_DE_DESSIN_LASER).eDrawingDoc();
 
