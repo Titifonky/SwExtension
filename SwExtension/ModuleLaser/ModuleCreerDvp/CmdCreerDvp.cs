@@ -190,9 +190,15 @@ namespace ModuleLaser.ModuleCreerDvp
             else
             {
                 z = new eZone();
-                var e = feuille.eEnveloppeDesVues();
-                
-                z.PointMin.X = JeuEntreVue; z.PointMin.Y = e.PointMax.Y + JeuEntreVue;
+                Double Ymin = JeuEntreVue;
+
+                if (feuille.eListeDesVues().Count > 0)
+                {
+                    var e = feuille.eEnveloppeDesVues();
+                    Ymin += e.PointMax.Y;
+                }
+
+                z.PointMin.X = JeuEntreVue; z.PointMin.Y =  Ymin;
                 z.PointMax.X = z.PointMin.X; z.PointMax.Y = z.PointMin.Y;
                 DicPoint.Add(feuille.GetName(), z);
             }
