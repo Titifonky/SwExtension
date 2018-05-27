@@ -1136,6 +1136,9 @@ namespace Outils
         internal const String EPAISSEUR_DE_TOLE = "Epaisseur de la tôle";
         internal const String NO_DOSSIER = "NoDossier";
         internal const String REF_DOSSIER = "RefDossier";
+        internal const String NOM_DOSSIER = "NomDossier";
+        internal const String NOM_ESQUISSE_NUMEROTER = "REPERAGE_DOSSIER";
+        internal const String NOM_BLOCK_ESQUISSE_NUMEROTER = "REPERAGE_DOSSIER.sldblk";
         internal const String NO_CONFIG = "NoConfigPliee";
         internal const String NOM_ELEMENT = "Element";
         internal const String PROFIL_NOM = "Profil";
@@ -4328,7 +4331,7 @@ namespace Outils
 
         public static String eNomConfigDepliee(String nomConfigPliee, String refDossier)
         {
-            return nomConfigPliee + CONSTANTES.CONFIG_DEPLIEE + refDossier;
+            return nomConfigPliee + CONSTANTES.CONFIG_DEPLIEE + "_" + refDossier;
         }
 
         public static String eNomConfigDepliee(String nomConfigPliee, BodyFolder dossier)

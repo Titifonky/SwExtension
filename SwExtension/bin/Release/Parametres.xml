@@ -182,4 +182,5 @@
   <Module name="NumeroterDossier" intitule="Numeroter les dossiers">
     <Parametre name="CombinerCorpsIdentiques" intitule="Combiner les corps identiques des différents modèles" tip="" type="System.Boolean">True</Parametre>
   </Module>
+  <Module name="AfficherLogDebug" intitule="Afficher le log de debug" />
 </Parametres>

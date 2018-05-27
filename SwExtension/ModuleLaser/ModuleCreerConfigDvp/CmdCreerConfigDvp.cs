@@ -5,6 +5,7 @@ using SolidWorks.Interop.swconst;
 using SwExtension;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.RegularExpressions;
 
 namespace ModuleLaser.ModuleCreerConfigDvp
@@ -195,6 +196,8 @@ namespace ModuleLaser.ModuleCreerConfigDvp
                 WindowLog.Ecrire("Resultat :");
                 WindowLog.Ecrire("----------------");
                 WindowLog.EcrireF("  {0} dvp crées", NbDvp);
+
+                File.WriteAllText(Path.Combine(MdlBase.eDossier(), "Log_CreerConfigDvp.txt"), WindowLog.Resume);
 
                 MdlBase.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
                 MdlBase.ShowConfiguration2(nomConfigBase);

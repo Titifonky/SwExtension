@@ -23,16 +23,18 @@ namespace ModuleLaser.ModuleCreerDvp
         public eOrientation OrientationDvp = eOrientation.Portrait;
         public Boolean FermerPlan = false;
         public Boolean ConvertirEsquisse = false;
+        public Boolean MajPlans = false;
         public Boolean ComposantsExterne = false;
         public String RefFichier = "";
         public int TailleInscription = 5;
-        //public String FormatInscription = "<Nom_Piece>-<Nom_Config>-<No_Dossier>";
 
         private Dictionary<String, DrawingDoc> DicDessins = new Dictionary<string, DrawingDoc>();
 
         private List<String> DicErreur = new List<String>();
 
         private String DossierDVP = "";
+
+        private String ResumeLog = "";
 
         protected override void Command()
         {
@@ -53,12 +55,13 @@ namespace ModuleLaser.ModuleCreerDvp
                 var dic = MdlBase.DenombrerDossiers(ComposantsExterne, HashMateriaux, Filtre);
 
                 int MdlPct = 0;
-                foreach(var mdl in dic.Keys)
+                foreach (var mdl in dic.Keys)
                 {
                     mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
 
                     WindowLog.SautDeLigne();
                     WindowLog.EcrireF("[{1}/{2}] {0}", mdl.eNomSansExt(), ++MdlPct, dic.Count);
+                    
 
                     int CfgPct = 0;
                     foreach (var NomConfigPliee in dic[mdl].Keys)
@@ -164,6 +167,8 @@ namespace ModuleLaser.ModuleCreerDvp
                 {
                     WindowLog.Ecrire("Pas d'erreur");
                 }
+
+                File.WriteAllText(Path.Combine(DossierDVP, "Log_CreerDvp.txt"), WindowLog.Resume);
             }
             catch (Exception e)
             { this.LogMethode(new Object[] { e }); }
@@ -198,7 +203,7 @@ namespace ModuleLaser.ModuleCreerDvp
                     Ymin += e.PointMax.Y;
                 }
 
-                z.PointMin.X = JeuEntreVue; z.PointMin.Y =  Ymin;
+                z.PointMin.X = JeuEntreVue; z.PointMin.Y = Ymin;
                 z.PointMax.X = z.PointMin.X; z.PointMax.Y = z.PointMin.Y;
                 DicPoint.Add(feuille.GetName(), z);
             }
@@ -243,17 +248,18 @@ namespace ModuleLaser.ModuleCreerDvp
             if (DicDessins.ContainsKey(Fichier))
                 return DicDessins[Fichier];
 
-            var di = new DirectoryInfo(DossierDVP);
-            var NomFichierExt = Fichier + eTypeDoc.Dessin.GetEnumInfo<ExtFichier>();
-            foreach (var f in di.GetFiles())
+            if (MajPlans)
             {
-                if(f.Name.ToUpper() == NomFichierExt.ToUpper())
+                var di = new DirectoryInfo(DossierDVP);
+                var NomFichierExt = Fichier + eTypeDoc.Dessin.GetEnumInfo<ExtFichier>();
+                var r = di.GetFiles(NomFichierExt, SearchOption.TopDirectoryOnly);
+                if (r.Length > 0)
                 {
                     int Erreur = 0, Warning = 0;
-                    DrawingDoc dessin = App.Sw.OpenDoc6(Path.Combine(DossierDVP, NomFichierExt), 
+                    DrawingDoc dessin = App.Sw.OpenDoc6(Path.Combine(DossierDVP, NomFichierExt),
                         (int)swDocumentTypes_e.swDocDRAWING,
-                        (int)swOpenDocOptions_e.swOpenDocOptions_Silent, 
-                        "", 
+                        (int)swOpenDocOptions_e.swOpenDocOptions_Silent,
+                        "",
                         ref Erreur,
                         ref Warning).eDrawingDoc();
                     DicDessins.Add(Fichier, dessin);
@@ -296,12 +302,29 @@ namespace ModuleLaser.ModuleCreerDvp
                     pCorps.eVisible(false);
             }
 
+            var NomVue = piece.eModelDoc2().eNomSansExt() + " - " + configDepliee;
+
+            if (MajPlans)
+            {
+                foreach (var vue in feuille.eListeDesVues())
+                {
+                    if (vue.GetName2() == NomVue)
+                    {
+                        vue.eSelectionner(dessin);
+                        dessin.eModelDoc2().Extension.DeleteSelection2((int)swDeleteSelectionOptions_e.swDelete_Advanced);
+                        break;
+                    }
+                }
+            }
+
+            dessin.eModelDoc2().eEffacerSelection();
+
             View Vue = dessin.CreateFlatPatternViewFromModelView3(piece.eModelDoc2().GetPathName(), configDepliee, 0, 0, 0, !AfficherLignePliage, false);
             Vue.ScaleDecimal = 1;
 
             if (Vue.IsRef())
             {
-                Vue.SetName2(piece.eModelDoc2().eNomSansExt() + " - " + configDepliee);
+                Vue.SetName2(NomVue);
 
                 GeomVue g = AppliquerOptionsVue(dessin, piece, Vue);
 

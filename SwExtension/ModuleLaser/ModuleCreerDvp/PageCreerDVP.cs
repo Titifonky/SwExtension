@@ -74,6 +74,7 @@ namespace ModuleLaser.ModuleCreerDvp
         private CtrlEnumComboBox<eOrientation, Intitule> _EnumComboBox_OrientationDvp;
         private CtrlCheckBox _CheckBox_FermerPlan;
         private CtrlCheckBox _CheckBox_ConvertirEsquisse;
+        private CtrlCheckBox _CheckBox_MajPlans;
 
         protected void Calque()
         {
@@ -155,6 +156,8 @@ namespace ModuleLaser.ModuleCreerDvp
                 _EnumComboBox_OrientationDvp.IsEnabled = _CheckBox_OrienterDvp.IsChecked;
 
                 _CheckBox_FermerPlan = G.AjouterCheckBox(FermerPlan);
+                _CheckBox_MajPlans = G.AjouterCheckBox("Mettre à jour les dvps existant");
+                _CheckBox_MajPlans.IsChecked = false;
 
                 G = _Calque.AjouterGroupe("Fichiers volumineux");
                 G.Expanded = true;
@@ -211,11 +214,11 @@ namespace ModuleLaser.ModuleCreerDvp
             Cmd.OrienterDvp = _CheckBox_OrienterDvp.IsChecked;
             Cmd.OrientationDvp = _EnumComboBox_OrientationDvp.Val;
             Cmd.FermerPlan = _CheckBox_FermerPlan.IsChecked;
+            Cmd.MajPlans = _CheckBox_MajPlans.IsChecked;
             Cmd.ConvertirEsquisse = _CheckBox_ConvertirEsquisse.IsChecked;
             Cmd.ComposantsExterne = _CheckBox_ComposantsExterne.IsChecked;
             Cmd.RefFichier = _Texte_RefFichier.Text.Trim();
             Cmd.TailleInscription = _Texte_TailleInscription.Text.eToInteger();
-            //Cmd.FormatInscription = _Texte_FormatInscription.Text;
 
             Cmd.Executer();
         }

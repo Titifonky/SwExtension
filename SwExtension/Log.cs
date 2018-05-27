@@ -196,6 +196,8 @@ namespace LogDebugging
     {
         private static SwExtension.NotePad _NotePad = null;
 
+        public static String Resume = "";
+
         public static void AfficherFenetre(Boolean a = true)
         {
             if (a)
@@ -236,6 +238,8 @@ namespace LogDebugging
 
             _NotePad.AppendText(ligne + Environment.NewLine);
 
+            Resume += ligne + Environment.NewLine;
+
             Log.Message("## " + ligne);
         }
 
@@ -260,6 +264,7 @@ namespace LogDebugging
 
         internal static void Effacer()
         {
+            Resume = "";
             Text("", false);
             _NotePad.Effacer();
 
