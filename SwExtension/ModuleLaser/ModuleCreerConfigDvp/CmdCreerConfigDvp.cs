@@ -61,7 +61,7 @@ namespace ModuleLaser.ModuleCreerConfigDvp
                         mdl.eParcourirConfiguration(
                             (String c) =>
                             {
-                                if (c.eEstConfigPliee())
+                                if (c.eEstConfigPliee() && !ListeNomConfigs.ContainsKey(c))
                                     ListeNomConfigs.Add(c, 1);
 
                                 return false;

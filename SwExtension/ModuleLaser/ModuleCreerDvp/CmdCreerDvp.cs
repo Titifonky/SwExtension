@@ -34,8 +34,6 @@ namespace ModuleLaser.ModuleCreerDvp
 
         private String DossierDVP = "";
 
-        private String ResumeLog = "";
-
         protected override void Command()
         {
             try
