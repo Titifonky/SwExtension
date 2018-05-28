@@ -46,7 +46,17 @@ namespace ModuleLaser
                     eTypeCorps Filtre = PrendreEnCompteTole ? eTypeCorps.Barre | eTypeCorps.Tole : eTypeCorps.Barre;
                     HashSet<String> HashMateriaux = new HashSet<string>(ListeMateriaux);
 
-                    var dic = MdlBase.DenombrerDossiers(ComposantsExterne, HashMateriaux, Filtre);
+                    var dic = MdlBase.DenombrerDossiers(ComposantsExterne,
+                    fDossier =>
+                    {
+                        BodyFolder swDossier = fDossier.GetSpecificFeature2();
+
+                        if (Filtre.HasFlag(swDossier.eTypeDeDossier()) && HashMateriaux.Contains(swDossier.eGetMateriau()))
+                            return true;
+
+                        return false;
+                    }
+                    );
 
                     foreach (var mdl in dic.Keys)
                     {

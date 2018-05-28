@@ -14,6 +14,7 @@ namespace ModuleLaser.ModuleCreerDvp
     {
         public ModelDoc2 MdlBase = null;
         public List<String> ListeMateriaux = new List<String>();
+        public List<String> ListeEp = new List<String>();
         public String ForcerMateriau = null;
         public int Quantite = 1;
         public Boolean AfficherLignePliage = false;
@@ -49,8 +50,24 @@ namespace ModuleLaser.ModuleCreerDvp
 
                 eTypeCorps Filtre = eTypeCorps.Tole;
                 HashSet<String> HashMateriaux = new HashSet<string>(ListeMateriaux);
+                HashSet<String> HashEp = new HashSet<string>(ListeEp);
 
-                var dic = MdlBase.DenombrerDossiers(ComposantsExterne, HashMateriaux, Filtre);
+                var dic = MdlBase.DenombrerDossiers(ComposantsExterne,
+                    fDossier =>
+                    {
+                        BodyFolder swDossier = fDossier.GetSpecificFeature2();
+
+                        if (Filtre.HasFlag(swDossier.eTypeDeDossier()) && HashMateriaux.Contains(swDossier.eGetMateriau()))
+                        {
+                            String Ep = swDossier.ePremierCorps().eEpaisseur().ToString();
+
+                            if(HashEp.Contains(Ep))
+                                return true;
+                        }
+
+                        return false;
+                    }
+                    );
 
                 int MdlPct = 0;
                 foreach (var mdl in dic.Keys)

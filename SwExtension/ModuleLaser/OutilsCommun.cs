@@ -137,19 +137,105 @@ namespace ModuleLaser
                         ListeMateriaux.AddIfNotExist(Materiau);
                     }
                 }
-
-                //foreach (Body2 corps in mdl.ePartDoc().eListeCorps(true))
-                //{
-                //    if (TypeCorps.HasFlag(corps.eTypeDeCorps()))
-                //    {
-                //        String Materiau = corps.eGetMateriauCorpsOuPiece(mdl.ePartDoc(), mdl.eNomConfigActive());
-
-                //        ListeMateriaux.AddIfNotExist(Materiau);
-                //    }
-                //}
             }
 
             return ListeMateriaux;
+        }
+
+        public static List<string> ListeEp(this ModelDoc2 mdl)
+        {
+            List<string> ListeEp = new List<string>();
+
+            if (mdl.TypeDoc() == eTypeDoc.Assemblage)
+            {
+
+                App.ModelDoc2.eRecParcourirComposants(
+                    c =>
+                    {
+                        if (!c.IsHidden(false) && !c.ExcludeFromBOM && (c.TypeDoc() == eTypeDoc.Piece))
+                        {
+                            var LstDossier = c.eListeDesDossiersDePiecesSoudees();
+                            foreach (var dossier in LstDossier)
+                            {
+                                if (!dossier.eEstExclu() && dossier.eEstUnDossierDeToles())
+                                {
+                                    String Ep = dossier.ePremierCorps().eEpaisseur().ToString();
+
+                                    ListeEp.AddIfNotExist(Ep);
+                                }
+                            }
+                        }
+
+                        return false;
+                    }
+                );
+            }
+            else if (mdl.TypeDoc() == eTypeDoc.Piece)
+            {
+                var LstDossier = mdl.ePartDoc().eListeDesDossiersDePiecesSoudees();
+                foreach (var dossier in LstDossier)
+                {
+                    if (!dossier.eEstExclu() && dossier.eEstUnDossierDeToles())
+                    {
+                        String Ep = dossier.ePremierCorps().eEpaisseur().ToString();
+
+                        ListeEp.AddIfNotExist(Ep);
+                    }
+                }
+            }
+
+            return ListeEp;
+        }
+
+        public static List<string> ListeProfil(this ModelDoc2 mdl)
+        {
+            List<string> ListeProfil = new List<string>();
+
+            if (mdl.TypeDoc() == eTypeDoc.Assemblage)
+            {
+
+                App.ModelDoc2.eRecParcourirComposants(
+                    c =>
+                    {
+                        if (!c.IsHidden(false) && !c.ExcludeFromBOM && (c.TypeDoc() == eTypeDoc.Piece))
+                        {
+                            var LstDossier = c.eListeDesDossiersDePiecesSoudees();
+                            foreach (var dossier in LstDossier)
+                            {
+                                if (!dossier.eEstExclu() && dossier.eEstUnDossierDeToles())
+                                {
+                                    if (dossier.ePropExiste(CONSTANTES.PROFIL_NOM))
+                                    {
+                                        String Profil = dossier.eProp(CONSTANTES.PROFIL_NOM);
+
+                                        ListeProfil.AddIfNotExist(Profil);
+                                    }
+                                }
+                            }
+                        }
+
+                        return false;
+                    }
+                );
+            }
+            else if (mdl.TypeDoc() == eTypeDoc.Piece)
+            {
+                var LstDossier = mdl.ePartDoc().eListeDesDossiersDePiecesSoudees();
+                foreach (var dossier in LstDossier)
+                {
+                    if (!dossier.eEstExclu() && dossier.eEstUnDossierDeToles())
+                    {
+                        if (dossier.ePropExiste(CONSTANTES.PROFIL_NOM))
+                        {
+                            String Profil = dossier.eProp(CONSTANTES.PROFIL_NOM);
+
+                            ListeProfil.AddIfNotExist(Profil);
+                        }
+                    }
+                }
+            }
+
+            return ListeProfil;
         }
 
         /// <summary>
@@ -241,10 +327,9 @@ namespace ModuleLaser
         /// </summary>
         /// <param name="mdlBase"></param>
         /// <param name="composantsExterne"></param>
-        /// <param name="listeMateriaux"></param>
-        /// <param name="filtreTypeCorps"></param>
+        /// <param name="filtreDossier"></param>
         /// <returns></returns>
-        public static SortedDictionary<ModelDoc2, SortedDictionary<String, SortedDictionary<int, int>>> DenombrerDossiers(this ModelDoc2 mdlBase, Boolean composantsExterne, HashSet<String> listeMateriaux, eTypeCorps filtreTypeCorps)
+        public static SortedDictionary<ModelDoc2, SortedDictionary<String, SortedDictionary<int, int>>> DenombrerDossiers(this ModelDoc2 mdlBase, Boolean composantsExterne, Predicate<Feature> filtreDossier = null, Predicate<Component2> filtreComposant = null)
         {
             SortedDictionary<ModelDoc2, SortedDictionary<String, SortedDictionary<int, int>>> dic = new SortedDictionary<ModelDoc2, SortedDictionary<String, SortedDictionary<int, int>>>(new CompareModelDoc2());
 
@@ -261,9 +346,7 @@ namespace ModuleLaser
                 var dicDossier = new SortedDictionary<int, int>();
                 foreach (var dossier in Piece.eListeDesDossiersDePiecesSoudees())
                 {
-                    if (!dossier.eEstExclu() &&
-                        filtreTypeCorps.HasFlag(dossier.eTypeDeDossier()) &&
-                        (listeMateriaux.IsNull() || listeMateriaux.Contains(dossier.eGetMateriau())))
+                    if (dossier.eNbCorps() > 0 && !dossier.eEstExclu() && (filtreDossier.IsNull() || filtreDossier(dossier.GetFeature())))
                     {
                         dicDossier.Add(dossier.GetFeature().GetID(), dossier.eNbCorps());
                     }
@@ -285,32 +368,36 @@ namespace ModuleLaser
                             foreach (var fDossier in comp.eListeDesFonctionsDePiecesSoudees())
                             {
                                 BodyFolder SwDossier = fDossier.GetSpecificFeature2();
-                                if (SwDossier.IsNull() ||
-                                SwDossier.eNbCorps() == 0 ||
-                                SwDossier.eEstExclu() ||
-                                !filtreTypeCorps.HasFlag(SwDossier.eTypeDeDossier()) ||
-                                !(listeMateriaux.IsRef()?listeMateriaux.Contains(SwDossier.eGetMateriau()):true)
-                                )
-                                    continue;
-
-                                Boolean Ajoute = false;
-                                foreach (var DossierTest in ListeDossiers)
+                                if (SwDossier.IsRef() && SwDossier.eNbCorps() > 0 && !SwDossier.eEstExclu() && (filtreDossier.IsNull() || filtreDossier(fDossier)))
                                 {
-                                    var RefDossier = SwDossier.eProp(CONSTANTES.REF_DOSSIER);
-                                    if (RefDossier == DossierTest.Repere)
+                                    Boolean Ajoute = false;
+                                    foreach (var DossierTest in ListeDossiers)
                                     {
-                                        DossierTest.Nb += SwDossier.eNbCorps();
-                                        Ajoute = true;
-                                        break;
-                                    }
-                                }
+                                        var RefDossier = SwDossier.eProp(CONSTANTES.REF_DOSSIER);
+                                        if (RefDossier == DossierTest.Repere)
+                                        {
+                                            if (filtreComposant.IsRef() && filtreComposant(comp))
+                                                DossierTest.FiltreComposant = true;
 
-                                if (Ajoute == false)
-                                {
-                                    var RefDossier = SwDossier.eProp(CONSTANTES.REF_DOSSIER);
-                                    var dossier = new Dossier(RefDossier, comp.eModelDoc2(), comp.eNomConfiguration(), fDossier.GetID());
-                                    dossier.Nb = SwDossier.eNbCorps();
-                                    ListeDossiers.Add(dossier);
+                                            DossierTest.Nb += SwDossier.eNbCorps();
+                                            Ajoute = true;
+                                            break;
+                                        }
+                                    }
+
+                                    if (Ajoute == false)
+                                    {
+                                        var RefDossier = SwDossier.eProp(CONSTANTES.REF_DOSSIER);
+                                        var dossier = new Dossier(RefDossier, comp.eModelDoc2(), comp.eNomConfiguration(), fDossier.GetID());
+
+                                        // Si le filtre renvoi false
+                                        // on desactive la propriete filtre
+                                        if (filtreComposant.IsRef() && !filtreComposant(comp))
+                                            dossier.FiltreComposant = false;
+
+                                        dossier.Nb = SwDossier.eNbCorps();
+                                        ListeDossiers.Add(dossier);
+                                    }
                                 }
                             }
                         },
@@ -326,10 +413,13 @@ namespace ModuleLaser
 
                 foreach (var dossier in ListeDossiers)
                 {
-                    if(dic.ContainsKey(dossier.Mdl))
+                    if (!dossier.FiltreComposant)
+                        continue;
+
+                    if (dic.ContainsKey(dossier.Mdl))
                     {
                         var lcfg = dic[dossier.Mdl];
-                        if(lcfg.ContainsKey(dossier.Config))
+                        if (lcfg.ContainsKey(dossier.Config))
                         {
                             var ldossier = lcfg[dossier.Config];
                             ldossier.Add(dossier.Id, dossier.Nb);
@@ -362,6 +452,7 @@ namespace ModuleLaser
             public ModelDoc2 Mdl;
             public String Config;
             public int Nb = 0;
+            public Boolean FiltreComposant = true;
 
             public Dossier(String repere, ModelDoc2 mdl, String config, int id)
             {

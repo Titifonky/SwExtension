@@ -49,7 +49,7 @@ namespace ModuleLaser.ModuleCreerDvp
                 ConvertirEsquisse = _Config.AjouterParam("ConvertirEsquisse", false, "Convertir les dvp en esquisse", "Le lien entre le dvp et le modèle est cassé, la config dvp est supprimée après la création de la vue");
 
                 OnCalque += Calque;
-                OnRunAfterActivation += Rechercher_Materiaux;
+                OnRunAfterActivation += Rechercher_Infos;
                 OnRunOkCommand += RunOkCommand;
             }
             catch (Exception e)
@@ -60,11 +60,11 @@ namespace ModuleLaser.ModuleCreerDvp
         private CtrlCheckBox _CheckBox_ForcerMateriau;
         private CtrlTextComboBox _TextComboBox_ForcerMateriau;
 
+        private CtrlTextListBox _TextListBox_Ep;
+
         private CtrlTextBox _Texte_RefFichier;
         private CtrlTextBox _Texte_Quantite;
         private CtrlTextBox _Texte_TailleInscription;
-        //private CtrlTextBox _Texte_FormatInscription;
-        //private CtrlLabel _Label_InfoFormat;
 
         private CtrlCheckBox _CheckBox_ComposantsExterne;
         private CtrlCheckBox _CheckBox_AfficherLignePliage;
@@ -104,7 +104,7 @@ namespace ModuleLaser.ModuleCreerDvp
 
                 _TextListBox_Materiaux = G.AjouterTextListBox();
                 _TextListBox_Materiaux.TouteHauteur = true;
-                _TextListBox_Materiaux.Height = 60;
+                _TextListBox_Materiaux.Height = 50;
                 _TextListBox_Materiaux.SelectionMultiple = true;
 
                 _CheckBox_ForcerMateriau = G.AjouterCheckBox("Forcer le materiau");
@@ -114,6 +114,13 @@ namespace ModuleLaser.ModuleCreerDvp
                 _TextComboBox_ForcerMateriau.NotifieSurSelection = false;
                 _TextComboBox_ForcerMateriau.IsEnabled = false;
                 _CheckBox_ForcerMateriau.OnIsCheck += _TextComboBox_ForcerMateriau.IsEnable;
+
+                G = _Calque.AjouterGroupe("Ep :");
+
+                _TextListBox_Ep = G.AjouterTextListBox();
+                _TextListBox_Ep.TouteHauteur = true;
+                _TextListBox_Ep.Height = 50;
+                _TextListBox_Ep.SelectionMultiple = true;
 
                 G = _Calque.AjouterGroupe("Options");
 
@@ -135,17 +142,9 @@ namespace ModuleLaser.ModuleCreerDvp
                 _Texte_TailleInscription = G.AjouterTexteBox(TailleInscription, false);
                 _Texte_TailleInscription.ValiderTexte += ValiderTextIsInteger;
                 _Texte_TailleInscription.StdIndent();
-                //_Texte_FormatInscription = G.AjouterTexteBox(FormatInscription, true);
-                //_Texte_FormatInscription.StdIndent();
-                //_Label_InfoFormat = G.AjouterLabel(String.Join(" ", ChampsInscription));
-                //_Label_InfoFormat.StdIndent();
-
 
                 _CheckBox_InscrireNomTole.OnIsCheck += _Texte_TailleInscription.IsEnable;
-                //_CheckBox_InscrireNomTole.OnIsCheck += _Texte_FormatInscription.IsEnable;
                 _Texte_TailleInscription.IsEnabled = _CheckBox_InscrireNomTole.IsChecked;
-                //_Texte_FormatInscription.IsEnabled = _CheckBox_InscrireNomTole.IsChecked;
-
 
 
                 _CheckBox_OrienterDvp = G.AjouterCheckBox(OrienterDvp);
@@ -182,8 +181,9 @@ namespace ModuleLaser.ModuleCreerDvp
         }
 
         private List<String> ListeMateriaux;
+        private List<String> ListeEp;
 
-        protected void Rechercher_Materiaux()
+        protected void Rechercher_Infos()
         {
             WindowLog.Ecrire("Recherche des materiaux : ");
 
@@ -198,6 +198,18 @@ namespace ModuleLaser.ModuleCreerDvp
             _TextListBox_Materiaux.ToutSelectionner(false);
             _TextComboBox_ForcerMateriau.Liste = ListeMateriaux;
             _TextComboBox_ForcerMateriau.Index = 0;
+
+            WindowLog.Ecrire("Recherche des ep de tôle : ");
+
+            ListeEp = App.ModelDoc2.ListeEp();
+
+            foreach (var m in ListeEp)
+                WindowLog.Ecrire(" - ep" + m);
+
+            WindowLog.SautDeLigne();
+
+            _TextListBox_Ep.Liste = ListeEp;
+            _TextListBox_Ep.ToutSelectionner(false);
         }
 
         protected void RunOkCommand()
@@ -206,6 +218,7 @@ namespace ModuleLaser.ModuleCreerDvp
 
             Cmd.MdlBase = App.Sw.ActiveDoc;
             Cmd.ListeMateriaux = _TextListBox_Materiaux.ListSelectedText.Count > 0 ? _TextListBox_Materiaux.ListSelectedText : _TextListBox_Materiaux.Liste;
+            Cmd.ListeEp = _TextListBox_Ep.ListSelectedText.Count > 0 ? _TextListBox_Ep.ListSelectedText : _TextListBox_Ep.Liste;
             Cmd.ForcerMateriau = _CheckBox_ForcerMateriau.IsChecked ? _TextComboBox_ForcerMateriau.Text : null;
             Cmd.Quantite = _Texte_Quantite.Text.eToInteger();
             Cmd.AfficherLignePliage = _CheckBox_AfficherLignePliage.IsChecked;
