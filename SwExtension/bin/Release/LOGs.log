@@ -1,89 +1,357 @@
-09:57:00,752 | 
+16:50:15,947 | 
  
-09:57:00,761 | ====================================================================================================
-09:57:00,761 | |                                                                                                  |
-09:57:00,761 | |                                          DEBUG                                                   |
-09:57:00,761 | |                                                                                                  |
-09:57:00,761 | ====================================================================================================
-09:57:00,761 | 
+16:50:15,954 | ====================================================================================================
+16:50:15,954 | |                                                                                                  |
+16:50:15,954 | |                                          DEBUG                                                   |
+16:50:15,954 | |                                                                                                  |
+16:50:15,954 | ====================================================================================================
+16:50:15,954 | 
  
-09:57:11,519 | 			PageCreerDvp..ctor  ->  Est initialisé : True
-09:57:11,569 | 				-> ## 09:57:11     0     0      CREER LES DVP DE TÔLE
-09:57:11,590 | 				-> ## 09:57:11     0     0  ========================
-09:57:11,608 | 				-> ## 09:57:11     0     0  
-09:57:11,669 | 			PageCreerDvp.Command  ->  Show
-09:57:11,775 | 				-> ## 09:57:11     0     0  Recherche des materiaux : 
-09:57:12,025 | 				-> ## 09:57:12     1     0   - Acier S235
-09:57:12,041 | 				-> ## 09:57:12     1     0   - Tôle alu
-09:57:12,056 | 				-> ## 09:57:12     1     0  
-09:57:12,073 | 				-> ## 09:57:12     1     0  Recherche des ep de tôle : 
-09:57:12,287 | 				-> ## 09:57:12     1     0   - ep30
-09:57:12,307 | 				-> ## 09:57:12     1     0   - ep20
-09:57:12,317 | 				-> ## 09:57:12     1     0  
-09:57:12,358 | 				-> ## 09:57:12     1     0  Executé en 0s729
-09:57:12,367 | 				-> ## 09:57:12     1     0  
-09:57:13,777 | 			PageCreerDvp.CanRaiseEvent  ->  CanRaiseEvent True
-09:57:13,777 | 				-> Callback methode -> OnGainedFocus
-09:57:13,859 | 			PageCreerDvp.CanRaiseEvent  ->  CanRaiseEvent True
-09:57:13,859 | 				-> Callback methode -> OnListboxSelectionChanged
-09:57:14,978 | 			PageCreerDvp.CanRaiseEvent  ->  CanRaiseEvent True
-09:57:14,978 | 				-> Callback methode -> OnLostFocus
-09:57:14,988 | 			PageCreerDvp.CanRaiseEvent  ->  CanRaiseEvent True
-09:57:14,988 | 				-> Callback methode -> OnGainedFocus
-09:57:15,078 | 			PageCreerDvp.CanRaiseEvent  ->  CanRaiseEvent True
-09:57:15,078 | 				-> Callback methode -> OnListboxSelectionChanged
-09:57:16,757 | 			PageCreerDvp.CanRaiseEvent  ->  CanRaiseEvent True
-09:57:16,757 | 				-> Callback methode -> OnLostFocus
-09:57:17,537 | 				-> ## 09:57:17     6     5  
-09:57:17,557 | 				-> ## 09:57:17     6     0  [1/1] Test
-09:57:17,571 | 				-> ## 09:57:17     6     0  
-09:57:17,591 | 				-> ## 09:57:17     6     0    [1/1] Config : "0"
-09:57:17,791 | 				-> ## 09:57:17     6     0  
-09:57:17,808 | 				-> ## 09:57:17     6     0      - [1/1] Dossier : "P6" x1
-09:57:17,818 | 				-> ## 09:57:17     6     0        Ep 20 / Materiau Tôle alu
-09:57:17,841 | 				-> ## 09:57:17     6     0            Config 0SM-FLAT-PATTERN_P6
-09:57:21,529 | 				-> ## 09:57:21    10     4  Pas d'erreur
-09:57:21,550 | 				-> ## 09:57:21    10     0  
-09:57:21,579 | 				-> ## 09:57:21    10     0  Executé en 4s662
-09:57:32,572 | 			PageListeDebit..ctor  ->  Est initialisé : True
-09:57:32,615 | 				-> ## 09:57:32     0     0      LISTE DE DÉBIT
-09:57:32,626 | 				-> ## 09:57:32     0     0  ========================
-09:57:32,642 | 				-> ## 09:57:32     0     0  
-09:57:32,652 | 			PageListeDebit.Command  ->  Show
-09:57:32,742 | 				-> ## 09:57:32     0     0  Recherche des materiaux : 
-09:57:33,011 | 				-> ## 09:57:33     0     0   - Acier S235
-09:57:33,025 | 				-> ## 09:57:33     0     0  
-09:57:33,061 | 				-> ## 09:57:33     0     0  Executé en 0s400
-09:57:33,075 | 				-> ## 09:57:33     1     0  
-09:57:34,780 | 			PageCreerDvp..ctor  ->  Est initialisé : True
-09:57:34,795 | 				-> ## 09:57:34     0     0      CREER LES DVP DE TÔLE
-09:57:34,810 | 				-> ## 09:57:34     0     0  ========================
-09:57:34,825 | 				-> ## 09:57:34     0     0  
-09:57:34,826 | 			PageCreerDvp.Command  ->  Show
-09:57:34,892 | 				-> ## 09:57:34     0     0  Recherche des materiaux : 
-09:57:35,130 | 				-> ## 09:57:35     0     0   - Acier S235
-09:57:35,142 | 				-> ## 09:57:35     0     0   - Tôle alu
-09:57:35,159 | 				-> ## 09:57:35     0     0  
-09:57:35,176 | 				-> ## 09:57:35     0     0  Recherche des ep de tôle : 
-09:57:35,364 | 				-> ## 09:57:35     1     0   - ep30
-09:57:35,395 | 				-> ## 09:57:35     1     0   - ep20
-09:57:35,410 | 				-> ## 09:57:35     1     0  
-09:57:35,442 | 				-> ## 09:57:35     1     0  Executé en 0s589
-09:57:35,458 | 				-> ## 09:57:35     1     0  
-09:57:36,987 | 			PageCreerDvp.CanRaiseEvent  ->  CanRaiseEvent True
-09:57:36,987 | 				-> Callback methode -> OnGainedFocus
-09:57:37,078 | 			PageCreerDvp.CanRaiseEvent  ->  CanRaiseEvent True
-09:57:37,078 | 				-> Callback methode -> OnListboxSelectionChanged
-09:57:39,769 | 			PageCreerDvp.CanRaiseEvent  ->  CanRaiseEvent True
-09:57:39,769 | 				-> Callback methode -> OnLostFocus
-09:57:40,611 | 				-> ## 09:57:40     6     5  
-09:57:40,626 | 				-> ## 09:57:40     6     0  [1/1] Test
-09:57:40,643 | 				-> ## 09:57:40     6     0  
-09:57:40,659 | 				-> ## 09:57:40     6     0    [1/1] Config : "2"
-09:57:41,097 | 				-> ## 09:57:41     6     0  
-09:57:41,110 | 				-> ## 09:57:41     6     0      - [1/1] Dossier : "P8" x2
-09:57:41,126 | 				-> ## 09:57:41     6     0        Ep 30 / Materiau Acier S235
-09:57:41,144 | 				-> ## 09:57:41     6     0            Config 2SM-FLAT-PATTERN_P8
-09:57:43,512 | 				-> ## 09:57:43     9     2  Pas d'erreur
-09:57:43,531 | 				-> ## 09:57:43     9     0  
-09:57:43,573 | 				-> ## 09:57:43     9     0  Executé en 3s622
+17:00:36,862 | 			PagePdf..ctor  ->  Est initialisé : True
+17:00:36,895 | 				-> ## 05:00:36     0     0      EXPORTER EN PDF
+17:00:36,923 | 				-> ## 05:00:36     0     0  ========================
+17:00:36,939 | 				-> ## 05:00:36     0     0  
+17:00:36,992 | 			PagePdf.Command  ->  Show
+17:00:37,090 | 				-> ## 05:00:37     0     0  Executé en 0s118
+17:00:37,105 | 				-> ## 05:00:37     0     0  
+17:00:39,043 | 			PagePdf.CanRaiseEvent  ->  CanRaiseEvent True
+17:00:39,043 | 				-> Callback methode -> OnGainedFocus
+17:00:40,472 | 			PagePdf.CanRaiseEvent  ->  CanRaiseEvent True
+17:00:40,472 | 				-> Callback methode -> OnLostFocus
+17:00:40,509 | 			PagePdf.CanRaiseEvent  ->  CanRaiseEvent True
+17:00:40,509 | 				-> Callback methode -> OnGainedFocus
+17:00:40,972 | 			PagePdf.CanRaiseEvent  ->  CanRaiseEvent True
+17:00:40,972 | 				-> Callback methode -> OnListboxSelectionChanged
+17:00:41,831 | 			PagePdf.CanRaiseEvent  ->  CanRaiseEvent True
+17:00:41,831 | 				-> Callback methode -> OnLostFocus
+17:00:43,974 | 				-> ## 05:00:43     7     7  Export : PDF
+17:00:43,988 | 				-> ## 05:00:43     7     0  
+17:00:44,005 | 				-> ## 05:00:44     7     0    Dossier : 0 Plans
+17:00:44,023 | 				-> ## 05:00:44     7     0     2.1 Plancher collaborant - Plan de réservation - Ind B.pdf
+17:00:45,056 | 				-> ## 05:00:45     8     1  
+17:00:45,073 | 				-> ## 05:00:45     8     0  Executé en 1s86
+17:01:18,546 | 			PagePdf..ctor  ->  Est initialisé : True
+17:01:18,578 | 				-> ## 05:01:18     0     0      EXPORTER EN PDF
+17:01:18,607 | 				-> ## 05:01:18     0     0  ========================
+17:01:18,623 | 				-> ## 05:01:18     0     0  
+17:01:18,625 | 			PagePdf.Command  ->  Show
+17:01:18,723 | 				-> ## 05:01:18     0     0  Executé en 0s69
+17:01:18,740 | 				-> ## 05:01:18     0     0  
+17:01:19,613 | 			PagePdf.CanRaiseEvent  ->  CanRaiseEvent True
+17:01:19,613 | 				-> Callback methode -> OnGainedFocus
+17:01:21,484 | 			PagePdf.CanRaiseEvent  ->  CanRaiseEvent True
+17:01:21,484 | 				-> Callback methode -> OnLostFocus
+17:01:21,642 | 				-> ## 05:01:21     3     3  Export : PDF
+17:01:21,658 | 				-> ## 05:01:21     3     0  
+17:01:21,675 | 				-> ## 05:01:21     3     0    Dossier : 0 Plans
+17:01:21,690 | 				-> ## 05:01:21     3     0     2.1 Plancher collaborant - Plan de réservation - Ind B.pdf
+17:01:22,724 | 				-> ## 05:01:22     4     1  
+17:01:22,740 | 				-> ## 05:01:22     4     0  Executé en 1s86
+17:40:08,044 | 			PageListeDebit..ctor  ->  Est initialisé : True
+17:40:08,066 | 				-> ## 05:40:08     0     0      LISTE DE DÉBIT
+17:40:08,095 | 				-> ## 05:40:08     0     0  ========================
+17:40:08,111 | 				-> ## 05:40:08     0     0  
+17:40:08,124 | 			PageListeDebit.Command  ->  Show
+17:40:08,245 | 				-> ## 05:40:08     0     0  Recherche des materiaux : 
+17:40:11,077 | 				-> ## 05:40:11     3     3   - Acier S235
+17:40:11,096 | 				-> ## 05:40:11     3     0   - Bois
+17:40:11,112 | 				-> ## 05:40:11     3     0  
+17:40:11,213 | 				-> ## 05:40:11     3     0  Executé en 3s87
+17:40:11,229 | 				-> ## 05:40:11     3     0  
+17:40:12,669 | 			PageListeDebit.CanRaiseEvent  ->  CanRaiseEvent True
+17:40:12,669 | 				-> Callback methode -> OnGainedFocus
+17:40:12,768 | 			PageListeDebit.CanRaiseEvent  ->  CanRaiseEvent True
+17:40:12,768 | 				-> Callback methode -> OnListboxSelectionChanged
+17:40:15,611 | 			PageListeDebit.CanRaiseEvent  ->  CanRaiseEvent True
+17:40:15,611 | 				-> Callback methode -> OnLostFocus
+17:40:15,689 | 			PageListeDebit.CanRaiseEvent  ->  CanRaiseEvent True
+17:40:15,689 | 				-> Callback methode -> OnOptionCheck
+17:40:17,848 | 			PageListeDebit.CanRaiseEvent  ->  CanRaiseEvent True
+17:40:17,849 | 				-> Callback methode -> OnGainedFocus
+17:40:18,809 | 			PageListeDebit.CanRaiseEvent  ->  CanRaiseEvent True
+17:40:18,809 | 				-> Callback methode -> OnTextboxChanged
+17:40:19,055 | 			PageListeDebit.CanRaiseEvent  ->  CanRaiseEvent True
+17:40:19,055 | 				-> Callback methode -> OnTextboxChanged
+17:40:19,232 | 			PageListeDebit.CanRaiseEvent  ->  CanRaiseEvent True
+17:40:19,232 | 				-> Callback methode -> OnTextboxChanged
+17:40:19,399 | 			PageListeDebit.CanRaiseEvent  ->  CanRaiseEvent True
+17:40:19,400 | 				-> Callback methode -> OnTextboxChanged
+17:40:21,304 | 			PageListeDebit.CanRaiseEvent  ->  CanRaiseEvent True
+17:40:21,304 | 				-> Callback methode -> OnLostFocus
+17:40:21,459 | 			Sw.eDossierListeDesPiecesSoudees
+17:40:21,459 | 				-> Le composant n'est pas une pièce
+17:40:21,466 | 			Sw.eDossierListeDesPiecesSoudees
+17:40:21,466 | 				-> Le composant n'est pas une pièce
+17:40:21,472 | 			Sw.eDossierListeDesPiecesSoudees
+17:40:21,472 | 				-> Le composant n'est pas une pièce
+17:40:22,357 | 			Sw.eDossierListeDesPiecesSoudees
+17:40:22,357 | 				-> Le composant n'est pas une pièce
+17:40:22,364 | 			Sw.eDossierListeDesPiecesSoudees
+17:40:22,364 | 				-> Le composant n'est pas une pièce
+17:40:22,370 | 			Sw.eDossierListeDesPiecesSoudees
+17:40:22,370 | 				-> Le composant n'est pas une pièce
+17:40:22,376 | 			Sw.eDossierListeDesPiecesSoudees
+17:40:22,376 | 				-> Le composant n'est pas une pièce
+17:40:22,381 | 			Sw.eDossierListeDesPiecesSoudees
+17:40:22,381 | 				-> Le composant n'est pas une pièce
+17:40:22,388 | 			Sw.eDossierListeDesPiecesSoudees
+17:40:22,389 | 				-> Le composant n'est pas une pièce
+17:40:22,394 | 			Sw.eDossierListeDesPiecesSoudees
+17:40:22,394 | 				-> Le composant n'est pas une pièce
+17:40:22,401 | 			Sw.eDossierListeDesPiecesSoudees
+17:40:22,401 | 				-> Le composant n'est pas une pièce
+17:40:22,407 | 			Sw.eDossierListeDesPiecesSoudees
+17:40:22,407 | 				-> Le composant n'est pas une pièce
+17:40:22,412 | 			Sw.eDossierListeDesPiecesSoudees
+17:40:22,412 | 				-> Le composant n'est pas une pièce
+17:40:22,420 | 			Sw.eDossierListeDesPiecesSoudees
+17:40:22,420 | 				-> Le composant n'est pas une pièce
+17:40:22,428 | 			Sw.eDossierListeDesPiecesSoudees
+17:40:22,428 | 				-> Le composant n'est pas une pièce
+17:40:22,433 | 			Sw.eDossierListeDesPiecesSoudees
+17:40:22,433 | 				-> Le composant n'est pas une pièce
+17:40:22,441 | 			Sw.eDossierListeDesPiecesSoudees
+17:40:22,441 | 				-> Le composant n'est pas une pièce
+17:40:22,449 | 			Sw.eDossierListeDesPiecesSoudees
+17:40:22,449 | 				-> Le composant n'est pas une pièce
+17:40:22,618 | 			Sw.eDossierListeDesPiecesSoudees
+17:40:22,618 | 				-> Le composant n'est pas une pièce
+17:40:22,625 | 			Sw.eDossierListeDesPiecesSoudees
+17:40:22,625 | 				-> Le composant n'est pas une pièce
+17:40:30,055 | 				-> ## 05:40:30    22    19  
+17:40:30,248 | 				-> ## 05:40:30    22     0  Executé en 8s571
+17:40:30,296 | 				-> ## 05:40:30    22     0  Lg max des barres :
+17:40:30,312 | 				-> ## 05:40:30    22     0     IPE 450 [Acier S235]       6000
+17:40:30,347 | 				-> ## 05:40:30    22     0  
+Acier S235
+  IPE 450                          9400.0mm   ×94
+17:40:30,378 | 				-> ## 05:40:30    22     0  
+17:40:30,395 | 				-> ## 05:40:30    22     0  
+17:40:30,412 | 				-> ## 05:40:30    22     0  
+17:40:30,429 | 				-> ## 05:40:30    22     0  Executé en 0s82
+17:40:59,589 | 			PageNumeroterDossier..ctor  ->  Est initialisé : True
+17:40:59,625 | 				-> ## 05:40:59     0     0      NUMEROTER LES DOSSIERS
+17:40:59,647 | 				-> ## 05:40:59     0     0  ========================
+17:40:59,663 | 				-> ## 05:40:59     0     0  
+17:40:59,663 | 			PageNumeroterDossier.Command  ->  Show
+17:40:59,780 | 				-> ## 05:40:59     0     0  Executé en 0s99
+17:40:59,796 | 				-> ## 05:40:59     0     0  
+17:41:00,904 | 			Sw.eDossierListeDesPiecesSoudees
+17:41:00,905 | 				-> Le composant n'est pas une pièce
+17:41:00,993 | 			Sw.eDossierListeDesPiecesSoudees
+17:41:00,993 | 				-> Le composant n'est pas une pièce
+17:41:00,994 | 			Sw.eDossierListeDesPiecesSoudees
+17:41:00,994 | 				-> Le composant n'est pas une pièce
+17:41:00,995 | 			Sw.eDossierListeDesPiecesSoudees
+17:41:00,995 | 				-> Le composant n'est pas une pièce
+17:41:00,996 | 			Sw.eDossierListeDesPiecesSoudees
+17:41:00,996 | 				-> Le composant n'est pas une pièce
+17:41:00,997 | 			Sw.eDossierListeDesPiecesSoudees
+17:41:00,997 | 				-> Le composant n'est pas une pièce
+17:41:00,998 | 			Sw.eDossierListeDesPiecesSoudees
+17:41:00,998 | 				-> Le composant n'est pas une pièce
+17:41:00,998 | 			Sw.eDossierListeDesPiecesSoudees
+17:41:00,998 | 				-> Le composant n'est pas une pièce
+17:41:00,999 | 			Sw.eDossierListeDesPiecesSoudees
+17:41:00,999 | 				-> Le composant n'est pas une pièce
+17:41:01,000 | 			Sw.eDossierListeDesPiecesSoudees
+17:41:01,000 | 				-> Le composant n'est pas une pièce
+17:41:01,000 | 			Sw.eDossierListeDesPiecesSoudees
+17:41:01,000 | 				-> Le composant n'est pas une pièce
+17:41:01,001 | 			Sw.eDossierListeDesPiecesSoudees
+17:41:01,001 | 				-> Le composant n'est pas une pièce
+17:41:01,002 | 			Sw.eDossierListeDesPiecesSoudees
+17:41:01,002 | 				-> Le composant n'est pas une pièce
+17:41:01,003 | 			Sw.eDossierListeDesPiecesSoudees
+17:41:01,003 | 				-> Le composant n'est pas une pièce
+17:41:01,004 | 			Sw.eDossierListeDesPiecesSoudees
+17:41:01,004 | 				-> Le composant n'est pas une pièce
+17:41:01,004 | 			Sw.eDossierListeDesPiecesSoudees
+17:41:01,004 | 				-> Le composant n'est pas une pièce
+17:41:01,005 | 			Sw.eDossierListeDesPiecesSoudees
+17:41:01,005 | 				-> Le composant n'est pas une pièce
+17:41:01,006 | 			Sw.eDossierListeDesPiecesSoudees
+17:41:01,006 | 				-> Le composant n'est pas une pièce
+17:41:01,007 | 			Sw.eDossierListeDesPiecesSoudees
+17:41:01,007 | 				-> Le composant n'est pas une pièce
+17:41:01,008 | 			Sw.eDossierListeDesPiecesSoudees
+17:41:01,008 | 				-> Le composant n'est pas une pièce
+17:42:19,104 | 				-> ## 05:42:19    80    79  Nb de corps unique : 28
+17:42:19,134 | 				-> ## 05:42:19    80     0  P1 ×18
+17:42:19,150 | 				-> ## 05:42:19    80     0  P2 ×18
+17:42:19,167 | 				-> ## 05:42:19    80     0  P3 ×2
+17:42:19,184 | 				-> ## 05:42:19    80     0  P4 ×2
+17:42:19,200 | 				-> ## 05:42:19    80     0  P5 ×4
+17:42:19,218 | 				-> ## 05:42:19    80     0  P6 ×4
+17:42:19,234 | 				-> ## 05:42:19    80     0  P7 ×60
+17:42:19,251 | 				-> ## 05:42:19    80     0  P8 ×2
+17:42:19,267 | 				-> ## 05:42:19    80     0  P9 ×2
+17:42:19,284 | 				-> ## 05:42:19    80     0  P10 ×11
+17:42:19,300 | 				-> ## 05:42:19    80     0  P11 ×5
+17:42:19,317 | 				-> ## 05:42:19    80     0  P12 ×2
+17:42:19,334 | 				-> ## 05:42:19    80     0  P13 ×4
+17:42:19,350 | 				-> ## 05:42:19    80     0  P14 ×2
+17:42:19,367 | 				-> ## 05:42:19    80     0  P15 ×12
+17:42:19,384 | 				-> ## 05:42:19    80     0  P16 ×12
+17:42:19,400 | 				-> ## 05:42:19    80     0  P17 ×8
+17:42:19,417 | 				-> ## 05:42:19    80     0  P18 ×8
+17:42:19,434 | 				-> ## 05:42:19    80     0  P19 ×2
+17:42:19,451 | 				-> ## 05:42:19    80     0  P20 ×2
+17:42:19,467 | 				-> ## 05:42:19    80     0  P21 ×2
+17:42:19,484 | 				-> ## 05:42:19    80     0  P22 ×9
+17:42:19,500 | 				-> ## 05:42:19    80     0  P23 ×9
+17:42:19,518 | 				-> ## 05:42:19    80     0  P24 ×8
+17:42:19,534 | 				-> ## 05:42:19    80     0  P25 ×9
+17:42:19,551 | 				-> ## 05:42:19    80     0  P26 ×2
+17:42:19,567 | 				-> ## 05:42:19    80     0  P27 ×2
+17:42:19,584 | 				-> ## 05:42:19    80     0  P28 ×4
+17:42:19,600 | 				-> ## 05:42:19    80     0  Nb total de corps : 225
+17:42:19,617 | 				-> ## 05:42:19    80     0  
+17:42:19,634 | 				-> ## 05:42:19    80     0  Executé en 1m18s
+17:42:47,768 | 			PageListeDebit..ctor  ->  Est initialisé : True
+17:42:47,788 | 				-> ## 05:42:47     0     0      LISTE DE DÉBIT
+17:42:47,818 | 				-> ## 05:42:47     0     0  ========================
+17:42:47,834 | 				-> ## 05:42:47     0     0  
+17:42:47,836 | 			PageListeDebit.Command  ->  Show
+17:42:47,985 | 				-> ## 05:42:47     0     0  Recherche des materiaux : 
+17:42:50,396 | 				-> ## 05:42:50     3     2   - Acier S235
+17:42:50,418 | 				-> ## 05:42:50     3     0   - Bois
+17:42:50,437 | 				-> ## 05:42:50     3     0  
+17:42:50,552 | 				-> ## 05:42:50     3     0  Executé en 2s696
+17:42:50,569 | 				-> ## 05:42:50     3     0  
+17:42:52,145 | 			PageListeDebit.CanRaiseEvent  ->  CanRaiseEvent True
+17:42:52,145 | 				-> Callback methode -> OnGainedFocus
+17:42:52,221 | 			PageListeDebit.CanRaiseEvent  ->  CanRaiseEvent True
+17:42:52,221 | 				-> Callback methode -> OnListboxSelectionChanged
+17:42:55,576 | 			PageListeDebit.CanRaiseEvent  ->  CanRaiseEvent True
+17:42:55,576 | 				-> Callback methode -> OnLostFocus
+17:42:55,662 | 			Sw.eDossierListeDesPiecesSoudees
+17:42:55,662 | 				-> Le composant n'est pas une pièce
+17:42:55,668 | 			Sw.eDossierListeDesPiecesSoudees
+17:42:55,668 | 				-> Le composant n'est pas une pièce
+17:42:55,674 | 			Sw.eDossierListeDesPiecesSoudees
+17:42:55,674 | 				-> Le composant n'est pas une pièce
+17:42:56,576 | 			Sw.eDossierListeDesPiecesSoudees
+17:42:56,576 | 				-> Le composant n'est pas une pièce
+17:42:56,583 | 			Sw.eDossierListeDesPiecesSoudees
+17:42:56,583 | 				-> Le composant n'est pas une pièce
+17:42:56,589 | 			Sw.eDossierListeDesPiecesSoudees
+17:42:56,589 | 				-> Le composant n'est pas une pièce
+17:42:56,595 | 			Sw.eDossierListeDesPiecesSoudees
+17:42:56,595 | 				-> Le composant n'est pas une pièce
+17:42:56,600 | 			Sw.eDossierListeDesPiecesSoudees
+17:42:56,600 | 				-> Le composant n'est pas une pièce
+17:42:56,608 | 			Sw.eDossierListeDesPiecesSoudees
+17:42:56,608 | 				-> Le composant n'est pas une pièce
+17:42:56,613 | 			Sw.eDossierListeDesPiecesSoudees
+17:42:56,613 | 				-> Le composant n'est pas une pièce
+17:42:56,621 | 			Sw.eDossierListeDesPiecesSoudees
+17:42:56,621 | 				-> Le composant n'est pas une pièce
+17:42:56,626 | 			Sw.eDossierListeDesPiecesSoudees
+17:42:56,626 | 				-> Le composant n'est pas une pièce
+17:42:56,632 | 			Sw.eDossierListeDesPiecesSoudees
+17:42:56,632 | 				-> Le composant n'est pas une pièce
+17:42:56,640 | 			Sw.eDossierListeDesPiecesSoudees
+17:42:56,640 | 				-> Le composant n'est pas une pièce
+17:42:56,648 | 			Sw.eDossierListeDesPiecesSoudees
+17:42:56,648 | 				-> Le composant n'est pas une pièce
+17:42:56,654 | 			Sw.eDossierListeDesPiecesSoudees
+17:42:56,654 | 				-> Le composant n'est pas une pièce
+17:42:56,662 | 			Sw.eDossierListeDesPiecesSoudees
+17:42:56,662 | 				-> Le composant n'est pas une pièce
+17:42:56,670 | 			Sw.eDossierListeDesPiecesSoudees
+17:42:56,670 | 				-> Le composant n'est pas une pièce
+17:42:56,786 | 			Sw.eDossierListeDesPiecesSoudees
+17:42:56,786 | 				-> Le composant n'est pas une pièce
+17:42:56,793 | 			Sw.eDossierListeDesPiecesSoudees
+17:42:56,793 | 				-> Le composant n'est pas une pièce
+17:43:07,509 | 				-> ## 05:43:07    20    17  
+17:43:07,515 | 				-> ## 05:43:07    20     0  Executé en 11s840
+17:43:24,831 | <Base><Materiau name="Acier S235"><Profil name="Cofraplus 60">6000</Profil><Profil name="IPE 450">6000</Profil><Profil name="IPE 400">6000</Profil><Profil name="IPE 200">6000</Profil><Profil name="Plat 90x10">6000</Profil><Profil name="UPE 200">6000</Profil><Profil name="Plat 70x10">6000</Profil></Materiau></Base>
+17:43:24,858 | 				-> ## 05:43:24    37    17  Lg max des barres :
+17:43:24,888 | 				-> ## 05:43:24    37     0  Cofraplus 60 [Acier S235]       6000
+17:43:24,920 | 				-> ## 05:43:24    37     0     IPE 450 [Acier S235]       6000
+17:43:24,939 | 				-> ## 05:43:24    37     0     IPE 400 [Acier S235]       6000
+17:43:24,971 | 				-> ## 05:43:24    37     0     IPE 200 [Acier S235]       6000
+17:43:24,995 | 				-> ## 05:43:24    37     0  Plat 90x10 [Acier S235]       6000
+17:43:25,021 | 				-> ## 05:43:25    37     0     UPE 200 [Acier S235]       6000
+17:43:25,037 | 				-> ## 05:43:25    37     0  Plat 70x10 [Acier S235]       6000
+17:43:25,071 | 				-> ## 05:43:25    37     0  
+Acier S235
+     24× Cofraplus 60
+      1× IPE 450
+      1× IPE 400
+     18× IPE 200
+      2× Plat 90x10
+      4× UPE 200
+      1× Plat 70x10
+17:43:25,104 | 				-> ## 05:43:25    37     0  
+17:43:25,138 | 				-> ## 05:43:25    37     0  
+17:43:25,171 | 				-> ## 05:43:25    37     0  Nb d'éléments 94
+17:43:25,204 | 				-> ## 05:43:25    37     0  Nb de barres 51
+17:43:25,238 | 				-> ## 05:43:25    37     0  
+17:43:25,270 | 				-> ## 05:43:25    38     0  Executé en 0s167
+17:45:04,010 | 				-> ## 05:45:04     0     0      RENOMMER TOUTES LES FEUILLES
+17:45:04,040 | 				-> ## 05:45:04     0     0  ========================
+17:45:04,057 | 				-> ## 05:45:04     0     0  
+17:45:04,390 | 				-> ## 05:45:04     0     0  AA01-0(1)
+17:45:04,473 | 				-> ## 05:45:04     0     0  AA01-0(2)
+17:45:04,557 | 				-> ## 05:45:04     1     0  AA01-0(3)
+17:45:04,639 | 				-> ## 05:45:04     1     0  AA01-Illustration
+17:45:07,024 | 				-> ## 05:45:07     3     2  Executé en 2s951
+17:45:07,040 | 				-> ## 05:45:07     3     0  
+17:45:07,760 | 				-> ## 05:45:07     0     0      METTRE EN PAGE LES FEUILLES
+17:45:07,789 | 				-> ## 05:45:07     0     0  ========================
+17:45:07,806 | 				-> ## 05:45:07     0     0  
+17:45:07,823 | 				-> ## 05:45:07     0     0  Haute qualité : oui
+17:45:07,839 | 				-> ## 05:45:07     0     0  
+17:45:07,939 | 				-> ## 05:45:07     0     0   - AA01-0(1)
+17:45:08,109 | 				-> ## 05:45:08     0     0      A3 Paysage
+17:45:08,123 | 				-> ## 05:45:08     0     0  
+17:45:11,223 | 				-> ## 05:45:11     3     3   - AA01-0(2)
+17:45:11,257 | 				-> ## 05:45:11     4     0      A3 Paysage
+17:45:11,273 | 				-> ## 05:45:11     4     0  
+17:45:12,906 | 				-> ## 05:45:12     5     2   - AA01-0(3)
+17:45:12,941 | 				-> ## 05:45:12     5     0      A4 Portrait
+17:45:12,957 | 				-> ## 05:45:12     5     0  
+17:45:13,590 | 				-> ## 05:45:13     6     1   - AA01-Illustration
+17:45:13,624 | 				-> ## 05:45:13     6     0      A3 Paysage
+17:45:13,641 | 				-> ## 05:45:13     6     0  
+17:45:13,841 | 				-> ## 05:45:13     6     0  Executé en 6s17
+17:45:13,858 | 				-> ## 05:45:13     6     0  
+17:45:20,158 | 				-> ## 05:45:20     0     0      METTRE EN PAGE LES FEUILLES
+17:45:20,175 | 				-> ## 05:45:20     0     0  ========================
+17:45:20,190 | 				-> ## 05:45:20     0     0  
+17:45:20,207 | 				-> ## 05:45:20     0     0  Haute qualité : oui
+17:45:20,224 | 				-> ## 05:45:20     0     0  
+17:45:20,324 | 				-> ## 05:45:20     0     0   - AA01-0(1)
+17:45:20,357 | 				-> ## 05:45:20     0     0      A3 Paysage
+17:45:20,374 | 				-> ## 05:45:20     0     0  
+17:45:20,657 | 				-> ## 05:45:20     1     0   - AA01-0(2)
+17:45:20,674 | 				-> ## 05:45:20     1     0      A3 Paysage
+17:45:20,690 | 				-> ## 05:45:20     1     0  
+17:45:20,791 | 				-> ## 05:45:20     1     0   - AA01-0(3)
+17:45:20,808 | 				-> ## 05:45:20     1     0      A4 Portrait
+17:45:20,824 | 				-> ## 05:45:20     1     0  
+17:45:20,924 | 				-> ## 05:45:20     1     0   - AA01-Illustration
+17:45:20,940 | 				-> ## 05:45:20     1     0      A3 Paysage
+17:45:20,957 | 				-> ## 05:45:20     1     0  
+17:45:21,074 | 				-> ## 05:45:21     1     0  Executé en 0s857
+17:45:21,090 | 				-> ## 05:45:21     1     0  
+17:45:22,424 | 			PagePdf..ctor  ->  Est initialisé : True
+17:45:22,444 | 				-> ## 05:45:22     0     0      EXPORTER EN PDF
+17:45:22,475 | 				-> ## 05:45:22     0     0  ========================
+17:45:22,491 | 				-> ## 05:45:22     0     0  
+17:45:22,493 | 			PagePdf.Command  ->  Show
+17:45:22,607 | 				-> ## 05:45:22     0     0  Executé en 0s86
+17:45:22,624 | 				-> ## 05:45:22     0     0  
+17:45:25,402 | 			PagePdf.CanRaiseEvent  ->  CanRaiseEvent True
+17:45:25,402 | 				-> Callback methode -> OnGainedFocus
+17:45:27,156 | 			PagePdf.CanRaiseEvent  ->  CanRaiseEvent True
+17:45:27,156 | 				-> Callback methode -> OnLostFocus
+17:45:27,369 | 				-> ## 05:45:27     5     5  Export : PDF
+17:45:27,391 | 				-> ## 05:45:27     5     0  
+17:45:27,408 | 				-> ## 05:45:27     5     0    Dossier : 0 Plans
+17:45:27,424 | 				-> ## 05:45:27     5     0     2.1 Plancher collaborant - Plan de principe - Ind C.pdf
+17:45:31,643 | 				-> ## 05:45:31     9     4  
+17:45:31,659 | 				-> ## 05:45:31     9     0  Executé en 4s348
