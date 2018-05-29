@@ -1,357 +1,198 @@
-16:50:15,947 | 
+11:49:00,789 | 
  
-16:50:15,954 | ====================================================================================================
-16:50:15,954 | |                                                                                                  |
-16:50:15,954 | |                                          DEBUG                                                   |
-16:50:15,954 | |                                                                                                  |
-16:50:15,954 | ====================================================================================================
-16:50:15,954 | 
+11:49:00,796 | ====================================================================================================
+11:49:00,796 | |                                                                                                  |
+11:49:00,796 | |                                          DEBUG                                                   |
+11:49:00,796 | |                                                                                                  |
+11:49:00,796 | ====================================================================================================
+11:49:00,796 | 
  
-17:00:36,862 | 			PagePdf..ctor  ->  Est initialisé : True
-17:00:36,895 | 				-> ## 05:00:36     0     0      EXPORTER EN PDF
-17:00:36,923 | 				-> ## 05:00:36     0     0  ========================
-17:00:36,939 | 				-> ## 05:00:36     0     0  
-17:00:36,992 | 			PagePdf.Command  ->  Show
-17:00:37,090 | 				-> ## 05:00:37     0     0  Executé en 0s118
-17:00:37,105 | 				-> ## 05:00:37     0     0  
-17:00:39,043 | 			PagePdf.CanRaiseEvent  ->  CanRaiseEvent True
-17:00:39,043 | 				-> Callback methode -> OnGainedFocus
-17:00:40,472 | 			PagePdf.CanRaiseEvent  ->  CanRaiseEvent True
-17:00:40,472 | 				-> Callback methode -> OnLostFocus
-17:00:40,509 | 			PagePdf.CanRaiseEvent  ->  CanRaiseEvent True
-17:00:40,509 | 				-> Callback methode -> OnGainedFocus
-17:00:40,972 | 			PagePdf.CanRaiseEvent  ->  CanRaiseEvent True
-17:00:40,972 | 				-> Callback methode -> OnListboxSelectionChanged
-17:00:41,831 | 			PagePdf.CanRaiseEvent  ->  CanRaiseEvent True
-17:00:41,831 | 				-> Callback methode -> OnLostFocus
-17:00:43,974 | 				-> ## 05:00:43     7     7  Export : PDF
-17:00:43,988 | 				-> ## 05:00:43     7     0  
-17:00:44,005 | 				-> ## 05:00:44     7     0    Dossier : 0 Plans
-17:00:44,023 | 				-> ## 05:00:44     7     0     2.1 Plancher collaborant - Plan de réservation - Ind B.pdf
-17:00:45,056 | 				-> ## 05:00:45     8     1  
-17:00:45,073 | 				-> ## 05:00:45     8     0  Executé en 1s86
-17:01:18,546 | 			PagePdf..ctor  ->  Est initialisé : True
-17:01:18,578 | 				-> ## 05:01:18     0     0      EXPORTER EN PDF
-17:01:18,607 | 				-> ## 05:01:18     0     0  ========================
-17:01:18,623 | 				-> ## 05:01:18     0     0  
-17:01:18,625 | 			PagePdf.Command  ->  Show
-17:01:18,723 | 				-> ## 05:01:18     0     0  Executé en 0s69
-17:01:18,740 | 				-> ## 05:01:18     0     0  
-17:01:19,613 | 			PagePdf.CanRaiseEvent  ->  CanRaiseEvent True
-17:01:19,613 | 				-> Callback methode -> OnGainedFocus
-17:01:21,484 | 			PagePdf.CanRaiseEvent  ->  CanRaiseEvent True
-17:01:21,484 | 				-> Callback methode -> OnLostFocus
-17:01:21,642 | 				-> ## 05:01:21     3     3  Export : PDF
-17:01:21,658 | 				-> ## 05:01:21     3     0  
-17:01:21,675 | 				-> ## 05:01:21     3     0    Dossier : 0 Plans
-17:01:21,690 | 				-> ## 05:01:21     3     0     2.1 Plancher collaborant - Plan de réservation - Ind B.pdf
-17:01:22,724 | 				-> ## 05:01:22     4     1  
-17:01:22,740 | 				-> ## 05:01:22     4     0  Executé en 1s86
-17:40:08,044 | 			PageListeDebit..ctor  ->  Est initialisé : True
-17:40:08,066 | 				-> ## 05:40:08     0     0      LISTE DE DÉBIT
-17:40:08,095 | 				-> ## 05:40:08     0     0  ========================
-17:40:08,111 | 				-> ## 05:40:08     0     0  
-17:40:08,124 | 			PageListeDebit.Command  ->  Show
-17:40:08,245 | 				-> ## 05:40:08     0     0  Recherche des materiaux : 
-17:40:11,077 | 				-> ## 05:40:11     3     3   - Acier S235
-17:40:11,096 | 				-> ## 05:40:11     3     0   - Bois
-17:40:11,112 | 				-> ## 05:40:11     3     0  
-17:40:11,213 | 				-> ## 05:40:11     3     0  Executé en 3s87
-17:40:11,229 | 				-> ## 05:40:11     3     0  
-17:40:12,669 | 			PageListeDebit.CanRaiseEvent  ->  CanRaiseEvent True
-17:40:12,669 | 				-> Callback methode -> OnGainedFocus
-17:40:12,768 | 			PageListeDebit.CanRaiseEvent  ->  CanRaiseEvent True
-17:40:12,768 | 				-> Callback methode -> OnListboxSelectionChanged
-17:40:15,611 | 			PageListeDebit.CanRaiseEvent  ->  CanRaiseEvent True
-17:40:15,611 | 				-> Callback methode -> OnLostFocus
-17:40:15,689 | 			PageListeDebit.CanRaiseEvent  ->  CanRaiseEvent True
-17:40:15,689 | 				-> Callback methode -> OnOptionCheck
-17:40:17,848 | 			PageListeDebit.CanRaiseEvent  ->  CanRaiseEvent True
-17:40:17,849 | 				-> Callback methode -> OnGainedFocus
-17:40:18,809 | 			PageListeDebit.CanRaiseEvent  ->  CanRaiseEvent True
-17:40:18,809 | 				-> Callback methode -> OnTextboxChanged
-17:40:19,055 | 			PageListeDebit.CanRaiseEvent  ->  CanRaiseEvent True
-17:40:19,055 | 				-> Callback methode -> OnTextboxChanged
-17:40:19,232 | 			PageListeDebit.CanRaiseEvent  ->  CanRaiseEvent True
-17:40:19,232 | 				-> Callback methode -> OnTextboxChanged
-17:40:19,399 | 			PageListeDebit.CanRaiseEvent  ->  CanRaiseEvent True
-17:40:19,400 | 				-> Callback methode -> OnTextboxChanged
-17:40:21,304 | 			PageListeDebit.CanRaiseEvent  ->  CanRaiseEvent True
-17:40:21,304 | 				-> Callback methode -> OnLostFocus
-17:40:21,459 | 			Sw.eDossierListeDesPiecesSoudees
-17:40:21,459 | 				-> Le composant n'est pas une pièce
-17:40:21,466 | 			Sw.eDossierListeDesPiecesSoudees
-17:40:21,466 | 				-> Le composant n'est pas une pièce
-17:40:21,472 | 			Sw.eDossierListeDesPiecesSoudees
-17:40:21,472 | 				-> Le composant n'est pas une pièce
-17:40:22,357 | 			Sw.eDossierListeDesPiecesSoudees
-17:40:22,357 | 				-> Le composant n'est pas une pièce
-17:40:22,364 | 			Sw.eDossierListeDesPiecesSoudees
-17:40:22,364 | 				-> Le composant n'est pas une pièce
-17:40:22,370 | 			Sw.eDossierListeDesPiecesSoudees
-17:40:22,370 | 				-> Le composant n'est pas une pièce
-17:40:22,376 | 			Sw.eDossierListeDesPiecesSoudees
-17:40:22,376 | 				-> Le composant n'est pas une pièce
-17:40:22,381 | 			Sw.eDossierListeDesPiecesSoudees
-17:40:22,381 | 				-> Le composant n'est pas une pièce
-17:40:22,388 | 			Sw.eDossierListeDesPiecesSoudees
-17:40:22,389 | 				-> Le composant n'est pas une pièce
-17:40:22,394 | 			Sw.eDossierListeDesPiecesSoudees
-17:40:22,394 | 				-> Le composant n'est pas une pièce
-17:40:22,401 | 			Sw.eDossierListeDesPiecesSoudees
-17:40:22,401 | 				-> Le composant n'est pas une pièce
-17:40:22,407 | 			Sw.eDossierListeDesPiecesSoudees
-17:40:22,407 | 				-> Le composant n'est pas une pièce
-17:40:22,412 | 			Sw.eDossierListeDesPiecesSoudees
-17:40:22,412 | 				-> Le composant n'est pas une pièce
-17:40:22,420 | 			Sw.eDossierListeDesPiecesSoudees
-17:40:22,420 | 				-> Le composant n'est pas une pièce
-17:40:22,428 | 			Sw.eDossierListeDesPiecesSoudees
-17:40:22,428 | 				-> Le composant n'est pas une pièce
-17:40:22,433 | 			Sw.eDossierListeDesPiecesSoudees
-17:40:22,433 | 				-> Le composant n'est pas une pièce
-17:40:22,441 | 			Sw.eDossierListeDesPiecesSoudees
-17:40:22,441 | 				-> Le composant n'est pas une pièce
-17:40:22,449 | 			Sw.eDossierListeDesPiecesSoudees
-17:40:22,449 | 				-> Le composant n'est pas une pièce
-17:40:22,618 | 			Sw.eDossierListeDesPiecesSoudees
-17:40:22,618 | 				-> Le composant n'est pas une pièce
-17:40:22,625 | 			Sw.eDossierListeDesPiecesSoudees
-17:40:22,625 | 				-> Le composant n'est pas une pièce
-17:40:30,055 | 				-> ## 05:40:30    22    19  
-17:40:30,248 | 				-> ## 05:40:30    22     0  Executé en 8s571
-17:40:30,296 | 				-> ## 05:40:30    22     0  Lg max des barres :
-17:40:30,312 | 				-> ## 05:40:30    22     0     IPE 450 [Acier S235]       6000
-17:40:30,347 | 				-> ## 05:40:30    22     0  
-Acier S235
-  IPE 450                          9400.0mm   ×94
-17:40:30,378 | 				-> ## 05:40:30    22     0  
-17:40:30,395 | 				-> ## 05:40:30    22     0  
-17:40:30,412 | 				-> ## 05:40:30    22     0  
-17:40:30,429 | 				-> ## 05:40:30    22     0  Executé en 0s82
-17:40:59,589 | 			PageNumeroterDossier..ctor  ->  Est initialisé : True
-17:40:59,625 | 				-> ## 05:40:59     0     0      NUMEROTER LES DOSSIERS
-17:40:59,647 | 				-> ## 05:40:59     0     0  ========================
-17:40:59,663 | 				-> ## 05:40:59     0     0  
-17:40:59,663 | 			PageNumeroterDossier.Command  ->  Show
-17:40:59,780 | 				-> ## 05:40:59     0     0  Executé en 0s99
-17:40:59,796 | 				-> ## 05:40:59     0     0  
-17:41:00,904 | 			Sw.eDossierListeDesPiecesSoudees
-17:41:00,905 | 				-> Le composant n'est pas une pièce
-17:41:00,993 | 			Sw.eDossierListeDesPiecesSoudees
-17:41:00,993 | 				-> Le composant n'est pas une pièce
-17:41:00,994 | 			Sw.eDossierListeDesPiecesSoudees
-17:41:00,994 | 				-> Le composant n'est pas une pièce
-17:41:00,995 | 			Sw.eDossierListeDesPiecesSoudees
-17:41:00,995 | 				-> Le composant n'est pas une pièce
-17:41:00,996 | 			Sw.eDossierListeDesPiecesSoudees
-17:41:00,996 | 				-> Le composant n'est pas une pièce
-17:41:00,997 | 			Sw.eDossierListeDesPiecesSoudees
-17:41:00,997 | 				-> Le composant n'est pas une pièce
-17:41:00,998 | 			Sw.eDossierListeDesPiecesSoudees
-17:41:00,998 | 				-> Le composant n'est pas une pièce
-17:41:00,998 | 			Sw.eDossierListeDesPiecesSoudees
-17:41:00,998 | 				-> Le composant n'est pas une pièce
-17:41:00,999 | 			Sw.eDossierListeDesPiecesSoudees
-17:41:00,999 | 				-> Le composant n'est pas une pièce
-17:41:01,000 | 			Sw.eDossierListeDesPiecesSoudees
-17:41:01,000 | 				-> Le composant n'est pas une pièce
-17:41:01,000 | 			Sw.eDossierListeDesPiecesSoudees
-17:41:01,000 | 				-> Le composant n'est pas une pièce
-17:41:01,001 | 			Sw.eDossierListeDesPiecesSoudees
-17:41:01,001 | 				-> Le composant n'est pas une pièce
-17:41:01,002 | 			Sw.eDossierListeDesPiecesSoudees
-17:41:01,002 | 				-> Le composant n'est pas une pièce
-17:41:01,003 | 			Sw.eDossierListeDesPiecesSoudees
-17:41:01,003 | 				-> Le composant n'est pas une pièce
-17:41:01,004 | 			Sw.eDossierListeDesPiecesSoudees
-17:41:01,004 | 				-> Le composant n'est pas une pièce
-17:41:01,004 | 			Sw.eDossierListeDesPiecesSoudees
-17:41:01,004 | 				-> Le composant n'est pas une pièce
-17:41:01,005 | 			Sw.eDossierListeDesPiecesSoudees
-17:41:01,005 | 				-> Le composant n'est pas une pièce
-17:41:01,006 | 			Sw.eDossierListeDesPiecesSoudees
-17:41:01,006 | 				-> Le composant n'est pas une pièce
-17:41:01,007 | 			Sw.eDossierListeDesPiecesSoudees
-17:41:01,007 | 				-> Le composant n'est pas une pièce
-17:41:01,008 | 			Sw.eDossierListeDesPiecesSoudees
-17:41:01,008 | 				-> Le composant n'est pas une pièce
-17:42:19,104 | 				-> ## 05:42:19    80    79  Nb de corps unique : 28
-17:42:19,134 | 				-> ## 05:42:19    80     0  P1 ×18
-17:42:19,150 | 				-> ## 05:42:19    80     0  P2 ×18
-17:42:19,167 | 				-> ## 05:42:19    80     0  P3 ×2
-17:42:19,184 | 				-> ## 05:42:19    80     0  P4 ×2
-17:42:19,200 | 				-> ## 05:42:19    80     0  P5 ×4
-17:42:19,218 | 				-> ## 05:42:19    80     0  P6 ×4
-17:42:19,234 | 				-> ## 05:42:19    80     0  P7 ×60
-17:42:19,251 | 				-> ## 05:42:19    80     0  P8 ×2
-17:42:19,267 | 				-> ## 05:42:19    80     0  P9 ×2
-17:42:19,284 | 				-> ## 05:42:19    80     0  P10 ×11
-17:42:19,300 | 				-> ## 05:42:19    80     0  P11 ×5
-17:42:19,317 | 				-> ## 05:42:19    80     0  P12 ×2
-17:42:19,334 | 				-> ## 05:42:19    80     0  P13 ×4
-17:42:19,350 | 				-> ## 05:42:19    80     0  P14 ×2
-17:42:19,367 | 				-> ## 05:42:19    80     0  P15 ×12
-17:42:19,384 | 				-> ## 05:42:19    80     0  P16 ×12
-17:42:19,400 | 				-> ## 05:42:19    80     0  P17 ×8
-17:42:19,417 | 				-> ## 05:42:19    80     0  P18 ×8
-17:42:19,434 | 				-> ## 05:42:19    80     0  P19 ×2
-17:42:19,451 | 				-> ## 05:42:19    80     0  P20 ×2
-17:42:19,467 | 				-> ## 05:42:19    80     0  P21 ×2
-17:42:19,484 | 				-> ## 05:42:19    80     0  P22 ×9
-17:42:19,500 | 				-> ## 05:42:19    80     0  P23 ×9
-17:42:19,518 | 				-> ## 05:42:19    80     0  P24 ×8
-17:42:19,534 | 				-> ## 05:42:19    80     0  P25 ×9
-17:42:19,551 | 				-> ## 05:42:19    80     0  P26 ×2
-17:42:19,567 | 				-> ## 05:42:19    80     0  P27 ×2
-17:42:19,584 | 				-> ## 05:42:19    80     0  P28 ×4
-17:42:19,600 | 				-> ## 05:42:19    80     0  Nb total de corps : 225
-17:42:19,617 | 				-> ## 05:42:19    80     0  
-17:42:19,634 | 				-> ## 05:42:19    80     0  Executé en 1m18s
-17:42:47,768 | 			PageListeDebit..ctor  ->  Est initialisé : True
-17:42:47,788 | 				-> ## 05:42:47     0     0      LISTE DE DÉBIT
-17:42:47,818 | 				-> ## 05:42:47     0     0  ========================
-17:42:47,834 | 				-> ## 05:42:47     0     0  
-17:42:47,836 | 			PageListeDebit.Command  ->  Show
-17:42:47,985 | 				-> ## 05:42:47     0     0  Recherche des materiaux : 
-17:42:50,396 | 				-> ## 05:42:50     3     2   - Acier S235
-17:42:50,418 | 				-> ## 05:42:50     3     0   - Bois
-17:42:50,437 | 				-> ## 05:42:50     3     0  
-17:42:50,552 | 				-> ## 05:42:50     3     0  Executé en 2s696
-17:42:50,569 | 				-> ## 05:42:50     3     0  
-17:42:52,145 | 			PageListeDebit.CanRaiseEvent  ->  CanRaiseEvent True
-17:42:52,145 | 				-> Callback methode -> OnGainedFocus
-17:42:52,221 | 			PageListeDebit.CanRaiseEvent  ->  CanRaiseEvent True
-17:42:52,221 | 				-> Callback methode -> OnListboxSelectionChanged
-17:42:55,576 | 			PageListeDebit.CanRaiseEvent  ->  CanRaiseEvent True
-17:42:55,576 | 				-> Callback methode -> OnLostFocus
-17:42:55,662 | 			Sw.eDossierListeDesPiecesSoudees
-17:42:55,662 | 				-> Le composant n'est pas une pièce
-17:42:55,668 | 			Sw.eDossierListeDesPiecesSoudees
-17:42:55,668 | 				-> Le composant n'est pas une pièce
-17:42:55,674 | 			Sw.eDossierListeDesPiecesSoudees
-17:42:55,674 | 				-> Le composant n'est pas une pièce
-17:42:56,576 | 			Sw.eDossierListeDesPiecesSoudees
-17:42:56,576 | 				-> Le composant n'est pas une pièce
-17:42:56,583 | 			Sw.eDossierListeDesPiecesSoudees
-17:42:56,583 | 				-> Le composant n'est pas une pièce
-17:42:56,589 | 			Sw.eDossierListeDesPiecesSoudees
-17:42:56,589 | 				-> Le composant n'est pas une pièce
-17:42:56,595 | 			Sw.eDossierListeDesPiecesSoudees
-17:42:56,595 | 				-> Le composant n'est pas une pièce
-17:42:56,600 | 			Sw.eDossierListeDesPiecesSoudees
-17:42:56,600 | 				-> Le composant n'est pas une pièce
-17:42:56,608 | 			Sw.eDossierListeDesPiecesSoudees
-17:42:56,608 | 				-> Le composant n'est pas une pièce
-17:42:56,613 | 			Sw.eDossierListeDesPiecesSoudees
-17:42:56,613 | 				-> Le composant n'est pas une pièce
-17:42:56,621 | 			Sw.eDossierListeDesPiecesSoudees
-17:42:56,621 | 				-> Le composant n'est pas une pièce
-17:42:56,626 | 			Sw.eDossierListeDesPiecesSoudees
-17:42:56,626 | 				-> Le composant n'est pas une pièce
-17:42:56,632 | 			Sw.eDossierListeDesPiecesSoudees
-17:42:56,632 | 				-> Le composant n'est pas une pièce
-17:42:56,640 | 			Sw.eDossierListeDesPiecesSoudees
-17:42:56,640 | 				-> Le composant n'est pas une pièce
-17:42:56,648 | 			Sw.eDossierListeDesPiecesSoudees
-17:42:56,648 | 				-> Le composant n'est pas une pièce
-17:42:56,654 | 			Sw.eDossierListeDesPiecesSoudees
-17:42:56,654 | 				-> Le composant n'est pas une pièce
-17:42:56,662 | 			Sw.eDossierListeDesPiecesSoudees
-17:42:56,662 | 				-> Le composant n'est pas une pièce
-17:42:56,670 | 			Sw.eDossierListeDesPiecesSoudees
-17:42:56,670 | 				-> Le composant n'est pas une pièce
-17:42:56,786 | 			Sw.eDossierListeDesPiecesSoudees
-17:42:56,786 | 				-> Le composant n'est pas une pièce
-17:42:56,793 | 			Sw.eDossierListeDesPiecesSoudees
-17:42:56,793 | 				-> Le composant n'est pas une pièce
-17:43:07,509 | 				-> ## 05:43:07    20    17  
-17:43:07,515 | 				-> ## 05:43:07    20     0  Executé en 11s840
-17:43:24,831 | <Base><Materiau name="Acier S235"><Profil name="Cofraplus 60">6000</Profil><Profil name="IPE 450">6000</Profil><Profil name="IPE 400">6000</Profil><Profil name="IPE 200">6000</Profil><Profil name="Plat 90x10">6000</Profil><Profil name="UPE 200">6000</Profil><Profil name="Plat 70x10">6000</Profil></Materiau></Base>
-17:43:24,858 | 				-> ## 05:43:24    37    17  Lg max des barres :
-17:43:24,888 | 				-> ## 05:43:24    37     0  Cofraplus 60 [Acier S235]       6000
-17:43:24,920 | 				-> ## 05:43:24    37     0     IPE 450 [Acier S235]       6000
-17:43:24,939 | 				-> ## 05:43:24    37     0     IPE 400 [Acier S235]       6000
-17:43:24,971 | 				-> ## 05:43:24    37     0     IPE 200 [Acier S235]       6000
-17:43:24,995 | 				-> ## 05:43:24    37     0  Plat 90x10 [Acier S235]       6000
-17:43:25,021 | 				-> ## 05:43:25    37     0     UPE 200 [Acier S235]       6000
-17:43:25,037 | 				-> ## 05:43:25    37     0  Plat 70x10 [Acier S235]       6000
-17:43:25,071 | 				-> ## 05:43:25    37     0  
-Acier S235
-     24× Cofraplus 60
-      1× IPE 450
-      1× IPE 400
-     18× IPE 200
-      2× Plat 90x10
-      4× UPE 200
-      1× Plat 70x10
-17:43:25,104 | 				-> ## 05:43:25    37     0  
-17:43:25,138 | 				-> ## 05:43:25    37     0  
-17:43:25,171 | 				-> ## 05:43:25    37     0  Nb d'éléments 94
-17:43:25,204 | 				-> ## 05:43:25    37     0  Nb de barres 51
-17:43:25,238 | 				-> ## 05:43:25    37     0  
-17:43:25,270 | 				-> ## 05:43:25    38     0  Executé en 0s167
-17:45:04,010 | 				-> ## 05:45:04     0     0      RENOMMER TOUTES LES FEUILLES
-17:45:04,040 | 				-> ## 05:45:04     0     0  ========================
-17:45:04,057 | 				-> ## 05:45:04     0     0  
-17:45:04,390 | 				-> ## 05:45:04     0     0  AA01-0(1)
-17:45:04,473 | 				-> ## 05:45:04     0     0  AA01-0(2)
-17:45:04,557 | 				-> ## 05:45:04     1     0  AA01-0(3)
-17:45:04,639 | 				-> ## 05:45:04     1     0  AA01-Illustration
-17:45:07,024 | 				-> ## 05:45:07     3     2  Executé en 2s951
-17:45:07,040 | 				-> ## 05:45:07     3     0  
-17:45:07,760 | 				-> ## 05:45:07     0     0      METTRE EN PAGE LES FEUILLES
-17:45:07,789 | 				-> ## 05:45:07     0     0  ========================
-17:45:07,806 | 				-> ## 05:45:07     0     0  
-17:45:07,823 | 				-> ## 05:45:07     0     0  Haute qualité : oui
-17:45:07,839 | 				-> ## 05:45:07     0     0  
-17:45:07,939 | 				-> ## 05:45:07     0     0   - AA01-0(1)
-17:45:08,109 | 				-> ## 05:45:08     0     0      A3 Paysage
-17:45:08,123 | 				-> ## 05:45:08     0     0  
-17:45:11,223 | 				-> ## 05:45:11     3     3   - AA01-0(2)
-17:45:11,257 | 				-> ## 05:45:11     4     0      A3 Paysage
-17:45:11,273 | 				-> ## 05:45:11     4     0  
-17:45:12,906 | 				-> ## 05:45:12     5     2   - AA01-0(3)
-17:45:12,941 | 				-> ## 05:45:12     5     0      A4 Portrait
-17:45:12,957 | 				-> ## 05:45:12     5     0  
-17:45:13,590 | 				-> ## 05:45:13     6     1   - AA01-Illustration
-17:45:13,624 | 				-> ## 05:45:13     6     0      A3 Paysage
-17:45:13,641 | 				-> ## 05:45:13     6     0  
-17:45:13,841 | 				-> ## 05:45:13     6     0  Executé en 6s17
-17:45:13,858 | 				-> ## 05:45:13     6     0  
-17:45:20,158 | 				-> ## 05:45:20     0     0      METTRE EN PAGE LES FEUILLES
-17:45:20,175 | 				-> ## 05:45:20     0     0  ========================
-17:45:20,190 | 				-> ## 05:45:20     0     0  
-17:45:20,207 | 				-> ## 05:45:20     0     0  Haute qualité : oui
-17:45:20,224 | 				-> ## 05:45:20     0     0  
-17:45:20,324 | 				-> ## 05:45:20     0     0   - AA01-0(1)
-17:45:20,357 | 				-> ## 05:45:20     0     0      A3 Paysage
-17:45:20,374 | 				-> ## 05:45:20     0     0  
-17:45:20,657 | 				-> ## 05:45:20     1     0   - AA01-0(2)
-17:45:20,674 | 				-> ## 05:45:20     1     0      A3 Paysage
-17:45:20,690 | 				-> ## 05:45:20     1     0  
-17:45:20,791 | 				-> ## 05:45:20     1     0   - AA01-0(3)
-17:45:20,808 | 				-> ## 05:45:20     1     0      A4 Portrait
-17:45:20,824 | 				-> ## 05:45:20     1     0  
-17:45:20,924 | 				-> ## 05:45:20     1     0   - AA01-Illustration
-17:45:20,940 | 				-> ## 05:45:20     1     0      A3 Paysage
-17:45:20,957 | 				-> ## 05:45:20     1     0  
-17:45:21,074 | 				-> ## 05:45:21     1     0  Executé en 0s857
-17:45:21,090 | 				-> ## 05:45:21     1     0  
-17:45:22,424 | 			PagePdf..ctor  ->  Est initialisé : True
-17:45:22,444 | 				-> ## 05:45:22     0     0      EXPORTER EN PDF
-17:45:22,475 | 				-> ## 05:45:22     0     0  ========================
-17:45:22,491 | 				-> ## 05:45:22     0     0  
-17:45:22,493 | 			PagePdf.Command  ->  Show
-17:45:22,607 | 				-> ## 05:45:22     0     0  Executé en 0s86
-17:45:22,624 | 				-> ## 05:45:22     0     0  
-17:45:25,402 | 			PagePdf.CanRaiseEvent  ->  CanRaiseEvent True
-17:45:25,402 | 				-> Callback methode -> OnGainedFocus
-17:45:27,156 | 			PagePdf.CanRaiseEvent  ->  CanRaiseEvent True
-17:45:27,156 | 				-> Callback methode -> OnLostFocus
-17:45:27,369 | 				-> ## 05:45:27     5     5  Export : PDF
-17:45:27,391 | 				-> ## 05:45:27     5     0  
-17:45:27,408 | 				-> ## 05:45:27     5     0    Dossier : 0 Plans
-17:45:27,424 | 				-> ## 05:45:27     5     0     2.1 Plancher collaborant - Plan de principe - Ind C.pdf
-17:45:31,643 | 				-> ## 05:45:31     9     4  
-17:45:31,659 | 				-> ## 05:45:31     9     0  Executé en 4s348
+11:52:25,921 | 				-> ## 11:52:25     0     0      INCLURE/EXCLURE DE LA NOMENCLATURE
+11:52:25,948 | 				-> ## 11:52:25     0     0  ========================
+11:52:25,966 | 				-> ## 11:52:25     0     0  
+11:52:26,014 | 				-> ## 11:52:26     0     0  PX01-1 : Est exclu
+11:52:26,031 | 				-> ## 11:52:26     0     0  AP01-2/PX20-1 : Est exclu
+11:52:26,048 | 				-> ## 11:52:26     0     0  AP01-2/PX10-1 : Est exclu
+11:52:26,064 | 				-> ## 11:52:26     0     0  AB01-2/PX50-12 : Est exclu
+11:52:26,080 | 				-> ## 11:52:26     0     0  AB01-2/PX50-3 : Est exclu
+11:52:26,098 | 				-> ## 11:52:26     0     0  AB01-2/PX50-9 : Est exclu
+11:52:26,114 | 				-> ## 11:52:26     0     0  AB01-2/PX50-10 : Est exclu
+11:52:26,131 | 				-> ## 11:52:26     0     0  AB01-2/PX50-2 : Est exclu
+11:52:26,147 | 				-> ## 11:52:26     0     0  AB01-2/PX50-77 : Est exclu
+11:52:26,164 | 				-> ## 11:52:26     0     0  AB01-2/PX50-79 : Est exclu
+11:52:26,182 | 				-> ## 11:52:26     0     0  AB01-2/PX50-11 : Est exclu
+11:52:26,199 | 				-> ## 11:52:26     0     0  AB01-2/PX50-1 : Est exclu
+11:52:26,214 | 				-> ## 11:52:26     0     0  AB01-2/PX50-14 : Est exclu
+11:52:26,246 | 				-> ## 11:52:26     0     0  AB01-2/PX50-15 : Est exclu
+11:52:26,265 | 				-> ## 11:52:26     0     0  AB01-2/PX50-57 : Est exclu
+11:52:26,280 | 				-> ## 11:52:26     0     0  AB01-2/PX50-59 : Est exclu
+11:52:26,298 | 				-> ## 11:52:26     0     0  AB01-2/PX50-58 : Est exclu
+11:52:26,317 | 				-> ## 11:52:26     0     0  AB01-2/PX50-40 : Est exclu
+11:52:26,348 | 				-> ## 11:52:26     0     0  AB01-2/PX50-75 : Est exclu
+11:52:26,364 | 				-> ## 11:52:26     0     0  AB01-2/PX50-76 : Est exclu
+11:52:26,383 | 				-> ## 11:52:26     0     0  AB01-2/PX50-41 : Est exclu
+11:52:26,399 | 				-> ## 11:52:26     0     0  AB01-2/PX50-78 : Est exclu
+11:52:26,417 | 				-> ## 11:52:26     1     0  AB01-2/PX50-82 : Est exclu
+11:52:26,450 | 				-> ## 11:52:26     1     0  AB01-2/PX50-83 : Est exclu
+11:52:26,483 | 				-> ## 11:52:26     1     0  AB01-2/PX50-86 : Est exclu
+11:52:26,517 | 				-> ## 11:52:26     1     0  AB01-2/PX50-87 : Est exclu
+11:52:26,550 | 				-> ## 11:52:26     1     0  AB01-2/PX50-98 : Est exclu
+11:52:26,582 | 				-> ## 11:52:26     1     0  AB01-2/PX50-90 : Est exclu
+11:52:26,602 | 				-> ## 11:52:26     1     0  AB01-2/PX50-94 : Est exclu
+11:52:26,632 | 				-> ## 11:52:26     1     0  AB01-2/PX50-95 : Est exclu
+11:52:26,651 | 				-> ## 11:52:26     1     0  AB01-2/PX50-91 : Est exclu
+11:52:26,684 | 				-> ## 11:52:26     1     0  AB01-2/PX50-99 : Est exclu
+11:52:26,716 | 				-> ## 11:52:26     1     0  AB01-6/PX50-14 : Est exclu
+11:52:26,733 | 				-> ## 11:52:26     1     0  AB01-6/PX50-41 : Est exclu
+11:52:26,766 | 				-> ## 11:52:26     1     0  AB01-6/PX50-1 : Est exclu
+11:52:26,783 | 				-> ## 11:52:26     1     0  AB01-6/PX50-3 : Est exclu
+11:52:26,816 | 				-> ## 11:52:26     1     0  AB01-6/PX50-15 : Est exclu
+11:52:26,850 | 				-> ## 11:52:26     1     0  AB01-6/PX50-40 : Est exclu
+11:52:26,885 | 				-> ## 11:52:26     1     0  AB01-6/PX50-78 : Est exclu
+11:52:26,919 | 				-> ## 11:52:26     1     0  AB01-6/PX50-75 : Est exclu
+11:52:26,949 | 				-> ## 11:52:26     1     0  AB01-6/PX50-91 : Est exclu
+11:52:26,982 | 				-> ## 11:52:26     1     0  AB01-6/PX50-83 : Est exclu
+11:52:27,015 | 				-> ## 11:52:27     1     0  AB01-6/PX50-94 : Est exclu
+11:52:27,051 | 				-> ## 11:52:27     1     0  AB01-6/PX50-79 : Est exclu
+11:52:27,082 | 				-> ## 11:52:27     1     0  AB01-6/PX50-87 : Est exclu
+11:52:27,117 | 				-> ## 11:52:27     1     0  AB01-6/PX50-86 : Est exclu
+11:52:27,150 | 				-> ## 11:52:27     1     0  AB01-6/PX50-90 : Est exclu
+11:52:27,185 | 				-> ## 11:52:27     1     0  AB01-6/PX50-57 : Est exclu
+11:52:27,218 | 				-> ## 11:52:27     1     0  AB01-6/PX50-58 : Est exclu
+11:52:27,250 | 				-> ## 11:52:27     1     0  AB01-6/PX50-59 : Est exclu
+11:52:27,284 | 				-> ## 11:52:27     1     0  AB01-6/PX50-76 : Est exclu
+11:52:27,317 | 				-> ## 11:52:27     1     0  AB01-6/PX50-77 : Est exclu
+11:52:27,351 | 				-> ## 11:52:27     1     0  AB01-6/PX50-82 : Est exclu
+11:52:27,387 | 				-> ## 11:52:27     1     0  AB01-6/PX50-95 : Est exclu
+11:52:27,417 | 				-> ## 11:52:27     2     0  AB01-6/PX50-98 : Est exclu
+11:52:27,469 | 				-> ## 11:52:27     2     0  AB01-6/PX50-99 : Est exclu
+11:52:27,504 | 				-> ## 11:52:27     2     0  PX60-1 : Est exclu
+11:52:27,537 | 				-> ## 11:52:27     2     0  AB01-4/PX50-9 : Est exclu
+11:52:27,569 | 				-> ## 11:52:27     2     0  AB01-4/PX50-11 : Est exclu
+11:52:27,612 | 				-> ## 11:52:27     2     0  AB01-4/PX50-1 : Est exclu
+11:52:27,638 | 				-> ## 11:52:27     2     0  AB01-4/PX50-3 : Est exclu
+11:52:27,670 | 				-> ## 11:52:27     2     0  AB01-4/PX50-2 : Est exclu
+11:52:27,702 | 				-> ## 11:52:27     2     0  AB01-4/PX50-4 : Est exclu
+11:52:27,736 | 				-> ## 11:52:27     2     0  AB01-4/PX50-10 : Est exclu
+11:52:27,768 | 				-> ## 11:52:27     2     0  AB01-4/PX50-87 : Est exclu
+11:52:27,805 | 				-> ## 11:52:27     2     0  AB01-4/PX50-75 : Est exclu
+11:52:27,835 | 				-> ## 11:52:27     2     0  AB01-4/PX50-82 : Est exclu
+11:52:27,871 | 				-> ## 11:52:27     2     0  AB01-4/PX50-83 : Est exclu
+11:52:27,902 | 				-> ## 11:52:27     2     0  AB01-4/PX50-14 : Est exclu
+11:52:27,935 | 				-> ## 11:52:27     2     0  AB01-4/PX50-57 : Est exclu
+11:52:27,970 | 				-> ## 11:52:27     2     0  AB01-4/PX50-58 : Est exclu
+11:52:28,001 | 				-> ## 11:52:28     2     0  AB01-4/PX50-59 : Est exclu
+11:52:28,035 | 				-> ## 11:52:28     2     0  AB01-4/PX50-42 : Est exclu
+11:52:28,070 | 				-> ## 11:52:28     2     0  AB01-4/PX50-78 : Est exclu
+11:52:28,100 | 				-> ## 11:52:28     2     0  AB01-4/PX50-40 : Est exclu
+11:52:28,134 | 				-> ## 11:52:28     2     0  AB01-4/PX50-15 : Est exclu
+11:52:28,168 | 				-> ## 11:52:28     2     0  AB01-4/PX50-41 : Est exclu
+11:52:28,201 | 				-> ## 11:52:28     2     0  AB01-4/PX50-80 : Est exclu
+11:52:28,233 | 				-> ## 11:52:28     2     0  AB01-4/PX50-84 : Est exclu
+11:52:28,267 | 				-> ## 11:52:28     2     0  AB01-4/PX50-76 : Est exclu
+11:52:28,301 | 				-> ## 11:52:28     2     0  AB01-4/PX50-77 : Est exclu
+11:52:28,333 | 				-> ## 11:52:28     2     0  AB01-4/PX50-16 : Est exclu
+11:52:28,369 | 				-> ## 11:52:28     2     0  AB01-4/PX50-54 : Est exclu
+11:52:28,400 | 				-> ## 11:52:28     3     0  AB01-4/PX50-79 : Est exclu
+11:52:28,419 | 				-> ## 11:52:28     3     0  AB01-4/PX50-86 : Est exclu
+11:52:28,451 | 				-> ## 11:52:28     3     0  AB01-4/PX50-88 : Est exclu
+11:52:28,496 | 				-> ## 11:52:28     3     0  AB01-4/PX50-90 : Est exclu
+11:52:28,518 | 				-> ## 11:52:28     3     0  AB01-4/PX50-91 : Est exclu
+11:52:28,551 | 				-> ## 11:52:28     3     0  AB01-4/PX50-94 : Est exclu
+11:52:28,584 | 				-> ## 11:52:28     3     0  AB01-4/PX50-95 : Est exclu
+11:52:28,617 | 				-> ## 11:52:28     3     0  AB01-4/PX50-96 : Est exclu
+11:52:28,650 | 				-> ## 11:52:28     3     0  AB01-4/PX50-98 : Est exclu
+11:52:28,686 | 				-> ## 11:52:28     3     0  AB01-4/PX50-100 : Est exclu
+11:52:28,721 | 				-> ## 11:52:28     3     0  AB01-4/PX50-99 : Est exclu
+11:52:28,753 | 				-> ## 11:52:28     3     0  AB01-4/PX50-92 : Est exclu
+11:52:28,784 | 				-> ## 11:52:28     3     0  AP01-1/PC01-1 : Est exclu
+11:52:28,818 | 				-> ## 11:52:28     3     0  AP01-1/PX70-1 : Est exclu
+11:52:28,850 | 				-> ## 11:52:28     3     0  AB01-3/PX50-3 : Est exclu
+11:52:28,885 | 				-> ## 11:52:28     3     0  AB01-3/PX50-1 : Est exclu
+11:52:28,918 | 				-> ## 11:52:28     3     0  AB01-3/PX50-58 : Est exclu
+11:52:28,952 | 				-> ## 11:52:28     3     0  AB01-3/PX50-15 : Est exclu
+11:52:28,984 | 				-> ## 11:52:28     3     0  AB01-3/PX50-57 : Est exclu
+11:52:29,020 | 				-> ## 11:52:29     3     0  AB01-3/PX50-78 : Est exclu
+11:52:29,054 | 				-> ## 11:52:29     3     0  AB01-3/PX50-86 : Est exclu
+11:52:29,085 | 				-> ## 11:52:29     3     0  AB01-3/PX50-87 : Est exclu
+11:52:29,118 | 				-> ## 11:52:29     3     0  AB01-3/PX50-59 : Est exclu
+11:52:29,153 | 				-> ## 11:52:29     3     0  AB01-3/PX50-41 : Est exclu
+11:52:29,199 | 				-> ## 11:52:29     3     0  AB01-3/PX50-14 : Est exclu
+11:52:29,220 | 				-> ## 11:52:29     3     0  AB01-3/PX50-40 : Est exclu
+11:52:29,252 | 				-> ## 11:52:29     3     0  AB01-3/PX50-75 : Est exclu
+11:52:29,285 | 				-> ## 11:52:29     3     0  AB01-3/PX50-77 : Est exclu
+11:52:29,319 | 				-> ## 11:52:29     3     0  AB01-3/PX50-83 : Est exclu
+11:52:29,350 | 				-> ## 11:52:29     3     0  AB01-3/PX50-82 : Est exclu
+11:52:29,367 | 				-> ## 11:52:29     3     0  AB01-3/PX50-76 : Est exclu
+11:52:29,383 | 				-> ## 11:52:29     3     0  AB01-3/PX50-79 : Est exclu
+11:52:29,400 | 				-> ## 11:52:29     4     0  AB01-3/PX50-90 : Est exclu
+11:52:29,434 | 				-> ## 11:52:29     4     0  AB01-3/PX50-98 : Est exclu
+11:52:29,467 | 				-> ## 11:52:29     4     0  AB01-3/PX50-91 : Est exclu
+11:52:29,502 | 				-> ## 11:52:29     4     0  AB01-3/PX50-94 : Est exclu
+11:52:29,534 | 				-> ## 11:52:29     4     0  AB01-3/PX50-99 : Est exclu
+11:52:29,568 | 				-> ## 11:52:29     4     0  AB01-3/PX50-95 : Est exclu
+11:52:29,601 | 				-> ## 11:52:29     4     0  AB01-5/PX50-3 : Est exclu
+11:52:29,635 | 				-> ## 11:52:29     4     0  AB01-5/PX50-1 : Est exclu
+11:52:29,667 | 				-> ## 11:52:29     4     0  AB01-5/PX50-58 : Est exclu
+11:52:29,702 | 				-> ## 11:52:29     4     0  AB01-5/PX50-15 : Est exclu
+11:52:29,736 | 				-> ## 11:52:29     4     0  AB01-5/PX50-57 : Est exclu
+11:52:29,781 | 				-> ## 11:52:29     4     0  AB01-5/PX50-78 : Est exclu
+11:52:29,802 | 				-> ## 11:52:29     4     0  AB01-5/PX50-86 : Est exclu
+11:52:29,835 | 				-> ## 11:52:29     4     0  AB01-5/PX50-87 : Est exclu
+11:52:29,868 | 				-> ## 11:52:29     4     0  AB01-5/PX50-59 : Est exclu
+11:52:29,903 | 				-> ## 11:52:29     4     0  AB01-5/PX50-41 : Est exclu
+11:52:29,934 | 				-> ## 11:52:29     4     0  AB01-5/PX50-14 : Est exclu
+11:52:29,969 | 				-> ## 11:52:29     4     0  AB01-5/PX50-40 : Est exclu
+11:52:30,000 | 				-> ## 11:52:29     4     0  AB01-5/PX50-75 : Est exclu
+11:52:30,017 | 				-> ## 11:52:30     4     0  AB01-5/PX50-77 : Est exclu
+11:52:30,051 | 				-> ## 11:52:30     4     0  AB01-5/PX50-83 : Est exclu
+11:52:30,084 | 				-> ## 11:52:30     4     0  AB01-5/PX50-82 : Est exclu
+11:52:30,117 | 				-> ## 11:52:30     4     0  AB01-5/PX50-76 : Est exclu
+11:52:30,133 | 				-> ## 11:52:30     4     0  AB01-5/PX50-79 : Est exclu
+11:52:30,153 | 				-> ## 11:52:30     4     0  AB01-5/PX50-90 : Est exclu
+11:52:30,187 | 				-> ## 11:52:30     4     0  AB01-5/PX50-98 : Est exclu
+11:52:30,217 | 				-> ## 11:52:30     4     0  AB01-5/PX50-91 : Est exclu
+11:52:30,250 | 				-> ## 11:52:30     4     0  AB01-5/PX50-94 : Est exclu
+11:52:30,286 | 				-> ## 11:52:30     4     0  AB01-5/PX50-99 : Est exclu
+11:52:30,320 | 				-> ## 11:52:30     4     0  AB01-5/PX50-95 : Est exclu
+11:52:30,352 | 				-> ## 11:52:30     4     0  AB01-1/PX50-2 : Est exclu
+11:52:30,385 | 				-> ## 11:52:30     4     0  AB01-1/PX50-1 : Est exclu
+11:52:30,418 | 				-> ## 11:52:30     5     0  AB01-1/PX50-4 : Est exclu
+11:52:30,453 | 				-> ## 11:52:30     5     0  AB01-1/PX50-57 : Est exclu
+11:52:30,486 | 				-> ## 11:52:30     5     0  AB01-1/PX50-54 : Est exclu
+11:52:30,519 | 				-> ## 11:52:30     5     0  AB01-1/PX50-42 : Est exclu
+11:52:30,552 | 				-> ## 11:52:30     5     0  AB01-1/PX50-76 : Est exclu
+11:52:30,584 | 				-> ## 11:52:30     5     0  AB01-1/PX50-3 : Est exclu
+11:52:30,618 | 				-> ## 11:52:30     5     0  AB01-1/PX50-9 : Est exclu
+11:52:30,650 | 				-> ## 11:52:30     5     0  AB01-1/PX50-11 : Est exclu
+11:52:30,684 | 				-> ## 11:52:30     5     0  AB01-1/PX50-10 : Est exclu
+11:52:30,720 | 				-> ## 11:52:30     5     0  AB01-1/PX50-12 : Est exclu
+11:52:30,751 | 				-> ## 11:52:30     5     0  AB01-1/PX50-75 : Est exclu
+11:52:30,798 | 				-> ## 11:52:30     5     0  AB01-1/PX50-16 : Est exclu
+11:52:30,817 | 				-> ## 11:52:30     5     0  AB01-1/PX50-40 : Est exclu
+11:52:30,851 | 				-> ## 11:52:30     5     0  AB01-1/PX50-15 : Est exclu
+11:52:30,887 | 				-> ## 11:52:30     5     0  AB01-1/PX50-41 : Est exclu
+11:52:30,919 | 				-> ## 11:52:30     5     0  AB01-1/PX50-58 : Est exclu
+11:52:30,950 | 				-> ## 11:52:30     5     0  AB01-1/PX50-79 : Est exclu
+11:52:30,969 | 				-> ## 11:52:30     5     0  AB01-1/PX50-80 : Est exclu
+11:52:31,002 | 				-> ## 11:52:31     5     0  AB01-1/PX50-83 : Est exclu
+11:52:31,035 | 				-> ## 11:52:31     5     0  AB01-1/PX50-14 : Est exclu
+11:52:31,068 | 				-> ## 11:52:31     5     0  AB01-1/PX50-77 : Est exclu
+11:52:31,101 | 				-> ## 11:52:31     5     0  AB01-1/PX50-86 : Est exclu
+11:52:31,136 | 				-> ## 11:52:31     5     0  AB01-1/PX50-59 : Est exclu
+11:52:31,169 | 				-> ## 11:52:31     5     0  AB01-1/PX50-88 : Est exclu
+11:52:31,201 | 				-> ## 11:52:31     5     0  AB01-1/PX50-87 : Est exclu
+11:52:31,249 | 				-> ## 11:52:31     5     0  AB01-1/PX50-92 : Est exclu
+11:52:31,266 | 				-> ## 11:52:31     5     0  AB01-1/PX50-94 : Est exclu
+11:52:31,285 | 				-> ## 11:52:31     5     0  AB01-1/PX50-95 : Est exclu
+11:52:31,318 | 				-> ## 11:52:31     5     0  AB01-1/PX50-96 : Est exclu
+11:52:31,350 | 				-> ## 11:52:31     5     0  AB01-1/PX50-84 : Est exclu
+11:52:31,386 | 				-> ## 11:52:31     5     0  AB01-1/PX50-91 : Est exclu
+11:52:31,419 | 				-> ## 11:52:31     6     0  AB01-1/PX50-78 : Est exclu
+11:52:31,450 | 				-> ## 11:52:31     6     0  AB01-1/PX50-82 : Est exclu
+11:52:31,487 | 				-> ## 11:52:31     6     0  AB01-1/PX50-99 : Est exclu
+11:52:31,517 | 				-> ## 11:52:31     6     0  AB01-1/PX50-90 : Est exclu
+11:52:31,550 | 				-> ## 11:52:31     6     0  AB01-1/PX50-100 : Est exclu
+11:52:31,587 | 				-> ## 11:52:31     6     0  AB01-1/PX50-98 : Est exclu
+11:52:31,918 | 				-> ## 11:52:31     6     0  Executé en 5s930
+11:52:31,967 | 				-> ## 11:52:31     6     0  

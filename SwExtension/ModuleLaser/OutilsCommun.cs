@@ -240,6 +240,11 @@ namespace ModuleLaser
 
         /// <summary>
         /// Renvoi la liste unique des modeles et configurations
+        /// Modele : ModelDoc2
+        ///     |-Config1 : Nom de la configuration
+        ///     |     |-Nb : quantite de configuration identique dans le modele complet
+        ///     |-Config 2
+        ///     | etc...
         /// </summary>
         /// <param name="mdlBase"></param>
         /// <param name="composantsExterne"></param>
@@ -324,6 +329,15 @@ namespace ModuleLaser
         /// <summary>
         /// Renvoi la liste des modeles avec la liste des configurations, des dossiers
         /// et les quantites de chaque dossier dans l'assemblage
+        /// Modele : ModelDoc2
+        ///     |-Config1 : Nom de la configuration
+        ///     |     |-Dossier1 : Comparaison avec la propriete RefDossier, référence à l'Id de la fonction pour pouvoir le selectionner plus tard
+        ///     |     |      |- Nb : quantite de corps identique dans le modele complet
+        ///     |     |
+        ///     |     |-Dossier2
+        ///     |            |- Nb
+        ///     |-Config 2
+        ///     | etc...
         /// </summary>
         /// <param name="mdlBase"></param>
         /// <param name="composantsExterne"></param>
@@ -363,7 +377,10 @@ namespace ModuleLaser
                 mdlBase.eComposantRacine().eRecParcourirComposantBase(
                         comp =>
                         {
-                            if (comp.IsSuppressed() || comp.ExcludeFromBOM) return;
+                            if (comp.IsSuppressed() || comp.ExcludeFromBOM || comp.TypeDoc() != eTypeDoc.Piece) return;
+
+                            if (filtreComposant.IsRef() && !filtreComposant(comp))
+                                return;
 
                             foreach (var fDossier in comp.eListeDesFonctionsDePiecesSoudees())
                             {
@@ -376,9 +393,6 @@ namespace ModuleLaser
                                         var RefDossier = SwDossier.eProp(CONSTANTES.REF_DOSSIER);
                                         if (RefDossier == DossierTest.Repere)
                                         {
-                                            if (filtreComposant.IsRef() && filtreComposant(comp))
-                                                DossierTest.FiltreComposant = true;
-
                                             DossierTest.Nb += SwDossier.eNbCorps();
                                             Ajoute = true;
                                             break;
@@ -389,11 +403,6 @@ namespace ModuleLaser
                                     {
                                         var RefDossier = SwDossier.eProp(CONSTANTES.REF_DOSSIER);
                                         var dossier = new Dossier(RefDossier, comp.eModelDoc2(), comp.eNomConfiguration(), fDossier.GetID());
-
-                                        // Si le filtre renvoi false
-                                        // on desactive la propriete filtre
-                                        if (filtreComposant.IsRef() && !filtreComposant(comp))
-                                            dossier.FiltreComposant = false;
 
                                         dossier.Nb = SwDossier.eNbCorps();
                                         ListeDossiers.Add(dossier);
@@ -413,9 +422,6 @@ namespace ModuleLaser
 
                 foreach (var dossier in ListeDossiers)
                 {
-                    if (!dossier.FiltreComposant)
-                        continue;
-
                     if (dic.ContainsKey(dossier.Mdl))
                     {
                         var lcfg = dic[dossier.Mdl];
@@ -452,7 +458,6 @@ namespace ModuleLaser
             public ModelDoc2 Mdl;
             public String Config;
             public int Nb = 0;
-            public Boolean FiltreComposant = true;
 
             public Dossier(String repere, ModelDoc2 mdl, String config, int id)
             {
