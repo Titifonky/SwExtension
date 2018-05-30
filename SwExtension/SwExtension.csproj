@@ -90,6 +90,7 @@
     <Compile Include="Macros\BoutonMasquerCorpsVue.cs" />
     <Compile Include="Macros\BoutonSelectionnerCorpsIdentiques.cs" />
     <Compile Include="Macros\BoutonAfficherLogDebug.cs" />
+    <Compile Include="ModuleLaser\BoutonExportStructure.cs" />
     <Compile Include="Macros\Test2.cs" />
     <Compile Include="Macros\Test.cs" />
     <Compile Include="ModuleEmpreinte\PageEmpreinte - Copier.cs" />

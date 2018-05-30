@@ -60,14 +60,22 @@ namespace ModuleLaser
 
                             var piece = mdl.ePartDoc();
                             var NbConfig = lst[mdl][cfg];
-                            foreach (var fDossier in piece.eListeDesFonctionsDePiecesSoudees())
+                            var ListeDossier = piece.eListeDesFonctionsDePiecesSoudees(
+                                swD =>
+                                {
+                                    BodyFolder Dossier = swD.GetSpecificFeature2();
+                                    eTypeCorps TypeCorps = Dossier.eTypeDeDossier();
+
+                                    if (Dossier.IsNull() || Dossier.eNbCorps() == 0 || !(TypeCorps == eTypeCorps.Barre || TypeCorps == eTypeCorps.Tole))
+                                        return false;
+
+                                    return true;
+                                }
+                                );
+
+                            foreach (var fDossier in ListeDossier)
                             {
                                 BodyFolder Dossier = fDossier.GetSpecificFeature2();
-                                eTypeCorps TypeCorps = Dossier.eTypeDeDossier();
-
-                                if (Dossier.IsNull() || Dossier.eNbCorps() == 0 || !(TypeCorps == eTypeCorps.Barre || TypeCorps == eTypeCorps.Tole))
-                                    continue;
-
                                 CustomPropertyManager PM = fDossier.CustomPropertyManager;
                                 String NomParam = "";
 
@@ -107,13 +115,14 @@ namespace ModuleLaser
                                 }
 
                                 var SwCorps = Dossier.ePremierCorps();
-                                if (SwCorps.IsNull()) continue;
 
                                 Boolean Ajoute = false;
 
                                 var MateriauCorps = SwCorps.eGetMateriauCorpsOuPiece(piece, cfg);
                                 var nbCorps = Dossier.eNbCorps() * NbConfig;
                                 Dimension param = mdl.Parameter(NomParam);
+
+                                eTypeCorps TypeCorps = Dossier.eTypeDeDossier();
 
                                 if (CombinerCorpsIdentiques)
                                 {

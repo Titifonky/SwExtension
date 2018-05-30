@@ -1062,7 +1062,7 @@ namespace ModuleLaser.ModuleExportBarre
 
             ListeD.Sort(new WindowsStringComparer(ListSortDirection.Ascending));
 
-            Indice = ChercherIndice(ListeD);
+            Indice = OutilsCommun.ChercherIndice(ListeD);
 
             DossierExport = Path.Combine(MdlBase.eDossier(), NomBase + " - " + Indice);
 
@@ -1079,18 +1079,7 @@ namespace ModuleLaser.ModuleExportBarre
 
         }
 
-        private readonly String ChaineIndice = "ZYXWVUTSRQPONMLKJIHGFEDCBA";
-
-        private String ChercherIndice(List<String> liste)
-        {
-            for (int i = 0; i < ChaineIndice.Length; i++)
-            {
-                if (liste.Any(d => { return d.EndsWith(" Ind " + ChaineIndice[i]) ? true : false; }))
-                    return "Ind " + ChaineIndice[Math.Max(0, i - 1)];
-            }
-
-            return "Ind " + ChaineIndice.Last();
-        }
+        
 
         private class InfosBarres : List<List<String>>
         {

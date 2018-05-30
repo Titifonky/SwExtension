@@ -6,15 +6,16 @@ using ModuleExportFichier.ModuleDxfDwg;
 using ModuleExportFichier.ModulePdf;
 using ModuleImporterInfos;
 using ModuleInsererPercage;
+using ModuleLaser;
 using ModuleLaser.ModuleCreerConfigDvp;
 using ModuleLaser.ModuleCreerDvp;
 using ModuleLaser.ModuleExportBarre;
 using ModuleLaser.ModuleListeDebit;
 using ModuleLaser.ModuleNumeroterDossier;
 using ModuleLierLesConfigurations;
+using ModuleListerConfigComp;
 using ModuleListerMateriaux;
 using ModuleListerPercage;
-using ModuleListerConfigComp;
 using ModuleMarcheConfig.ModuleConfigurerContreMarche;
 using ModuleMarcheConfig.ModuleConfigurerPlatine;
 using ModuleMarcheConfig.ModuleInsererEsquisseConfig;
@@ -92,6 +93,7 @@ namespace SwExtension
 
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde("Eb", typeof(PageExportBarre));
+                _Mnu.AjouterCmde("Es", typeof(BoutonExportStructure));
                 _Mnu.AjouterCmde("Ld", typeof(PageListeDebit));
 
                 _Mnu.NouveauGroupe();

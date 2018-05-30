@@ -95,7 +95,16 @@ namespace ModuleLaser.ModuleCreerConfigDvp
 
                         PartDoc Piece = mdl.ePartDoc();
 
-                        var ListeDossier = Piece.eListePIDdesFonctionsDePiecesSoudees(null);
+                        var ListeDossier = Piece.eListePIDdesFonctionsDePiecesSoudees(
+                            swD =>
+                            {
+                                BodyFolder dossier = swD.GetSpecificFeature2();
+                                if (dossier.eEstExclu() || dossier.IsNull() || (dossier.GetBodyCount() == 0) || dossier.eTypeDeDossier() != eTypeCorps.Tole)
+                                    return false;
+
+                                return true;
+                            }
+                            );
 
                         for (int noD = 0; noD < ListeDossier.Count; noD++)
                         {
@@ -104,13 +113,7 @@ namespace ModuleLaser.ModuleCreerConfigDvp
 
                             var RefDossier = dossier.eProp(CONSTANTES.REF_DOSSIER);
 
-                            if (dossier.eEstExclu() || dossier.IsNull() || (dossier.GetBodyCount() == 0)) continue;
-                            
-
                             Body2 Tole = dossier.eCorpsDeTolerie();
-
-                            if (Tole.IsNull())
-                                continue;
 
                             var pidTole = new SwObjectPID<Body2>(Tole, MdlBase);
 

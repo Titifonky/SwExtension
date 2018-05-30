@@ -90,29 +90,6 @@ namespace Macros
         //    try
         //    {
         //        ModelDoc2 mdl = App.ModelDoc2;
-        //        List<Face2> ListeFaces = mdl.eSelect_RecupererListeObjets<Face2>();
-
-        //        Body2 CorpsBase = ListeFaces[0].GetBody();
-        //        Body2 CorpsTest = ListeFaces[1].GetBody();
-        //        WindowLog.Ecrire(CorpsBase.Name);
-
-        //        MathTransform mt = null;
-        //        Boolean r = CorpsBase.GetCoincidenceTransform2((Object)CorpsTest, out mt);
-        //        if (r == true)
-        //            WindowLog.Ecrire("Coincidence : " + CorpsBase.Name + " et " + CorpsTest.Name);
-        //        else
-        //            WindowLog.Ecrire("Ne coincide pas : " + CorpsBase.Name + " et " + CorpsTest.Name);
-
-        //    }
-        //    catch (Exception e) { this.LogMethode(new Object[] { e }); }
-
-        //}
-
-        //protected override void Command()
-        //{
-        //    try
-        //    {
-        //        ModelDoc2 mdl = App.ModelDoc2;
         //        //var DossierExport = mdl.eDossier();
         //        //var NomFichier = mdl.eNomSansExt();
 

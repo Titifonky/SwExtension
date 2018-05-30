@@ -281,7 +281,7 @@ namespace ModuleLaser
                 mdlBase.eComposantRacine().eRecParcourirComposantBase(
                         comp =>
                         {
-                            if (comp.IsSuppressed() || comp.ExcludeFromBOM) return;
+                            if (comp.IsSuppressed() || comp.ExcludeFromBOM || comp.TypeDoc() != eTypeDoc.Piece) return;
 
                             var mdl = comp.eModelDoc2();
                             var cfg = comp.eNomConfiguration();
@@ -295,9 +295,9 @@ namespace ModuleLaser
                             foreach (var fDossier in comp.eListeDesFonctionsDePiecesSoudees())
                             {
                                 BodyFolder SwDossier = fDossier.GetSpecificFeature2();
-                                if (SwDossier.IsRef() ||
-                                SwDossier.eNbCorps() > 0 ||
-                                !SwDossier.eEstExclu() ||
+                                if (SwDossier.IsRef() &&
+                                SwDossier.eNbCorps() > 0 &&
+                                !SwDossier.eEstExclu() &&
                                 filtreTypeCorps.HasFlag(SwDossier.eTypeDeDossier()))
                                 {
                                     if (dic.ContainsKey(mdl))
@@ -466,6 +466,19 @@ namespace ModuleLaser
                 Config = config;
                 Id = id;
             }
+        }
+
+        private static readonly String ChaineIndice = "ZYXWVUTSRQPONMLKJIHGFEDCBA";
+
+        public static String ChercherIndice(List<String> liste)
+        {
+            for (int i = 0; i < ChaineIndice.Length; i++)
+            {
+                if (liste.Any(d => { return d.EndsWith(" Ind " + ChaineIndice[i]) ? true : false; }))
+                    return "Ind " + ChaineIndice[Math.Max(0, i - 1)];
+            }
+
+            return "Ind " + ChaineIndice.Last();
         }
     }
 }

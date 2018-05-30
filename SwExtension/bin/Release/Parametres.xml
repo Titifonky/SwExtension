@@ -183,4 +183,5 @@
     <Parametre name="CombinerCorpsIdentiques" intitule="Combiner les corps identiques des différents modèles" tip="" type="System.Boolean">True</Parametre>
   </Module>
   <Module name="AfficherLogDebug" intitule="Afficher le log de debug" />
+  <Module name="ExportStructure" intitule="Exporter les structures" />
 </Parametres>
