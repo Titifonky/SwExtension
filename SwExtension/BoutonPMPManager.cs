@@ -111,8 +111,8 @@ namespace SwExtension
 
         private Boolean CanRaiseEvent([CallerMemberName] String methode = "")
         {
-            this.LogMethode(new Object[] { "CanRaiseEvent", IsShow & IsInit });
-            Log.Message("Callback methode -> " + methode);
+            //this.LogMethode(new Object[] { "CanRaiseEvent", IsShow & IsInit });
+            //Log.Message("Callback methode -> " + methode);
             return IsShow & IsInit;
         }
 

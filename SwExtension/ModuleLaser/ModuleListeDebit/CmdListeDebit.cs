@@ -85,6 +85,12 @@ namespace ModuleLaser
 
                                 if (String.IsNullOrWhiteSpace(Profil) || (Longueur == 0)) continue;
 
+                                if(String.IsNullOrWhiteSpace(RefDossier))
+                                {
+                                    WindowLog.EcrireF("{0}-{1}-{2} : Pas de reférence profil", mdl.eNomSansExt(), NomConfigPliee, fDossier.Name);
+                                    continue;
+                                }
+
                                 var Materiau = dossier.ePremierCorps().eGetMateriauCorpsOuPiece(Piece, NomConfigPliee);
 
                                 if (!HashMateriaux.Contains(Materiau)) continue;
