@@ -31,6 +31,7 @@ namespace ModuleLaser
             }
 
             private CtrlCheckBox _CheckBox_CombinerCorps;
+            private CtrlCheckBox _CheckBox_MajDossiers;
 
             protected void Calque()
             {
@@ -41,6 +42,7 @@ namespace ModuleLaser
                     G = _Calque.AjouterGroupe("Options");
 
                     _CheckBox_CombinerCorps = G.AjouterCheckBox(CombinerCorpsIdentiques);
+                    //_CheckBox_MajDossiers = G.AjouterCheckBox("Ne pas supprimer les refs existantes");
                 }
                 catch (Exception e)
                 { this.LogMethode(new Object[] { e }); }
@@ -52,6 +54,7 @@ namespace ModuleLaser
 
                 Cmd.MdlBase = App.Sw.ActiveDoc;
                 Cmd.CombinerCorpsIdentiques = _CheckBox_CombinerCorps.IsChecked;
+                //Cmd.MajDossiers = _CheckBox_MajDossiers.IsChecked;
 
                 Cmd.Executer();
             }

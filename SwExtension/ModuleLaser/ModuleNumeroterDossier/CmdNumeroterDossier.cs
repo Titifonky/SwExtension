@@ -16,16 +16,11 @@ namespace ModuleLaser
         {
             public ModelDoc2 MdlBase = null;
             public Boolean CombinerCorpsIdentiques = false;
+            public Boolean MajDossiers = false;
 
-            private int indice = 1;
+            private int indice = 0;
 
-            private int GenRepereDossier
-            {
-                get
-                {
-                    return indice++;
-                }
-            }
+            private int GenRepereDossier { get { return ++indice; } }
 
             /// <summary>
             /// Pour pouvoir obtenir une référence unique pour chaque dossier de corps, identiques
@@ -39,6 +34,9 @@ namespace ModuleLaser
             {
                 try
                 {
+                    if (MajDossiers)
+                        IndiceMax();
+
                     var ListeCorps = new List<Corps>();
 
                     var lst = MdlBase.ListerComposants(false, eTypeCorps.Tole | eTypeCorps.Barre);
@@ -53,7 +51,6 @@ namespace ModuleLaser
                         mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
                         EsquisseRepere(mdl);
 
-
                         foreach (var cfg in lst[mdl].Keys)
                         {
                             mdl.ShowConfiguration2(cfg);
@@ -67,7 +64,7 @@ namespace ModuleLaser
                                 swD =>
                                 {
                                     BodyFolder Dossier = swD.GetSpecificFeature2();
-                                    
+
                                     // Si le dossier est la racine d'un sous-ensemble soudé, il n'y a rien dedans
                                     if (Dossier.IsRef() && Dossier.eNbCorps() > 0)
                                     {
@@ -84,6 +81,7 @@ namespace ModuleLaser
                             {
                                 BodyFolder Dossier = fDossier.GetSpecificFeature2();
                                 CustomPropertyManager PM = fDossier.CustomPropertyManager;
+
                                 String NomParam = "";
 
                                 WindowLog.EcrireF("     {0}", fDossier.Name);
@@ -98,6 +96,7 @@ namespace ModuleLaser
                                 //              P"D1@REPERAGE_DOSSIER@Nom_de_la_piece.SLDPRT"
                                 //      Si oui, on récupère le nom du paramètre
                                 var clef = mdl.GetPathName() + "___" + fDossier.GetID();
+
                                 if (!DossierTraite.Contains(clef))
                                 {
                                     DossierTraite.Add(clef);
@@ -105,11 +104,13 @@ namespace ModuleLaser
                                     IndexDimension.AddIfNotExistOrPlus(mdl.GetPathName());
 
                                     NomParam = String.Format("D{0}@{1}", IndexDimension[mdl.GetPathName()]++, CONSTANTES.NOM_ESQUISSE_NUMEROTER);
-                                    var propVal = String.Format("P\"{0}@{1}\"", NomParam, mdl.eNomAvecExt());
+                                    var propVal = String.Format("{0}\"{1}@{2}\"", CONSTANTES.PREFIXE_REF_DOSSIER, NomParam, mdl.eNomAvecExt());
                                     var r = PM.ePropAdd(CONSTANTES.REF_DOSSIER, propVal);
 
-                                    if(r > 0)
+                                    if (r > 0)
                                         WindowLog.EcrireF("{0}-{1}-{2} : Pas de propriété ajoutée {3}", mdl.eNomSansExt(), cfg, fDossier.Name, (swCustomInfoAddResult_e)r);
+
+                                    PM.ePropAdd(CONSTANTES.DESC_DOSSIER, propVal);
                                 }
                                 else
                                 {
@@ -117,9 +118,16 @@ namespace ModuleLaser
                                     var r = PM.Get6(CONSTANTES.REF_DOSSIER, false, out val, out result, out wasResolved, out link);
 
                                     if (r == 1)
-                                        WindowLog.EcrireF("{0}-{1}-{2} : Pas de propriété ajoutée {3}", mdl.eNomSansExt(), cfg, fDossier.Name, (swCustomInfoGetResult_e)r);
+                                        WindowLog.EcrireF("{0}-{1}-{2} : Pas de propriété {3}", mdl.eNomSansExt(), cfg, fDossier.Name, (swCustomInfoGetResult_e)r);
 
-                                    NomParam = val.Replace("P\"", "").Replace("@" + mdl.eNomAvecExt() + "\"", "");
+                                    NomParam = val.Replace(CONSTANTES.PREFIXE_REF_DOSSIER + "\"", "").Replace("@" + mdl.eNomAvecExt() + "\"", "");
+                                }
+
+                                {
+                                    String val, result = ""; Boolean wasResolved, link;
+                                    var r = PM.Get6(CONSTANTES.REF_DOSSIER, false, out val, out result, out wasResolved, out link);
+
+                                    PM.ePropAdd(CONSTANTES.DESC_DOSSIER, val);
                                 }
 
                                 // On ajoute la propriété NomDossier
@@ -153,6 +161,8 @@ namespace ModuleLaser
                                             CorpsTest.Nb += nbCorps;
 
                                             var errors = param.SetSystemValue3(CorpsTest.Repere * 0.001, (int)swSetValueInConfiguration_e.swSetValue_InSpecificConfigurations, cfg);
+                                            if (errors > 0)
+                                                WindowLog.EcrireF(" Erreur de mise à jour {0}", (swSetValueReturnStatus_e)errors);
 
                                             CorpsTest.AjouterModele(mdl, cfg, fDossier.GetID());
                                             Ajoute = true;
@@ -161,10 +171,13 @@ namespace ModuleLaser
                                     }
                                 }
 
-                                if (Ajoute == false)
+                                if ((Ajoute == false))
                                 {
                                     var rep = GenRepereDossier;
                                     var errors = param.SetSystemValue3(rep * 0.001, (int)swSetValueInConfiguration_e.swSetValue_InSpecificConfigurations, cfg);
+
+                                    if (errors > 0)
+                                        WindowLog.EcrireF(" Erreur de mise à jour {0}", (swSetValueReturnStatus_e)errors);
 
                                     var corps = new Corps(SwCorps, TypeCorps, MateriauCorps);
                                     corps.Nb = nbCorps;
@@ -348,6 +361,46 @@ namespace ModuleLaser
                 {
                     AjouterModele(comp.eModelDoc2(), comp.eNomConfiguration(), dossier);
                 }
+            }
+
+            private void IndiceMax()
+            {
+                eTypeCorps Filtre = eTypeCorps.Barre | eTypeCorps.Tole;
+
+                var Dic = new HashSet<String>();
+
+                var dic = MdlBase.eRecParcourirComposants(
+                    comp =>
+                    {
+                        if (!comp.IsSuppressed())
+                        {
+                            var clef = comp.eNomAvecExt() + "___" + comp.eNomConfiguration();
+                            if (!Dic.Contains(clef))
+                            {
+                                Dic.Add(clef);
+
+                                var l = comp.eListeDesFonctionsDePiecesSoudees(
+                                    f =>
+                                    {
+                                        BodyFolder dossier = f.GetSpecificFeature2();
+                                        if (dossier.IsRef() && dossier.eNbCorps() > 0 && Filtre.HasFlag(dossier.eTypeDeDossier()))
+                                        {
+                                            var RefDossier = dossier.eProp(CONSTANTES.REF_DOSSIER).Replace(CONSTANTES.PREFIXE_REF_DOSSIER, "");
+                                            if (RefDossier.eIsInteger())
+                                                indice = Math.Max(indice, RefDossier.eToInteger());
+                                        }
+
+                                        return true;
+                                    }
+                                    );
+                            }
+
+                        }
+                        return false;
+                    }
+                    );
+
+                WindowLog.EcrireF("Indice Max : {0}", indice);
             }
         }
     }

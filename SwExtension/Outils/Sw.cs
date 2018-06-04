@@ -1136,6 +1136,8 @@ namespace Outils
         internal const String EPAISSEUR_DE_TOLE = "Epaisseur de la tôle";
         internal const String NO_DOSSIER = "NoDossier";
         internal const String REF_DOSSIER = "RefDossier";
+        internal const String PREFIXE_REF_DOSSIER = "P";
+        internal const String DESC_DOSSIER = "Description";
         internal const String NOM_DOSSIER = "NomDossier";
         internal const String NOM_ESQUISSE_NUMEROTER = "REPERAGE_DOSSIER";
         internal const String NOM_BLOCK_ESQUISSE_NUMEROTER = "REPERAGE_DOSSIER.sldblk";
