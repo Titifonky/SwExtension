@@ -98,6 +98,7 @@ namespace SwExtension
 
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde("Nd", typeof(PageNumeroterDossier));
+                _Mnu.AjouterCmde("Vn", typeof(BoutonVerifierNumerotation));
 
                 //==================================================================================================
                 _Mnu = _eListeMenu.Add("Escalier", "Fonctions d'aide à la création d'escalier");

@@ -184,4 +184,5 @@
   </Module>
   <Module name="AfficherLogDebug" intitule="Afficher le log de debug" />
   <Module name="ExportStructure" intitule="Exporter les structures" />
+  <Module name="VerifierNumerotation" intitule="Verifier la numerotation" />
 </Parametres>

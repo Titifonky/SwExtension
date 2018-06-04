@@ -2790,9 +2790,11 @@ namespace Outils
             return result;
         }
 
-        public static void ePropAdd(this CustomPropertyManager pm, String nomPropriete, Object val, swCustomPropertyAddOption_e action = swCustomPropertyAddOption_e.swCustomPropertyDeleteAndAdd)
+        public static int ePropAdd(this CustomPropertyManager pm, String nomPropriete, Object val, swCustomPropertyAddOption_e action = swCustomPropertyAddOption_e.swCustomPropertyDeleteAndAdd)
         {
-            pm.Add3(nomPropriete, (int)swCustomInfoType_e.swCustomInfoText, val.ToString(), (int)action);
+            var r = pm.Add3(nomPropriete, (int)swCustomInfoType_e.swCustomInfoText, val.ToString(), (int)action);
+
+            return r;
         }
 
         public static void ePropSet(this CustomPropertyManager pm, String nomPropriete, Object val)

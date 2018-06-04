@@ -53,10 +53,13 @@ namespace ModuleLaser
                         mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
                         EsquisseRepere(mdl);
 
+
                         foreach (var cfg in lst[mdl].Keys)
                         {
                             mdl.ShowConfiguration2(cfg);
                             mdl.EditRebuild3();
+                            WindowLog.SautDeLigne();
+                            WindowLog.EcrireF("{0} \"{1}\"", mdl.eNomSansExt(), cfg);
 
                             var piece = mdl.ePartDoc();
                             var NbConfig = lst[mdl][cfg];
@@ -83,6 +86,8 @@ namespace ModuleLaser
                                 CustomPropertyManager PM = fDossier.CustomPropertyManager;
                                 String NomParam = "";
 
+                                WindowLog.EcrireF("     {0}", fDossier.Name);
+
                                 // On recherche si le dossier à déjà été traité.
                                 //      Si non, on ajoute le dossier à la liste
                                 //          On met à jour la liste des index des dimensions :
@@ -101,12 +106,19 @@ namespace ModuleLaser
 
                                     NomParam = String.Format("D{0}@{1}", IndexDimension[mdl.GetPathName()]++, CONSTANTES.NOM_ESQUISSE_NUMEROTER);
                                     var propVal = String.Format("P\"{0}@{1}\"", NomParam, mdl.eNomAvecExt());
-                                    PM.ePropAdd(CONSTANTES.REF_DOSSIER, propVal);
+                                    var r = PM.ePropAdd(CONSTANTES.REF_DOSSIER, propVal);
+
+                                    if(r > 0)
+                                        WindowLog.EcrireF("{0}-{1}-{2} : Pas de propriété ajoutée {3}", mdl.eNomSansExt(), cfg, fDossier.Name, (swCustomInfoAddResult_e)r);
                                 }
                                 else
                                 {
                                     String val, result = ""; Boolean wasResolved, link;
-                                    PM.Get6(CONSTANTES.REF_DOSSIER, false, out val, out result, out wasResolved, out link);
+                                    var r = PM.Get6(CONSTANTES.REF_DOSSIER, false, out val, out result, out wasResolved, out link);
+
+                                    if (r == 1)
+                                        WindowLog.EcrireF("{0}-{1}-{2} : Pas de propriété ajoutée {3}", mdl.eNomSansExt(), cfg, fDossier.Name, (swCustomInfoGetResult_e)r);
+
                                     NomParam = val.Replace("P\"", "").Replace("@" + mdl.eNomAvecExt() + "\"", "");
                                 }
 
@@ -172,6 +184,7 @@ namespace ModuleLaser
                     MdlBase.EditRebuild3();
 
                     // Petit récap
+                    WindowLog.SautDeLigne();
                     WindowLog.EcrireF("Nb de corps unique : {0}", ListeCorps.Count);
 
                     int nbtt = 0;
