@@ -184,6 +184,8 @@ namespace ModuleLaser
                 }
             }
 
+            ListeEp.Sort(new WindowsStringComparer());
+
             return ListeEp;
         }
 
