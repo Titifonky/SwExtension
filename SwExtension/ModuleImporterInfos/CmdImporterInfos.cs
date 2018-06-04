@@ -33,7 +33,9 @@ namespace ModuleImporterInfos
                     MdlBase.ForceRebuild3(false);
             }
             catch (Exception e)
-            { this.LogMethode(new Object[] { e }); }
+            {
+                this.LogErreur(new Object[] { e });
+            }
         }
 
         private void LireInfos()

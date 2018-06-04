@@ -26,49 +26,56 @@ namespace ModuleMarcheConfig
 
             protected override void Command()
             {
-                _NomConfigCourante = MdlBase.eNomConfigActive();
-
-                if (SurTouteLesConfigs)
+                try
                 {
-                    var pidF_Dessus = new SwObjectPID<Face2>(F_Dessus, MdlBase);
-                    var pidF_Devant = new SwObjectPID<Face2>(F_Devant, MdlBase);
-                    var pidPltG_Plan = new SwObjectPID<Feature>(PltG_Plan, MdlBase);
-                    var pidPltD_Plan = new SwObjectPID<Feature>(PltD_Plan, MdlBase);
-                    var pidPltG = new SwObjectPID<Component2>(PltG, MdlBase);
-                    var pidPltD = new SwObjectPID<Component2>(PltD, MdlBase);
+                    _NomConfigCourante = MdlBase.eNomConfigActive();
 
-                    List<String> ListeNomsConfig = MdlBase.eListeNomConfiguration(eTypeConfig.DeBase);
-
-                    foreach (String NomConfig in ListeNomsConfig)
+                    if (SurTouteLesConfigs)
                     {
-                        MdlBase.ShowConfiguration2(NomConfig);
-                        MdlBase.EditRebuild3();
+                        var pidF_Dessus = new SwObjectPID<Face2>(F_Dessus, MdlBase);
+                        var pidF_Devant = new SwObjectPID<Face2>(F_Devant, MdlBase);
+                        var pidPltG_Plan = new SwObjectPID<Feature>(PltG_Plan, MdlBase);
+                        var pidPltD_Plan = new SwObjectPID<Feature>(PltD_Plan, MdlBase);
+                        var pidPltG = new SwObjectPID<Component2>(PltG, MdlBase);
+                        var pidPltD = new SwObjectPID<Component2>(PltD, MdlBase);
 
-                        //pidF_Dessus.Maj(ref F_Dessus);
-                        //pidF_Devant.Maj(ref F_Devant);
-                        //pidPltG_Plan.Maj(ref PltG_Plan);
-                        //pidPltD_Plan.Maj(ref PltD_Plan);
-                        //pidPltG.Maj(ref PltG);
-                        //pidPltD.Maj(ref PltD);
+                        List<String> ListeNomsConfig = MdlBase.eListeNomConfiguration(eTypeConfig.DeBase);
 
-                        pidF_Dessus.Maj();
-                        pidF_Devant.Maj();
-                        pidPltG_Plan.Maj();
-                        pidPltD_Plan.Maj();
-                        pidPltG.Maj();
-                        pidPltD.Maj();
+                        foreach (String NomConfig in ListeNomsConfig)
+                        {
+                            MdlBase.ShowConfiguration2(NomConfig);
+                            MdlBase.EditRebuild3();
 
+                            //pidF_Dessus.Maj(ref F_Dessus);
+                            //pidF_Devant.Maj(ref F_Devant);
+                            //pidPltG_Plan.Maj(ref PltG_Plan);
+                            //pidPltD_Plan.Maj(ref PltD_Plan);
+                            //pidPltG.Maj(ref PltG);
+                            //pidPltD.Maj(ref PltD);
+
+                            pidF_Dessus.Maj();
+                            pidF_Devant.Maj();
+                            pidPltG_Plan.Maj();
+                            pidPltD_Plan.Maj();
+                            pidPltG.Maj();
+                            pidPltD.Maj();
+
+                            Run(F_Dessus, F_Devant, PltG_Plan, PltD_Plan, PltG, PltD);
+                        }
+
+                        MdlBase.ShowConfiguration2(_NomConfigCourante);
+                    }
+                    else
+                    {
                         Run(F_Dessus, F_Devant, PltG_Plan, PltD_Plan, PltG, PltD);
                     }
 
-                    MdlBase.ShowConfiguration2(_NomConfigCourante);
+                    MdlBase.EditRebuild3();
                 }
-                else
+                catch (Exception e)
                 {
-                    Run(F_Dessus, F_Devant, PltG_Plan, PltD_Plan, PltG, PltD);
+                    this.LogErreur(new Object[] { e });
                 }
-
-                MdlBase.EditRebuild3();
             }
 
             private void Run(Face2 dessus, Face2 devant, Feature gPlan, Feature dPlan, Component2 pltG, Component2 pltD)
@@ -124,7 +131,7 @@ namespace ModuleMarcheConfig
                 }
                 catch (Exception e)
                 {
-                    this.LogMethode(new Object[] { e });
+                    this.LogErreur(new Object[] { e });
                 }
             }
 

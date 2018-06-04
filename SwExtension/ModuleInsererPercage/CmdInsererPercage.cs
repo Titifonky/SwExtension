@@ -30,77 +30,84 @@ namespace ModuleInsererPercage
 
         protected override void Command()
         {
-            _Ass = MdlBase.eAssemblyDoc();
-
-            _NomConfigCourante = MdlBase.ConfigurationManager.ActiveConfiguration.Name;
-
-            var pidBase = new SwObjectPID<Component2>(Base, MdlBase);
-            var pidFace = new SwObjectPID<Face2>(Face, MdlBase);
-            var pidPlan = new SwObjectPID<Feature>(Plan, MdlBase);
-
-            AjouterPercage(Percage);
-
-            if (SurTouteLesConfigs)
+            try
             {
-                List<String> ListeNomsConfig = MdlBase.eListeNomConfiguration(eTypeConfig.DeBase);
+                _Ass = MdlBase.eAssemblyDoc();
 
-                foreach (String NomConfig in ListeNomsConfig)
+                _NomConfigCourante = MdlBase.ConfigurationManager.ActiveConfiguration.Name;
+
+                var pidBase = new SwObjectPID<Component2>(Base, MdlBase);
+                var pidFace = new SwObjectPID<Face2>(Face, MdlBase);
+                var pidPlan = new SwObjectPID<Feature>(Plan, MdlBase);
+
+                AjouterPercage(Percage);
+
+                if (SurTouteLesConfigs)
                 {
-                    MdlBase.ShowConfiguration2(NomConfig);
-                    MdlBase.EditRebuild3();
+                    List<String> ListeNomsConfig = MdlBase.eListeNomConfiguration(eTypeConfig.DeBase);
 
-                    Configuration Conf = MdlBase.GetConfigurationByName(NomConfig);
-                    Conf.SuppressNewFeatures = true;
-                    //Conf.eSetSupprimerNouvellesFonctions(true, MdlBase);
-                }
-
-                foreach (String NomConfig in ListeNomsConfig)
-                {
-                    _NomConfigActive = NomConfig;
-                    MdlBase.ShowConfiguration2(NomConfig);
-                    MdlBase.EditRebuild3();
-
-                    pidBase.Maj(ref Base);
-                    pidFace.Maj(ref Face);
-                    pidPlan.Maj(ref Plan);
-
-                    Run(Base, Face, Plan);
-                }
-
-                InsererDansUnDossier();
-
-                foreach (String NomConfig in ListeNomsConfig)
-                {
-                    _NomConfigActive = NomConfig;
-                    MdlBase.ShowConfiguration2(NomConfig);
-                    MdlBase.EditRebuild3();
-
-                    List<String> ListeComp = _DicConfigWithComp[NomConfig];
-                    foreach (String NomComp in _ListePercage.Keys)
+                    foreach (String NomConfig in ListeNomsConfig)
                     {
-                        if (!ListeComp.Contains(NomComp))
+                        MdlBase.ShowConfiguration2(NomConfig);
+                        MdlBase.EditRebuild3();
+
+                        Configuration Conf = MdlBase.GetConfigurationByName(NomConfig);
+                        Conf.SuppressNewFeatures = true;
+                        //Conf.eSetSupprimerNouvellesFonctions(true, MdlBase);
+                    }
+
+                    foreach (String NomConfig in ListeNomsConfig)
+                    {
+                        _NomConfigActive = NomConfig;
+                        MdlBase.ShowConfiguration2(NomConfig);
+                        MdlBase.EditRebuild3();
+
+                        pidBase.Maj(ref Base);
+                        pidFace.Maj(ref Face);
+                        pidPlan.Maj(ref Plan);
+
+                        Run(Base, Face, Plan);
+                    }
+
+                    InsererDansUnDossier();
+
+                    foreach (String NomConfig in ListeNomsConfig)
+                    {
+                        _NomConfigActive = NomConfig;
+                        MdlBase.ShowConfiguration2(NomConfig);
+                        MdlBase.EditRebuild3();
+
+                        List<String> ListeComp = _DicConfigWithComp[NomConfig];
+                        foreach (String NomComp in _ListePercage.Keys)
                         {
-                            MdlBase.eSelectByIdComp(_ListePercage[NomComp]);
-                            _Ass.eModifierEtatComposant(swComponentSuppressionState_e.swComponentSuppressed);
-                            MdlBase.eEffacerSelection();
+                            if (!ListeComp.Contains(NomComp))
+                            {
+                                MdlBase.eSelectByIdComp(_ListePercage[NomComp]);
+                                _Ass.eModifierEtatComposant(swComponentSuppressionState_e.swComponentSuppressed);
+                                MdlBase.eEffacerSelection();
+                            }
                         }
                     }
+
+                    MdlBase.ShowConfiguration2(_NomConfigCourante);
+                }
+                else
+                {
+                    Run(Base, Face, Plan);
+
+                    InsererDansUnDossier();
                 }
 
-                MdlBase.ShowConfiguration2(_NomConfigCourante);
+
+                // On met les percages dans un dossier, c'est plus propre
+
+
+                MdlBase.EditRebuild3();
             }
-            else
+            catch (Exception e)
             {
-                Run(Base, Face, Plan);
-
-                InsererDansUnDossier();
+                this.LogErreur(new Object[] { e });
             }
-
-
-            // On met les percages dans un dossier, c'est plus propre
-
-
-            MdlBase.EditRebuild3();
         }
 
         private void Run(Component2 cBase, Face2 face, Feature plan)

@@ -85,7 +85,9 @@ namespace ModuleLierLesConfigurations
                 MdlBase.EditRebuild3();
             }
             catch (Exception e)
-            { this.LogMethode(new Object[] { e }); }
+            {
+                this.LogErreur(new Object[] { e });
+            }
         }
 
         private Boolean CreerConfigs()

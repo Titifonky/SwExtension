@@ -64,12 +64,16 @@ namespace ModuleLaser
                                 swD =>
                                 {
                                     BodyFolder Dossier = swD.GetSpecificFeature2();
-                                    eTypeCorps TypeCorps = Dossier.eTypeDeDossier();
+                                    
+                                    // Si le dossier est la racine d'un sous-ensemble soudé, il n'y a rien dedans
+                                    if (Dossier.IsRef() && Dossier.eNbCorps() > 0)
+                                    {
+                                        eTypeCorps TypeCorps = Dossier.eTypeDeDossier();
+                                        if (TypeCorps == eTypeCorps.Barre || TypeCorps == eTypeCorps.Tole)
+                                            return true;
+                                    }
 
-                                    if (Dossier.IsNull() || Dossier.eNbCorps() == 0 || !(TypeCorps == eTypeCorps.Barre || TypeCorps == eTypeCorps.Tole))
-                                        return false;
-
-                                    return true;
+                                    return false;
                                 }
                                 );
 
@@ -181,7 +185,10 @@ namespace ModuleLaser
                     WindowLog.EcrireF("Nb total de corps : {0}", nbtt);
 
                 }
-                catch (Exception e) { this.LogMethode(new Object[] { e }); }
+                catch (Exception e)
+                {
+                    this.LogErreur(new Object[] { e });
+                }
             }
 
             private Feature EsquisseRepere(ModelDoc2 mdl)

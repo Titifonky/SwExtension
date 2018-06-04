@@ -207,7 +207,9 @@ namespace ModuleLaser.ModuleCreerConfigDvp
                 MdlBase.EditRebuild3();
             }
             catch (Exception e)
-            { this.LogMethode(new Object[] { e }); }
+            {
+                this.LogErreur(new Object[] { e });
+            }
         }
 
         private void cmdMasquerEsquisses(ModelDoc2 mdl)

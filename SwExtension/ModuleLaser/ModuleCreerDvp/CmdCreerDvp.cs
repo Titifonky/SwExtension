@@ -186,7 +186,9 @@ namespace ModuleLaser.ModuleCreerDvp
                 File.WriteAllText(Path.Combine(DossierDVP, "Log_CreerDvp.txt"), WindowLog.Resume);
             }
             catch (Exception e)
-            { this.LogMethode(new Object[] { e }); }
+            {
+                this.LogErreur(new Object[] { e });
+            }
         }
 
         private String cmdRefPiece(ModelDoc2 mdl, String configPliee, String noDossier)

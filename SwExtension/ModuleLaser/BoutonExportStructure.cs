@@ -103,7 +103,10 @@ namespace ModuleLaser
                     }
                 }
             }
-            catch (Exception e) { this.LogMethode(new Object[] { e }); }
+            catch (Exception e)
+            {
+                this.LogErreur(new Object[] { e });
+            }
 
         }
 

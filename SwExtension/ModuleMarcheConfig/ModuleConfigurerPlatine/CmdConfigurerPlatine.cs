@@ -121,7 +121,7 @@ namespace ModuleMarcheConfig
                 }
                 catch (Exception e)
                 {
-                    this.LogMethode(new Object[] { e });
+                    this.LogErreur(new Object[] { e });
                 }
             }
 

@@ -67,7 +67,9 @@ namespace ModuleContraindreComposant
                     Comp.eFixer(_Ass);
             }
             catch (Exception e)
-            { this.LogMethode(new Object[] { e }); }
+            {
+                this.LogErreur(new Object[] { e });
+            }
         }
     }
 }

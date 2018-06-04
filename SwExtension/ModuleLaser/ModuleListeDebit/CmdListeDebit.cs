@@ -106,7 +106,9 @@ namespace ModuleLaser
                     return listeElement.ListeLgProfil;
                 }
                 catch (Exception e)
-                { this.LogMethode(new Object[] { e }); }
+                {
+                    this.LogErreur(new Object[] { e });
+                }
 
                 return null;
             }
@@ -160,7 +162,9 @@ namespace ModuleLaser
                     }
                 }
                 catch (Exception e)
-                { this.LogMethode(new Object[] { e }); }
+                {
+                    this.LogErreur(new Object[] { e });
+                }
             }
 
             public String ConstruireRefBarre(ModelDoc2 mdl, String configPliee, String noDossier)

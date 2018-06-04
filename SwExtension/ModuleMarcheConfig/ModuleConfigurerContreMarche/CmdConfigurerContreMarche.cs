@@ -30,39 +30,45 @@ namespace ModuleMarcheConfig
 
             protected override void Command()
             {
-
-                _NomConfigCourante = MdlBase.eNomConfigActive();
-
-                if (SurTouteLesConfigs)
+                try
                 {
-                    var pidF_Dessus = new SwObjectPID<Face2>(F_Dessus, MdlBase);
-                    var pidF_Devant = new SwObjectPID<Face2>(F_Devant, MdlBase);
-                    var pidContreMarche_Esquisse_Comp = new SwObjectPID<Component2>(ContreMarche_Esquisse_Comp, MdlBase);
-                    var pidContreMarche_Esquisse_Fonction = new SwObjectPID<Feature>(ContreMarche_Esquisse_Fonction, MdlBase);
+                    _NomConfigCourante = MdlBase.eNomConfigActive();
 
-                    List<String> ListeNomsConfig = MdlBase.eListeNomConfiguration(eTypeConfig.DeBase);
-
-                    foreach (String NomConfig in ListeNomsConfig)
+                    if (SurTouteLesConfigs)
                     {
-                        MdlBase.ShowConfiguration2(NomConfig);
-                        MdlBase.EditRebuild3();
+                        var pidF_Dessus = new SwObjectPID<Face2>(F_Dessus, MdlBase);
+                        var pidF_Devant = new SwObjectPID<Face2>(F_Devant, MdlBase);
+                        var pidContreMarche_Esquisse_Comp = new SwObjectPID<Component2>(ContreMarche_Esquisse_Comp, MdlBase);
+                        var pidContreMarche_Esquisse_Fonction = new SwObjectPID<Feature>(ContreMarche_Esquisse_Fonction, MdlBase);
 
-                        pidF_Dessus.Maj(ref F_Dessus);
-                        pidF_Devant.Maj(ref F_Devant);
-                        pidContreMarche_Esquisse_Comp.Maj(ref ContreMarche_Esquisse_Comp);
-                        pidContreMarche_Esquisse_Fonction.Maj(ref ContreMarche_Esquisse_Fonction);
+                        List<String> ListeNomsConfig = MdlBase.eListeNomConfiguration(eTypeConfig.DeBase);
 
+                        foreach (String NomConfig in ListeNomsConfig)
+                        {
+                            MdlBase.ShowConfiguration2(NomConfig);
+                            MdlBase.EditRebuild3();
+
+                            pidF_Dessus.Maj(ref F_Dessus);
+                            pidF_Devant.Maj(ref F_Devant);
+                            pidContreMarche_Esquisse_Comp.Maj(ref ContreMarche_Esquisse_Comp);
+                            pidContreMarche_Esquisse_Fonction.Maj(ref ContreMarche_Esquisse_Fonction);
+
+                            Run(F_Dessus, F_Devant, ContreMarche_Esquisse_Comp, ContreMarche_Esquisse_Fonction);
+                        }
+
+                        MdlBase.ShowConfiguration2(_NomConfigCourante);
+                    }
+                    else
+                    {
                         Run(F_Dessus, F_Devant, ContreMarche_Esquisse_Comp, ContreMarche_Esquisse_Fonction);
                     }
 
-                    MdlBase.ShowConfiguration2(_NomConfigCourante);
+                    MdlBase.EditRebuild3();
                 }
-                else
+                catch (Exception e)
                 {
-                    Run(F_Dessus, F_Devant, ContreMarche_Esquisse_Comp, ContreMarche_Esquisse_Fonction);
+                    this.LogErreur(new Object[] { e });
                 }
-
-                MdlBase.EditRebuild3();
             }
 
             private void Run(Face2 dessus, Face2 devant, Component2 contreMarche, Feature esquisse)
@@ -119,7 +125,7 @@ namespace ModuleMarcheConfig
                 }
                 catch (Exception e)
                 {
-                    this.LogMethode(new Object[] { e });
+                    this.LogErreur(new Object[] { e });
                 }
             }
 

@@ -31,7 +31,10 @@ namespace ModuleExportFichier
                     Feuille.eExporterEn(Dessin, typeExport, CheminDossier, NomFichier, ToutesLesFeuilles);
                 }
                 catch (Exception e)
-                { this.LogMethode(new Object[] { e }); }
+                {
+                    WindowLog.Ecrire("Erreur : Consultez le fichier LOG");
+                    this.LogMethode(new Object[] { e });
+                }
             }
         }
     }
