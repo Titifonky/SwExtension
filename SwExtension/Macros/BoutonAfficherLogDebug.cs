@@ -23,11 +23,18 @@ namespace Macros
 
         protected override void Command()
         {
-            var dossier = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var cheminFichier = Path.Combine(dossier, NomFichierLogDebug.GetValeur<String>());
+            try
+            {
+                var dossier = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                var cheminFichier = Path.Combine(dossier, NomFichierLogDebug.GetValeur<String>());
 
-            if (File.Exists(cheminFichier))
-                System.Diagnostics.Process.Start(cheminFichier);
+                if (File.Exists(cheminFichier))
+                    System.Diagnostics.Process.Start(cheminFichier);
+            }
+            catch (Exception e)
+            {
+                this.LogErreur(new Object[] { e });
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Outils;
+﻿using LogDebugging;
+using Outils;
 using SolidWorks.Interop.sldworks;
 using SwExtension;
 using System;
@@ -13,14 +14,21 @@ namespace Macros
     {
         protected override void Command()
         {
-            DrawingDoc dessin = App.ModelDoc2.eDrawingDoc();
-
-            String nom = dessin.eFeuilleActive().GetName();
-
-            if (Interaction.InputBox("Nouveau nom", "Nom :", ref nom) == DialogResult.OK)
+            try
             {
-                if (!String.IsNullOrWhiteSpace(nom))
-                    dessin.eFeuilleActive().SetName(nom);
+                DrawingDoc dessin = App.ModelDoc2.eDrawingDoc();
+
+                String nom = dessin.eFeuilleActive().GetName();
+
+                if (Interaction.InputBox("Nouveau nom", "Nom :", ref nom) == DialogResult.OK)
+                {
+                    if (!String.IsNullOrWhiteSpace(nom))
+                        dessin.eFeuilleActive().SetName(nom);
+                }
+            }
+            catch (Exception e)
+            {
+                this.LogErreur(new Object[] { e });
             }
         }
     }

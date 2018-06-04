@@ -32,7 +32,9 @@ namespace Macros
                     App.ModelDoc2.eRecParcourirComposants(SupprimerConfigs);
             }
             catch (Exception e)
-            { this.LogMethode(new Object[] { e }); }
+            {
+                this.LogErreur(new Object[] { e });
+            }
         }
 
         private Dictionary<String, String> _Dic = new Dictionary<string, string>();
@@ -54,7 +56,9 @@ namespace Macros
                 }
             }
             catch (Exception e)
-            { this.LogMethode(new Object[] { e }); }
+            {
+                this.LogErreur(new Object[] { e });
+            }
 
             return false;
         }

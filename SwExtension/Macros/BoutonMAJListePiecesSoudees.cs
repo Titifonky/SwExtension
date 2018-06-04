@@ -34,7 +34,9 @@ namespace Macros
                     App.ModelDoc2.eRecParcourirComposants(Maj);
             }
             catch (Exception e)
-            { this.LogMethode(new Object[] { e }); }
+            {
+                this.LogErreur(new Object[] { e });
+            }
         }
 
         private Dictionary<String, String> _Dic = new Dictionary<string, string>();

@@ -35,7 +35,9 @@ namespace Macros
                 }
             }
             catch (Exception e)
-            { Log.Message(e); }
+            {
+                this.LogErreur(new Object[] { e });
+            }
         }
     }
 }

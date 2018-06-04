@@ -14,28 +14,35 @@ namespace Macros
     {
         protected override void Command()
         {
-            DrawingDoc dessin = App.ModelDoc2.eDrawingDoc();
+            try
+            {
+                DrawingDoc dessin = App.ModelDoc2.eDrawingDoc();
 
-            String FeuilleCourante = dessin.eFeuilleActive().GetName();
+                String FeuilleCourante = dessin.eFeuilleActive().GetName();
 
-            Boolean HauteQualite = true;
+                Boolean HauteQualite = true;
 
-            WindowLog.Ecrire("Haute qualité : " + (HauteQualite ? "oui" : "non"));
-            WindowLog.SautDeLigne();
+                WindowLog.Ecrire("Haute qualité : " + (HauteQualite ? "oui" : "non"));
+                WindowLog.SautDeLigne();
 
-            dessin.eParcourirLesFeuilles(
-                f =>
-                {
-                    dessin.ActivateSheet(f.GetName());
-                    WindowLog.Ecrire(" - " + f.GetName());
-                    String res = dessin.eMettreEnPagePourImpression(f, swPageSetupDrawingColor_e.swPageSetup_AutomaticDrawingColor, HauteQualite);
-                    WindowLog.Ecrire("    " + res);
-                    WindowLog.SautDeLigne();
-                    return false;
-                }
-                );
+                dessin.eParcourirLesFeuilles(
+                    f =>
+                    {
+                        dessin.ActivateSheet(f.GetName());
+                        WindowLog.Ecrire(" - " + f.GetName());
+                        String res = dessin.eMettreEnPagePourImpression(f, swPageSetupDrawingColor_e.swPageSetup_AutomaticDrawingColor, HauteQualite);
+                        WindowLog.Ecrire("    " + res);
+                        WindowLog.SautDeLigne();
+                        return false;
+                    }
+                    );
 
-            dessin.ActivateSheet(FeuilleCourante);
+                dessin.ActivateSheet(FeuilleCourante);
+            }
+            catch (Exception e)
+            {
+                this.LogErreur(new Object[] { e });
+            }
         }
     }
 }

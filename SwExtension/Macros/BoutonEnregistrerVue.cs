@@ -1,4 +1,5 @@
-﻿using Outils;
+﻿using LogDebugging;
+using Outils;
 using SolidWorks.Interop.sldworks;
 using SwExtension;
 using System;
@@ -26,31 +27,37 @@ namespace Macros
 
         protected override void Command()
         {
-            
-            ModelDoc2 mdl = App.ModelDoc2;
-
-            String nom = "";
-            var hashVuesStandard = new HashSet<String>(PropVuesStandard.GetValeur<String>().Split(','));
-            var listeVues = new List<String>();
-
-            foreach (String n in mdl.GetModelViewNames())
+            try
             {
-                if (!hashVuesStandard.Contains(n))
-                    listeVues.Add(n);
-            }
+                ModelDoc2 mdl = App.ModelDoc2;
 
-            if (listeVues.Count == 0)
-                listeVues.Add("Aucunes");
+                String nom = "";
+                var hashVuesStandard = new HashSet<String>(PropVuesStandard.GetValeur<String>().Split(','));
+                var listeVues = new List<String>();
 
-            String VuesExistantes = "Vues existantes : " + String.Join(", ", listeVues);
-
-            if (Interaction.InputBox("Enregistrer la vue", VuesExistantes, ref nom) == DialogResult.OK)
-            {
-                if (!String.IsNullOrWhiteSpace(nom) || !nom.StartsWith("*"))
+                foreach (String n in mdl.GetModelViewNames())
                 {
-                    mdl.DeleteNamedView(nom);
-                    mdl.NameView(nom);
+                    if (!hashVuesStandard.Contains(n))
+                        listeVues.Add(n);
                 }
+
+                if (listeVues.Count == 0)
+                    listeVues.Add("Aucunes");
+
+                String VuesExistantes = "Vues existantes : " + String.Join(", ", listeVues);
+
+                if (Interaction.InputBox("Enregistrer la vue", VuesExistantes, ref nom) == DialogResult.OK)
+                {
+                    if (!String.IsNullOrWhiteSpace(nom) || !nom.StartsWith("*"))
+                    {
+                        mdl.DeleteNamedView(nom);
+                        mdl.NameView(nom);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                this.LogErreur(new Object[] { e });
             }
         }
     }

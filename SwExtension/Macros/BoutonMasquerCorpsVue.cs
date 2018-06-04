@@ -31,7 +31,10 @@ namespace Macros
 
                 WindowLog.Ecrire(Vue.Name);
             }
-            catch (Exception e) { this.LogMethode(new Object[] { e }); }
+            catch (Exception e)
+            {
+                this.LogErreur(new Object[] { e });
+            }
 
         }
     }

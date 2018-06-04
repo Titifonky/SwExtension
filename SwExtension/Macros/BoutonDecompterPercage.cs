@@ -38,7 +38,10 @@ namespace Macros
                     WindowLog.EcrireF("{0,-5} : {1,-5}", "Ø " + Math.Round(item.Key, 2), "×" + item.Value);
 
             }
-            catch (Exception e) { this.LogMethode(new Object[] { e }); }
+            catch (Exception e)
+            {
+                this.LogErreur(new Object[] { e });
+            }
 
         }
 

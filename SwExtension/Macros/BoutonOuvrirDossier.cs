@@ -24,7 +24,9 @@ namespace Macros
                 System.Diagnostics.Process.Start(App.ModelDoc2.eDossier());
             }
             catch (Exception e)
-            { Log.Message(e); }
+            {
+                this.LogErreur(new Object[] { e });
+            }
         }
     }
 }

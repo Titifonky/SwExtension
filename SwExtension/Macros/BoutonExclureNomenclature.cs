@@ -28,7 +28,9 @@ namespace Macros
                 App.ModelDoc2.FeatureManager.UpdateFeatureTree();
             }
             catch (Exception e)
-            { Log.Message(e); }
+            {
+                this.LogErreur(new Object[] { e });
+            }
         }
 
         private Boolean InclureExclure(Component2 cp)

@@ -23,7 +23,10 @@ namespace Macros
             {
                 ModelDoc2 mdl = App.ModelDoc2;
 
-                Body2 CorpsBase = mdl.eSelect_RecupererObjet<Face2>().GetBody();
+                Face2 Face = mdl.eSelect_RecupererObjet<Face2>();
+                if (Face.IsNull()) return;
+
+                Body2 CorpsBase = Face.GetBody();
                 if (CorpsBase.IsNull()) return;
 
                 String MateriauxCorpsBase = CorpsBase.eGetMateriauCorpsOuComp(mdl.eSelect_RecupererComposant());
@@ -49,7 +52,10 @@ namespace Macros
                     corps.eSelect(true);
                 }
             }
-            catch (Exception e) { this.LogMethode(new Object[] { e }); }
+            catch (Exception e)
+            {
+                this.LogErreur(new Object[] { e });
+            }
 
         }
     }
