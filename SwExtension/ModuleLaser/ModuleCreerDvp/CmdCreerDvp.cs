@@ -371,6 +371,12 @@ namespace ModuleLaser.ModuleCreerDvp
                     Note.SetTextJustification((int)swTextJustification_e.swTextJustificationCenter);
 
                     Annotation Annotation = Note.GetAnnotation();
+
+                    TextFormat swTextFormat = Annotation.GetTextFormat(0);
+                    // Hauteur du texte en fonction des dimensions du dvp, 2.5% de la dimension max du dvp
+                    swTextFormat.CharHeight = TailleInscription * 0.001;
+                    Annotation.SetTextFormat(0, false, swTextFormat);
+                    
                     Annotation.Layer = "GRAVURE";
                     Annotation.SetLeader3((int)swLeaderStyle_e.swNO_LEADER, (int)swLeaderSide_e.swLS_SMART, true, true, false, false);
                 }
