@@ -22,6 +22,11 @@ namespace ModuleLaser
 
             private int GenRepereDossier { get { return ++indice; } }
 
+            // Liste des dossiers déjà traité
+            HashSet<String> DossierTraite = new HashSet<String>();
+            // Liste des index déjà attribués pour les dimensions
+            Dictionary<String, int> IndexDimension = new Dictionary<string, int>();
+
             /// <summary>
             /// Pour pouvoir obtenir une référence unique pour chaque dossier de corps, identiques
             /// dans l'assemblage, on passe par la création d'une propriété dans chaque dossier.
@@ -40,11 +45,6 @@ namespace ModuleLaser
                     var ListeCorps = new List<Corps>();
 
                     var lst = MdlBase.ListerComposants(false, eTypeCorps.Tole | eTypeCorps.Barre);
-
-                    // Liste des dossiers déjà traité
-                    HashSet<String> DossierTraite = new HashSet<String>();
-                    // Liste des index déjà attribués pour les dimensions
-                    Dictionary<String, int> IndexDimension = new Dictionary<string, int>();
 
                     foreach (var mdl in lst.Keys)
                     {
@@ -82,6 +82,9 @@ namespace ModuleLaser
                                 BodyFolder Dossier = fDossier.GetSpecificFeature2();
                                 CustomPropertyManager PM = fDossier.CustomPropertyManager;
 
+                                // Si MajDossier et PropExiste, ne pas mettre à jour
+                                Boolean Maj = !(MajDossiers && PM.ePropExiste(CONSTANTES.REF_DOSSIER));
+
                                 String NomParam = "";
 
                                 WindowLog.EcrireF("     {0}", fDossier.Name);
@@ -95,7 +98,7 @@ namespace ModuleLaser
                                 //          On ajoute la propriété au dossier selon le modèle suivant :
                                 //              P"D1@REPERAGE_DOSSIER@Nom_de_la_piece.SLDPRT"
                                 //      Si oui, on récupère le nom du paramètre
-                                var clef = mdl.GetPathName() + "___" + fDossier.GetID();
+                                var clef = HashDossier(mdl, fDossier);
 
                                 if (!DossierTraite.Contains(clef))
                                 {
@@ -120,7 +123,7 @@ namespace ModuleLaser
                                     if (r == 1)
                                         WindowLog.EcrireF("{0}-{1}-{2} : Pas de propriété {3}", mdl.eNomSansExt(), cfg, fDossier.Name, (swCustomInfoGetResult_e)r);
 
-                                    NomParam = val.Replace(CONSTANTES.PREFIXE_REF_DOSSIER + "\"", "").Replace("@" + mdl.eNomAvecExt() + "\"", "");
+                                    NomParam = ExtractNomParam(val);
                                 }
 
                                 {
@@ -160,9 +163,12 @@ namespace ModuleLaser
                                         {
                                             CorpsTest.Nb += nbCorps;
 
-                                            var errors = param.SetSystemValue3(CorpsTest.Repere * 0.001, (int)swSetValueInConfiguration_e.swSetValue_InSpecificConfigurations, cfg);
-                                            if (errors > 0)
-                                                WindowLog.EcrireF(" Erreur de mise à jour {0}", (swSetValueReturnStatus_e)errors);
+                                            if (Maj)
+                                            {
+                                                var errors = param.SetSystemValue3(CorpsTest.Repere * 0.001, (int)swSetValueInConfiguration_e.swSetValue_InSpecificConfigurations, cfg);
+                                                if (errors > 0)
+                                                    WindowLog.EcrireF(" Erreur de mise à jour {0}", (swSetValueReturnStatus_e)errors);
+                                            }
 
                                             CorpsTest.AjouterModele(mdl, cfg, fDossier.GetID());
                                             Ajoute = true;
@@ -171,7 +177,7 @@ namespace ModuleLaser
                                     }
                                 }
 
-                                if ((Ajoute == false))
+                                if ((Ajoute == false) && Maj)
                                 {
                                     var rep = GenRepereDossier;
                                     var errors = param.SetSystemValue3(rep * 0.001, (int)swSetValueInConfiguration_e.swSetValue_InSpecificConfigurations, cfg);
@@ -215,6 +221,23 @@ namespace ModuleLaser
                 {
                     this.LogErreur(new Object[] { e });
                 }
+            }
+
+            private String HashDossier(ModelDoc2 mdl, Feature f)
+            {
+                return mdl.GetPathName() + "___" + f.GetID();
+            }
+
+            private String ExtractNomParam(String s)
+            {
+                // val.Replace(CONSTANTES.PREFIXE_REF_DOSSIER + "\"", "").Replace("@" + mdl.eNomAvecExt() + "\"", "");
+                s = s.Replace(CONSTANTES.PREFIXE_REF_DOSSIER + "\"", "").Replace("\"", "");
+                var t = s.Split('@');
+                if (t.Length > 2)
+                    return String.Format("{0}@{1}", t[0], t[1]);
+
+                this.LogErreur(new Object[] { "Pas de parametre dans la reference dossier" });
+                return "";
             }
 
             private Feature EsquisseRepere(ModelDoc2 mdl)
@@ -369,36 +392,57 @@ namespace ModuleLaser
 
                 var Dic = new HashSet<String>();
 
-                var dic = MdlBase.eRecParcourirComposants(
-                    comp =>
+                Predicate<Component2> Test = delegate (Component2 comp)
+                {
+                    if (!comp.IsSuppressed())
                     {
-                        if (!comp.IsSuppressed())
+                        var hashComp = comp.eKeyAvecConfig();
+                        if (!Dic.Contains(hashComp))
                         {
-                            var clef = comp.eNomAvecExt() + "___" + comp.eNomConfiguration();
-                            if (!Dic.Contains(clef))
-                            {
-                                Dic.Add(clef);
+                            Dic.Add(hashComp);
 
-                                var l = comp.eListeDesFonctionsDePiecesSoudees(
-                                    f =>
+                            var l = comp.eListeDesFonctionsDePiecesSoudees(
+                                f =>
+                                {
+                                    BodyFolder dossier = f.GetSpecificFeature2();
+                                    if (dossier.IsRef() && dossier.eNbCorps() > 0 && Filtre.HasFlag(dossier.eTypeDeDossier()))
                                     {
-                                        BodyFolder dossier = f.GetSpecificFeature2();
-                                        if (dossier.IsRef() && dossier.eNbCorps() > 0 && Filtre.HasFlag(dossier.eTypeDeDossier()))
+                                        CustomPropertyManager PM = f.CustomPropertyManager;
+
+                                        String val, result = ""; Boolean wasResolved, link;
+                                        var r = PM.Get6(CONSTANTES.REF_DOSSIER, false, out val, out result, out wasResolved, out link);
+
+                                        var RefDossier = result.Replace(CONSTANTES.PREFIXE_REF_DOSSIER, "");
+                                        if (RefDossier.eIsInteger())
                                         {
-                                            var RefDossier = dossier.eProp(CONSTANTES.REF_DOSSIER).Replace(CONSTANTES.PREFIXE_REF_DOSSIER, "");
-                                            if (RefDossier.eIsInteger())
-                                                indice = Math.Max(indice, RefDossier.eToInteger());
+                                            indice = Math.Max(indice, RefDossier.eToInteger());
+                                            var hashDossier = HashDossier(comp.eModelDoc2(), f);
+                                            DossierTraite.Add(hashDossier);
+
+                                            // On recherche l'index max pour chaque modele
+                                            var NomParam = ExtractNomParam(val);
+                                            var dim = NomParam.Split('@')[0].CleanStringOfNonDigits().eToInteger();
+                                            var hashMdl = comp.GetPathName();
+                                            if (IndexDimension.ContainsKey(hashMdl))
+                                                IndexDimension[hashMdl] = Math.Max(IndexDimension[hashMdl], dim);
+                                            else
+                                                IndexDimension[hashMdl] = dim;
                                         }
-
-                                        return true;
                                     }
-                                    );
-                            }
 
+                                    return true;
+                                }
+                                );
                         }
-                        return false;
+
                     }
-                    );
+                    return false;
+                };
+
+                if (MdlBase.TypeDoc() == eTypeDoc.Piece)
+                    Test(MdlBase.eComposantRacine());
+                else
+                    MdlBase.eRecParcourirComposants(Test);
 
                 WindowLog.EcrireF("Indice Max : {0}", indice);
             }

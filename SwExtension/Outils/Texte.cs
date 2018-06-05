@@ -172,6 +172,29 @@ namespace Outils
             return (sb.ToString().Normalize(NormalizationForm.FormC));
         }
 
+        public static string CleanStringOfNonDigits(this string s)
+        {
+            if (string.IsNullOrEmpty(s)) return s;
+            StringBuilder sb = new StringBuilder(s);
+            int j = 0;
+            int i = 0;
+            while (i < sb.Length)
+            {
+                bool isDigit = char.IsDigit(sb[i]);
+                if (isDigit)
+                {
+                    sb[j++] = sb[i++];
+                }
+                else
+                {
+                    ++i;
+                }
+            }
+            sb.Length = j;
+            string cleaned = sb.ToString();
+            return cleaned;
+        }
+
         /// <summary>
         /// Renvoi la position d'un texte dans un autre comme String.IndexOf
         /// Mais retourne la valeur int.MaxValue si le texte n'est pas trouvé
