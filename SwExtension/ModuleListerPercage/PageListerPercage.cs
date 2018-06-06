@@ -199,19 +199,24 @@ namespace ModuleListerPercage
                                 Surface S = face.GetSurface();
                                 if (S.IsRef() && S.IsCylinder() && (face.GetLoopCount() > 1))
                                 {
+                                    // On regarde si c'est un trou ou un cylindre
                                     Double[] ListeParam = (Double[])S.CylinderParams;
                                     Point Centre = new Point(ListeParam[0], ListeParam[1], ListeParam[2]);
                                     Vecteur Axe = new Vecteur(ListeParam[3], ListeParam[4], ListeParam[5]);
                                     Double Diam = Math.Round(ListeParam[6] * 2.0 * 1000, 2);
 
                                     Double[] FaceUV = face.GetUVBounds();
-                                    Double[] Eval = S.Evaluate((FaceUV[0] + FaceUV[1]) / 2.0, (FaceUV[2] + FaceUV[3]) / 2.0, 0, 0);
+                                    Double[] Eval = S.Evaluate(FaceUV[0], FaceUV[2], 0, 0);
+                                    // Point de départ de la normale
                                     Point PointNormale = new Point(Eval[0], Eval[1], Eval[2]);
                                     Vecteur Normale = new Vecteur(Eval[3], Eval[4], Eval[5]);
-                                    Vecteur Vtest = new Vecteur(PointNormale, Centre);
                                     if (face.FaceInSurfaceSense())
                                         Normale.Inverser();
 
+                                    Vecteur Vtest = new Vecteur(PointNormale, Centre);
+
+                                    // Si l'angle est inférieur à 90°, la normale vas vers le centre
+                                    // donc c'est un trou
                                     if (Normale.Angle(Vtest) < D90)
                                     {
                                         var dicDiam = new Dictionary<Component2, List<Face2>>();
