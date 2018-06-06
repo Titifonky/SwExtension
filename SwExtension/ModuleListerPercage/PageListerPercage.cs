@@ -215,7 +215,7 @@ namespace ModuleListerPercage
 
                                     Vecteur Vtest = new Vecteur(PointNormale, Centre);
 
-                                    // Si l'angle est inférieur à 90°, la normale vas vers le centre
+                                    // Si l'angle est inférieur à 90°, la normale va vers le centre
                                     // donc c'est un trou
                                     if (Normale.Angle(Vtest) < D90)
                                     {
