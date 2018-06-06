@@ -164,9 +164,7 @@ namespace ModuleListerPercage
             Predicate<Component2> Test = c =>
             {
                 if (!c.IsHidden(true) && (c.TypeDoc() == eTypeDoc.Piece))
-                {
                     Bdd.Decompter(c);
-                }
 
                 return false;
             };
@@ -180,6 +178,13 @@ namespace ModuleListerPercage
         public class BDD
         {
             private Dictionary<Double, Dictionary<Component2, List<Face2>>> Dic = new Dictionary<Double, Dictionary<Component2, List<Face2>>>();
+
+            private Double D90 = 0;
+
+            public BDD()
+            {
+                D90 = Math.PI * 0.5;
+            }
 
             public Boolean Decompter(Component2 cp)
             {
@@ -195,21 +200,34 @@ namespace ModuleListerPercage
                                 if (S.IsRef() && S.IsCylinder() && (face.GetLoopCount() > 1))
                                 {
                                     Double[] ListeParam = (Double[])S.CylinderParams;
+                                    Point Centre = new Point(ListeParam[0], ListeParam[1], ListeParam[2]);
+                                    Vecteur Axe = new Vecteur(ListeParam[3], ListeParam[4], ListeParam[5]);
                                     Double Diam = Math.Round(ListeParam[6] * 2.0 * 1000, 2);
 
-                                    var dicDiam = new Dictionary<Component2, List<Face2>>();
-                                    if (Dic.ContainsKey(Diam))
-                                        dicDiam = Dic[Diam];
-                                    else
-                                        Dic.Add(Diam, dicDiam);
+                                    Double[] FaceUV = face.GetUVBounds();
+                                    Double[] Eval = S.Evaluate((FaceUV[0] + FaceUV[1]) / 2.0, (FaceUV[2] + FaceUV[3]) / 2.0, 0, 0);
+                                    Point PointNormale = new Point(Eval[0], Eval[1], Eval[2]);
+                                    Vecteur Normale = new Vecteur(Eval[3], Eval[4], Eval[5]);
+                                    Vecteur Vtest = new Vecteur(PointNormale, Centre);
+                                    if (face.FaceInSurfaceSense())
+                                        Normale.Inverser();
 
-                                    var listFace = new List<Face2>();
-                                    if (dicDiam.ContainsKey(cp))
-                                        listFace = dicDiam[cp];
-                                    else
-                                        dicDiam.Add(cp, listFace);
+                                    if (Normale.Angle(Vtest) < D90)
+                                    {
+                                        var dicDiam = new Dictionary<Component2, List<Face2>>();
+                                        if (Dic.ContainsKey(Diam))
+                                            dicDiam = Dic[Diam];
+                                        else
+                                            Dic.Add(Diam, dicDiam);
 
-                                    listFace.Add(face);
+                                        var listFace = new List<Face2>();
+                                        if (dicDiam.ContainsKey(cp))
+                                            listFace = dicDiam[cp];
+                                        else
+                                            dicDiam.Add(cp, listFace);
+
+                                        listFace.Add(face);
+                                    }
                                 }
                             }
                         }

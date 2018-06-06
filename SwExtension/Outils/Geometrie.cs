@@ -6,6 +6,17 @@ using System.ComponentModel;
 
 namespace Outils
 {
+    public static class MathConst
+    {
+        private static Double _R2 = 0;
+        public static Double Racine2()
+        {
+            if (_R2 == 0)
+                return Math.Sqrt(2);
+
+            return _R2;
+        }
+    }
     public struct Point
     {
         public Double X;
@@ -284,7 +295,7 @@ namespace Outils
             Vecteur p = Vectoriel(v).Unitaire();
             p.Ajouter(normal.Unitaire());
 
-            if (p.Norme > Math.Sqrt(2))
+            if (p.Norme > MathConst.Racine2())
                 return true;
 
             return false;

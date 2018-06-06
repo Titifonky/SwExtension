@@ -168,25 +168,28 @@ namespace ModuleListerMateriaux
         {
             Bdd = new BDD();
 
-            App.ModelDoc2.eRecParcourirComposants(
-                    c =>
-                    {
-                        bool filtre = false;
+            Predicate<Component2> Test = c =>
+            {
+                bool filtre = false;
 
-                        if (_CheckBox_ComposantsCache.IsChecked)
-                            filtre = c.IsSuppressed();
-                        else
-                            filtre = c.IsHidden(true);
+                if (_CheckBox_ComposantsCache.IsChecked)
+                    filtre = c.IsSuppressed();
+                else
+                    filtre = c.IsHidden(true);
 
-                        if (!filtre && (c.TypeDoc() == eTypeDoc.Piece))
-                        {
-                            foreach (var dossier in c.eListeDesDossiersDePiecesSoudees())
-                                Bdd.AjouterDossier(dossier, c);
-                        }
+                if (!filtre && (c.TypeDoc() == eTypeDoc.Piece))
+                {
+                    foreach (var dossier in c.eListeDesDossiersDePiecesSoudees())
+                        Bdd.AjouterDossier(dossier, c);
+                }
 
-                        return false;
-                    }
-                );
+                return false;
+            };
+
+            if (MdlBase.TypeDoc() == eTypeDoc.Piece)
+                Test(MdlBase.eComposantRacine());
+            else
+                MdlBase.eRecParcourirComposants(Test);
         }
 
         public class BDD
