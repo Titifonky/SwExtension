@@ -1386,7 +1386,7 @@ namespace Outils
 
         public static SldWorks Sw = null;
         public static ModelDoc2 ModelDoc2 { get { return Sw.ActiveDoc; } }
-        public static AssemblyDoc Assembly { get { return Sw.ActiveDoc; } }
+        public static AssemblyDoc AssemblyDoc { get { return Sw.ActiveDoc; } }
         public static PartDoc PartDoc { get { return Sw.ActiveDoc; } }
         public static DrawingDoc DrawingDoc { get { return Sw.ActiveDoc; } }
 

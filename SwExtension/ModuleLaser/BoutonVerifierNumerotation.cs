@@ -25,39 +25,42 @@ namespace ModuleLaser
 
                 var Dic = new HashSet<String>();
 
-                var dic = MdlBase.eRecParcourirComposants(
-                    comp =>
+                Predicate<Component2> Test = comp =>
+                {
+                    if (!comp.IsSuppressed())
                     {
-                        if (!comp.IsSuppressed())
+                        var clef = comp.eNomAvecExt() + "___" + comp.eNomConfiguration();
+                        if (!Dic.Contains(clef))
                         {
-                            var clef = comp.eNomAvecExt() + "___" + comp.eNomConfiguration();
-                            if (!Dic.Contains(clef))
-                            {
-                                Dic.Add(clef);
+                            Dic.Add(clef);
 
-                                var l = comp.eListeDesFonctionsDePiecesSoudees(
-                                    f =>
+                            var l = comp.eListeDesFonctionsDePiecesSoudees(
+                                f =>
+                                {
+                                    BodyFolder dossier = f.GetSpecificFeature2();
+                                    if (dossier.IsRef() && dossier.eNbCorps() > 0 && Filtre.HasFlag(dossier.eTypeDeDossier()))
                                     {
-                                        BodyFolder dossier = f.GetSpecificFeature2();
-                                        if (dossier.IsRef() && dossier.eNbCorps() > 0 && Filtre.HasFlag(dossier.eTypeDeDossier()))
+                                        var RefDossier = dossier.eProp(CONSTANTES.REF_DOSSIER);
+                                        if (String.IsNullOrWhiteSpace(RefDossier))
                                         {
-                                            var RefDossier = dossier.eProp(CONSTANTES.REF_DOSSIER);
-                                            if (String.IsNullOrWhiteSpace(RefDossier))
-                                            {
-                                                WindowLog.EcrireF("{0} \"{1}\"", comp.eNomSansExt(), comp.eNomConfiguration());
-                                                WindowLog.EcrireF("  {0} : Pas de reference", f.Name);
-                                            }
+                                            WindowLog.EcrireF("{0} \"{1}\"", comp.eNomSansExt(), comp.eNomConfiguration());
+                                            WindowLog.EcrireF("  {0} : Pas de reference", f.Name);
                                         }
-
-                                        return true;
                                     }
-                                    );
-                            }
 
+                                    return true;
+                                }
+                                );
                         }
-                        return false;
+
                     }
-                    );
+                    return false;
+                };
+
+                if (MdlBase.TypeDoc() == eTypeDoc.Piece)
+                    Test(MdlBase.eComposantRacine());
+                else
+                    MdlBase.eRecParcourirComposants(Test);
             }
             catch (Exception e)
             {

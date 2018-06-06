@@ -91,7 +91,7 @@ namespace ModuleListerConfigComp
 
         private void ExitIsoler()
         {
-            App.Assembly.ExitIsolate();
+            App.AssemblyDoc.ExitIsolate();
         }
 
         private void IsolerComposants()

@@ -384,7 +384,7 @@ namespace ModuleEmpreinte
 
         public static void Exit()
         {
-            App.Assembly.ExitIsolate();
+            App.AssemblyDoc.ExitIsolate();
             Bouton.Caption = "Isoler les composants";
             _Isoler = false;
         }

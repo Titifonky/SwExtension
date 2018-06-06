@@ -10,7 +10,7 @@ using System.Drawing;
 
 namespace ModuleListerMateriaux
 {
-    [ModuleTypeDocContexte(eTypeDoc.Assemblage),
+    [ModuleTypeDocContexte(eTypeDoc.Assemblage | eTypeDoc.Piece),
         ModuleTitre("Lister les materiaux et les profils"),
         ModuleNom("ListerMateriauxEtProfils"),
         ModuleDescription("Lister les materiaux et les profils.")
@@ -19,10 +19,14 @@ namespace ModuleListerMateriaux
     {
         private const String NomVolume = "Volume";
 
+        private ModelDoc2 MdlBase;
+
         public PageListerMateriaux()
         {
             try
             {
+                InitModeleBase();
+
                 OnCalque += Calque;
                 OnRunAfterActivation += AfficherMateriaux;
                 OnRunOkCommand += RunOkCommand;
@@ -45,10 +49,13 @@ namespace ModuleListerMateriaux
             {
                 Groupe G;
 
-                G = _Calque.AjouterGroupe("Options");
+                if (MdlBase.TypeDoc() == eTypeDoc.Assemblage)
+                {
+                    G = _Calque.AjouterGroupe("Options");
 
-                _Button_IsolerComposants = G.AjouterBouton("Isoler les composants");
-                _Button_IsolerComposants.OnButtonPress += delegate (Object sender) { IsolerComposants(); };
+                    _Button_IsolerComposants = G.AjouterBouton("Isoler les composants");
+                    _Button_IsolerComposants.OnButtonPress += delegate (Object sender) { IsolerComposants(); };
+                }
 
                 G = _Calque.AjouterGroupe("Materiaux :");
 
@@ -82,27 +89,36 @@ namespace ModuleListerMateriaux
 
         private Boolean Isoler = false;
 
+        private void InitModeleBase()
+        {
+            MdlBase = App.ModelDoc2;
+        }
+
         private void ExitIsoler()
         {
-            App.Assembly.ExitIsolate();
+            if (MdlBase.TypeDoc() != eTypeDoc.Assemblage)
+                return;
+
+            MdlBase.eAssemblyDoc().ExitIsolate();
             _Button_IsolerComposants.Caption = "Isoler les composants";
             Isoler = false;
         }
 
         private void IsolerComposants()
         {
+            if (MdlBase.TypeDoc() != eTypeDoc.Assemblage)
+                return;
+
             if (!Isoler)
             {
-                var mdl = App.ModelDoc2;
+                List<Body2> listeCorps = MdlBase.eSelect_RecupererListeObjets<Body2>(_Select_Selection.Marque);
+                List<Component2> listeComps = MdlBase.eSelect_RecupererListeComposants(_Select_Selection.Marque);
 
-                List<Body2> listeCorps = mdl.eSelect_RecupererListeObjets<Body2>(_Select_Selection.Marque);
-                List<Component2> listeComps = mdl.eSelect_RecupererListeComposants(_Select_Selection.Marque);
+                MdlBase.eSelectMulti(listeComps, _Select_Selection.Marque, false);
 
-                mdl.eSelectMulti(listeComps, _Select_Selection.Marque, false);
+                MdlBase.eAssemblyDoc().Isolate();
 
-                mdl.eAssemblyDoc().Isolate();
-
-                mdl.eSelectMulti(listeCorps, _Select_Selection.Marque, false);
+                MdlBase.eSelectMulti(listeCorps, _Select_Selection.Marque, false);
 
                 Isoler = true;
 
@@ -116,8 +132,6 @@ namespace ModuleListerMateriaux
 
         private void SelectionChanged(Object sender, int Item)
         {
-            var mdl = App.ModelDoc2;
-
             var listeElements = Bdd.ListeCorps(Item);
 
             var listeCorps = new List<Body2>();
@@ -126,8 +140,8 @@ namespace ModuleListerMateriaux
             {
                 if (element.Composant.IsHidden(false) && !ListeHiddenComposants.Contains(element.Composant.eKeyAvecConfig()))
                 {
-                    element.Composant.eSelectById(mdl, 16, true);
-                    element.Composant.eDeSelectById(mdl);
+                    element.Composant.eSelectById(MdlBase, 16, true);
+                    element.Composant.eDeSelectById(MdlBase);
                     ListeHiddenComposants.Add(element.Composant.eKeyAvecConfig());
                 }
 
@@ -139,7 +153,7 @@ namespace ModuleListerMateriaux
 
             ExitIsoler();
 
-            mdl.eSelectMulti(listeCorps, _Select_Selection.Marque, false);
+            MdlBase.eSelectMulti(listeCorps, _Select_Selection.Marque, false);
         }
 
         private void AfficherMateriaux()
@@ -153,8 +167,6 @@ namespace ModuleListerMateriaux
         private void Rechercher_Materiaux()
         {
             Bdd = new BDD();
-
-            var mdl = App.ModelDoc2;
 
             App.ModelDoc2.eRecParcourirComposants(
                     c =>
@@ -310,11 +322,9 @@ namespace ModuleListerMateriaux
 
         protected void RunOkCommand()
         {
-            var mdl = App.ModelDoc2;
+            List<Body2> listeCorps = MdlBase.eSelect_RecupererListeObjets<Body2>(_Select_Selection.Marque);
 
-            List<Body2> listeCorps = mdl.eSelect_RecupererListeObjets<Body2>(_Select_Selection.Marque);
-
-            mdl.eSelectMulti(listeCorps, -1, false);
+            MdlBase.eSelectMulti(listeCorps, -1, false);
         }
     }
 }

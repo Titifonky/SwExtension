@@ -9,19 +9,22 @@ using System.Linq;
 
 namespace ModuleListerPercage
 {
-    [ModuleTypeDocContexte(eTypeDoc.Assemblage),
+    [ModuleTypeDocContexte(eTypeDoc.Assemblage | eTypeDoc.Piece),
         ModuleTitre("Lister les percages"),
         ModuleNom("ListerPercage"),
         ModuleDescription("Lister les percages d'un modele.")
         ]
     public class PageListerPercage : BoutonPMPManager
     {
+        private ModelDoc2 MdlBase;
+
         public PageListerPercage()
         {
             LogToWindowLog = false;
 
             try
             {
+                InitModeleBase();
                 OnCalque += Calque;
                 OnRunAfterActivation += AfficherPercage;
                 OnRunOkCommand += RunOkCommand;
@@ -42,10 +45,13 @@ namespace ModuleListerPercage
             {
                 Groupe G;
 
-                G = _Calque.AjouterGroupe("Options");
+                if (MdlBase.TypeDoc() == eTypeDoc.Assemblage)
+                {
+                    G = _Calque.AjouterGroupe("Options");
 
-                _Button_IsolerComposants = G.AjouterBouton("Isoler les composants");
-                _Button_IsolerComposants.OnButtonPress += delegate (Object sender) { IsolerComposants(); };
+                    _Button_IsolerComposants = G.AjouterBouton("Isoler les composants");
+                    _Button_IsolerComposants.OnButtonPress += delegate (Object sender) { IsolerComposants(); };
+                }
 
                 G = _Calque.AjouterGroupe("Percages :");
 
@@ -74,25 +80,29 @@ namespace ModuleListerPercage
 
         private void ExitIsoler()
         {
-            App.Assembly.ExitIsolate();
+            if (MdlBase.TypeDoc() != eTypeDoc.Assemblage)
+                return;
+
+            MdlBase.eAssemblyDoc().ExitIsolate();
             _Button_IsolerComposants.Caption = "Isoler les composants";
             Isoler = false;
         }
 
         private void IsolerComposants()
         {
+            if (MdlBase.TypeDoc() != eTypeDoc.Assemblage)
+                return;
+
             if (!Isoler)
             {
-                var mdl = App.ModelDoc2;
+                List<Body2> listeCorps = MdlBase.eSelect_RecupererListeObjets<Body2>(_Select_Selection.Marque);
+                List<Component2> listeComps = MdlBase.eSelect_RecupererListeComposants(_Select_Selection.Marque);
 
-                List<Body2> listeCorps = mdl.eSelect_RecupererListeObjets<Body2>(_Select_Selection.Marque);
-                List<Component2> listeComps = mdl.eSelect_RecupererListeComposants(_Select_Selection.Marque);
+                MdlBase.eSelectMulti(listeComps, _Select_Selection.Marque, false);
 
-                mdl.eSelectMulti(listeComps, _Select_Selection.Marque, false);
+                MdlBase.eAssemblyDoc().Isolate();
 
-                mdl.eAssemblyDoc().Isolate();
-
-                mdl.eSelectMulti(listeCorps, _Select_Selection.Marque, false);
+                MdlBase.eSelectMulti(listeCorps, _Select_Selection.Marque, false);
 
                 Isoler = true;
 
@@ -108,8 +118,6 @@ namespace ModuleListerPercage
         {
             var TextListBox = sender as CtrlTextListBox;
 
-            var mdl = App.ModelDoc2;
-
             var listeElements = Bdd.ListeFace(TextListBox.SelectedText);
 
             var listeFace = new List<Face2>();
@@ -118,8 +126,8 @@ namespace ModuleListerPercage
             {
                 if (element.Key.IsHidden(false) && !ListeHiddenComposants.Contains(element.Key.eKeyAvecConfig()))
                 {
-                    element.Key.eSelectById(mdl, 16, true);
-                    element.Key.eDeSelectById(mdl);
+                    element.Key.eSelectById(MdlBase, 16, true);
+                    element.Key.eDeSelectById(MdlBase);
                     ListeHiddenComposants.Add(element.Key.eKeyAvecConfig());
                 }
 
@@ -133,7 +141,12 @@ namespace ModuleListerPercage
 
             ExitIsoler();
 
-            mdl.eSelectMulti(listeFace, _Select_Selection.Marque, false);
+            MdlBase.eSelectMulti(listeFace, _Select_Selection.Marque, false);
+        }
+
+        private void InitModeleBase()
+        {
+            MdlBase = App.ModelDoc2;
         }
 
         private void AfficherPercage()
@@ -148,19 +161,20 @@ namespace ModuleListerPercage
         {
             Bdd = new BDD();
 
-            var mdl = App.ModelDoc2;
+            Predicate<Component2> Test = c =>
+            {
+                if (!c.IsHidden(true) && (c.TypeDoc() == eTypeDoc.Piece))
+                {
+                    Bdd.Decompter(c);
+                }
 
-            App.ModelDoc2.eRecParcourirComposants(
-                    c =>
-                    {
-                        if (!c.IsHidden(true) && (c.TypeDoc() == eTypeDoc.Piece))
-                        {
-                            Bdd.Decompter(c);
-                        }
+                return false;
+            };
 
-                        return false;
-                    }
-                );
+            if (MdlBase.TypeDoc() == eTypeDoc.Piece)
+                Test(MdlBase.eComposantRacine());
+            else
+                MdlBase.eRecParcourirComposants(Test);
         }
 
         public class BDD
@@ -247,11 +261,9 @@ namespace ModuleListerPercage
 
         protected void RunOkCommand()
         {
-            var mdl = App.ModelDoc2;
+            List<Body2> listeCorps = MdlBase.eSelect_RecupererListeObjets<Body2>(_Select_Selection.Marque);
 
-            List<Body2> listeCorps = mdl.eSelect_RecupererListeObjets<Body2>(_Select_Selection.Marque);
-
-            mdl.eSelectMulti(listeCorps, -1, false);
+            MdlBase.eSelectMulti(listeCorps, -1, false);
         }
     }
 }
