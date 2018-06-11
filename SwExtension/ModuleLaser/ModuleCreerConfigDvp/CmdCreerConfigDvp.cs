@@ -44,7 +44,7 @@ namespace ModuleLaser.ModuleCreerConfigDvp
             {
                 int NbDvp = 0;
 
-                var dic = MdlBase.ListerComposants(false, eTypeCorps.Tole);
+                var dic = MdlBase.ListerComposants(false);
 
                 int MdlPct = 0;
                 foreach (var mdl in dic.Keys)

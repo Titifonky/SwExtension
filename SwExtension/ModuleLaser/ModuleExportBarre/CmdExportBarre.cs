@@ -59,23 +59,6 @@ namespace ModuleLaser.ModuleExportBarre
                     }
                     );
 
-                foreach (var mdl in dic.Keys)
-                {
-                    WindowLog.Ecrire(mdl.eNomAvecExt());
-                    foreach (var NomConfigPliee in dic[mdl].Keys)
-                    {
-                        WindowLog.Ecrire(NomConfigPliee);
-                        var ListeDossier = dic[mdl][NomConfigPliee];
-                        foreach (var t in ListeDossier)
-                        {
-                            var IdDossier = t.Key;
-                            var QuantiteBarre = t.Value * Quantite;
-                            WindowLog.Ecrire(IdDossier + " - x" + QuantiteBarre);
-                        }
-                    }
-                }
-
-
                 if (ListerUsinages)
                     Nomenclature.TitreColonnes("Barre ref.", "Materiau", "Profil", "Lg", "Nb", "Usinage Ext 1", "Usinage Ext 2", "Détail des Usinage interne");
                 else
@@ -186,10 +169,7 @@ namespace ModuleLaser.ModuleExportBarre
                 s.Close();
 
             }
-            catch (Exception e)
-            {
-                this.LogErreur(new Object[] { e });
-            }
+            catch (Exception e) { this.LogErreur(new Object[] { e }); }
         }
 
         // ========================================================================================

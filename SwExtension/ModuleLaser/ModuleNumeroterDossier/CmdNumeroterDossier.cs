@@ -44,7 +44,7 @@ namespace ModuleLaser
 
                     var ListeCorps = new List<Corps>();
 
-                    var lst = MdlBase.ListerComposants(false, eTypeCorps.Tole | eTypeCorps.Barre);
+                    var lst = MdlBase.ListerComposants(false);
 
                     foreach (var mdl in lst.Keys)
                     {
@@ -66,12 +66,9 @@ namespace ModuleLaser
                                     BodyFolder Dossier = swD.GetSpecificFeature2();
 
                                     // Si le dossier est la racine d'un sous-ensemble soudé, il n'y a rien dedans
-                                    if (Dossier.IsRef() && Dossier.eNbCorps() > 0)
-                                    {
-                                        eTypeCorps TypeCorps = Dossier.eTypeDeDossier();
-                                        if (TypeCorps == eTypeCorps.Barre || TypeCorps == eTypeCorps.Tole)
-                                            return true;
-                                    }
+                                    if (Dossier.IsRef() && Dossier.eNbCorps() > 0 &&
+                                        (eTypeCorps.Barre | eTypeCorps.Tole).HasFlag(Dossier.eTypeDeDossier()))
+                                        return true;
 
                                     return false;
                                 }
@@ -193,6 +190,9 @@ namespace ModuleLaser
                                 }
                             }
                         }
+
+                        if (mdl.GetPathName() != MdlBase.GetPathName())
+                            App.Sw.CloseDoc(mdl.GetPathName());
                     }
 
                     MdlBase.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);

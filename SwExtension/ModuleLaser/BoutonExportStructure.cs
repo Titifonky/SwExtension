@@ -34,7 +34,7 @@ namespace ModuleLaser
                 ModelDoc2 MdlBase = App.ModelDoc2;
                 CreerDossierExport(MdlBase);
 
-                var dic = MdlBase.ListerComposants(false, eTypeCorps.Barre);
+                var dic = MdlBase.ListerComposants(false);
 
                 int MdlPct = 0;
                 foreach (var mdl in dic.Keys)

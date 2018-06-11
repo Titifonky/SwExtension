@@ -4,8 +4,8 @@
     <Parametre name="Reinitialiser" intitule="Reinitialiser les menus &amp; onglets" tip="" type="System.Boolean">False</Parametre>
   </Module>
   <Module name="ExportDxfDwg" intitule="Exporter en Dxf/Dwg">
-    <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="SelectionnerDossier" intitule="Selectionner un dossier" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="SelectionnerDossier" intitule="Selectionner un dossier" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="ToutesLesFeuilles" intitule="Toutes les feuilles" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="FormatExport" intitule="Format" tip="" type="Outils.eTypeFichierExport">DWG</Parametre>
     <Parametre name="VersionExport" intitule="Version" tip="" type="Outils.eDxfFormat">R2010</Parametre>
@@ -16,7 +16,7 @@
     <Parametre name="ExporterHauteQualite" intitule="Exporter en haute qualité" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="ExporterFeuilleEspacePapier" intitule="Exporter les feuilles dans l'espace papier" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="ConvertirSplineToPolyligne" intitule="Convertir les splines en polylignes" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">D:\Projet\A157 - Ville de Courrieres\AD424 - Renovation de la salle d'harmonie de Courrieres\0\5.2.2 Garde-corps exterieur\Plans Développées\DWG - Ind C</Parametre>
+    <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">E:\Projets\A165 - Gauthier Lemay Architecte\AD447 - Garde corps metallique\0\Plans Développées\DWG - Ind A</Parametre>
   </Module>
   <Module name="ExportPdf" intitule="Exporter en Pdf">
     <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">True</Parametre>
@@ -124,7 +124,7 @@
     <Parametre name="PrendreEnCompteTole" intitule="Prendre en compte les tôles" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="ComposantExterne" intitule="Exporter les barres externes au dossier du modèle" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="TypeExport" intitule="Format :" tip="" type="Outils.eTypeFichierExport">ParasolidBinary</Parametre>
-    <Parametre name="ListerUsinages" intitule="Lister les usinages" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="ListerUsinages" intitule="Lister les usinages" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="ExporterBarres" intitule="Exporter les barres" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="CreerPdf3D" intitule="Créer les pdf 3D des barres" tip="" type="System.Boolean">False</Parametre>
   </Module>

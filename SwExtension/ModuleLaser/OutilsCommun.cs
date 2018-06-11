@@ -252,79 +252,52 @@ namespace ModuleLaser
         /// <param name="composantsExterne"></param>
         /// <param name="filtreTypeCorps"></param>
         /// <returns></returns>
-        public static SortedDictionary<ModelDoc2, SortedDictionary<String, int>> ListerComposants(this ModelDoc2 mdlBase, Boolean composantsExterne, eTypeCorps filtreTypeCorps)
+        public static SortedDictionary<ModelDoc2, SortedDictionary<String, int>> ListerComposants(this ModelDoc2 mdlBase, Boolean composantsExterne)
         {
             SortedDictionary<ModelDoc2, SortedDictionary<String, int>> dic = new SortedDictionary<ModelDoc2, SortedDictionary<String, int>>(new CompareModelDoc2());
 
             try
             {
-                if (mdlBase.TypeDoc() == eTypeDoc.Piece)
+                Action<Component2> Test = delegate (Component2 comp)
                 {
-                    var ConfigActive = mdlBase.eNomConfigActive();
-                    if (!ConfigActive.eEstConfigPliee())
-                    {
-                        WindowLog.Ecrire("Pas de configuration valide," +
-                                            "\r\n le nom de la config doit être composée exclusivement de chiffres");
-                        return dic;
-                    }
-                    var Piece = mdlBase.ePartDoc();
-                    var lcfg = new SortedDictionary<String, int>(new WindowsStringComparer());
-                    dic.Add(mdlBase, lcfg);
-                    foreach (var dossier in Piece.eListeDesDossiersDePiecesSoudees())
-                    {
-                        if (!dossier.eEstExclu() &&
-                            filtreTypeCorps.HasFlag(dossier.eTypeDeDossier()))
+                    var cfg = comp.eNomConfiguration();
+
+                    if (comp.IsSuppressed() || comp.ExcludeFromBOM || !cfg.eEstConfigPliee() || comp.TypeDoc() != eTypeDoc.Piece) return;
+
+                    var mdl = comp.eModelDoc2();
+                    
+                    if (dic.ContainsKey(mdl))
+                        if (dic[mdl].ContainsKey(cfg))
                         {
-                            lcfg.Add(ConfigActive, 1);
-                            break;
+                            dic[mdl][cfg] += 1;
+                            return;
                         }
+
+                    if (dic.ContainsKey(mdl))
+                        dic[mdl].Add(cfg, 1);
+                    else
+                    {
+                        var lcfg = new SortedDictionary<String, int>(new WindowsStringComparer());
+                        lcfg.Add(cfg, 1);
+                        dic.Add(mdl, lcfg);
                     }
-                }
+                };
+
+                if (mdlBase.TypeDoc() == eTypeDoc.Piece)
+                    Test(mdlBase.eComposantRacine());
                 else
                 {
                     mdlBase.eComposantRacine().eRecParcourirComposantBase(
-                            comp =>
-                            {
-                                if (comp.IsSuppressed() || comp.ExcludeFromBOM || comp.TypeDoc() != eTypeDoc.Piece) return;
+                        Test,
+                        // On ne parcourt pas les assemblages exclus
+                        c =>
+                        {
+                            if (c.ExcludeFromBOM)
+                                return false;
 
-                                var mdl = comp.eModelDoc2();
-                                var cfg = comp.eNomConfiguration();
-                                if (dic.ContainsKey(mdl))
-                                    if (dic[mdl].ContainsKey(cfg))
-                                    {
-                                        dic[mdl][cfg] += 1;
-                                        return;
-                                    }
-
-                                foreach (var fDossier in comp.eListeDesFonctionsDePiecesSoudees())
-                                {
-                                    BodyFolder SwDossier = fDossier.GetSpecificFeature2();
-                                    if (SwDossier.IsRef() &&
-                                    SwDossier.eNbCorps() > 0 &&
-                                    !SwDossier.eEstExclu() &&
-                                    filtreTypeCorps.HasFlag(SwDossier.eTypeDeDossier()))
-                                    {
-                                        if (dic.ContainsKey(mdl))
-                                            dic[mdl].Add(cfg, 1);
-                                        else
-                                        {
-                                            var lcfg = new SortedDictionary<String, int>(new WindowsStringComparer());
-                                            lcfg.Add(cfg, 1);
-                                            dic.Add(mdl, lcfg);
-                                        }
-                                        break;
-                                    }
-                                }
-                            },
-                            // On ne parcourt pas les assemblages exclus
-                            c =>
-                            {
-                                if (c.ExcludeFromBOM)
-                                    return false;
-
-                                return true;
-                            }
-                            );
+                            return true;
+                        }
+                        );
                 }
             }
             catch (Exception e) { Log.LogErreur(new Object[] { e }); }
@@ -349,149 +322,84 @@ namespace ModuleLaser
         /// <param name="composantsExterne"></param>
         /// <param name="filtreDossier"></param>
         /// <returns></returns>
-        public static SortedDictionary<ModelDoc2, SortedDictionary<String, SortedDictionary<int, int>>> DenombrerDossiers(this ModelDoc2 mdlBase, Boolean composantsExterne, Predicate<Feature> filtreDossier = null, Predicate<Component2> filtreComposant = null)
+        public static SortedDictionary<ModelDoc2, SortedDictionary<String, SortedDictionary<int, int>>> DenombrerDossiers(this ModelDoc2 mdlBase, Boolean composantsExterne, Predicate<Feature> filtreDossier = null, Boolean fermerFichier = false)
         {
 
             SortedDictionary<ModelDoc2, SortedDictionary<String, SortedDictionary<int, int>>> dic = new SortedDictionary<ModelDoc2, SortedDictionary<String, SortedDictionary<int, int>>>(new CompareModelDoc2());
             try
             {
-                if (mdlBase.TypeDoc() == eTypeDoc.Piece)
+                var ListeComposants = mdlBase.ListerComposants(composantsExterne);
+
+                var ListeDossiers = new Dictionary<String, Dossier>();
+
+                Predicate<Feature> Test = delegate (Feature fDossier)
                 {
-                    var ConfigActive = mdlBase.eNomConfigActive();
-                    if (!ConfigActive.eEstConfigPliee())
-                    {
-                        WindowLog.Ecrire("Pas de configuration valide," +
-                                            "\r\n le nom de la config doit être composée exclusivement de chiffres");
-                        return dic;
-                    }
-                    var Piece = mdlBase.ePartDoc();
-                    var dicDossier = new SortedDictionary<int, int>();
-                    foreach (var dossier in Piece.eListeDesDossiersDePiecesSoudees())
-                    {
-                        if (!dossier.eEstExclu() && (filtreDossier.IsNull() || filtreDossier(dossier.GetFeature())))
-                        {
-                            dicDossier.Add(dossier.GetFeature().GetID(), dossier.eNbCorps());
-                        }
-                    }
+                    BodyFolder SwDossier = fDossier.GetSpecificFeature2();
+                    if (SwDossier.IsRef() && SwDossier.eNbCorps() > 0 && !SwDossier.eEstExclu() && (filtreDossier.IsNull() || filtreDossier(fDossier)))
+                        return true;
 
-                    var dicConfig = new SortedDictionary<String, SortedDictionary<int, int>>(new WindowsStringComparer());
-                    dicConfig.Add(ConfigActive, dicDossier);
-                    dic.Add(mdlBase, dicConfig);
-                }
-                else
+                    return false;
+                };
+
+                foreach (var mdl in ListeComposants.Keys)
                 {
-                    var ListeDossiers = new Dictionary<String, Dossier>();
+                    mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
 
-                    var ListeCompsUnique = mdlBase.ListerComposants(composantsExterne, eTypeCorps.Barre | eTypeCorps.Tole);
-
-                    Predicate<Feature> Test = delegate (Feature fDossier)
+                    foreach (var t in ListeComposants[mdl])
                     {
-                        BodyFolder SwDossier = fDossier.GetSpecificFeature2();
-                        if (SwDossier.IsRef() && SwDossier.eNbCorps() > 0 && !SwDossier.eEstExclu() && (filtreDossier.IsNull() || filtreDossier(fDossier)))
-                            return true;
+                        var cfg = t.Key;
+                        var nbCfg = t.Value;
+                        mdl.ShowConfiguration2(cfg);
+                        mdl.EditRebuild3();
+                        var Piece = mdl.ePartDoc();
 
-                        return false;
-                    };
-
-                    foreach (var mdl in ListeCompsUnique.Keys)
-                    {
-                        mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
-
-                        foreach (var t in ListeCompsUnique[mdl])
+                        foreach (var fDossier in Piece.eListeDesFonctionsDePiecesSoudees(Test))
                         {
-                            var cfg = t.Key;
-                            var Nb = t.Value;
-                            mdl.ShowConfiguration2(cfg);
-                            mdl.EditRebuild3();
-                            var Piece = mdl.ePartDoc();
+                            BodyFolder SwDossier = fDossier.GetSpecificFeature2();
+                            var RefDossier = SwDossier.eProp(CONSTANTES.REF_DOSSIER);
 
-
-
-                            foreach (var fDossier in Piece.eListeDesFonctionsDePiecesSoudees(Test))
-                            {
-
-                            }
-
-
-
-                        }
-                    }
-
-                    mdlBase.eComposantRacine().eRecParcourirComposantBase(
-                            comp =>
-                            {
-                                if (comp.IsSuppressed() || comp.ExcludeFromBOM || comp.TypeDoc() != eTypeDoc.Piece) return;
-
-                                if (filtreComposant.IsRef() && !filtreComposant(comp))
-                                    return;
-
-                                WindowLog.Ecrire(comp.eNomAvecExt() + "-" + comp.eNomConfiguration());
-                                var liste = comp.eListeDesFonctionsDePiecesSoudees();
-                                for (int i = 0; i < liste.Count; i++)
-                                {
-                                    var fDossier = liste[i];
-                                    BodyFolder SwDossier = fDossier.GetSpecificFeature2();
-                                    var RefDossier = SwDossier.eProp(CONSTANTES.REF_DOSSIER);
-                                    WindowLog.Ecrire(RefDossier);
-                                    if (SwDossier.IsRef() && SwDossier.eNbCorps() > 0 && !SwDossier.eEstExclu() && (filtreDossier.IsNull() || filtreDossier(fDossier)))
-                                    {
-                                        WindowLog.Ecrire("   ok");
-                                        if (ListeDossiers.ContainsKey(RefDossier))
-                                        {
-                                            ListeDossiers[RefDossier].Nb += SwDossier.eNbCorps();
-                                        }
-                                        else
-                                        {
-                                            var dossier = new Dossier(RefDossier, comp.eModelDoc2(), comp.eNomConfiguration(), fDossier.GetID());
-                                            dossier.Nb = SwDossier.eNbCorps();
-
-                                            ListeDossiers.Add(RefDossier, dossier);
-                                        }
-                                    }
-                                }
-                            },
-                            // On ne parcourt pas les assemblages exclus
-                            c =>
-                            {
-                                if (c.ExcludeFromBOM)
-                                    return false;
-
-                                return true;
-                            }
-                            );
-
-                    foreach (var Dossier in ListeDossiers.Values)
-                    {
-                        WindowLog.Ecrire(Dossier.Repere + ":" + Dossier.Nb);
-                        WindowLog.Ecrire(Dossier.Mdl.eNomAvecExt() + "-" + Dossier.Config);
-
-                    }
-
-                    foreach (var dossier in ListeDossiers.Values)
-                    {
-                        if (dic.ContainsKey(dossier.Mdl))
-                        {
-                            var lcfg = dic[dossier.Mdl];
-                            if (lcfg.ContainsKey(dossier.Config))
-                            {
-                                var ldossier = lcfg[dossier.Config];
-                                ldossier.Add(dossier.Id, dossier.Nb);
-                            }
+                            if (ListeDossiers.ContainsKey(RefDossier))
+                                ListeDossiers[RefDossier].Nb += SwDossier.eNbCorps() * nbCfg;
                             else
                             {
-                                var ldossier = new SortedDictionary<int, int>();
-                                ldossier.Add(dossier.Id, dossier.Nb);
-                                lcfg.Add(dossier.Config, ldossier);
+                                var dossier = new Dossier(RefDossier, mdl, cfg, fDossier.GetID());
+                                dossier.Nb = SwDossier.eNbCorps() * nbCfg;
+
+                                ListeDossiers.Add(RefDossier, dossier);
                             }
+                        }
+                    }
+
+                    if (fermerFichier && (mdl.GetPathName() != mdlBase.GetPathName()))
+                        App.Sw.CloseDoc(mdl.GetPathName());
+                }
+
+                // Conversion d'une liste de dossier
+                // en liste de modele
+                foreach (var dossier in ListeDossiers.Values)
+                {
+                    if (dic.ContainsKey(dossier.Mdl))
+                    {
+                        var lcfg = dic[dossier.Mdl];
+                        if (lcfg.ContainsKey(dossier.Config))
+                        {
+                            var ldossier = lcfg[dossier.Config];
+                            ldossier.Add(dossier.Id, dossier.Nb);
                         }
                         else
                         {
                             var ldossier = new SortedDictionary<int, int>();
                             ldossier.Add(dossier.Id, dossier.Nb);
-                            var lcfg = new SortedDictionary<String, SortedDictionary<int, int>>(new WindowsStringComparer());
                             lcfg.Add(dossier.Config, ldossier);
-                            dic.Add(dossier.Mdl, lcfg);
                         }
+                    }
+                    else
+                    {
+                        var ldossier = new SortedDictionary<int, int>();
+                        ldossier.Add(dossier.Id, dossier.Nb);
+                        var lcfg = new SortedDictionary<String, SortedDictionary<int, int>>(new WindowsStringComparer());
+                        lcfg.Add(dossier.Config, ldossier);
+                        dic.Add(dossier.Mdl, lcfg);
                     }
                 }
             }
