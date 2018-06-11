@@ -25,11 +25,14 @@ namespace ModuleLaser
 
                 var Dic = new HashSet<String>();
 
+                Boolean Erreur = false;
+
                 Predicate<Component2> Test = comp =>
                 {
                     if (!comp.IsSuppressed())
                     {
                         var clef = comp.eNomAvecExt() + "___" + comp.eNomConfiguration();
+                        WindowLog.Ecrire(clef);
                         if (!Dic.Contains(clef))
                         {
                             Dic.Add(clef);
@@ -45,6 +48,7 @@ namespace ModuleLaser
                                         {
                                             WindowLog.EcrireF("{0} \"{1}\"", comp.eNomSansExt(), comp.eNomConfiguration());
                                             WindowLog.EcrireF("  {0} : Pas de reference", f.Name);
+                                            Erreur = true;
                                         }
                                     }
 
@@ -61,6 +65,9 @@ namespace ModuleLaser
                     Test(MdlBase.eComposantRacine());
                 else
                     MdlBase.eRecParcourirComposants(Test);
+
+                if (!Erreur)
+                    WindowLog.Ecrire("Aucune erreur\n");
             }
             catch (Exception e)
             {

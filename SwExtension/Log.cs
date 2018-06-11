@@ -142,6 +142,15 @@ namespace LogDebugging
             Write("\t\t\t\t-> " + String.Format(Message, objs));
         }
 
+        internal static void LogErreur(Object[] Message, [CallerMemberName] String methode = "")
+        {
+            if (!_Actif)
+                return;
+
+            WindowLog.Ecrire("Erreur : Consultez le fichier LOG");
+            Write("\t\t\t" + methode + "  ->  " + String.Join(" ", Message));
+        }
+
         internal static void LogErreur(this Object O, Object[] Message, [CallerMemberName] String methode = "")
         {
             if (!_Actif)

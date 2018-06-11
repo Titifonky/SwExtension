@@ -19,8 +19,8 @@
     <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">D:\Projet\A157 - Ville de Courrieres\AD424 - Renovation de la salle d'harmonie de Courrieres\0\5.2.2 Garde-corps exterieur\Plans Développées\DWG - Ind C</Parametre>
   </Module>
   <Module name="ExportPdf" intitule="Exporter en Pdf">
-    <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="SelectionnerDossier" intitule="Selectionner un dossier" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="SelectionnerDossier" intitule="Selectionner un dossier" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="ToutesLesFeuilles" intitule="Toutes les feuilles" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="FormatExport" intitule="Format" tip="" type="Outils.eTypeFichierExport">PDF</Parametre>
     <Parametre name="ExporterEnCouleur" intitule="Exporter en couleur" tip="" type="System.Boolean">True</Parametre>
@@ -124,9 +124,9 @@
     <Parametre name="PrendreEnCompteTole" intitule="Prendre en compte les tôles" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="ComposantExterne" intitule="Exporter les barres externes au dossier du modèle" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="TypeExport" intitule="Format :" tip="" type="Outils.eTypeFichierExport">ParasolidBinary</Parametre>
-    <Parametre name="ListerUsinages" intitule="Lister les usinages" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="ExporterBarres" intitule="Exporter les barres" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="CreerPdf3D" intitule="Créer les pdf 3D des barres" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="ListerUsinages" intitule="Lister les usinages" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="ExporterBarres" intitule="Exporter les barres" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="CreerPdf3D" intitule="Créer les pdf 3D des barres" tip="" type="System.Boolean">False</Parametre>
   </Module>
   <Module name="RenommerToutesFeuilles" intitule="Renommer toutes les feuilles">
   </Module>

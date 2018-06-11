@@ -2614,7 +2614,7 @@ namespace Outils
                     if (f.GetTypeName2() == FeatureType.swTnCutListFolder)
                     {
                         BodyFolder dossier = f.GetSpecificFeature2();
-                        if ((dossier.GetBodyCount() > 0) && (filtre.IsNull() || filtre(dossier)))
+                        if (dossier.IsRef() &&  (dossier.GetBodyCount() > 0) && (filtre.IsNull() || filtre(dossier)))
                             Liste.Add(dossier);
                     }
                 }
