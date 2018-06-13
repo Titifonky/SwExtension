@@ -2628,6 +2628,12 @@ namespace Outils
             return piece.eDossierListeDesPiecesSoudees().eListeDesDossiersDePiecesSoudees(filtre);
         }
 
+        /// <summary>
+        /// A utiliser avec attention, le contenu des dossiers n'est pas toujours à jour
+        /// </summary>
+        /// <param name="composant"></param>
+        /// <param name="filtre"></param>
+        /// <returns></returns>
         public static List<BodyFolder> eListeDesDossiersDePiecesSoudees(this Component2 composant, Predicate<BodyFolder> filtre = null)
         {
             return composant.eDossierListeDesPiecesSoudees().eListeDesDossiersDePiecesSoudees(filtre);
