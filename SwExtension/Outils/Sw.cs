@@ -2653,11 +2653,6 @@ namespace Outils
             return piece.eDossierListeDesPiecesSoudees().eListeDesFonctionsDePiecesSoudees(filtre);
         }
 
-        public static List<Feature> eListeDesFonctionsDePiecesSoudees(this Component2 composant, Predicate<Feature> filtre = null)
-        {
-            return composant.eDossierListeDesPiecesSoudees().eListeDesFonctionsDePiecesSoudees(filtre);
-        }
-
         public static ListPID<Feature> eListePIDdesFonctionsDePiecesSoudees(this Feature Fonction, ModelDoc2 mdl, Predicate<Feature> filtre = null)
         {
             ListPID<Feature> Liste = new ListPID<Feature>(mdl);
@@ -2676,11 +2671,6 @@ namespace Outils
         public static ListPID<Feature> eListePIDdesFonctionsDePiecesSoudees(this PartDoc piece, Predicate<Feature> filtre = null)
         {
             return piece.eDossierListeDesPiecesSoudees().eListePIDdesFonctionsDePiecesSoudees(piece.eModelDoc2(), filtre);
-        }
-
-        public static ListPID<Feature> eListePIDdesFonctionsDePiecesSoudees(this Component2 composant, Predicate<Feature> filtre = null)
-        {
-            return composant.eDossierListeDesPiecesSoudees().eListePIDdesFonctionsDePiecesSoudees(composant.eModelDoc2(), filtre);
         }
 
         public static ListPID<Feature> eListePIDdesFonctionsDeSousEnsembleDePiecesSoudees(this Feature Fonction, ModelDoc2 mdl)

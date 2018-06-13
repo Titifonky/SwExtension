@@ -390,59 +390,69 @@ namespace ModuleLaser
             {
                 eTypeCorps Filtre = eTypeCorps.Barre | eTypeCorps.Tole;
 
-                var Dic = new HashSet<String>();
+                var ListeComposants = MdlBase.ListerComposants(false);
 
-                Predicate<Component2> Test = delegate (Component2 comp)
+                Func<Feature, Tuple<String, String>> ExtractRef = delegate (Feature dossier)
                 {
-                    if (!comp.IsSuppressed())
+                    CustomPropertyManager PM = dossier.CustomPropertyManager;
+                    String val, result = ""; Boolean wasResolved, link;
+                    var r = PM.Get6(CONSTANTES.REF_DOSSIER, false, out val, out result, out wasResolved, out link);
+
+                    return new Tuple<String, String>(result.Replace(CONSTANTES.PREFIXE_REF_DOSSIER, ""), val);
+                };
+
+                Predicate<Feature> Test = delegate (Feature f)
+                {
+                    BodyFolder dossier = f.GetSpecificFeature2();
+                    if (dossier.IsRef() && dossier.eNbCorps() > 0 && Filtre.HasFlag(dossier.eTypeDeDossier()))
                     {
-                        var hashComp = comp.eKeyAvecConfig();
-                        if (!Dic.Contains(hashComp))
-                        {
-                            Dic.Add(hashComp);
+                        CustomPropertyManager PM = f.CustomPropertyManager;
 
-                            var l = comp.eListeDesFonctionsDePiecesSoudees(
-                                f =>
-                                {
-                                    BodyFolder dossier = f.GetSpecificFeature2();
-                                    if (dossier.IsRef() && dossier.eNbCorps() > 0 && Filtre.HasFlag(dossier.eTypeDeDossier()))
-                                    {
-                                        CustomPropertyManager PM = f.CustomPropertyManager;
+                        String val, result = ""; Boolean wasResolved, link;
+                        var r = PM.Get6(CONSTANTES.REF_DOSSIER, false, out val, out result, out wasResolved, out link);
 
-                                        String val, result = ""; Boolean wasResolved, link;
-                                        var r = PM.Get6(CONSTANTES.REF_DOSSIER, false, out val, out result, out wasResolved, out link);
-
-                                        var RefDossier = result.Replace(CONSTANTES.PREFIXE_REF_DOSSIER, "");
-                                        if (RefDossier.eIsInteger())
-                                        {
-                                            indice = Math.Max(indice, RefDossier.eToInteger());
-                                            var hashDossier = HashDossier(comp.eModelDoc2(), f);
-                                            DossierTraite.Add(hashDossier);
-
-                                            // On recherche l'index max pour chaque modele
-                                            var NomParam = ExtractNomParam(val);
-                                            var dim = NomParam.Split('@')[0].CleanStringOfNonDigits().eToInteger();
-                                            var hashMdl = comp.GetPathName();
-                                            if (IndexDimension.ContainsKey(hashMdl))
-                                                IndexDimension[hashMdl] = Math.Max(IndexDimension[hashMdl], dim);
-                                            else
-                                                IndexDimension[hashMdl] = dim;
-                                        }
-                                    }
-
-                                    return true;
-                                }
-                                );
-                        }
-
+                        var RefDossier = ExtractRef(f).Item1;
+                        if (RefDossier.eIsInteger())
+                            return true;
                     }
+
                     return false;
                 };
 
-                if (MdlBase.TypeDoc() == eTypeDoc.Piece)
-                    Test(MdlBase.eComposantRacine());
-                else
-                    MdlBase.eRecParcourirComposants(Test);
+                foreach (var mdl in ListeComposants.Keys)
+                {
+                    mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
+
+                    foreach (var t in ListeComposants[mdl])
+                    {
+                        var cfg = t.Key;
+                        var nbCfg = t.Value;
+                        mdl.ShowConfiguration2(cfg);
+                        mdl.EditRebuild3();
+                        var Piece = mdl.ePartDoc();
+
+                        foreach (var f in Piece.eListeDesFonctionsDePiecesSoudees(Test))
+                        {
+                            var RefDossier = ExtractRef(f);
+
+                            indice = Math.Max(indice, RefDossier.Item1.eToInteger());
+                            var hashDossier = HashDossier(mdl, f);
+                            DossierTraite.Add(hashDossier);
+
+                            // On recherche l'index max pour chaque modele
+                            var NomParam = ExtractNomParam(RefDossier.Item2);
+                            var dim = NomParam.Split('@')[0].CleanStringOfNonDigits().eToInteger();
+                            var hashMdl = mdl.GetPathName();
+                            if (IndexDimension.ContainsKey(hashMdl))
+                                IndexDimension[hashMdl] = Math.Max(IndexDimension[hashMdl], dim);
+                            else
+                                IndexDimension[hashMdl] = dim;
+                        }
+                    }
+
+                    if (mdl.GetPathName() != MdlBase.GetPathName())
+                        App.Sw.CloseDoc(mdl.GetPathName());
+                }
 
                 WindowLog.EcrireF("Indice Max : {0}", indice);
             }
