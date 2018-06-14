@@ -154,15 +154,10 @@ namespace ModuleLaser
                     {
                         if (!c.IsHidden(false) && !c.ExcludeFromBOM && (c.TypeDoc() == eTypeDoc.Piece))
                         {
-                            var LstDossier = c.eListeDesDossiersDePiecesSoudees();
-                            foreach (var dossier in LstDossier)
+                            foreach (var corps in c.eListeCorps())
                             {
-                                if (!dossier.eEstExclu() && dossier.eEstUnDossierDeToles())
-                                {
-                                    String Ep = dossier.ePremierCorps().eEpaisseur().ToString();
-
-                                    ListeEp.AddIfNotExist(Ep);
-                                }
+                                if(corps.eTypeDeCorps() == eTypeCorps.Tole)
+                                    ListeEp.AddIfNotExist(corps.eEpaisseur().ToString());
                             }
                         }
 
@@ -187,57 +182,6 @@ namespace ModuleLaser
             ListeEp.Sort(new WindowsStringComparer());
 
             return ListeEp;
-        }
-
-        public static List<string> ListeProfil(this ModelDoc2 mdl)
-        {
-            List<string> ListeProfil = new List<string>();
-
-            if (mdl.TypeDoc() == eTypeDoc.Assemblage)
-            {
-
-                App.ModelDoc2.eRecParcourirComposants(
-                    c =>
-                    {
-                        if (!c.IsHidden(false) && !c.ExcludeFromBOM && (c.TypeDoc() == eTypeDoc.Piece))
-                        {
-                            var LstDossier = c.eListeDesDossiersDePiecesSoudees();
-                            foreach (var dossier in LstDossier)
-                            {
-                                if (!dossier.eEstExclu() && dossier.eEstUnDossierDeToles())
-                                {
-                                    if (dossier.ePropExiste(CONSTANTES.PROFIL_NOM))
-                                    {
-                                        String Profil = dossier.eProp(CONSTANTES.PROFIL_NOM);
-
-                                        ListeProfil.AddIfNotExist(Profil);
-                                    }
-                                }
-                            }
-                        }
-
-                        return false;
-                    }
-                );
-            }
-            else if (mdl.TypeDoc() == eTypeDoc.Piece)
-            {
-                var LstDossier = mdl.ePartDoc().eListeDesDossiersDePiecesSoudees();
-                foreach (var dossier in LstDossier)
-                {
-                    if (!dossier.eEstExclu() && dossier.eEstUnDossierDeToles())
-                    {
-                        if (dossier.ePropExiste(CONSTANTES.PROFIL_NOM))
-                        {
-                            String Profil = dossier.eProp(CONSTANTES.PROFIL_NOM);
-
-                            ListeProfil.AddIfNotExist(Profil);
-                        }
-                    }
-                }
-            }
-
-            return ListeProfil;
         }
 
         /// <summary>

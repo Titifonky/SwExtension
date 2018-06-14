@@ -3976,6 +3976,9 @@ namespace Outils
         {
             if (corps.IsRef())
             {
+                if (corps.IsSheetMetal())
+                    return eTypeCorps.Tole;
+
                 foreach (Feature Fonction in corps.GetFeatures())
                 {
                     switch (Fonction.GetTypeName2())
