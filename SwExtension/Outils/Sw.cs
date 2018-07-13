@@ -1723,21 +1723,41 @@ namespace Outils
             return Path.GetFileName(mdl.GetPathName());
         }
 
+        /// <summary>
+        /// Renvoi le chemin complet du dossier
+        /// </summary>
+        /// <param name="cp"></param>
+        /// <returns></returns>
         public static String eDossier(this Component2 cp)
         {
             return Path.GetDirectoryName(cp.GetPathName());
         }
 
+        /// <summary>
+        /// Renvoi le chemin complet du dossier
+        /// </summary>
+        /// <param name="mdl"></param>
+        /// <returns></returns>
         public static String eDossier(this ModelDoc2 mdl)
         {
             return Path.GetDirectoryName(mdl.GetPathName());
         }
 
+        /// <summary>
+        /// Renvoi le nom du dossier
+        /// </summary>
+        /// <param name="cp"></param>
+        /// <returns></returns>
         public static String eNomDossier(this Component2 cp)
         {
             return new DirectoryInfo(cp.eDossier()).Name;
         }
 
+        /// <summary>
+        /// Renvoi le nom du dossier
+        /// </summary>
+        /// <param name="mdl"></param>
+        /// <returns></returns>
         public static String eNomDossier(this ModelDoc2 mdl)
         {
             return new DirectoryInfo(mdl.eDossier()).Name;

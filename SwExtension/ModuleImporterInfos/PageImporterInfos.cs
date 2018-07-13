@@ -27,6 +27,8 @@ namespace ModuleImporterInfos
                 _pComposantsExterne = _Config.AjouterParam("ComposantExterne", false, "Importer dans les composants externe au dossier du modèle");
                 _pToutReconstruire = _Config.AjouterParam("ToutReconstruire", false, "Reconstruire le modèle à la fin de l'importation");
 
+                InitVariables();
+
                 OnCalque += Calque;
                 OnRunAfterActivation += Rechercher_Fichier;
                 OnRunOkCommand += RunOkCommand;
@@ -40,6 +42,15 @@ namespace ModuleImporterInfos
         private CtrlTextListBox _TextListBox_AfficherInfos;
         private CtrlCheckBox _CheckBox_ComposantsExterne;
         private CtrlCheckBox _CheckBox_ToutReconstruire;
+
+        String NomFichier = "";
+        int Iteration = 0;
+
+        private void InitVariables()
+        {
+            NomFichier = _pFichierInfos.GetValeur<String>();
+            Iteration = 0;
+        }
 
         protected void Calque()
         {
@@ -83,24 +94,38 @@ namespace ModuleImporterInfos
             { this.LogMethode(new Object[] { e }); }
         }
 
+        protected String ScanFichier(String Dossier)
+        {
+            String pChemin = Path.Combine(Dossier, NomFichier);
+
+            if (!File.Exists(pChemin))
+            {
+                try
+                {
+                    String DossierParent = Directory.GetParent(Dossier).FullName;
+                    if (!String.IsNullOrWhiteSpace(DossierParent) && (Iteration++ < 5))
+                        pChemin = ScanFichier(DossierParent);
+                    else
+                        pChemin = "";
+                }
+                catch
+                {
+                    pChemin = "";
+                }
+            }
+
+            return pChemin;
+        }
+
         protected void Rechercher_Fichier()
         {
             try
             {
-                String pNomFichier = _pFichierInfos.GetValeur<String>();
-
-                if (String.IsNullOrWhiteSpace(pNomFichier))
+                if (String.IsNullOrWhiteSpace(NomFichier))
                     return;
 
                 // On regarde dans le repertoire du modèle courant
-                String pChemin = Path.Combine(Path.GetDirectoryName(App.ModelDoc2.GetPathName()), pNomFichier);
-
-                if (!File.Exists(pChemin))
-                {
-                    pChemin = Path.Combine(Directory.GetParent(Path.GetDirectoryName(App.ModelDoc2.GetPathName())).FullName, pNomFichier);
-                    if (!File.Exists(pChemin))
-                        pChemin = "";
-                }
+                String pChemin = ScanFichier(App.ModelDoc2.eDossier());
 
                 PublierInfos(pChemin);
             }
