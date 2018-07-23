@@ -7,7 +7,7 @@ using System.IO;
 
 namespace ModuleImporterInfos
 {
-    [ModuleTypeDocContexte(eTypeDoc.Assemblage | eTypeDoc.Piece),
+    [ModuleTypeDocContexte(eTypeDoc.Assemblage | eTypeDoc.Piece | eTypeDoc.Dessin),
         ModuleTitre("Importer des infos"),
         ModuleNom("ImporterInfos"),
         ModuleDescription("Importe les propriétés du fichier sélectionné dans tous les composants du modèle actif." + 

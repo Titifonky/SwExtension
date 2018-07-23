@@ -70,7 +70,6 @@ namespace SwExtension
                 //==================================================================================================
                 eMenu _Mnu = _eListeMenu.Add("Fonction", "Extension des fonctions Sw");
 
-                _Mnu.AjouterCmde("If", typeof(PageImporterInfos));
                 _Mnu.AjouterCmde("Lc", typeof(PageLierLesConfigurations));
                 _Mnu.AjouterCmde("Co", typeof(PageContraindreComposant));
 
@@ -115,7 +114,7 @@ namespace SwExtension
                 //==================================================================================================
                 _Mnu = _eListeMenu.Add("Macro", "Macro Sw");
 
-                _Mnu.AjouterCmde("PM", typeof(PageParametres));
+                _Mnu.AjouterCmde("If", typeof(PageImporterInfos));
                 _Mnu.AjouterCmde("OD", typeof(BoutonOuvrirDossier));
                 _Mnu.AjouterCmde("AA", typeof(BoutonActiverAimantation), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
                 _Mnu.AjouterCmde("AR", typeof(BoutonActiverRelationAuto), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
@@ -140,6 +139,7 @@ namespace SwExtension
                 _Mnu.AjouterCmde("T2", typeof(Test2), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
 
                 _Mnu.NouveauGroupe();
+                _Mnu.AjouterCmde("PM", typeof(PageParametres));
                 _Mnu.AjouterCmde("Al", typeof(BoutonAfficherLogDebug));
 
                 //==================================================================================================

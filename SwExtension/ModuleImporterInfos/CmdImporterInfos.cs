@@ -24,10 +24,10 @@ namespace ModuleImporterInfos
             {
                 LireInfos();
 
-                AjouterInfos(MdlBase.eComposantRacine());
+                AjouterInfos(MdlBase);
 
                 if (MdlBase.TypeDoc() == eTypeDoc.Assemblage)
-                    MdlBase.eRecParcourirComposants(AjouterInfos);
+                    MdlBase.eRecParcourirComposants(c => AjouterInfos(c.eModelDoc2()));
 
                 if (ToutReconstruire)
                     MdlBase.ForceRebuild3(false);
@@ -50,16 +50,16 @@ namespace ModuleImporterInfos
             WindowLog.SautDeLigne();
         }
 
-        private Boolean AjouterInfos(Component2 Cp)
+        private Boolean AjouterInfos(ModelDoc2 Mdl)
         {
             try
             {
-                if (!_ListeComp.Contains(Cp.GetPathName()) && (ComposantsExterne || Cp.eEstDansLeDossier(MdlBase)))
+                if (!_ListeComp.Contains(Mdl.GetPathName()) && (ComposantsExterne || Mdl.eEstDansLeDossier(MdlBase)))
                 {
-                    _ListeComp.Add(Cp.GetPathName());
+                    _ListeComp.Add(Mdl.GetPathName());
 
-                    WindowLog.Ecrire(Cp.eNomAvecExt());
-                    CustomPropertyManager PM = Cp.eModelDoc2().Extension.get_CustomPropertyManager("");
+                    WindowLog.Ecrire(Mdl.eNomAvecExt());
+                    CustomPropertyManager PM = Mdl.Extension.get_CustomPropertyManager("");
                     foreach (String k in _Dic.Keys)
                         PM.Add3(k, (int)swCustomInfoType_e.swCustomInfoText, _Dic[k], (int)swCustomPropertyAddOption_e.swCustomPropertyDeleteAndAdd);
                 }

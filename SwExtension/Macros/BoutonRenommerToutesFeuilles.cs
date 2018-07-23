@@ -24,7 +24,19 @@ namespace Macros
 
                 int i = 1;
                 foreach (Sheet feuille in Dessin.eListeDesFeuilles())
-                    feuille.SetName((i++).ToString());
+                {
+                    var ListeVues = feuille.eListeDesVues();
+
+                    foreach (var v in ListeVues)
+                    {
+                        if (v.ReferencedConfiguration != "")
+                        {
+                            feuille.SetName((i++).ToString());
+                            break;
+                        }
+                    }
+
+                }
 
                 List<String> ListeNomFeuille = new List<string>();
                 Dictionary<String, List<Sheet>> DicFeuilles = new Dictionary<string, List<Sheet>>();
