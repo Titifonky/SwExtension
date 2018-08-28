@@ -142,7 +142,7 @@ namespace ModuleImporterInfos
                 if (String.IsNullOrWhiteSpace(Chemin) || !File.Exists(Chemin))
                     pListe.Add("");
                 else
-                    using (StreamReader sr = new StreamReader(Chemin, Texte.eGetEncoding(Chemin)))
+                    using (StreamReader sr = new StreamReader(Chemin, System.Text.Encoding.GetEncoding(1252)))
                     {
                         while (sr.Peek() > -1)
                             pListe.Add(sr.ReadLine());

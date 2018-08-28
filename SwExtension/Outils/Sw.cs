@@ -3962,7 +3962,24 @@ namespace Outils
         public static Boolean eEstSemblable(this Body2 corps, Body2 corpsTest)
         {
             MathTransform mt = null;
+
+            return corps.eEstSemblable(corpsTest, out mt);
+        }
+
+        public static Boolean eEstSemblable(this Body2 corps, Body2 corpsTest, out MathTransform mt)
+        {
             Boolean result = corps.GetCoincidenceTransform2((Object)corpsTest, out mt);
+
+            if (result == true)
+            {
+                WindowLog.Ecrire(corps.Name + " == " + corpsTest.Name);
+                double[] v = (double[])mt.ArrayData;
+                WindowLog.EcrireF("  Rotation:");
+                WindowLog.EcrireF("    {0} {1} {2}", v[0], v[1], v[2]);
+                WindowLog.EcrireF("    {0} {1} {2}", v[3], v[4], v[5]);
+                WindowLog.EcrireF("    {0} {1} {2}", v[6], v[7], v[8]);
+            }
+
             return result;
         }
 

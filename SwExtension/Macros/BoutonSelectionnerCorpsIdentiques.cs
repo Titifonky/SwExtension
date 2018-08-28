@@ -1,6 +1,7 @@
 ﻿using LogDebugging;
 using Outils;
 using SolidWorks.Interop.sldworks;
+using SolidWorks.Interop.swconst;
 using SwExtension;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,19 @@ namespace Macros
                 Body2 CorpsBase = Face.GetBody();
                 if (CorpsBase.IsNull()) return;
 
-                String MateriauxCorpsBase = CorpsBase.eGetMateriauCorpsOuComp(mdl.eSelect_RecupererComposant());
+                Component2 cpCorpsBase = mdl.eSelect_RecupererComposant();
+                String MateriauxCorpsBase = "";
+
+                if (mdl.TypeDoc() == eTypeDoc.Piece)
+                {
+                    cpCorpsBase = mdl.eComposantRacine();
+                    MateriauxCorpsBase = CorpsBase.eGetMateriauCorpsOuPiece(mdl.ePartDoc(), mdl.eNomConfigActive());
+                }
+                else
+                {
+                    MateriauxCorpsBase = CorpsBase.eGetMateriauCorpsOuComp(cpCorpsBase);
+                }
+
                 mdl.eEffacerSelection();
 
                 var ListeCorpsIdentiques = new List<Body2>();

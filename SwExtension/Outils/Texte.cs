@@ -73,6 +73,24 @@ namespace Outils
             return eConvertirEnBmp(text, htImage, htImage);
         }
 
+        public static String eConvertToUnicode(this String s)
+        {
+            Encoding ansi = Encoding.GetEncoding(1252);
+            Encoding unicode = Encoding.Unicode;
+
+            // Convert the string into a byte array.
+            byte[] asciiBytes = ansi.GetBytes(s);
+
+            // Perform the conversion from one encoding to the other.
+            byte[] unicodeBytes = Encoding.Convert(ansi, unicode, asciiBytes);
+
+            // Convert the new byte[] into a char[] and then into a string.
+            char[] unicodeChars = new char[unicode.GetCharCount(unicodeBytes, 0, unicodeBytes.Length)];
+            unicode.GetChars(unicodeBytes, 0, unicodeBytes.Length, unicodeChars, 0);
+
+            return new string(unicodeChars);
+        }
+
         public static int eCountNewLine(this String s)
         {
             int n = 0;
