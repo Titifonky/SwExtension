@@ -3974,10 +3974,21 @@ namespace Outils
             {
                 WindowLog.Ecrire(corps.Name + " == " + corpsTest.Name);
                 double[] v = (double[])mt.ArrayData;
-                WindowLog.EcrireF("  Rotation:");
-                WindowLog.EcrireF("    {0} {1} {2}", v[0], v[1], v[2]);
-                WindowLog.EcrireF("    {0} {1} {2}", v[3], v[4], v[5]);
-                WindowLog.EcrireF("    {0} {1} {2}", v[6], v[7], v[8]);
+                double[,] matrice = new double[3, 3];
+                matrice[0, 0] = v[0]; matrice[0, 1] = v[1]; matrice[0, 2] = v[2];
+                matrice[1, 0] = v[3]; matrice[1, 1] = v[4]; matrice[1, 2] = v[5];
+                matrice[2, 0] = v[6]; matrice[2, 1] = v[7]; matrice[2, 2] = v[8];
+                double det1 = matrice[0, 0] * ((matrice[1, 1] * matrice[2, 2]) - (matrice[2, 1] * matrice[1, 2]));
+                double det2 = matrice[0, 1] * ((matrice[1, 0]) * (matrice[2, 2]) - (matrice[2, 0] * matrice[1, 2]));
+                double det3 = matrice[0, 2] * ((matrice[1, 0]) * (matrice[2, 1]) - (matrice[2, 0] * matrice[1, 1]));
+                double Determinant = det1 - det2 + det3;
+
+                double det = 0;
+                for (int i = 0; i < 3; i++)
+                    det += (matrice[0, i] * (matrice[1, (i + 1) % 3] * matrice[2, (i + 2) % 3] - matrice[1, (i + 2) % 3] * matrice[2, (i + 1) % 3]));
+
+                WindowLog.EcrireF("Determinant1 : {0}", Determinant);
+                WindowLog.EcrireF("Determinant2 : {0}", det);
             }
 
             return result;
