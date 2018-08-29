@@ -3972,7 +3972,6 @@ namespace Outils
 
             if (result == true)
             {
-                WindowLog.Ecrire(corps.Name + " == " + corpsTest.Name);
                 double[] v = (double[])mt.ArrayData;
                 double[,] matrice = new double[3, 3];
                 matrice[0, 0] = v[0]; matrice[0, 1] = v[1]; matrice[0, 2] = v[2];
@@ -3983,12 +3982,8 @@ namespace Outils
                 double det3 = matrice[0, 2] * ((matrice[1, 0]) * (matrice[2, 1]) - (matrice[2, 0] * matrice[1, 1]));
                 double Determinant = det1 - det2 + det3;
 
-                double det = 0;
-                for (int i = 0; i < 3; i++)
-                    det += (matrice[0, i] * (matrice[1, (i + 1) % 3] * matrice[2, (i + 2) % 3] - matrice[1, (i + 2) % 3] * matrice[2, (i + 1) % 3]));
-
-                WindowLog.EcrireF("Determinant1 : {0}", Determinant);
-                WindowLog.EcrireF("Determinant2 : {0}", det);
+                if (Determinant < 0)
+                    result = false;
             }
 
             return result;
