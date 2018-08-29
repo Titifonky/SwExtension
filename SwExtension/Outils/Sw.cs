@@ -3959,6 +3959,12 @@ namespace Outils
             return pCdG;
         }
 
+        /// <summary>
+        /// Verification de la similitude de deux corps, hors symetrie
+        /// </summary>
+        /// <param name="corps"></param>
+        /// <param name="corpsTest"></param>
+        /// <returns></returns>
         public static Boolean eEstSemblable(this Body2 corps, Body2 corpsTest)
         {
             MathTransform mt = null;
@@ -3966,23 +3972,31 @@ namespace Outils
             return corps.eEstSemblable(corpsTest, out mt);
         }
 
+        /// <summary>
+        /// Verification de la similitude de deux corps, hors symetrie
+        /// </summary>
+        /// <param name="corps"></param>
+        /// <param name="corpsTest"></param>
+        /// <param name="mt"></param>
+        /// <returns></returns>
         public static Boolean eEstSemblable(this Body2 corps, Body2 corpsTest, out MathTransform mt)
         {
+            // La méthode renvoi true si les corps sont symétriques.
             Boolean result = corps.GetCoincidenceTransform2((Object)corpsTest, out mt);
 
             if (result == true)
             {
+                // Vérification du déterminant de la matrice de rotation
+                // Calcul du déterminant
                 double[] v = (double[])mt.ArrayData;
-                double[,] matrice = new double[3, 3];
-                matrice[0, 0] = v[0]; matrice[0, 1] = v[1]; matrice[0, 2] = v[2];
-                matrice[1, 0] = v[3]; matrice[1, 1] = v[4]; matrice[1, 2] = v[5];
-                matrice[2, 0] = v[6]; matrice[2, 1] = v[7]; matrice[2, 2] = v[8];
-                double det1 = matrice[0, 0] * ((matrice[1, 1] * matrice[2, 2]) - (matrice[2, 1] * matrice[1, 2]));
-                double det2 = matrice[0, 1] * ((matrice[1, 0]) * (matrice[2, 2]) - (matrice[2, 0] * matrice[1, 2]));
-                double det3 = matrice[0, 2] * ((matrice[1, 0]) * (matrice[2, 1]) - (matrice[2, 0] * matrice[1, 1]));
-                double Determinant = det1 - det2 + det3;
+                double det1 = v[0] * ((v[4] * v[8]) - (v[7] * v[5]));
+                double det2 = v[1] * ((v[3] * v[8]) - (v[6] * v[5]));
+                double det3 = v[2] * ((v[3] * v[7]) - (v[6] * v[4]));
+                double det = det1 - det2 + det3;
 
-                if (Determinant < 0)
+                // Si le déterminant est == -1, la matrice est une symetrie
+                // Les corps ne sont pas semblables
+                if (det < 0)
                     result = false;
             }
 
