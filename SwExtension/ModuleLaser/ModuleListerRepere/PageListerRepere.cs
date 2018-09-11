@@ -172,6 +172,9 @@ namespace ModuleLaser
 
                 Predicate<Component2> Test = c =>
                 {
+                    if (c.ExcludeFromBOM)
+                        return false;
+
                     bool filtre = false;
 
                     if (_CheckBox_ComposantsCache.IsChecked)
@@ -179,7 +182,7 @@ namespace ModuleLaser
                     else
                         filtre = c.IsHidden(true);
 
-                    if (!filtre && (c.TypeDoc() == eTypeDoc.Piece))
+                    if (!filtre &&  (c.TypeDoc() == eTypeDoc.Piece))
                     {
 
                         ModelDoc2 mdl = c.eModelDoc2();
@@ -188,7 +191,7 @@ namespace ModuleLaser
                         mdl.EditRebuild3();
                         PartDoc piece = mdl.ePartDoc();
 
-                        foreach (var dossier in piece.eListeDesDossiersDePiecesSoudees())
+                        foreach (var dossier in piece.eListeDesDossiersDePiecesSoudees(d => { return !d.eEstExclu(); }))
                             Bdd.AjouterDossier(dossier, c);
                     }
 
@@ -198,7 +201,7 @@ namespace ModuleLaser
                 if (MdlBase.TypeDoc() == eTypeDoc.Piece)
                     Test(MdlBase.eComposantRacine());
                 else
-                    MdlBase.eRecParcourirComposants(Test);
+                    MdlBase.eRecParcourirComposants(Test, c=> { return !c.ExcludeFromBOM; });
 
                 MdlBase.eActiver();
             }
@@ -215,7 +218,7 @@ namespace ModuleLaser
 
                     String Repere = "";
 
-                    if(dossier.ePropExiste(CONSTANTES.REF_DOSSIER))
+                    if (dossier.ePropExiste(CONSTANTES.REF_DOSSIER))
                         Repere = dossier.eProp(CONSTANTES.REF_DOSSIER);
                     else
                         Repere = Erreur;
@@ -241,7 +244,10 @@ namespace ModuleLaser
                 {
                     if (_ListNoms.IsNull())
                     {
-                        _ListNoms = new List<String>(Dic.Keys);
+                        _ListNoms = new List<String>();
+                        foreach (var r in Dic)
+                            _ListNoms.Add(String.Format("{0,-7}{1,5}", r.Key, "×" + r.Value.Count));
+
                         _ListNoms.Sort(new WindowsStringComparer());
                     }
 
@@ -252,7 +258,7 @@ namespace ModuleLaser
                 {
                     List<Element> liste = new List<Element>();
 
-                    String rep = _ListNoms[Niveau];
+                    String rep = _ListNoms[Niveau].Split(new char[] { ' ' })[0].Trim();
 
                     return Dic[rep];
                 }
