@@ -4,9 +4,9 @@
     <Parametre name="Reinitialiser" intitule="Reinitialiser les menus &amp; onglets" tip="" type="System.Boolean">False</Parametre>
   </Module>
   <Module name="ExportDxfDwg" intitule="Exporter en Dxf/Dwg">
-    <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="SelectionnerDossier" intitule="Selectionner un dossier" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="ToutesLesFeuilles" intitule="Toutes les feuilles" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="SelectionnerDossier" intitule="Selectionner un dossier" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="ToutesLesFeuilles" intitule="Toutes les feuilles" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="FormatExport" intitule="Format" tip="" type="Outils.eTypeFichierExport">DWG</Parametre>
     <Parametre name="VersionExport" intitule="Version" tip="" type="Outils.eDxfFormat">R2010</Parametre>
     <Parametre name="UtiliserPoliceACAD" intitule="Utiliser les polices AutoCAD" tip="" type="System.Boolean">True</Parametre>
@@ -14,9 +14,9 @@
     <Parametre name="FusionnerExtremites" intitule="Fusionner les extremités" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="ToleranceFusion" intitule="Tolérance de fusion" tip="Tolérance de fusion" type="System.Double">0.001</Parametre>
     <Parametre name="ExporterHauteQualite" intitule="Exporter en haute qualité" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="ExporterFeuilleEspacePapier" intitule="Exporter les feuilles dans l'espace papier" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="ExporterFeuilleEspacePapier" intitule="Exporter les feuilles dans l'espace papier" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="ConvertirSplineToPolyligne" intitule="Convertir les splines en polylignes" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">D:\Projet\E145 - Ville de Raismes\ED381 - CAPH - Reamenagement des bat. 5 et 6\1\2.7 Plancher local serveur\V3\Plans Développées\DWG - Ind A</Parametre>
+    <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">D:\Projet\E170 - Guillaume Ramillien\ED514 - Creche\0\Grille\Plans Développées\DWG - Ind A</Parametre>
   </Module>
   <Module name="ExportPdf" intitule="Exporter en Pdf">
     <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">True</Parametre>
@@ -44,8 +44,8 @@
   </Module>
   <Module name="CreerDvp" intitule="Creer les dvp de tôle">
     <Parametre name="PropQuantite" intitule="Propriete &quot;Quantite&quot;" tip="Recherche cette propriete" type="System.String">Quantite</Parametre>
-    <Parametre name="AfficherLignePliage" intitule="Afficher les lignes de pliage" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="AfficherNotePliage" intitule="Afficher les notes de pliage" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="AfficherLignePliage" intitule="Afficher les lignes de pliage" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="AfficherNotePliage" intitule="Afficher les notes de pliage" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="InscrireNomTole" intitule="Inscrire la réf du dvp sur la tole" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="TailleInscription" intitule="Ht des inscriptions en mm" tip="Ht des inscriptions en mm" type="System.Int32">10</Parametre>
     <Parametre name="ComposantExterne" intitule="Créer les dvp des composants externe au dossier du modèle" tip="" type="System.Boolean">False</Parametre>
@@ -180,7 +180,7 @@
   <Module name="Test2" intitule="Test2" />
   <Module name="SelectionnerCorpsIdentiques" intitule="Selectionner les corps identiques" />
   <Module name="NumeroterDossier" intitule="Numeroter les dossiers">
-    <Parametre name="CombinerCorpsIdentiques" intitule="Combiner les corps identiques des différents modèles" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="CombinerCorpsIdentiques" intitule="Combiner les corps identiques des différents modèles" tip="" type="System.Boolean">True</Parametre>
   </Module>
   <Module name="AfficherLogDebug" intitule="Afficher le log de debug" />
   <Module name="ExportStructure" intitule="Exporter les structures" />

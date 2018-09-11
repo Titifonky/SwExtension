@@ -3960,7 +3960,7 @@ namespace Outils
         }
 
         /// <summary>
-        /// Verification de la similitude de deux corps, hors symetrie
+        /// Verification de la similitude de deux corps et exclu symetrie
         /// </summary>
         /// <param name="corps"></param>
         /// <param name="corpsTest"></param>
@@ -3973,7 +3973,7 @@ namespace Outils
         }
 
         /// <summary>
-        /// Verification de la similitude de deux corps, hors symetrie
+        /// Verification de la similitude de deux corps et exclu symetrie
         /// </summary>
         /// <param name="corps"></param>
         /// <param name="corpsTest"></param>
@@ -3981,7 +3981,7 @@ namespace Outils
         /// <returns></returns>
         public static Boolean eEstSemblable(this Body2 corps, Body2 corpsTest, out MathTransform mt)
         {
-            // La méthode renvoi true si les corps sont symétriques.
+            // La méthode renvoi également true si les corps sont symétriques.
             Boolean result = corps.GetCoincidenceTransform2((Object)corpsTest, out mt);
 
             if (result == true)
