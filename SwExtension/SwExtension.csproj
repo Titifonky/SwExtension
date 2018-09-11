@@ -115,6 +115,8 @@
     <Compile Include="ModuleExportFichier\PageExportFichier.cs" />
     <Compile Include="ModuleListerConfigComp\CmdListerConfigComp.cs" />
     <Compile Include="ModuleListerConfigComp\PageListerConfigComp.cs" />
+    <Compile Include="ModuleLaser\ModuleListerRepere\CmdListerRepere.cs" />
+    <Compile Include="ModuleLaser\ModuleListerRepere\PageListerRepere.cs" />
     <Compile Include="ModuleListerPercage\CmdListerPercage.cs" />
     <Compile Include="ModuleListerPercage\PageListerPercage.cs" />
     <Compile Include="ModuleListerMateriaux\CmdListerMateriaux.cs" />
