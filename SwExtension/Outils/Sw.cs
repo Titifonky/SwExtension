@@ -2298,7 +2298,7 @@ namespace Outils
         {
             Object[] ChildComp = (Object[])cp.GetChildren();
 
-            if (ChildComp.IsNull())
+            if ((cp.TypeDoc() == eTypeDoc.Piece) || ChildComp.IsNull())
                 return false;
 
             foreach (Component2 Cp in ChildComp)
@@ -2309,7 +2309,7 @@ namespace Outils
                 {
                     // Si on traverse les composants et que la recherche renvoi true,
                     // on a trouvé la première occurence donc on remonte true
-                    if (Cp.eRecParcourirComposants(filtreTest))
+                    if (Cp.eRecParcourirComposants(filtreTest, filtreRec))
                         return true;
                 }
             }

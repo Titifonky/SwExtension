@@ -182,7 +182,7 @@ namespace ModuleLaser
                     else
                         filtre = c.IsHidden(true);
 
-                    if (!filtre &&  (c.TypeDoc() == eTypeDoc.Piece))
+                    if (!filtre && (c.TypeDoc() == eTypeDoc.Piece))
                     {
 
                         ModelDoc2 mdl = c.eModelDoc2();
@@ -201,7 +201,7 @@ namespace ModuleLaser
                 if (MdlBase.TypeDoc() == eTypeDoc.Piece)
                     Test(MdlBase.eComposantRacine());
                 else
-                    MdlBase.eRecParcourirComposants(Test, c=> { return !c.ExcludeFromBOM; });
+                    MdlBase.eRecParcourirComposants(Test, c => { if (c.ExcludeFromBOM) return false; return true; });
 
                 MdlBase.eActiver();
             }
