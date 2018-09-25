@@ -147,6 +147,7 @@ namespace ModuleLaser
                         ListeHiddenComposants.Add(element.Composant.eKeyAvecConfig());
                     }
 
+                    //WindowLog.EcrireF("{0} {1}", element.Composant.Name2, element.Corps.Name);
                     var corps = element.Composant.eChercherCorps(element.Corps.Name, false);
                     if (corps.IsNull()) continue;
 
@@ -267,11 +268,13 @@ namespace ModuleLaser
                 {
                     public Component2 Composant { get; private set; }
                     public Body2 Corps { get; private set; }
+                    public Object Pid { get; private set; }
 
                     public Element(Body2 corps, Component2 composant)
                     {
                         Composant = composant;
                         Corps = corps;
+                        Pid = Composant.eModelDoc2().Extension.GetPersistReference3(Corps);
                     }
                 }
             }
