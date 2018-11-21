@@ -1133,7 +1133,7 @@ namespace Outils
         internal const String CONFIG_DEPLIEE = "SM-FLAT-PATTERN";
         internal const String CONFIG_PLIEE_PATTERN = @"^\d+$";
         internal const String ARTICLE_LISTE_DES_PIECES_SOUDEES = "Article-liste-des-pièces-soudées";
-        internal const String EPAISSEUR_DE_TOLE = "Epaisseur de la tôle";
+        internal const String EPAISSEUR_DE_TOLERIE = "Epaisseur de tôlerie";
         internal const String NO_DOSSIER = "NoDossier";
         internal const String REF_DOSSIER = "RefDossier";
         internal const String PREFIXE_REF_DOSSIER = "P";
@@ -4405,13 +4405,77 @@ namespace Outils
 
         /// <summary>
         /// Epaisseur en mm
+        /// Issue de la fonction tolerie du 1er corps ou le cas echéant du dossier
+        /// </summary>
+        /// <param name="dossier"></param>
+        /// <returns></returns>
+        public static Double eEpaisseur1ErCorpsOuDossier(this BodyFolder dossier)
+        {
+            Body2 corps = dossier.ePremierCorps();
+            Double E = corps.eEpaisseurCorps();
+            if (E == -1)
+                E = dossier.eEpaisseurDossier();
+
+            return E;
+        }
+
+        /// <summary>
+        /// Epaisseur en mm
+        /// Issue de la fonction tolerie ou le cas echéant du dossier
+        /// </summary>
+        /// <param name="corps"></param>
+        /// <param name="dossier"></param>
+        /// <returns></returns>
+        public static Double eEpaisseurCorpsOuDossier(this Body2 corps, BodyFolder dossier)
+        {
+            Double E = corps.eEpaisseurCorps();
+            if (E == -1)
+                E = dossier.eEpaisseurDossier();
+
+            return E;
+        }
+
+        /// <summary>
+        /// Epaisseur en mm
+        /// Issue de la fonction tolerie
         /// </summary>
         /// <param name="corps"></param>
         /// <returns></returns>
-        public static Double eEpaisseur(this Body2 corps)
+        public static Double eEpaisseurCorps(this Body2 corps)
         {
-            SheetMetalFeatureData pParam = corps.eFonctionTolerie().GetDefinition();
-            return Math.Round(pParam.Thickness * 1000, 5);
+            Double Ep = -1;
+            try
+            {
+                SheetMetalFeatureData pParam = corps.eFonctionTolerie().GetDefinition();
+                Ep = Math.Round(pParam.Thickness * 1000, 5);
+            }
+            catch (Exception e)
+            {
+                Log.Message(e);
+                Log.MessageF("Corps : {0}",corps.Name);
+            }
+
+            return Ep;
+        }
+
+        /// <summary>
+        /// Epaisseur en mm
+        /// Issue du dossier
+        /// </summary>
+        /// <param name="dossier"></param>
+        /// <returns></returns>
+        public static Double eEpaisseurDossier(this BodyFolder dossier)
+        {
+            Double Ep = -1;
+            try
+            {
+                if (dossier.ePropExiste(CONSTANTES.EPAISSEUR_DE_TOLERIE))
+                    Ep = dossier.eProp(CONSTANTES.EPAISSEUR_DE_TOLERIE).eToDouble();
+            }
+            catch (Exception e)
+            { Log.Message(e); }
+
+            return Ep;
         }
 
         /// <summary>

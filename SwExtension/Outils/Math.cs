@@ -66,10 +66,8 @@ namespace Outils
                 {
                     Val = Double.Parse(s, System.Globalization.NumberStyles.Any, System.Globalization.NumberFormatInfo.InvariantInfo);
                 }
-                catch
-                {
-
-                }
+                catch (Exception e)
+                { Log.Message(e); }
 
                 Val = 0;
             }

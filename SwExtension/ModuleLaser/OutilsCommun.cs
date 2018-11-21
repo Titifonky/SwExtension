@@ -157,7 +157,7 @@ namespace ModuleLaser
                             foreach (var corps in c.eListeCorps())
                             {
                                 if(corps.eTypeDeCorps() == eTypeCorps.Tole)
-                                    ListeEp.AddIfNotExist(corps.eEpaisseur().ToString());
+                                    ListeEp.AddIfNotExist(corps.eEpaisseurCorps().ToString());
                             }
                         }
 
@@ -172,9 +172,13 @@ namespace ModuleLaser
                 {
                     if (!dossier.eEstExclu() && dossier.eEstUnDossierDeToles())
                     {
-                        String Ep = dossier.ePremierCorps().eEpaisseur().ToString();
+                        Double Ep = dossier.eEpaisseur1ErCorpsOuDossier();
 
-                        ListeEp.AddIfNotExist(Ep);
+                        // On laisse les epaisseurs négatives pour pouvoir les localiser.
+                        //if (Ep == -1)
+                        //    continue;
+
+                        ListeEp.AddIfNotExist(Ep.ToString());
                     }
                 }
             }

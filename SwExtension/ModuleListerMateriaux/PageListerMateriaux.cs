@@ -166,30 +166,35 @@ namespace ModuleListerMateriaux
 
         private void Rechercher_Materiaux()
         {
-            Bdd = new BDD();
-
-            Predicate<Component2> Test = c =>
+            try
             {
-                bool filtre = false;
+                Bdd = new BDD();
 
-                if (_CheckBox_ComposantsCache.IsChecked)
-                    filtre = c.IsSuppressed();
-                else
-                    filtre = c.IsHidden(true);
-
-                if (!filtre && (c.TypeDoc() == eTypeDoc.Piece))
+                Predicate<Component2> Test = c =>
                 {
-                    foreach (var dossier in c.eListeDesDossiersDePiecesSoudees())
-                        Bdd.AjouterDossier(dossier, c);
-                }
+                    bool filtre = false;
 
-                return false;
-            };
+                    if (_CheckBox_ComposantsCache.IsChecked)
+                        filtre = c.IsSuppressed();
+                    else
+                        filtre = c.IsHidden(true);
 
-            if (MdlBase.TypeDoc() == eTypeDoc.Piece)
-                Test(MdlBase.eComposantRacine());
-            else
-                MdlBase.eRecParcourirComposants(Test);
+                    if (!filtre && (c.TypeDoc() == eTypeDoc.Piece))
+                    {
+                        foreach (var dossier in c.eListeDesDossiersDePiecesSoudees())
+                            Bdd.AjouterDossier(dossier, c);
+                    }
+
+                    return false;
+                };
+
+                if (MdlBase.TypeDoc() == eTypeDoc.Piece)
+                    Test(MdlBase.eComposantRacine());
+                else
+                    MdlBase.eRecParcourirComposants(Test);
+            }
+            catch (Exception e)
+            { this.LogMethode(new Object[] { e }); }
         }
 
         public class BDD
@@ -207,7 +212,16 @@ namespace ModuleListerMateriaux
                 String Profil = "";
 
                 if (corps.eTypeDeCorps() == eTypeCorps.Tole)
-                    Profil = "Ep " + corps.eEpaisseur().ToString();
+                {
+                    Double E = corps.eEpaisseurCorpsOuDossier(dossier);
+                    if (E == -1)
+                    {
+                        WindowLog.EcrireF("Pb d'epaisseur sur le corps {0}", corps.Name);
+                        return;
+                    }
+
+                    Profil = "Ep " + E.ToString();
+                }
                 else if (dossier.ePropExiste(CONSTANTES.PROFIL_NOM))
                     Profil = dossier.eProp(CONSTANTES.PROFIL_NOM);
                 else

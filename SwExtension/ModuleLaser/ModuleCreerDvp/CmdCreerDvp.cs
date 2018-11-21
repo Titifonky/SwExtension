@@ -59,7 +59,7 @@ namespace ModuleLaser.ModuleCreerDvp
 
                         if (Filtre.HasFlag(swDossier.eTypeDeDossier()) && HashMateriaux.Contains(swDossier.eGetMateriau()))
                         {
-                            String Ep = swDossier.ePremierCorps().eEpaisseur().ToString();
+                            String Ep = swDossier.ePremierCorps().eEpaisseurCorps().ToString();
 
                             if(HashEp.Contains(Ep))
                                 return true;
@@ -108,7 +108,7 @@ namespace ModuleLaser.ModuleCreerDvp
 
                             Materiau = ForcerMateriau.IsRefAndNotEmpty(Materiau);
 
-                            Double Epaisseur = Tole.eEpaisseur();
+                            Double Epaisseur = Tole.eEpaisseurCorps();
                             String NomConfigDepliee = Sw.eNomConfigDepliee(NomConfigPliee, RefDossier);
 
                             WindowLog.EcrireF("      Ep {0} / Materiau {1}", Epaisseur, Materiau);
