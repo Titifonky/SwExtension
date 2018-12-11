@@ -392,22 +392,28 @@ namespace ModuleProduction
             return "Ind " + ChaineIndice.Last();
         }
 
-        public static String CreerDossier(this ModelDoc2 mdl, String dossier)
+        public static Boolean CreerDossier(this ModelDoc2 mdl, String dossier, out String chemin)
         {
-            var Dossier = System.IO.Path.Combine(mdl.eDossier(), dossier);
-            if (!System.IO.Directory.Exists(Dossier))
-                System.IO.Directory.CreateDirectory(Dossier);
+            chemin = System.IO.Path.Combine(mdl.eDossier(), dossier);
+            if (!System.IO.Directory.Exists(chemin))
+            {
+                System.IO.Directory.CreateDirectory(chemin);
+                return true;
+            }
 
-            return Dossier;
+            return false;
         }
 
-        public static String CreerFichierTexte(this ModelDoc2 mdl, String dossier, String fichier)
+        public static Boolean CreerFichierTexte(this ModelDoc2 mdl, String dossier, String fichier, out String chemin)
         {
-            var Fichier = System.IO.Path.Combine(mdl.eDossier(), dossier, fichier + ".txt");
-            if (!System.IO.File.Exists(Fichier))
-                System.IO.File.CreateText(Fichier).Close();
+            chemin = System.IO.Path.Combine(mdl.eDossier(), dossier, fichier + ".txt");
+            if (!System.IO.File.Exists(chemin))
+            {
+                System.IO.File.CreateText(chemin).Close();
+                return true;
+            }
 
-            return Fichier;
+            return false;
         }
     }
 }

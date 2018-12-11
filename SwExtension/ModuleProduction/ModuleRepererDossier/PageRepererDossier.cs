@@ -19,9 +19,20 @@ namespace ModuleProduction
             private Parametre CombinerCorpsIdentiques;
 
             private ModelDoc2 MdlBase = null;
-            private int IndiceCampagne = 1;
+            private int _IndiceCampagne = 0;
+            private int IndiceMin = 0;
             private String DossierPiece = "";
             private String FichierNomenclature = "";
+
+            private int IndiceCampagne
+            {
+                get { return _IndiceCampagne; }
+                set
+                {
+                    _IndiceCampagne = value;
+                    _Texte_IndiceCampagne.Text = _IndiceCampagne.ToString();
+                }
+            }
 
             public PageRepererDossier()
             {
@@ -31,15 +42,16 @@ namespace ModuleProduction
 
                     MdlBase = App.Sw.ActiveDoc;
                     OnCalque += Calque;
-                    OnRunAfterActivation += Rechercher_Infos;
+                    OnRunAfterActivation += RechercherIndiceCampagne;
                     OnRunOkCommand += RunOkCommand;
                 }
                 catch (Exception e)
                 { this.LogMethode(new Object[] { e }); }
             }
 
+            private CtrlTextBox _Texte_IndiceCampagne;
             private CtrlCheckBox _CheckBox_CombinerCorps;
-            private CtrlCheckBox _CheckBox_MajDossiers;
+            private CtrlCheckBox _CheckBox_SupprimerReperes;
 
             protected void Calque()
             {
@@ -49,23 +61,33 @@ namespace ModuleProduction
 
                     G = _Calque.AjouterGroupe("Options");
 
+                    _Texte_IndiceCampagne = G.AjouterTexteBox("Indice de la campagne de repérage :");
+                    _Texte_IndiceCampagne.LectureSeule = true;
                     _CheckBox_CombinerCorps = G.AjouterCheckBox(CombinerCorpsIdentiques);
-                    _CheckBox_MajDossiers = G.AjouterCheckBox("Supprimer les repères existants");
+                    _CheckBox_SupprimerReperes = G.AjouterCheckBox("Supprimer les repères de la précédente campagne");
                 }
                 catch (Exception e)
                 { this.LogMethode(new Object[] { e }); }
             }
 
-            protected void Rechercher_Infos()
+            protected void RechercherIndiceCampagne()
             {
                 WindowLog.Ecrire("Recherche des éléments existants :");
 
                 // Recherche du dernier indice de la campagne de repérage
 
                 // Création du dossier pièces s'il n'existe pas
-                DossierPiece = MdlBase.CreerDossier(OutilsCommun.DossierPieces);
+                var creer = MdlBase.CreerDossier(OutilsCommun.DossierPieces, out DossierPiece);
                 // Recherche de la nomenclature
-                FichierNomenclature = MdlBase.CreerFichierTexte(OutilsCommun.DossierPieces, OutilsCommun.FichierNomenclature);
+                creer |= MdlBase.CreerFichierTexte(OutilsCommun.DossierPieces, OutilsCommun.FichierNomenclature, out FichierNomenclature);
+
+                if (creer)
+                {
+                    IndiceCampagne = 1;
+                    _CheckBox_SupprimerReperes.IsChecked = true;
+                    _CheckBox_SupprimerReperes.IsEnabled = false;
+                    return;
+                }
             }
 
             protected void RunOkCommand()
@@ -73,8 +95,10 @@ namespace ModuleProduction
                 CmdRepererDossier Cmd = new CmdRepererDossier();
 
                 Cmd.MdlBase = App.Sw.ActiveDoc;
+                Cmd.IndiceCampagne = IndiceCampagne;
+                Cmd.Indice = IndiceMin;
                 Cmd.CombinerCorpsIdentiques = _CheckBox_CombinerCorps.IsChecked;
-                Cmd.MajDossiers = _CheckBox_MajDossiers.IsChecked;
+                Cmd.SupprimerReperes = _CheckBox_SupprimerReperes.IsChecked;
 
                 Cmd.Executer();
             }

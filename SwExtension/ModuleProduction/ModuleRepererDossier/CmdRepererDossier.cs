@@ -14,12 +14,13 @@ namespace ModuleProduction
         public class CmdRepererDossier : Cmd
         {
             public ModelDoc2 MdlBase = null;
+            public int IndiceCampagne = 0;
+            public int Indice = 0;
             public Boolean CombinerCorpsIdentiques = false;
-            public Boolean MajDossiers = false;
+            public Boolean SupprimerReperes = false;
+            public List<String> ListeReperesAsupprimer = new List<String>();
 
-            private int indice = 0;
-
-            private int GenRepereDossier { get { return ++indice; } }
+            private int GenRepereDossier { get { return ++Indice; } }
 
             // Liste des dossiers déjà traité
             HashSet<String> DossierTraite = new HashSet<String>();
@@ -38,9 +39,6 @@ namespace ModuleProduction
             {
                 try
                 {
-                    if (MajDossiers)
-                        IndiceMax();
-
                     var ListeCorps = new List<Corps>();
 
                     var lst = MdlBase.ListerComposants(false);
@@ -385,7 +383,7 @@ namespace ModuleProduction
                 }
             }
 
-            private void IndiceMax()
+            private void NettoyerReperes()
             {
                 eTypeCorps Filtre = eTypeCorps.Barre | eTypeCorps.Tole;
 
@@ -406,9 +404,6 @@ namespace ModuleProduction
                     if (dossier.IsRef() && dossier.eNbCorps() > 0 && Filtre.HasFlag(dossier.eTypeDeDossier()))
                     {
                         CustomPropertyManager PM = f.CustomPropertyManager;
-
-                        String val, result = ""; Boolean wasResolved, link;
-                        var r = PM.Get6(CONSTANTES.REF_DOSSIER, false, out val, out result, out wasResolved, out link);
 
                         var RefDossier = ExtractRef(f).Item1;
                         if (RefDossier.eIsInteger())
@@ -434,7 +429,7 @@ namespace ModuleProduction
                         {
                             var RefDossier = ExtractRef(f);
 
-                            indice = Math.Max(indice, RefDossier.Item1.eToInteger());
+                            Indice = Math.Max(Indice, RefDossier.Item1.eToInteger());
                             var hashDossier = HashDossier(mdl, f);
                             DossierTraite.Add(hashDossier);
 
@@ -452,8 +447,6 @@ namespace ModuleProduction
                     if (mdl.GetPathName() != MdlBase.GetPathName())
                         App.Sw.CloseDoc(mdl.GetPathName());
                 }
-
-                WindowLog.EcrireF("Indice Max : {0}", indice);
             }
         }
     }
