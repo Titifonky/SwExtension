@@ -14,76 +14,101 @@ namespace Macros
 
     public class Test : BoutonBase
     {
-        String cheminbloc = "E:\\Mes documents\\SolidWorks\\2018\\Blocs\\Macro\\REPERAGE_DOSSIER.sldblk";
-        String NomEsquisse = "REPERAGE_DOSSIER";
 
         protected override void Command()
         {
             ModelDoc2 mdl = App.ModelDoc2;
 
-            var F = EsquisseRepere(mdl);
+            if (mdl.TypeDoc() != eTypeDoc.Piece)
+                return;
 
-            DisplayDimension dd = F.GetFirstDisplayDimension();
-            while (dd.IsRef())
+            
+
+            foreach (var cfg in mdl.eListeNomConfiguration(eTypeConfig.Racine))
             {
-                Dimension d = dd.GetDimension2(0);
-                WindowLog.Ecrire(d.Name);
-                dd = F.GetNextDisplayDimension(dd);
+                mdl.ShowConfiguration2(cfg);
+                mdl.EditRebuild3();
+
+                Configuration C = mdl.GetConfigurationByName(cfg);
+                WindowLog.EcrireF("Config {0} -> {1}", C.Name, C.GetID());
+
+                PartDoc piece = mdl.ePartDoc();
+
+                foreach (var f in piece.eListeDesFonctionsDePiecesSoudees())
+                    WindowLog.EcrireF("  Dossier {0} -> {1}", f.Name, f.GetID());
             }
         }
 
-        private Feature EsquisseRepere(ModelDoc2 mdl)
-        {
-            Feature Esquisse = mdl.eChercherFonction(fc => { return fc.Name == NomEsquisse; });
+        //String cheminbloc = "E:\\Mes documents\\SolidWorks\\2018\\Blocs\\Macro\\REPERAGE_DOSSIER.sldblk";
+        //String NomEsquisse = "REPERAGE_DOSSIER";
 
-            if (Esquisse.IsNull())
-            {
-                Feature Plan = mdl.eListeFonctions(fc => { return fc.GetTypeName2() == FeatureType.swTnRefPlane; })[1];
+        //protected override void Command()
+        //{
+        //    ModelDoc2 mdl = App.ModelDoc2;
 
-                Plan.eSelect();
+        //    var F = EsquisseRepere(mdl);
 
-                var SM = mdl.SketchManager;
+        //    DisplayDimension dd = F.GetFirstDisplayDimension();
+        //    while (dd.IsRef())
+        //    {
+        //        Dimension d = dd.GetDimension2(0);
+        //        WindowLog.Ecrire(d.Name);
+        //        dd = F.GetNextDisplayDimension(dd);
+        //    }
+        //}
 
-                SM.InsertSketch(true);
-                SM.AddToDB = false;
-                SM.DisplayWhenAdded = true;
+        //private Feature EsquisseRepere(ModelDoc2 mdl)
+        //{
+        //    Feature Esquisse = mdl.eChercherFonction(fc => { return fc.Name == NomEsquisse; });
 
-                Esquisse = mdl.Extension.GetLastFeatureAdded();
+        //    if (Esquisse.IsNull())
+        //    {
+        //        Feature Plan = mdl.eListeFonctions(fc => { return fc.GetTypeName2() == FeatureType.swTnRefPlane; })[1];
 
-                MathUtility Mu = App.Sw.GetMathUtility();
-                MathPoint mp = Mu.CreatePoint(new double[] { 0, 0, 0 });
+        //        Plan.eSelect();
 
-                var def = SM.MakeSketchBlockFromFile(mp, cheminbloc, false, 1, 0);
+        //        var SM = mdl.SketchManager;
 
-                if (def.IsNull())
-                {
-                    var TabDef = (Object[])SM.GetSketchBlockDefinitions();
-                    foreach (SketchBlockDefinition blocdef in TabDef)
-                    {
-                        if (blocdef.FileName == cheminbloc)
-                        {
-                            def = blocdef;
-                            break;
-                        }
-                    }
-                }
+        //        SM.InsertSketch(true);
+        //        SM.AddToDB = false;
+        //        SM.DisplayWhenAdded = true;
 
-                var Tab = (Object[])def.GetInstances();
-                var ins = (SketchBlockInstance)Tab[0];
-                SM.ExplodeSketchBlockInstance(ins);
+        //        Esquisse = mdl.Extension.GetLastFeatureAdded();
 
-                SM.AddToDB = false;
-                SM.DisplayWhenAdded = true;
-                SM.InsertSketch(true);
+        //        MathUtility Mu = App.Sw.GetMathUtility();
+        //        MathPoint mp = Mu.CreatePoint(new double[] { 0, 0, 0 });
 
-                Esquisse.Name = NomEsquisse;
-                Esquisse.eSelect();
-                mdl.BlankSketch();
-                mdl.eEffacerSelection();
-            }
+        //        var def = SM.MakeSketchBlockFromFile(mp, cheminbloc, false, 1, 0);
 
-            return Esquisse;
-        }
+        //        if (def.IsNull())
+        //        {
+        //            var TabDef = (Object[])SM.GetSketchBlockDefinitions();
+        //            foreach (SketchBlockDefinition blocdef in TabDef)
+        //            {
+        //                if (blocdef.FileName == cheminbloc)
+        //                {
+        //                    def = blocdef;
+        //                    break;
+        //                }
+        //            }
+        //        }
+
+        //        var Tab = (Object[])def.GetInstances();
+        //        var ins = (SketchBlockInstance)Tab[0];
+        //        SM.ExplodeSketchBlockInstance(ins);
+
+        //        SM.AddToDB = false;
+        //        SM.DisplayWhenAdded = true;
+        //        SM.InsertSketch(true);
+
+        //        Esquisse.Name = NomEsquisse;
+        //        Esquisse.eSelect();
+        //        mdl.BlankSketch();
+        //        mdl.eEffacerSelection();
+        //    }
+
+        //    return Esquisse;
+        //}
 
         //protected override void Command()
         //{

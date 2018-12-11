@@ -2634,7 +2634,7 @@ namespace Outils
                     if (f.GetTypeName2() == FeatureType.swTnCutListFolder)
                     {
                         BodyFolder dossier = f.GetSpecificFeature2();
-                        if (dossier.IsRef() &&  (dossier.GetBodyCount() > 0) && (filtre.IsNull() || filtre(dossier)))
+                        if (dossier.IsRef() && (dossier.GetBodyCount() > 0) && (filtre.IsNull() || filtre(dossier)))
                             Liste.Add(dossier);
                     }
                 }
@@ -4452,7 +4452,7 @@ namespace Outils
             catch (Exception e)
             {
                 Log.Message(e);
-                Log.MessageF("Corps : {0}",corps.Name);
+                Log.MessageF("Corps : {0}", corps.Name);
             }
 
             return Ep;

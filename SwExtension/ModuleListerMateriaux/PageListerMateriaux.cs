@@ -172,17 +172,18 @@ namespace ModuleListerMateriaux
 
                 Predicate<Component2> Test = c =>
                 {
-                    bool filtre = false;
-
-                    if (_CheckBox_ComposantsCache.IsChecked)
-                        filtre = c.IsSuppressed();
-                    else
-                        filtre = c.IsHidden(true);
-
-                    if (!filtre && (c.TypeDoc() == eTypeDoc.Piece))
+                    if (c.TypeDoc() == eTypeDoc.Piece && (!c.IsSuppressed()))
                     {
-                        foreach (var dossier in c.eListeDesDossiersDePiecesSoudees())
-                            Bdd.AjouterDossier(dossier, c);
+                        bool filtre = true;
+
+                        if (!_CheckBox_ComposantsCache.IsChecked)
+                            filtre = c.Visible == (int)swComponentVisibilityState_e.swComponentVisible;
+
+                        if (filtre)
+                        {
+                            foreach (var dossier in c.eListeDesDossiersDePiecesSoudees())
+                                Bdd.AjouterDossier(dossier, c);
+                        }
                     }
 
                     return false;
