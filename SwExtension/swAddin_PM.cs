@@ -6,6 +6,8 @@ using ModuleExportFichier.ModuleDxfDwg;
 using ModuleExportFichier.ModulePdf;
 using ModuleImporterInfos;
 using ModuleInsererPercage;
+using ModuleProduction;
+using ModuleProduction.ModuleRepererDossier;
 using ModuleLaser;
 using ModuleLaser.ModuleCreerConfigDvp;
 using ModuleLaser.ModuleCreerDvp;
@@ -100,6 +102,12 @@ namespace SwExtension
                 _Mnu.AjouterCmde("Nd", typeof(PageNumeroterDossier));
                 _Mnu.AjouterCmde("Vn", typeof(BoutonVerifierNumerotation));
                 _Mnu.AjouterCmde("Lr", typeof(PageListerRepere));
+
+                //==================================================================================================
+                _Mnu = _eListeMenu.Add("Production", "Fonctions pour la production laser");
+
+                _Mnu.NouveauGroupe();
+                _Mnu.AjouterCmde("Rd", typeof(PageRepererDossier));
 
                 //==================================================================================================
                 _Mnu = _eListeMenu.Add("Escalier", "Fonctions d'aide à la création d'escalier");

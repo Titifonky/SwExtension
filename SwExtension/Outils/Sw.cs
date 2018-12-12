@@ -1139,8 +1139,10 @@ namespace Outils
         internal const String PREFIXE_REF_DOSSIER = "P";
         internal const String DESC_DOSSIER = "Description";
         internal const String NOM_DOSSIER = "NomDossier";
+        internal const String ID_Piece = "ID_Piece";
+        internal const String ID_Config = "ID_Config";
         internal const String NOM_ESQUISSE_NUMEROTER = "REPERAGE_DOSSIER";
-        internal const String NOM_BLOCK_ESQUISSE_NUMEROTER = "REPERAGE_DOSSIER.sldblk";
+        internal const String NOM_BLOCK_ESQUISSE_NUMEROTER = "REPERAGE_DOSSIER_BLOC.SLDBLK";
         internal const String NO_CONFIG = "NoConfigPliee";
         internal const String NOM_ELEMENT = "Element";
         internal const String PROFIL_NOM = "Profil";
@@ -1395,6 +1397,32 @@ namespace Outils
 
     public static class Sw
     {
+        /// <summary>
+        /// Retourne le chemin complet du bloc
+        /// </summary>
+        /// <param name="nomBloc">avec extension</param>
+        /// <returns></returns>
+        public static String CheminBloc(String nomBloc)
+        {
+            String cheminbloc = "";
+
+            var CheminDossierBloc = App.Sw.GetUserPreferenceStringValue((int)swUserPreferenceStringValue_e.swFileLocationsBlocks).Split(new String[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (var chemin in CheminDossierBloc)
+            {
+                var d = new DirectoryInfo(chemin);
+                var r = d.GetFiles(nomBloc, SearchOption.AllDirectories);
+                if (r.Length > 0)
+                {
+                    cheminbloc = r[0].FullName;
+                    break;
+                }
+            }
+
+            return cheminbloc;
+        }
+
+        //========================================================================================
 
         public static String eKeySansConfig(this Component2 cp)
         {
@@ -2327,6 +2355,30 @@ namespace Outils
         public static Boolean eRecParcourirComposants(this ModelDoc2 mdl, Predicate<Component2> filtreTest, Predicate<Component2> filtreRec = null)
         {
             return eRecParcourirComposants(mdl.eComposantRacine(), filtreTest, filtreRec);
+        }
+
+        public static void eParcourirComposants(this ModelDoc2 mdl, Predicate<Component2> fonction)
+        {
+            if (mdl.TypeDoc() == eTypeDoc.Assemblage)
+            {
+                Object[] ChildComp = (Object[])mdl.eAssemblyDoc().GetComponents(false);
+                foreach (Component2 Cp in ChildComp)
+                    if (fonction(Cp)) return;
+            }
+        }
+
+        public static List<Component2> eListeComposants(this ModelDoc2 mdl)
+        {
+            List<Component2> Liste = new List<Component2>();
+
+            if (mdl.TypeDoc() == eTypeDoc.Assemblage)
+            {
+                Object[] ChildComp = (Object[])mdl.eAssemblyDoc().GetComponents(false);
+                foreach (Component2 Cp in ChildComp)
+                    Liste.Add(Cp);
+            }
+
+            return Liste;
         }
 
         /// <summary>

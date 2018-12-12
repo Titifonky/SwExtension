@@ -180,11 +180,14 @@
   <Module name="Test2" intitule="Test2" />
   <Module name="SelectionnerCorpsIdentiques" intitule="Selectionner les corps identiques" />
   <Module name="NumeroterDossier" intitule="Numeroter les dossiers">
-    <Parametre name="CombinerCorpsIdentiques" intitule="Combiner les corps identiques des différents modèles" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="CombinerCorpsIdentiques" intitule="Combiner les corps identiques des différents modèles" tip="" type="System.Boolean">True</Parametre>
   </Module>
   <Module name="AfficherLogDebug" intitule="Afficher le log de debug" />
   <Module name="ExportStructure" intitule="Exporter les structures" />
   <Module name="VerifierNumerotation" intitule="Verifier la numerotation" />
   <Module name="ListerRepere" intitule="Lister les repères">
+  </Module>
+  <Module name="RepererDossier" intitule="Repérer les dossiers">
+    <Parametre name="CombinerCorpsIdentiques" intitule="Combiner les corps identiques des différents modèles" tip="" type="System.Boolean">False</Parametre>
   </Module>
 </Parametres>

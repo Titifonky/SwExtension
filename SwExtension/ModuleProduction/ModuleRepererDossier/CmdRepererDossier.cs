@@ -39,6 +39,9 @@ namespace ModuleProduction
             {
                 try
                 {
+                    if (SupprimerReperes && (ListeReperesAsupprimer.Count == 0))
+                        NettoyerModele();
+
                     var ListeCorps = new List<Corps>();
 
                     var lst = MdlBase.ListerComposants(false);
@@ -77,7 +80,7 @@ namespace ModuleProduction
                                 CustomPropertyManager PM = fDossier.CustomPropertyManager;
 
                                 // Si MajDossier et PropExiste, ne pas mettre à jour
-                                Boolean Maj = !(MajDossiers && PM.ePropExiste(CONSTANTES.REF_DOSSIER));
+                                Boolean Maj = !PM.ePropExiste(CONSTANTES.REF_DOSSIER);
 
                                 String NomParam = "";
 
@@ -237,19 +240,53 @@ namespace ModuleProduction
                 return "";
             }
 
-            private Feature EsquisseRepere(ModelDoc2 mdl)
+            private void SupprimerDefBloc(ModelDoc2 mdl, String cheminbloc)
+            {
+                var TabDef = (Object[])mdl.SketchManager.GetSketchBlockDefinitions();
+                if (TabDef.IsRef())
+                {
+                    foreach (SketchBlockDefinition blocdef in TabDef)
+                    {
+                        if (blocdef.FileName == cheminbloc)
+                        {
+                            Feature d = blocdef.GetFeature();
+                            d.eSelect();
+                            mdl.Extension.DeleteSelection2((int)swDeleteSelectionOptions_e.swDelete_Absorbed);
+                            mdl.eEffacerSelection();
+                            break;
+                        }
+                    }
+                }
+            }
+
+            private String CheminBlocEsquisseNumeroter()
+            {
+                return Sw.CheminBloc(CONSTANTES.NOM_BLOCK_ESQUISSE_NUMEROTER);
+            }
+
+            private Feature EsquisseRepere(ModelDoc2 mdl, Boolean creer = true)
             {
                 // On recherche l'esquisse contenant les parametres
                 Feature Esquisse = mdl.eChercherFonction(fc => { return fc.Name == CONSTANTES.NOM_ESQUISSE_NUMEROTER; });
 
-                if (Esquisse.IsNull())
+                if (Esquisse.IsNull() && creer)
                 {
+                    var SM = mdl.SketchManager;
+
+                    // On recherche le chemin du bloc
+                    String cheminbloc = CheminBlocEsquisseNumeroter();
+
+                    if (String.IsNullOrWhiteSpace(cheminbloc))
+                        return null;
+
+                    // On supprime la definition du bloc
+                    SupprimerDefBloc(mdl, cheminbloc);
+
                     // On recherche le plan de dessus, le deuxième dans la liste des plans de référence
                     Feature Plan = mdl.eListeFonctions(fc => { return fc.GetTypeName2() == FeatureType.swTnRefPlane; })[1];
 
                     // Selection du plan et création de l'esquisse
                     Plan.eSelect();
-                    var SM = mdl.SketchManager;
                     SM.InsertSketch(true);
                     SM.AddToDB = false;
                     SM.DisplayWhenAdded = true;
@@ -259,49 +296,10 @@ namespace ModuleProduction
                     // On récupère la fonction de l'esquisse
                     Esquisse = mdl.Extension.GetLastFeatureAdded();
 
-                    // On recherche le chemin du bloc
-                    String cheminbloc = "";
-
-                    var CheminDossierBloc = App.Sw.GetUserPreferenceStringValue((int)swUserPreferenceStringValue_e.swFileLocationsBlocks).Split(new String[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-
-                    foreach (var chemin in CheminDossierBloc)
-                    {
-                        var d = new DirectoryInfo(chemin);
-                        var r = d.GetFiles(CONSTANTES.NOM_BLOCK_ESQUISSE_NUMEROTER, SearchOption.AllDirectories);
-                        if (r.Length > 0)
-                        {
-                            cheminbloc = r[0].FullName;
-                            break;
-                        }
-                    }
-
-                    if (String.IsNullOrWhiteSpace(cheminbloc))
-                        return null;
-
                     // On insère le bloc
                     MathUtility Mu = App.Sw.GetMathUtility();
                     MathPoint Origine = Mu.CreatePoint(new double[] { 0, 0, 0 });
                     var def = SM.MakeSketchBlockFromFile(Origine, cheminbloc, false, 1, 0);
-
-                    // Si l'insertion a échoué, c'est qu'il existe
-                    // déjà une definition dans le modèle
-                    // On la recherche
-                    if (def.IsNull())
-                    {
-                        var TabDef = (Object[])SM.GetSketchBlockDefinitions();
-                        foreach (SketchBlockDefinition blocdef in TabDef)
-                        {
-                            WindowLog.Ecrire(blocdef.FileName);
-                            if (blocdef.FileName == cheminbloc)
-                            {
-                                def = blocdef;
-                                break;
-                            }
-                        }
-
-                        // On insère le bloc
-                        SM.InsertSketchBlockInstance(def, Origine, 1, 0);
-                    }
 
                     // On récupère la première instance
                     // et on l'explose
@@ -314,6 +312,9 @@ namespace ModuleProduction
                     SM.DisplayWhenAdded = true;
                     SM.InsertSketch(true);
 
+                    //// On supprime la definition du bloc
+                    //SupprimerDefBloc(mdl, cheminbloc);
+
                     // On renomme l'esquisse
                     Esquisse.Name = CONSTANTES.NOM_ESQUISSE_NUMEROTER;
 
@@ -323,13 +324,19 @@ namespace ModuleProduction
                     Esquisse.SetSuppression2((int)swFeatureSuppressionAction_e.swUnSuppressFeature, (int)swInConfigurationOpts_e.swAllConfiguration, null);
                 }
 
-                // On selectionne l'esquisse, on la cache
-                // et on la masque dans le FeatureMgr
-                // elle ne sera pas du tout acessible par l'utilisateur
-                Esquisse.eSelect();
-                mdl.BlankSketch();
-                Esquisse.SetUIState((int)swUIStates_e.swIsHiddenInFeatureMgr, true);
-                mdl.eEffacerSelection();
+                if (Esquisse.IsRef())
+                {
+                    // On selectionne l'esquisse, on la cache
+                    // et on la masque dans le FeatureMgr
+                    // elle ne sera pas du tout acessible par l'utilisateur
+                    Esquisse.eSelect();
+                    mdl.BlankSketch();
+                    Esquisse.SetUIState((int)swUIStates_e.swIsHiddenInFeatureMgr, true);
+                    mdl.eEffacerSelection();
+
+                    mdl.EditRebuild3();
+                }
+
                 return Esquisse;
             }
 
@@ -383,70 +390,68 @@ namespace ModuleProduction
                 }
             }
 
-            private void NettoyerReperes()
+            private void NettoyerModele()
             {
-                eTypeCorps Filtre = eTypeCorps.Barre | eTypeCorps.Tole;
-
-                var ListeComposants = MdlBase.ListerComposants(false);
-
-                Func<Feature, Tuple<String, String>> ExtractRef = delegate (Feature dossier)
+                WindowLog.Ecrire("Nettoyer les modeles");
+                List<ModelDoc2> ListeComposants = new List<ModelDoc2>();
+                if (MdlBase.TypeDoc() == eTypeDoc.Piece)
+                    ListeComposants.Add(MdlBase);
+                else
                 {
-                    CustomPropertyManager PM = dossier.CustomPropertyManager;
-                    String val, result = ""; Boolean wasResolved, link;
-                    var r = PM.Get6(CONSTANTES.REF_DOSSIER, false, out val, out result, out wasResolved, out link);
-
-                    return new Tuple<String, String>(result.Replace(CONSTANTES.PREFIXE_REF_DOSSIER, ""), val);
-                };
+                    var l = MdlBase.eListeComposants();
+                    foreach (var cp in l)
+                        ListeComposants.Add(cp.eModelDoc2());
+                }
 
                 Predicate<Feature> Test = delegate (Feature f)
                 {
                     BodyFolder dossier = f.GetSpecificFeature2();
-                    if (dossier.IsRef() && dossier.eNbCorps() > 0 && Filtre.HasFlag(dossier.eTypeDeDossier()))
-                    {
-                        CustomPropertyManager PM = f.CustomPropertyManager;
-
-                        var RefDossier = ExtractRef(f).Item1;
-                        if (RefDossier.eIsInteger())
-                            return true;
-                    }
+                    if (dossier.IsRef() && dossier.eNbCorps() > 0)
+                        return true;
 
                     return false;
                 };
 
-                foreach (var mdl in ListeComposants.Keys)
+                foreach (var mdl in ListeComposants)
                 {
                     mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
-
-                    foreach (var t in ListeComposants[mdl])
                     {
-                        var cfg = t.Key;
-                        var nbCfg = t.Value;
+                        CustomPropertyManager PM = mdl.Extension.CustomPropertyManager[""];
+                        PM.Delete2(CONSTANTES.ID_Piece);
+
+                        // On supprime la definition du bloc
+                        SupprimerDefBloc(mdl, CheminBlocEsquisseNumeroter());
+                    }
+
+                    foreach (var cfg in mdl.eListeNomConfiguration())
+                    {
                         mdl.ShowConfiguration2(cfg);
                         mdl.EditRebuild3();
                         var Piece = mdl.ePartDoc();
 
+                        {
+                            CustomPropertyManager PM = mdl.Extension.CustomPropertyManager[cfg];
+                            PM.Delete2(CONSTANTES.ID_Config);
+                        }
+
                         foreach (var f in Piece.eListeDesFonctionsDePiecesSoudees(Test))
                         {
-                            var RefDossier = ExtractRef(f);
-
-                            Indice = Math.Max(Indice, RefDossier.Item1.eToInteger());
-                            var hashDossier = HashDossier(mdl, f);
-                            DossierTraite.Add(hashDossier);
-
-                            // On recherche l'index max pour chaque modele
-                            var NomParam = ExtractNomParam(RefDossier.Item2);
-                            var dim = NomParam.Split('@')[0].CleanStringOfNonDigits().eToInteger();
-                            var hashMdl = mdl.GetPathName();
-                            if (IndexDimension.ContainsKey(hashMdl))
-                                IndexDimension[hashMdl] = Math.Max(IndexDimension[hashMdl], dim);
-                            else
-                                IndexDimension[hashMdl] = dim;
+                            CustomPropertyManager PM = f.CustomPropertyManager;
+                            PM.Delete2(CONSTANTES.REF_DOSSIER);
+                            PM.Delete2(CONSTANTES.DESC_DOSSIER);
+                            PM.Delete2(CONSTANTES.NOM_DOSSIER);
                         }
                     }
 
                     if (mdl.GetPathName() != MdlBase.GetPathName())
                         App.Sw.CloseDoc(mdl.GetPathName());
                 }
+
+                int errors = 0;
+                int warnings = 0;
+                MdlBase.Save3((int)swSaveAsOptions_e.swSaveAsOptions_Silent + (int)swSaveAsOptions_e.swSaveAsOptions_SaveReferenced, ref errors, ref warnings);
+
+                WindowLog.Ecrire("Nettoyage terminé");
             }
         }
     }

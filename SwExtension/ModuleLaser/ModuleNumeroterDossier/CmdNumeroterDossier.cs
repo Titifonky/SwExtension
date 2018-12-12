@@ -246,20 +246,7 @@ namespace ModuleLaser
 
                 if (Esquisse.IsNull())
                 {
-                    // On recherche le plan de dessus, le deuxième dans la liste des plans de référence
-                    Feature Plan = mdl.eListeFonctions(fc => { return fc.GetTypeName2() == FeatureType.swTnRefPlane; })[1];
-
-                    // Selection du plan et création de l'esquisse
-                    Plan.eSelect();
                     var SM = mdl.SketchManager;
-                    SM.InsertSketch(true);
-                    SM.AddToDB = false;
-                    SM.DisplayWhenAdded = true;
-
-                    mdl.eEffacerSelection();
-
-                    // On récupère la fonction de l'esquisse
-                    Esquisse = mdl.Extension.GetLastFeatureAdded();
 
                     // On recherche le chemin du bloc
                     String cheminbloc = "";
@@ -280,30 +267,45 @@ namespace ModuleLaser
                     if (String.IsNullOrWhiteSpace(cheminbloc))
                         return null;
 
+                    Action SupprimerDefBloc = delegate
+                    {
+                        var TabDef = (Object[])SM.GetSketchBlockDefinitions();
+                        if (TabDef.IsRef())
+                        {
+                            foreach (SketchBlockDefinition blocdef in TabDef)
+                            {
+                                if (blocdef.FileName == cheminbloc)
+                                {
+                                    Feature d = blocdef.GetFeature();
+                                    d.eSelect();
+                                    mdl.Extension.DeleteSelection2((int)swDeleteSelectionOptions_e.swDelete_Absorbed);
+                                    mdl.eEffacerSelection();
+                                    break;
+                                }
+                            }
+                        }
+                    };
+
+                    SupprimerDefBloc();
+
+                    // On recherche le plan de dessus, le deuxième dans la liste des plans de référence
+                    Feature Plan = mdl.eListeFonctions(fc => { return fc.GetTypeName2() == FeatureType.swTnRefPlane; })[1];
+
+                    // Selection du plan et création de l'esquisse
+                    Plan.eSelect();
+                    SM.InsertSketch(true);
+                    SM.AddToDB = false;
+                    SM.DisplayWhenAdded = true;
+
+                    mdl.eEffacerSelection();
+
+                    // On récupère la fonction de l'esquisse
+                    Esquisse = mdl.Extension.GetLastFeatureAdded();
+
                     // On insère le bloc
                     MathUtility Mu = App.Sw.GetMathUtility();
                     MathPoint Origine = Mu.CreatePoint(new double[] { 0, 0, 0 });
                     var def = SM.MakeSketchBlockFromFile(Origine, cheminbloc, false, 1, 0);
-
-                    // Si l'insertion a échoué, c'est qu'il existe
-                    // déjà une definition dans le modèle
-                    // On la recherche
-                    if (def.IsNull())
-                    {
-                        var TabDef = (Object[])SM.GetSketchBlockDefinitions();
-                        foreach (SketchBlockDefinition blocdef in TabDef)
-                        {
-                            WindowLog.Ecrire(blocdef.FileName);
-                            if (blocdef.FileName == cheminbloc)
-                            {
-                                def = blocdef;
-                                break;
-                            }
-                        }
-
-                        // On insère le bloc
-                        SM.InsertSketchBlockInstance(def, Origine, 1, 0);
-                    }
 
                     // On récupère la première instance
                     // et on l'explose
@@ -315,6 +317,9 @@ namespace ModuleLaser
                     SM.AddToDB = false;
                     SM.DisplayWhenAdded = true;
                     SM.InsertSketch(true);
+
+                    // On supprime la definition du bloc
+                    SupprimerDefBloc();
 
                     // On renomme l'esquisse
                     Esquisse.Name = CONSTANTES.NOM_ESQUISSE_NUMEROTER;
