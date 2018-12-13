@@ -15,12 +15,14 @@ namespace ModuleProduction
         {
             public ModelDoc2 MdlBase = null;
             public int IndiceCampagne = 0;
-            public int Indice = 0;
+
             public Boolean CombinerCorpsIdentiques = false;
             public Boolean SupprimerReperes = false;
-            public List<String> ListeReperesAsupprimer = new List<String>();
+            public List<Corps> ListeCorpsExistant = new List<Corps>();
+            public String FichierNomenclature = "";
 
-            private int GenRepereDossier { get { return ++Indice; } }
+            private int _GenRepereDossier = 0;
+            private int GenRepereDossier { get { return ++_GenRepereDossier; } }
 
             // Liste des dossiers déjà traité
             HashSet<String> DossierTraite = new HashSet<String>();
@@ -39,7 +41,7 @@ namespace ModuleProduction
             {
                 try
                 {
-                    if (SupprimerReperes && (ListeReperesAsupprimer.Count == 0))
+                    if (SupprimerReperes && (ListeCorpsExistant.Count == 0))
                         NettoyerModele();
 
                     var ListeCorps = new List<Corps>();
@@ -167,7 +169,7 @@ namespace ModuleProduction
                                                     WindowLog.EcrireF(" Erreur de mise à jour {0}", (swSetValueReturnStatus_e)errors);
                                             }
 
-                                            CorpsTest.AjouterModele(mdl, cfg, fDossier.GetID());
+                                            //CorpsTest.AjouterModele(mdl, cfg, fDossier.GetID());
                                             Ajoute = true;
                                             break;
                                         }
@@ -183,9 +185,14 @@ namespace ModuleProduction
                                         WindowLog.EcrireF(" Erreur de mise à jour {0}", (swSetValueReturnStatus_e)errors);
 
                                     var corps = new Corps(SwCorps, TypeCorps, MateriauCorps);
+                                    corps.Campagne = IndiceCampagne;
                                     corps.Nb = nbCorps;
                                     corps.Repere = rep;
-                                    corps.AjouterModele(mdl, cfg, fDossier.GetID());
+                                    if (corps.TypeCorps == eTypeCorps.Tole)
+                                        corps.Dimension = SwCorps.eEpaisseurCorpsOuDossier(Dossier).ToString();
+                                    else
+                                        corps.Dimension = Dossier.eProfilDossier();
+                                    //corps.AjouterModele(mdl, cfg, fDossier.GetID());
                                     ListeCorps.Add(corps);
                                 }
                             }
@@ -208,14 +215,17 @@ namespace ModuleProduction
 
                     int nbtt = 0;
 
-                    foreach (var corps in ListeCorps)
+                    using (var sw = new StreamWriter(FichierNomenclature, true))
                     {
-                        nbtt += corps.Nb;
-                        WindowLog.EcrireF("P{0} ×{1}", corps.Repere, corps.Nb);
+                        foreach (var corps in ListeCorps)
+                        {
+                            nbtt += corps.Nb;
+                            WindowLog.EcrireF("P{0} ×{1}", corps.Repere, corps.Nb);
+                            sw.WriteLine(String.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}", corps.Campagne, corps.Repere, corps.Nb, corps.TypeCorps, corps.Dimension, corps.Materiau));
+                        }
                     }
 
                     WindowLog.EcrireF("Nb total de corps : {0}", nbtt);
-
                 }
                 catch (Exception e)
                 {
@@ -338,56 +348,6 @@ namespace ModuleProduction
                 }
 
                 return Esquisse;
-            }
-
-            private class Corps
-            {
-                public Body2 SwCorps;
-                public eTypeCorps TypeCorps;
-                public String Materiau;
-                public int Repere;
-                public SortedDictionary<ModelDoc2, SortedDictionary<String, Dictionary<int, int>>> ListeModele = new SortedDictionary<ModelDoc2, SortedDictionary<String, Dictionary<int, int>>>(new CompareModelDoc2());
-                public int Nb = 0;
-
-                public Corps(Body2 swCorps, eTypeCorps typeCorps, String materiau)
-                {
-                    SwCorps = swCorps;
-                    TypeCorps = typeCorps;
-                    Materiau = materiau;
-                }
-
-                public void AjouterModele(ModelDoc2 mdl, String config, int dossier)
-                {
-                    if (ListeModele.ContainsKey(mdl))
-                    {
-                        var lCfg = ListeModele[mdl];
-                        if (lCfg.ContainsKey(config))
-                        {
-                            var lDossier = lCfg[config];
-                            if (!lDossier.ContainsKey(dossier))
-                                lDossier.Add(dossier, Repere);
-                        }
-                        else
-                        {
-                            var lDossier = new Dictionary<int, int>();
-                            lDossier.Add(dossier, Repere);
-                            lCfg.Add(config, lDossier);
-                        }
-                    }
-                    else
-                    {
-                        var lDossier = new Dictionary<int, int>();
-                        lDossier.Add(dossier, Repere);
-                        var lCfg = new SortedDictionary<String, Dictionary<int, int>>(new WindowsStringComparer());
-                        lCfg.Add(config, lDossier);
-                        ListeModele.Add(mdl, lCfg);
-                    }
-                }
-
-                public void AjouterModele(Component2 comp, int dossier)
-                {
-                    AjouterModele(comp.eModelDoc2(), comp.eNomConfiguration(), dossier);
-                }
             }
 
             private void NettoyerModele()
