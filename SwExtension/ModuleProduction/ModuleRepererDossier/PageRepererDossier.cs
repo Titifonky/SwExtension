@@ -19,7 +19,7 @@ namespace ModuleProduction
             private Parametre CombinerCorpsIdentiques;
 
             private ModelDoc2 MdlBase = null;
-            private int _IndiceCampagne = 0;
+            private int _IndiceCampagne = 1;
             private int IndiceMin = 0;
             private String DossierPiece = "";
             private String FichierNomenclature = "";
@@ -72,21 +72,30 @@ namespace ModuleProduction
 
             protected void RechercherIndiceCampagne()
             {
+                IndiceCampagne = 1;
+
                 WindowLog.Ecrire("Recherche des éléments existants :");
 
                 // Recherche du dernier indice de la campagne de repérage
 
                 // Création du dossier pièces s'il n'existe pas
-                var creer = MdlBase.CreerDossier(OutilsCommun.DossierPieces, out DossierPiece);
+                MdlBase.CreerDossier(OutilsCommun.DossierPieces, out DossierPiece);
                 // Recherche de la nomenclature
-                creer |= MdlBase.CreerFichierTexte(OutilsCommun.DossierPieces, OutilsCommun.FichierNomenclature, out FichierNomenclature);
+                MdlBase.CreerFichierTexte(OutilsCommun.DossierPieces, OutilsCommun.FichierNomenclature, out FichierNomenclature);
 
-                if (creer)
+                using (var sr = new StreamReader(FichierNomenclature))
                 {
-                    IndiceCampagne = 1;
+                    string line;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        
+                    }
+                }
+
+                if(IndiceMin == 0)
+                {
                     _CheckBox_SupprimerReperes.IsChecked = true;
                     _CheckBox_SupprimerReperes.IsEnabled = false;
-                    return;
                 }
             }
 

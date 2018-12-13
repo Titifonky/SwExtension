@@ -19,8 +19,8 @@
     <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">D:\Projet\A182 - Romain\AD516 - Escalier metallique\0\V2\Plans Développées\DWG - Ind A</Parametre>
   </Module>
   <Module name="ExportPdf" intitule="Exporter en Pdf">
-    <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="SelectionnerDossier" intitule="Selectionner un dossier" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="SelectionnerDossier" intitule="Selectionner un dossier" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="ToutesLesFeuilles" intitule="Toutes les feuilles" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="FormatExport" intitule="Format" tip="" type="Outils.eTypeFichierExport">PDF</Parametre>
     <Parametre name="ExporterEnCouleur" intitule="Exporter en couleur" tip="" type="System.Boolean">True</Parametre>
