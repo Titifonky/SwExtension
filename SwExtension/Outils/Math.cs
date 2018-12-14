@@ -91,10 +91,8 @@ namespace Outils
                 }
                 catch
                 {
-
+                    Val = 0;
                 }
-
-                Val = 0;
             }
 
             return Val;

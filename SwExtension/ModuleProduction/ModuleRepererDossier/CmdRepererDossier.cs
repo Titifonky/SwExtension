@@ -217,6 +217,8 @@ namespace ModuleProduction
 
                     using (var sw = new StreamWriter(FichierNomenclature, true))
                     {
+                        sw.WriteLine(String.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}", "Campagne", "Repere", "Nb", "Type", "Dimension", "Materiau"));
+
                         foreach (var corps in ListeCorps)
                         {
                             nbtt += corps.Nb;

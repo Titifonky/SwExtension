@@ -65,8 +65,8 @@ namespace ModuleProduction
                     _Texte_IndiceCampagne = G.AjouterTexteBox("Indice de la campagne de repérage :");
                     _Texte_IndiceCampagne.LectureSeule = true;
                     _CheckBox_SupprimerReperes = G.AjouterCheckBox("Supprimer les repères de la précédente campagne");
-                    _CheckBox_SupprimerReperes.OnCheck += delegate { _Texte_IndiceCampagne.Text = Math.Max(1, (IndiceCampagne - 1)).ToString(); };
-                    _CheckBox_SupprimerReperes.OnUnCheck += delegate { _Texte_IndiceCampagne.Text = IndiceCampagne.ToString(); };
+                    _CheckBox_SupprimerReperes.OnCheck += delegate { IndiceCampagne = Math.Max(1, (IndiceCampagne - 1)); };
+                    _CheckBox_SupprimerReperes.OnUnCheck += delegate { IndiceCampagne += 1; };
                     _CheckBox_CombinerCorps = G.AjouterCheckBox(CombinerCorpsIdentiques);
                 }
                 catch (Exception e)
@@ -84,13 +84,14 @@ namespace ModuleProduction
                 // Recherche de la nomenclature
                 MdlBase.CreerFichierTexte(OutilsCommun.DossierPieces, OutilsCommun.FichierNomenclature, out FichierNomenclature);
 
+                // Aquisition de la liste des corps déjà repérées
                 int IndiceMin = IndiceCampagne;
-
                 using (var sr = new StreamReader(FichierNomenclature))
                 {
-                    String ligne;
+                    // On lit la première ligne contenant l'entête des colonnes
+                    String ligne = sr.ReadLine();
                     int NbCorps = 0;
-                    
+
                     while ((ligne = sr.ReadLine()) != null)
                     {
                         NbCorps++;
@@ -105,7 +106,16 @@ namespace ModuleProduction
                         WindowLog.EcrireF("{0} pièce(s) sont référencé(s)", NbCorps);
                 }
 
-                if(ListeCorps.Count == 0)
+                // Recherche des exports laser, tole ou tube, existant
+                var DossierTole = Path.Combine(MdlBase.eDossier(), OutilsCommun.DossierLaserTole);
+                IndiceMin = Math.Max(IndiceMin,
+                                     Math.Max(MdlBase.RechercherIndiceDossier(OutilsCommun.DossierLaserTole),
+                                              MdlBase.RechercherIndiceDossier(OutilsCommun.DossierLaserTube)
+                                              )
+                                     );
+
+
+                if (ListeCorps.Count == 0)
                 {
                     _CheckBox_SupprimerReperes.IsChecked = true;
                     _CheckBox_SupprimerReperes.IsEnabled = false;
@@ -121,7 +131,7 @@ namespace ModuleProduction
                 CmdRepererDossier Cmd = new CmdRepererDossier();
 
                 Cmd.MdlBase = App.Sw.ActiveDoc;
-                Cmd.IndiceCampagne = _Texte_IndiceCampagne.Text.eToInteger();
+                Cmd.IndiceCampagne = IndiceCampagne;
                 Cmd.CombinerCorpsIdentiques = _CheckBox_CombinerCorps.IsChecked;
                 Cmd.SupprimerReperes = _CheckBox_SupprimerReperes.IsChecked;
                 Cmd.ListeCorpsExistant = ListeCorps;
@@ -143,7 +153,7 @@ namespace ModuleProduction
             /// </summary>
             public String Dimension;
             public String Materiau;
-            
+
             /// <summary>
             /// SortedDictionary |- Modele
             ///                  |- SortedDictionary |- NomConfig
@@ -151,7 +161,7 @@ namespace ModuleProduction
             ///                                                     |- Repere
             /// </summary>
             public SortedDictionary<ModelDoc2, SortedDictionary<String, Dictionary<int, int>>> ListeModele = new SortedDictionary<ModelDoc2, SortedDictionary<String, Dictionary<int, int>>>(new CompareModelDoc2());
-            
+
 
             public Corps(Body2 swCorps, eTypeCorps typeCorps, String materiau)
             {

@@ -4,6 +4,7 @@ using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace ModuleProduction
@@ -394,10 +395,10 @@ namespace ModuleProduction
 
         public static Boolean CreerDossier(this ModelDoc2 mdl, String dossier, out String chemin)
         {
-            chemin = System.IO.Path.Combine(mdl.eDossier(), dossier);
-            if (!System.IO.Directory.Exists(chemin))
+            chemin = Path.Combine(mdl.eDossier(), dossier);
+            if (!Directory.Exists(chemin))
             {
-                System.IO.Directory.CreateDirectory(chemin);
+                Directory.CreateDirectory(chemin);
                 return true;
             }
 
@@ -406,14 +407,24 @@ namespace ModuleProduction
 
         public static Boolean CreerFichierTexte(this ModelDoc2 mdl, String dossier, String fichier, out String chemin)
         {
-            chemin = System.IO.Path.Combine(mdl.eDossier(), dossier, fichier + ".txt");
-            if (!System.IO.File.Exists(chemin))
+            chemin = Path.Combine(mdl.eDossier(), dossier, fichier + ".txt");
+            if (!File.Exists(chemin))
             {
-                System.IO.File.CreateText(chemin).Close();
+                File.CreateText(chemin).Close();
                 return true;
             }
 
             return false;
+        }
+
+        public static int RechercherIndiceDossier(this ModelDoc2 mdl, String dossier)
+        {
+            int indice = 0;
+
+            foreach (var d in Directory.EnumerateDirectories(Path.Combine(mdl.eDossier(), dossier)))
+                indice = Math.Max(indice, d.eToInteger());
+
+            return indice;
         }
     }
 }
