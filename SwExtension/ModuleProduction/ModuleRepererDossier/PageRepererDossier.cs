@@ -21,6 +21,7 @@ namespace ModuleProduction
 
             private ModelDoc2 MdlBase = null;
             private int _IndiceCampagne = 1;
+            private int RepereMax = 0;
             private String DossierPiece = "";
             private String FichierNomenclature = "";
             private List<Corps> ListeCorps = new List<Corps>();
@@ -80,9 +81,9 @@ namespace ModuleProduction
                 // Recherche du dernier indice de la campagne de repérage
 
                 // Création du dossier pièces s'il n'existe pas
-                MdlBase.CreerDossier(OutilsCommun.DossierPieces, out DossierPiece);
+                MdlBase.CreerDossier(CONST_PRODUCTION.DOSSIER_PIECES, out DossierPiece);
                 // Recherche de la nomenclature
-                MdlBase.CreerFichierTexte(OutilsCommun.DossierPieces, OutilsCommun.FichierNomenclature, out FichierNomenclature);
+                MdlBase.CreerFichierTexte(CONST_PRODUCTION.DOSSIER_PIECES, CONST_PRODUCTION.FICHIER_NOMENC, out FichierNomenclature);
 
                 // Aquisition de la liste des corps déjà repérées
                 int IndiceMin = IndiceCampagne;
@@ -99,6 +100,7 @@ namespace ModuleProduction
                         {
                             var c = new Corps(ligne);
                             IndiceMin = Math.Max(IndiceMin, c.Campagne);
+                            RepereMax = Math.Max(RepereMax, c.Repere);
                             ListeCorps.Add(c);
                         }
                     }
@@ -107,10 +109,10 @@ namespace ModuleProduction
                 }
 
                 // Recherche des exports laser, tole ou tube, existant
-                var DossierTole = Path.Combine(MdlBase.eDossier(), OutilsCommun.DossierLaserTole);
+                var DossierTole = Path.Combine(MdlBase.eDossier(), CONST_PRODUCTION.DOSSIER_LASERTOLE);
                 IndiceMin = Math.Max(IndiceMin,
-                                     Math.Max(MdlBase.RechercherIndiceDossier(OutilsCommun.DossierLaserTole),
-                                              MdlBase.RechercherIndiceDossier(OutilsCommun.DossierLaserTube)
+                                     Math.Max(MdlBase.RechercherIndiceDossier(CONST_PRODUCTION.DOSSIER_LASERTOLE),
+                                              MdlBase.RechercherIndiceDossier(CONST_PRODUCTION.DOSSIER_LASERTUBE)
                                               )
                                      );
 
@@ -132,6 +134,7 @@ namespace ModuleProduction
 
                 Cmd.MdlBase = App.Sw.ActiveDoc;
                 Cmd.IndiceCampagne = IndiceCampagne;
+                Cmd.RepereMax = RepereMax;
                 Cmd.CombinerCorpsIdentiques = _CheckBox_CombinerCorps.IsChecked;
                 Cmd.SupprimerReperes = _CheckBox_SupprimerReperes.IsChecked;
                 Cmd.ListeCorpsExistant = ListeCorps;

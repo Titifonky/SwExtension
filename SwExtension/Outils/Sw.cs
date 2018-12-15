@@ -1139,8 +1139,6 @@ namespace Outils
         internal const String PREFIXE_REF_DOSSIER = "P";
         internal const String DESC_DOSSIER = "Description";
         internal const String NOM_DOSSIER = "NomDossier";
-        internal const String ID_Piece = "ID_Piece";
-        internal const String ID_Config = "ID_Config";
         internal const String NOM_ESQUISSE_NUMEROTER = "REPERAGE_DOSSIER";
         internal const String NOM_BLOCK_ESQUISSE_NUMEROTER = "REPERAGE_DOSSIER_BLOC.SLDBLK";
         internal const String NO_CONFIG = "NoConfigPliee";
@@ -2830,11 +2828,22 @@ namespace Outils
 
         public static String eProp(this ModelDoc2 mdl, String nomPropriete, String nomConfig = "")
         {
-            String val, result = ""; Boolean wasResolved;
+            String val, result = ""; Boolean wasResolved, link;
 
             CustomPropertyManager PM = mdl.eGestProp(nomConfig);
             if (PM.IsRef())
-                PM.Get5(nomPropriete, false, out val, out result, out wasResolved);
+                PM.Get6(nomPropriete, false, out val, out result, out wasResolved, out link);
+
+            return result;
+        }
+
+        public static swCustomInfoDeleteResult_e ePropSuppr(this ModelDoc2 mdl, String nomPropriete, String nomConfig = "")
+        {
+            swCustomInfoDeleteResult_e result = swCustomInfoDeleteResult_e.swCustomInfoDeleteResult_OK;
+
+            CustomPropertyManager PM = mdl.eGestProp(nomConfig);
+            if (PM.IsRef())
+                result = (swCustomInfoDeleteResult_e)PM.Delete2(nomPropriete);
 
             return result;
         }
@@ -2860,9 +2869,18 @@ namespace Outils
             return result;
         }
 
-        public static int ePropAdd(this CustomPropertyManager pm, String nomPropriete, Object val, swCustomPropertyAddOption_e action = swCustomPropertyAddOption_e.swCustomPropertyDeleteAndAdd)
+        public static swCustomInfoAddResult_e ePropAdd(this CustomPropertyManager pm, String nomPropriete, Object val, swCustomPropertyAddOption_e action = swCustomPropertyAddOption_e.swCustomPropertyDeleteAndAdd)
         {
-            var r = pm.Add3(nomPropriete, (int)swCustomInfoType_e.swCustomInfoText, val.ToString(), (int)action);
+            swCustomInfoAddResult_e r = (swCustomInfoAddResult_e)pm.Add3(nomPropriete, (int)swCustomInfoType_e.swCustomInfoText, val.ToString(), (int)action);
+
+            return r;
+        }
+
+        public static swCustomInfoAddResult_e ePropAdd(this ModelDoc2 mdl, String nomPropriete, Object val, String nomConfig = "", swCustomPropertyAddOption_e action = swCustomPropertyAddOption_e.swCustomPropertyDeleteAndAdd)
+        {
+            CustomPropertyManager PM = mdl.eGestProp(nomConfig);
+
+            swCustomInfoAddResult_e r = (swCustomInfoAddResult_e)PM.ePropAdd(nomPropriete, val, action);
 
             return r;
         }

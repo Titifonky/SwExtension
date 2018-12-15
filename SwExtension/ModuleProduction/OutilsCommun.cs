@@ -9,13 +9,20 @@ using System.Linq;
 
 namespace ModuleProduction
 {
+    public static class CONST_PRODUCTION
+    {
+        public const String DOSSIER_PIECES = "Pieces";
+        public const String FICHIER_NOMENC = "Nomenclature";
+        public const String DOSSIER_LASERTOLE = "Laser tole";
+        public const String DOSSIER_LASERTUBE = "Laser tube";
+        public const String MAX_INDEXDIM = "MAX_INDEXDIM";
+        public const String ID_PIECE = "ID_PIECE";
+        public const String ID_CONFIG = "ID_CONFIG";
+        public const String ID_DOSSIERS = "ID_DOSSIERS";
+    }
+
     public static class OutilsCommun
     {
-        public const String DossierPieces = "Pieces";
-        public const String FichierNomenclature = "Nomenclature";
-        public const String DossierLaserTole = "Laser tole";
-        public const String DossierLaserTube = "Laser tube";
-
 
         public static Configuration CreerConfigDepliee(this ModelDoc2 mdl, String NomConfigDepliee, String NomConfigPliee)
         {
@@ -198,10 +205,10 @@ namespace ModuleProduction
         /// <summary>
         /// Renvoi la liste unique des modeles et configurations
         /// Modele : ModelDoc2
-        ///     |-Config1 : Nom de la configuration
-        ///     |     |-Nb : quantite de configuration identique dans le modele complet
-        ///     |-Config 2
-        ///     | etc...
+        ///                   |-Config1 : Nom de la configuration
+        ///                   |     |-Nb : quantite de configuration identique dans le modele complet
+        ///                   |-Config 2
+        ///                   | etc...
         /// </summary>
         /// <param name="mdlBase"></param>
         /// <param name="composantsExterne"></param>
