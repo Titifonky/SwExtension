@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace ModuleProduction
 {
@@ -170,7 +171,7 @@ namespace ModuleProduction
                         {
                             foreach (var corps in c.eListeCorps())
                             {
-                                if(corps.eTypeDeCorps() == eTypeCorps.Tole)
+                                if (corps.eTypeDeCorps() == eTypeCorps.Tole)
                                     ListeEp.AddIfNotExist(corps.eEpaisseurCorps().ToString());
                             }
                         }
@@ -227,7 +228,7 @@ namespace ModuleProduction
                     if (comp.IsSuppressed() || comp.ExcludeFromBOM || !cfg.eEstConfigPliee() || comp.TypeDoc() != eTypeDoc.Piece) return;
 
                     var mdl = comp.eModelDoc2();
-                    
+
                     if (dic.ContainsKey(mdl))
                         if (dic[mdl].ContainsKey(cfg))
                         {
@@ -417,7 +418,7 @@ namespace ModuleProduction
             chemin = Path.Combine(mdl.eDossier(), dossier, fichier + ".txt");
             if (!File.Exists(chemin))
             {
-                File.CreateText(chemin).Close();
+                File.WriteAllText(chemin, "", Encoding.GetEncoding(1252));
                 return true;
             }
 
@@ -427,9 +428,11 @@ namespace ModuleProduction
         public static int RechercherIndiceDossier(this ModelDoc2 mdl, String dossier)
         {
             int indice = 0;
+            String chemin = Path.Combine(mdl.eDossier(), dossier);
 
-            foreach (var d in Directory.EnumerateDirectories(Path.Combine(mdl.eDossier(), dossier)))
-                indice = Math.Max(indice, d.eToInteger());
+            if (Directory.Exists(chemin))
+                foreach (var d in Directory.EnumerateDirectories(chemin, "*", SearchOption.TopDirectoryOnly))
+                    indice = Math.Max(indice, new DirectoryInfo(d).Name.eToInteger());
 
             return indice;
         }

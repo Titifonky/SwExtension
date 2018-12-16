@@ -189,5 +189,6 @@
   </Module>
   <Module name="RepererDossier" intitule="Repérer les dossiers">
     <Parametre name="CombinerCorpsIdentiques" intitule="Combiner les corps identiques des différents modèles" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="ExporterFichierCorps" intitule="Exporter les corps dans des fichiers" tip="" type="System.Boolean">True</Parametre>
   </Module>
 </Parametres>

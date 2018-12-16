@@ -6,6 +6,9 @@ using SwExtension;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace ModuleProduction
 {
@@ -17,11 +20,13 @@ namespace ModuleProduction
             public int IndiceCampagne = 0;
 
             public Boolean CombinerCorpsIdentiques = false;
+            public Boolean CombinerAvecPrecedenteCampagne = false;
             public Boolean SupprimerReperes = false;
-            public List<Corps> ListeCorpsExistant = new List<Corps>();
-            public HashSet<String> ListeRepereASupprimer = new HashSet<String>();
+            public Boolean ExporterFichierCorps = false;
             public String FichierNomenclature = "";
-            public int RepereMax = 0;
+            public String CheminDossierPieces = "";
+            public SortedDictionary<int, Corps> ListeCorpsExistant = new SortedDictionary<int, Corps>();
+            public SortedDictionary<int, String> ListeCorpsCharge = new SortedDictionary<int, String>();
 
             private int _GenRepereDossier = 0;
             private int GenRepereDossier { get { return ++_GenRepereDossier; } }
@@ -38,45 +43,88 @@ namespace ModuleProduction
             {
                 try
                 {
-
-                    if (SupprimerReperes && (ListeCorpsExistant.Count == 0))
-                        NettoyerModele();
-
                     if (SupprimerReperes)
                     {
-                        foreach (var c in ListeCorpsExistant)
+                        CheminDossierPieces = Path.Combine(MdlBase.eDossier(), CONST_PRODUCTION.DOSSIER_PIECES);
+
+                        // Si aucun corps n'a déjà été repéré, on reinitialise tout
+                        if (ListeCorpsExistant.Count == 0)
                         {
-                            if (c.Campagne == IndiceCampagne)
-                                ListeRepereASupprimer.Add(CONSTANTES.PREFIXE_REF_DOSSIER + c.Repere);
+                            NettoyerModele();
+
+                            // On supprime tout les fichiers
+                            foreach (FileInfo file in new DirectoryInfo(CheminDossierPieces).GetFiles())
+                                file.Delete();
+                        }
+                        else
+                        {
+                            // On supprime les repères de la campagne actuelle
+                            HashSet<int> ListeRepereASupprimer = new HashSet<int>();
+
+                            foreach (var corps in ListeCorpsExistant.Values)
+                                if (corps.Campagne == IndiceCampagne)
+                                    ListeRepereASupprimer.Add(corps.Repere);
+
+                            
+                            String ext = eTypeDoc.Piece.GetEnumInfo<ExtFichier>();
+
+                            // On supprime les fichiers de corps existants
+                            foreach (var rep in ListeRepereASupprimer)
+                            {
+                                String fichier = Path.Combine(CheminDossierPieces, CONSTANTES.PREFIXE_REF_DOSSIER + rep + ext);
+                                if (File.Exists(fichier))
+                                    File.Delete(fichier);
+
+                                ListeCorpsExistant.Remove(rep);
+                            }
                         }
                     }
 
-                    _GenRepereDossier = RepereMax;
 
-                    var ListeCorps = new List<Corps>();
+
+                    // On charge les corps existant à partir des fichiers
+                    if(CombinerAvecPrecedenteCampagne)
+                    {
+                        foreach (FileInfo file in new DirectoryInfo(CheminDossierPieces).GetFiles())
+                        {
+                            int rep = Path.GetFileNameWithoutExtension(file.Name).Replace(CONSTANTES.PREFIXE_REF_DOSSIER, "").eToInteger();
+                            if(ListeCorpsExistant.ContainsKey(rep))
+                            {
+                                ListeCorpsCharge.Add(rep, file.FullName);
+                            }
+                        }
+                    }
+
+
+                    // On recherche l'indice de repere max
+                    foreach (var rep in ListeCorpsExistant.Keys)
+                        _GenRepereDossier = Math.Max(_GenRepereDossier, rep);
 
                     var lst = MdlBase.ListerComposants(false);
 
+                    // On boucle sur les modeles
                     foreach (var mdl in lst.Keys)
                     {
                         mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
+
+                        // On crée l'esquisse pour le reperage des dossiers
                         EsquisseRepere(mdl);
 
+                        // Si le modele est a repérer complètement
                         Boolean InitModele = true;
+                        // On recherche l'index de la dimension maximum
                         int IndexDimension = 0;
 
+                        // Les données sont stockées dans des propriétés du modèle
+                        // Le nom du modèle est stocké dans une propriété, si le modèle est copié
+                        // la propriété n'est plus valable, on force le repérage
+                        // On récupère également le dernier indice de la dimension utilisée
                         if (mdl.ePropExiste(CONST_PRODUCTION.ID_PIECE) && (mdl.eProp(CONST_PRODUCTION.ID_PIECE) == mdl.eNomSansExt()))
                         {
                             InitModele = false;
                             if (mdl.ePropExiste(CONST_PRODUCTION.MAX_INDEXDIM))
                                 IndexDimension = mdl.eProp(CONST_PRODUCTION.MAX_INDEXDIM).eToInteger();
-                            else
-                                mdl.ePropAdd(CONST_PRODUCTION.MAX_INDEXDIM, IndexDimension);
                         }
-                        else
-                            mdl.ePropAdd(CONST_PRODUCTION.ID_PIECE, mdl.eNomSansExt());
-
-
 
                         foreach (var nomCfg in lst[mdl].Keys)
                         {
@@ -85,12 +133,17 @@ namespace ModuleProduction
                             WindowLog.SautDeLigne();
                             WindowLog.EcrireF("{0} \"{1}\"", mdl.eNomSansExt(), nomCfg);
 
-                            List<int> ListIdDossiers = new List<int>();
+                            HashSet<int> ListIdDossiers = new HashSet<int>();
 
                             Boolean InitConfig = true;
 
                             int IdCfg = mdl.GetConfigurationByName(nomCfg).GetID();
 
+                            // Idem modèle, on stock l'id de la config dans une propriété.
+                            // Si une nouvelle config est crée, la valeur de cette propriété devient caduc,
+                            // on repère alors les dossiers
+                            // On en profite pour récupérer la liste des ids de dossiers déjà traité dans les précédentes
+                            // campagne de repérage
                             if (!InitModele && mdl.ePropExiste(CONST_PRODUCTION.ID_CONFIG, nomCfg) && (mdl.eProp(CONST_PRODUCTION.ID_CONFIG, nomCfg) == IdCfg.ToString()))
                             {
                                 InitConfig = false;
@@ -102,10 +155,7 @@ namespace ModuleProduction
                                 }
                             }
 
-                            mdl.ePropAdd(CONST_PRODUCTION.ID_CONFIG, IdCfg, nomCfg);
-
                             var piece = mdl.ePartDoc();
-                            var NbConfig = lst[mdl][nomCfg];
                             var ListeDossier = piece.eListeDesFonctionsDePiecesSoudees(
                                 swD =>
                                 {
@@ -120,35 +170,31 @@ namespace ModuleProduction
                                 }
                                 );
 
+                            var NbConfig = lst[mdl][nomCfg];
+
                             foreach (var fDossier in ListeDossier)
                             {
                                 BodyFolder Dossier = fDossier.GetSpecificFeature2();
+                                int IdDossier = fDossier.GetID();
 
                                 WindowLog.EcrireF("     {0}", fDossier.Name);
 
-                                // On recherche si le dossier contient déjà la propriété RefDossier
-                                //      Si non, on ajoute la propriété au dossier selon le modèle suivant :
-                                //              P"D1@REPERAGE_DOSSIER@Nom_de_la_piece.SLDPRT"
-                                //      Si oui, on récupère le nom du paramètre à configurer
-
-                                String NomParam = "";
-                                Boolean RefDossierCreer = GetNomParam(mdl, fDossier, ref IndexDimension, out NomParam);
+                                Boolean NouveauDossier = false;
+                                Dimension param = GetParam(mdl, fDossier, nomCfg, ref IndexDimension, out NouveauDossier);
 
                                 var SwCorps = Dossier.ePremierCorps();
 
-                                Boolean Ajoute = false;
-
                                 var MateriauCorps = SwCorps.eGetMateriauCorpsOuPiece(piece, nomCfg);
-                                var nbCorps = Dossier.eNbCorps() * NbConfig;
-                                Dimension param = mdl.Parameter(NomParam);
-
                                 eTypeCorps TypeCorps = Dossier.eTypeDeDossier();
+                                var nbCorps = Dossier.eNbCorps() * NbConfig;
+
+                                Boolean Combiner = false;
 
                                 if (CombinerCorpsIdentiques)
                                 {
                                     // On recherche s'il existe des corps identiques
                                     // Si oui, on applique le même repère au parametre
-                                    foreach (var CorpsTest in ListeCorps)
+                                    foreach (var CorpsTest in ListeCorpsExistant.Values)
                                     {
                                         if ((MateriauCorps != CorpsTest.Materiau) || (TypeCorps != CorpsTest.TypeCorps)) continue;
 
@@ -156,41 +202,63 @@ namespace ModuleProduction
                                         {
                                             CorpsTest.Nb += nbCorps;
 
-                                            if (Maj)
-                                            {
-                                                var errors = param.SetSystemValue3(CorpsTest.Repere * 0.001, (int)swSetValueInConfiguration_e.swSetValue_InSpecificConfigurations, nomCfg);
-                                                if (errors > 0)
-                                                    WindowLog.EcrireF(" Erreur de mise à jour {0}", (swSetValueReturnStatus_e)errors);
-                                            }
+                                            SetRepere(param, CorpsTest.Repere, nomCfg);
 
-                                            //CorpsTest.AjouterModele(mdl, cfg, fDossier.GetID());
-                                            Ajoute = true;
+                                            CorpsTest.AjouterModele(mdl, nomCfg, fDossier.GetID(), SwCorps.Name);
+                                            Combiner = true;
                                             break;
                                         }
                                     }
                                 }
 
-                                if ((Ajoute == false) && Maj)
+                                if (!Combiner)
                                 {
-                                    var rep = GenRepereDossier;
-                                    var errors = param.SetSystemValue3(rep * 0.001, (int)swSetValueInConfiguration_e.swSetValue_InSpecificConfigurations, nomCfg);
+                                    Corps corps = null;
+                                    int NvxRep = GetRepere(param, nomCfg);
+                                    
 
-                                    if (errors > 0)
-                                        WindowLog.EcrireF(" Erreur de mise à jour {0}", (swSetValueReturnStatus_e)errors);
+                                    // Création d'un nouveau repère si
+                                    if (InitConfig ||
+                                        NouveauDossier ||
+                                        !ListIdDossiers.Contains(IdDossier) ||
+                                        !ListeCorpsExistant.ContainsKey(NvxRep))
+                                    {
+                                        NvxRep = GenRepereDossier;
+                                        SetRepere(param, NvxRep, nomCfg);
+                                    }
 
-                                    var corps = new Corps(SwCorps, TypeCorps, MateriauCorps);
-                                    corps.Campagne = IndiceCampagne;
-                                    corps.Nb = nbCorps;
-                                    corps.Repere = rep;
+                                    if (NouveauDossier || !ListeCorpsExistant.ContainsKey(NvxRep))
+                                    {
+                                        corps = new Corps(SwCorps, TypeCorps, MateriauCorps);
+                                        corps.Campagne = IndiceCampagne;
+                                        ListeCorpsExistant.Add(NvxRep, corps);
+                                    }
+                                    else
+                                        corps = ListeCorpsExistant[NvxRep];
+
+                                    // Pour éviter de se retrouver avec des quantités inferieures à ce
+                                    // qui a déjà été commandé, on prend le maximum
+                                    if(IndiceCampagne > 1)
+                                        corps.Nb = Math.Max(corps.Nb, nbCorps);
+                                    else
+                                        corps.Nb = nbCorps;
+
+                                    corps.Repere = NvxRep;
+
                                     if (corps.TypeCorps == eTypeCorps.Tole)
                                         corps.Dimension = SwCorps.eEpaisseurCorpsOuDossier(Dossier).ToString();
                                     else
                                         corps.Dimension = Dossier.eProfilDossier();
-                                    //corps.AjouterModele(mdl, cfg, fDossier.GetID());
-                                    ListeCorps.Add(corps);
+
+                                    corps.AjouterModele(mdl, nomCfg, IdDossier, corps.SwCorps.Name);
                                 }
+                                ListIdDossiers.Add(IdDossier);
                             }
+                            mdl.ePropAdd(CONST_PRODUCTION.ID_CONFIG, IdCfg, nomCfg);
+                            mdl.ePropAdd(CONST_PRODUCTION.ID_DOSSIERS, String.Join(" ", ListIdDossiers), nomCfg);
                         }
+                        mdl.ePropAdd(CONST_PRODUCTION.ID_PIECE, mdl.eNomSansExt());
+                        mdl.ePropAdd(CONST_PRODUCTION.MAX_INDEXDIM, IndexDimension);
 
                         if (mdl.GetPathName() != MdlBase.GetPathName())
                             App.Sw.CloseDoc(mdl.GetPathName());
@@ -198,63 +266,120 @@ namespace ModuleProduction
 
                     MdlBase.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
 
+                    {
+                        int Errors = 0, Warnings = 0;
+                        MdlBase.Save3((int)swSaveAsOptions_e.swSaveAsOptions_SaveReferenced + (int)swSaveAsOptions_e.swSaveAsOptions_Silent, ref Errors, ref Warnings);
+                        MdlBase.EditRebuild3();
+                    }
 
-                    int Errors = 0, Warnings = 0;
-                    MdlBase.Save3((int)swSaveAsOptions_e.swSaveAsOptions_SaveReferenced + (int)swSaveAsOptions_e.swSaveAsOptions_Silent, ref Errors, ref Warnings);
-                    MdlBase.EditRebuild3();
+                    ////////////////////////////////// FIN DU REPERAGE ////////////////////////////////////////////////////
+
+                    ////////////////////////////////// EXPORTER LES CORPS /////////////////////////////////////////////////
+
+                    if (ExporterFichierCorps)
+                    {
+                        foreach (var corps in ListeCorpsExistant.Values)
+                        {
+                            if (corps.Campagne != IndiceCampagne) continue;
+
+                            ModelDoc2 mdl = null; String nomCfg = ""; int idDossier = -1; String nomCorps = "";
+
+                            // On recherche le fichier le plus petit à lier
+                            long taille = 0;
+                            foreach (var m in corps.ListeModele.Keys)
+                            {
+                                if (new FileInfo(m.GetPathName()).Length > taille)
+                                {
+                                    var kv1 = corps.ListeModele[m].First();
+                                    var kv2 = kv1.Value.First();
+                                    mdl = m; nomCfg = kv1.Key; idDossier = kv2.Key; nomCorps = kv2.Value;
+                                }
+                            }
+
+                            mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
+                            mdl.ShowConfiguration2(nomCfg);
+                            mdl.EditRebuild3();
+
+                            var mdlFichier = Sw.eCreerDocument(CheminDossierPieces, CONSTANTES.PREFIXE_REF_DOSSIER + corps.Repere, eTypeDoc.Piece);
+                            mdlFichier.eActiver();
+                            var Piece = mdlFichier.ePartDoc();
+                            var fonc = Piece.InsertPart3(mdl.GetPathName(), 90241, nomCfg);
+                            if (fonc.IsRef())
+                            {
+                                Body2 Corps = null;
+
+                                foreach (var c in Piece.eListeCorps(true))
+                                    if (c.Name.EndsWith("-<" + nomCorps + ">"))
+                                        Corps = c;
+
+                                Corps.eSelect();
+                                mdlFichier.FeatureManager.InsertDeleteBody2(true);
+
+                                mdlFichier.EditRebuild3();
+                                mdl.LockAllExternalReferences();
+                                int Errors = 0, Warnings = 0;
+                                mdlFichier.Save3((int)swSaveAsOptions_e.swSaveAsOptions_SaveReferenced + (int)swSaveAsOptions_e.swSaveAsOptions_Silent, ref Errors, ref Warnings);
+                                App.Sw.CloseDoc(mdlFichier.GetPathName());
+                            }
+                        }
+                    }
+
+                    ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
                     // Petit récap
                     WindowLog.SautDeLigne();
-                    WindowLog.EcrireF("Nb de corps unique : {0}", ListeCorps.Count);
+                    WindowLog.EcrireF("Nb de corps unique : {0}", ListeCorpsExistant.Count);
 
                     int nbtt = 0;
 
-                    using (var sw = new StreamWriter(FichierNomenclature, true))
+                    using (var sw = new StreamWriter(FichierNomenclature, false, Encoding.GetEncoding(1252)))
                     {
                         sw.WriteLine(String.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}", "Campagne", "Repere", "Nb", "Type", "Dimension", "Materiau"));
 
-                        foreach (var corps in ListeCorps)
+                        foreach (var corps in ListeCorpsExistant.Values)
                         {
                             nbtt += corps.Nb;
-                            WindowLog.EcrireF("P{0} ×{1}", corps.Repere, corps.Nb);
+                            WindowLog.EcrireF("{2} P{0} ×{1}", corps.Repere, corps.Nb, corps.Campagne);
                             sw.WriteLine(String.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}", corps.Campagne, corps.Repere, corps.Nb, corps.TypeCorps, corps.Dimension, corps.Materiau));
                         }
                     }
 
                     WindowLog.EcrireF("Nb total de corps : {0}", nbtt);
                 }
-                catch (Exception e)
-                {
-                    this.LogErreur(new Object[] { e });
-                }
+                catch (Exception e) { this.LogErreur(new Object[] { e }); }
             }
 
-            private Boolean GetNomParam(ModelDoc2 mdl, Feature fDossier, ref int indexDimension, out String nomParam)
+            private Dimension GetParam(ModelDoc2 mdl, Feature fDossier, String nomCfg, ref int indexDimension, out Boolean nouveauDossier)
             {
-                Boolean Creer = false;
+                Dimension param = null;
+                nouveauDossier = false;
 
-                Func<String, String> ExtractNomParam = delegate (String s)
+                try
                 {
-                    s = s.Replace(CONSTANTES.PREFIXE_REF_DOSSIER + "\"", "").Replace("\"", "");
-                    var t = s.Split('@');
-                    if (t.Length > 2)
-                        return String.Format("{0}@{1}", t[0], t[1]);
+                    String nomParam = "";
 
-                    this.LogErreur(new Object[] { "Pas de parametre dans la reference dossier" });
-                    return "";
-                };
+                    Func<String, String> ExtractNomParam = delegate (String s)
+                    {
+                        s = s.Replace(CONSTANTES.PREFIXE_REF_DOSSIER + "\"", "").Replace("\"", "");
+                        var t = s.Split('@');
+                        if (t.Length > 2)
+                            return String.Format("{0}@{1}", t[0], t[1]);
 
-                // On recherche si le dossier contient déjà la propriété RefDossier
-                //      Si non, on ajoute la propriété au dossier selon le modèle suivant :
-                //              P"D1@REPERAGE_DOSSIER@Nom_de_la_piece.SLDPRT"
-                //      Si oui, on récupère le nom du paramètre à configurer
+                        this.LogErreur(new Object[] { "Pas de parametre dans la reference dossier" });
+                        return "";
+                    };
 
-                {
+                    // On recherche si le dossier contient déjà la propriété RefDossier
+                    //      Si non, on ajoute la propriété au dossier selon le modèle suivant :
+                    //              P"D1@REPERAGE_DOSSIER@Nom_de_la_piece.SLDPRT"
+                    //      Si oui, on récupère le nom du paramètre à configurer
+
                     CustomPropertyManager PM = fDossier.CustomPropertyManager;
                     String val;
                     if (!PM.ePropExiste(CONSTANTES.REF_DOSSIER))
                     {
-                        nomParam = String.Format("D{0}@{1}", indexDimension++, CONSTANTES.NOM_ESQUISSE_NUMEROTER);
+                        nouveauDossier = true;
+                        nomParam = String.Format("D{0}@{1}", ++indexDimension, CONSTANTES.NOM_ESQUISSE_NUMEROTER);
                         val = String.Format("{0}\"{1}@{2}\"", CONSTANTES.PREFIXE_REF_DOSSIER, nomParam, mdl.eNomAvecExt());
                         var r = PM.ePropAdd(CONSTANTES.REF_DOSSIER, val);
                     }
@@ -268,9 +393,26 @@ namespace ModuleProduction
                     PM.ePropAdd(CONSTANTES.DESC_DOSSIER, val);
                     val = String.Format("\"SW-CutListItemName@@@{0}@{1}\"", fDossier.Name, mdl.eNomAvecExt());
                     PM.ePropAdd(CONSTANTES.NOM_DOSSIER, val);
-                }
 
-                return Creer;
+                    param = mdl.Parameter(nomParam);
+
+                    if (nouveauDossier)
+                        param.SetSystemValue3(0.5 * 0.001, (int)swSetValueInConfiguration_e.swSetValue_InSpecificConfigurations, nomCfg);
+                }
+                catch (Exception e) { this.LogErreur(new Object[] { e }); }
+
+                return param;
+            }
+
+            private int GetRepere(Dimension param, String nomCfg)
+            {
+                Double val = (Double)(param.GetSystemValue3((int)swSetValueInConfiguration_e.swSetValue_InSpecificConfigurations, nomCfg)[0]);
+                return (int)(val * 1000);
+            }
+
+            private void SetRepere(Dimension param, int val, String nomCfg)
+            {
+                param.SetSystemValue3(val * 0.001, (int)swSetValueInConfiguration_e.swSetValue_InSpecificConfigurations, nomCfg);
             }
 
             private void SupprimerDefBloc(ModelDoc2 mdl, String cheminbloc)
@@ -376,15 +518,11 @@ namespace ModuleProduction
             private void NettoyerModele()
             {
                 WindowLog.Ecrire("Nettoyer les modeles");
-                List<ModelDoc2> ListeComposants = new List<ModelDoc2>();
+                List<ModelDoc2> ListeMdl = new List<ModelDoc2>();
                 if (MdlBase.TypeDoc() == eTypeDoc.Piece)
-                    ListeComposants.Add(MdlBase);
+                    ListeMdl.Add(MdlBase);
                 else
-                {
-                    var l = MdlBase.eListeComposants();
-                    foreach (var cp in l)
-                        ListeComposants.Add(cp.eModelDoc2());
-                }
+                    ListeMdl = MdlBase.eAssemblyDoc().eListeModeles();
 
                 Predicate<Feature> Test = delegate (Feature f)
                 {
@@ -395,7 +533,7 @@ namespace ModuleProduction
                     return false;
                 };
 
-                foreach (var mdl in ListeComposants)
+                foreach (var mdl in ListeMdl)
                 {
                     mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
                     {
@@ -432,7 +570,7 @@ namespace ModuleProduction
                 int warnings = 0;
                 MdlBase.Save3((int)swSaveAsOptions_e.swSaveAsOptions_Silent + (int)swSaveAsOptions_e.swSaveAsOptions_SaveReferenced, ref errors, ref warnings);
 
-                WindowLog.Ecrire("Nettoyage terminé");
+                WindowLog.Ecrire("\nNettoyage terminé");
             }
         }
     }

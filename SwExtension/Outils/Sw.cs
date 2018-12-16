@@ -2365,15 +2365,19 @@ namespace Outils
             }
         }
 
-        public static List<Component2> eListeComposants(this ModelDoc2 mdl)
+        public static List<ModelDoc2> eListeModeles(this AssemblyDoc ass)
         {
-            List<Component2> Liste = new List<Component2>();
+            List<ModelDoc2> Liste = new List<ModelDoc2>();
 
-            if (mdl.TypeDoc() == eTypeDoc.Assemblage)
+            Object[] ChildComp = (Object[])ass.GetComponents(false);
+            HashSet<String> HashMdl = new HashSet<String>();
+            foreach (Component2 Cp in ChildComp)
             {
-                Object[] ChildComp = (Object[])mdl.eAssemblyDoc().GetComponents(false);
-                foreach (Component2 Cp in ChildComp)
-                    Liste.Add(Cp);
+                if (!Cp.IsHidden(true) && !HashMdl.Contains(Cp.GetPathName()))
+                {
+                    HashMdl.Add(Cp.GetPathName());
+                    Liste.Add(Cp.eModelDoc2());
+                }
             }
 
             return Liste;

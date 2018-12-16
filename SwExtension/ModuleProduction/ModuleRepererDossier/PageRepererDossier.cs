@@ -18,13 +18,14 @@ namespace ModuleProduction
         public class PageRepererDossier : BoutonPMPManager
         {
             private Parametre CombinerCorpsIdentiques;
+            private Parametre CombinerAvecPrecedenteCampagne;
+            private Parametre ExporterFichierCorps;
 
             private ModelDoc2 MdlBase = null;
-            private int _IndiceCampagne = 1;
-            private int RepereMax = 0;
+            private int _IndiceCampagne = 0;
             private String DossierPiece = "";
             private String FichierNomenclature = "";
-            private List<Corps> ListeCorps = new List<Corps>();
+            private SortedDictionary<int, Corps> ListeCorps = new SortedDictionary<int, Corps>();
 
             private int IndiceCampagne
             {
@@ -40,7 +41,9 @@ namespace ModuleProduction
             {
                 try
                 {
-                    CombinerCorpsIdentiques = _Config.AjouterParam("CombinerCorpsIdentiques", false, "Combiner les corps identiques des différents modèles");
+                    CombinerCorpsIdentiques = _Config.AjouterParam("CombinerCorpsIdentiques", true, "Combiner les corps identiques des différents modèles");
+                    CombinerAvecPrecedenteCampagne = _Config.AjouterParam("CombinerAvecPrecedenteCampagne", true, "Combiner les corps avec les précédentes campagnes");
+                    ExporterFichierCorps = _Config.AjouterParam("ExporterFichierCorps", true, "Exporter les corps dans des fichiers");
 
                     MdlBase = App.Sw.ActiveDoc;
                     OnCalque += Calque;
@@ -53,6 +56,8 @@ namespace ModuleProduction
 
             private CtrlTextBox _Texte_IndiceCampagne;
             private CtrlCheckBox _CheckBox_CombinerCorps;
+            private CtrlCheckBox _CheckBox_CombinerAvecPrecedenteCampagne;
+            private CtrlCheckBox _CheckBox_ExporterFichierCorps;
             private CtrlCheckBox _CheckBox_SupprimerReperes;
 
             protected void Calque()
@@ -66,9 +71,22 @@ namespace ModuleProduction
                     _Texte_IndiceCampagne = G.AjouterTexteBox("Indice de la campagne de repérage :");
                     _Texte_IndiceCampagne.LectureSeule = true;
                     _CheckBox_SupprimerReperes = G.AjouterCheckBox("Supprimer les repères de la précédente campagne");
-                    _CheckBox_SupprimerReperes.OnCheck += delegate { IndiceCampagne = Math.Max(1, (IndiceCampagne - 1)); };
-                    _CheckBox_SupprimerReperes.OnUnCheck += delegate { IndiceCampagne += 1; };
+                    _CheckBox_ExporterFichierCorps = G.AjouterCheckBox(ExporterFichierCorps);
                     _CheckBox_CombinerCorps = G.AjouterCheckBox(CombinerCorpsIdentiques);
+                    _CheckBox_CombinerAvecPrecedenteCampagne = G.AjouterCheckBox(CombinerAvecPrecedenteCampagne);
+
+                    _CheckBox_ExporterFichierCorps.OnUnCheck += _CheckBox_CombinerCorps.UnCheck;
+                    _CheckBox_ExporterFichierCorps.OnIsCheck += _CheckBox_CombinerCorps.IsEnable;
+                    _CheckBox_ExporterFichierCorps.OnUnCheck += _CheckBox_CombinerAvecPrecedenteCampagne.UnCheck;
+                    _CheckBox_ExporterFichierCorps.OnIsCheck += _CheckBox_CombinerAvecPrecedenteCampagne.IsEnable;
+
+                    if (!_CheckBox_ExporterFichierCorps.IsChecked)
+                    {
+                        _CheckBox_CombinerCorps.IsChecked = _CheckBox_ExporterFichierCorps.IsChecked;
+                        _CheckBox_CombinerCorps.IsEnabled = _CheckBox_ExporterFichierCorps.IsChecked;
+                        _CheckBox_CombinerAvecPrecedenteCampagne.IsChecked = _CheckBox_ExporterFichierCorps.IsChecked;
+                        _CheckBox_CombinerAvecPrecedenteCampagne.IsEnabled = _CheckBox_ExporterFichierCorps.IsChecked;
+                    }
                 }
                 catch (Exception e)
                 { this.LogMethode(new Object[] { e }); }
@@ -76,56 +94,60 @@ namespace ModuleProduction
 
             protected void RechercherIndiceCampagne()
             {
-                WindowLog.Ecrire("Recherche des éléments existants :");
-
-                // Recherche du dernier indice de la campagne de repérage
-
-                // Création du dossier pièces s'il n'existe pas
-                MdlBase.CreerDossier(CONST_PRODUCTION.DOSSIER_PIECES, out DossierPiece);
-                // Recherche de la nomenclature
-                MdlBase.CreerFichierTexte(CONST_PRODUCTION.DOSSIER_PIECES, CONST_PRODUCTION.FICHIER_NOMENC, out FichierNomenclature);
-
-                // Aquisition de la liste des corps déjà repérées
-                int IndiceMin = IndiceCampagne;
-                using (var sr = new StreamReader(FichierNomenclature))
+                try
                 {
-                    // On lit la première ligne contenant l'entête des colonnes
-                    String ligne = sr.ReadLine();
-                    int NbCorps = 0;
+                    WindowLog.Ecrire("Recherche des éléments existants :");
 
-                    while ((ligne = sr.ReadLine()) != null)
+                    // Recherche du dernier indice de la campagne de repérage
+
+                    // Création du dossier pièces s'il n'existe pas
+                    MdlBase.CreerDossier(CONST_PRODUCTION.DOSSIER_PIECES, out DossierPiece);
+                    // Recherche de la nomenclature
+                    MdlBase.CreerFichierTexte(CONST_PRODUCTION.DOSSIER_PIECES, CONST_PRODUCTION.FICHIER_NOMENC, out FichierNomenclature);
+
+                    // Aquisition de la liste des corps déjà repérées
+                    // et recherche de l'indice nomenclature max
+                    int IndiceNomenclature = 1;
+                    using (var sr = new StreamReader(FichierNomenclature))
                     {
-                        NbCorps++;
-                        if (!String.IsNullOrWhiteSpace(ligne))
+                        // On lit la première ligne contenant l'entête des colonnes
+                        String ligne = sr.ReadLine();
+                        if (ligne.IsRef())
                         {
-                            var c = new Corps(ligne);
-                            IndiceMin = Math.Max(IndiceMin, c.Campagne);
-                            RepereMax = Math.Max(RepereMax, c.Repere);
-                            ListeCorps.Add(c);
+                            int NbCorps = 0;
+
+                            while ((ligne = sr.ReadLine()) != null)
+                            {
+                                NbCorps++;
+                                if (!String.IsNullOrWhiteSpace(ligne))
+                                {
+                                    var c = new Corps(ligne);
+                                    IndiceNomenclature = Math.Max(IndiceNomenclature, c.Campagne);
+                                    ListeCorps.Add(c.Repere, c);
+                                }
+                            }
+                            if (NbCorps > 0)
+                                WindowLog.EcrireF("{0} pièce(s) sont référencé(s)", NbCorps);
                         }
                     }
-                    if (NbCorps > 0)
-                        WindowLog.EcrireF("{0} pièce(s) sont référencé(s)", NbCorps);
-                }
 
-                // Recherche des exports laser, tole ou tube, existant
-                var DossierTole = Path.Combine(MdlBase.eDossier(), CONST_PRODUCTION.DOSSIER_LASERTOLE);
-                IndiceMin = Math.Max(IndiceMin,
-                                     Math.Max(MdlBase.RechercherIndiceDossier(CONST_PRODUCTION.DOSSIER_LASERTOLE),
-                                              MdlBase.RechercherIndiceDossier(CONST_PRODUCTION.DOSSIER_LASERTUBE)
-                                              )
-                                     );
+                    // Recherche des exports laser, tole ou tube, existant
+                    var IndiceLaser = Math.Max(MdlBase.RechercherIndiceDossier(CONST_PRODUCTION.DOSSIER_LASERTOLE),
+                                                  MdlBase.RechercherIndiceDossier(CONST_PRODUCTION.DOSSIER_LASERTUBE)
+                                                  );
 
+                    if (ListeCorps.Count == 0)
+                    {
+                        _CheckBox_SupprimerReperes.IsChecked = true;
+                        _CheckBox_SupprimerReperes.IsEnabled = false;
+                    }
 
-                if (ListeCorps.Count == 0)
-                {
-                    _CheckBox_SupprimerReperes.IsChecked = true;
-                    _CheckBox_SupprimerReperes.IsEnabled = false;
+                    if (IndiceLaser >= IndiceNomenclature)
+                        IndiceCampagne = IndiceLaser + 1;
+                    else
+                        IndiceCampagne = IndiceNomenclature;
                 }
-                else
-                {
-                    IndiceCampagne = IndiceMin + 1;
-                }
+                catch (Exception e) { this.LogErreur(new Object[] { e }); }
             }
 
             protected void RunOkCommand()
@@ -134,9 +156,9 @@ namespace ModuleProduction
 
                 Cmd.MdlBase = App.Sw.ActiveDoc;
                 Cmd.IndiceCampagne = IndiceCampagne;
-                Cmd.RepereMax = RepereMax;
                 Cmd.CombinerCorpsIdentiques = _CheckBox_CombinerCorps.IsChecked;
                 Cmd.SupprimerReperes = _CheckBox_SupprimerReperes.IsChecked;
+                Cmd.ExporterFichierCorps = _CheckBox_ExporterFichierCorps.IsChecked;
                 Cmd.ListeCorpsExistant = ListeCorps;
                 Cmd.FichierNomenclature = FichierNomenclature;
 
@@ -158,12 +180,12 @@ namespace ModuleProduction
             public String Materiau;
 
             /// <summary>
-            /// SortedDictionary |- Modele
-            ///                  |- SortedDictionary |- NomConfig
-            ///                                      |- Dictionnary |- Id dossier
-            ///                                                     |- Repere
+            /// SortedDictionary
+            ///     |- Modele / SortedDictionary
+            ///         |- NomConfig / SortedDictionary
+            ///             |- Id dossier / NomCorps
             /// </summary>
-            public SortedDictionary<ModelDoc2, SortedDictionary<String, Dictionary<int, int>>> ListeModele = new SortedDictionary<ModelDoc2, SortedDictionary<String, Dictionary<int, int>>>(new CompareModelDoc2());
+            public SortedDictionary<ModelDoc2, SortedDictionary<String, SortedDictionary<int, String>>> ListeModele = new SortedDictionary<ModelDoc2, SortedDictionary<String, SortedDictionary<int, String>>>(new CompareModelDoc2());
 
 
             public Corps(Body2 swCorps, eTypeCorps typeCorps, String materiau)
@@ -193,38 +215,38 @@ namespace ModuleProduction
                 Materiau = tab[5];
             }
 
-            //public void AjouterModele(ModelDoc2 mdl, String config, int iDDossier)
-            //{
-            //    if (ListeModele.ContainsKey(mdl))
-            //    {
-            //        var lCfg = ListeModele[mdl];
-            //        if (lCfg.ContainsKey(config))
-            //        {
-            //            var lDossier = lCfg[config];
-            //            if (!lDossier.ContainsKey(iDDossier))
-            //                lDossier.Add(iDDossier, Repere);
-            //        }
-            //        else
-            //        {
-            //            var lDossier = new Dictionary<int, int>();
-            //            lDossier.Add(iDDossier, Repere);
-            //            lCfg.Add(config, lDossier);
-            //        }
-            //    }
-            //    else
-            //    {
-            //        var lDossier = new Dictionary<int, int>();
-            //        lDossier.Add(iDDossier, Repere);
-            //        var lCfg = new SortedDictionary<String, Dictionary<int, int>>(new WindowsStringComparer());
-            //        lCfg.Add(config, lDossier);
-            //        ListeModele.Add(mdl, lCfg);
-            //    }
-            //}
+            public void AjouterModele(ModelDoc2 mdl, String config, int iDDossier, String nomCorps)
+            {
+                if (ListeModele.ContainsKey(mdl))
+                {
+                    var lCfg = ListeModele[mdl];
+                    if (lCfg.ContainsKey(config))
+                    {
+                        var lDossier = lCfg[config];
+                        if (!lDossier.ContainsKey(iDDossier))
+                            lDossier.Add(iDDossier, nomCorps);
+                    }
+                    else
+                    {
+                        var lDossier = new SortedDictionary<int, String>();
+                        lDossier.Add(iDDossier, nomCorps);
+                        lCfg.Add(config, lDossier);
+                    }
+                }
+                else
+                {
+                    var lDossier = new SortedDictionary<int, String>();
+                    lDossier.Add(iDDossier, nomCorps);
+                    var lCfg = new SortedDictionary<String, SortedDictionary<int, String>>(new WindowsStringComparer());
+                    lCfg.Add(config, lDossier);
+                    ListeModele.Add(mdl, lCfg);
+                }
+            }
 
-            //public void AjouterModele(Component2 comp, int iDDossier)
-            //{
-            //    AjouterModele(comp.eModelDoc2(), comp.eNomConfiguration(), iDDossier);
-            //}
+            public void AjouterModele(Component2 comp, int iDDossier, String nomCorps)
+            {
+                AjouterModele(comp.eModelDoc2(), comp.eNomConfiguration(), iDDossier, nomCorps);
+            }
         }
     }
 }
