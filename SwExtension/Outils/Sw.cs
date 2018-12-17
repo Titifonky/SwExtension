@@ -1857,6 +1857,35 @@ namespace Outils
             return Modele;
         }
 
+        public static ModelDoc2 eOuvrir(String chemin, String config = "")
+        {
+            String Ext = Path.GetExtension(chemin).ToUpperInvariant();
+
+            swDocumentTypes_e TypeExt = swDocumentTypes_e.swDocNONE;
+            if (eTypeDoc.Piece.GetEnumInfo<ExtFichier>() == Ext)
+                TypeExt = swDocumentTypes_e.swDocPART;
+            else if (eTypeDoc.Assemblage.GetEnumInfo<ExtFichier>() == Ext)
+                TypeExt = swDocumentTypes_e.swDocASSEMBLY;
+            else if (eTypeDoc.Dessin.GetEnumInfo<ExtFichier>() == Ext)
+                TypeExt = swDocumentTypes_e.swDocDRAWING;
+
+            ModelDoc2 mdl = null;
+
+            if (TypeExt != swDocumentTypes_e.swDocNONE)
+            {
+                int errors = 0, warnings = 0;
+                mdl = App.Sw.OpenDoc6(chemin, (int)TypeExt, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, config, ref errors, ref warnings);
+            }
+
+            return mdl;
+        }
+
+        public static void eSauver(this ModelDoc2 modele)
+        {
+            int Errors = 0, Warnings = 0;
+            modele.Save3((int)swSaveAsOptions_e.swSaveAsOptions_SaveReferenced + (int)swSaveAsOptions_e.swSaveAsOptions_Silent, ref Errors, ref Warnings);
+        }
+
         /// <summary>
         /// Sauve le modele en Pdf 3D
         /// </summary>
@@ -3330,7 +3359,19 @@ namespace Outils
             return null;
         }
 
-        public static List<Body2> eListeCorps(this PartDoc piece, Boolean VisibleOnly)
+        public static Body2 ePremierCorps(this PartDoc piece, Boolean VisibleOnly = true)
+        {
+            Body2 Cp = null;
+
+            Object[] TabCorps = (Object[])piece.GetBodies2((int)swBodyType_e.swSolidBody, VisibleOnly);
+
+            if(TabCorps.IsRef() && (TabCorps.Length > 0))
+                Cp = (Body2)TabCorps[0];
+
+            return Cp;
+        }
+
+        public static List<Body2> eListeCorps(this PartDoc piece, Boolean VisibleOnly = true)
         {
             List<Body2> Liste = new List<Body2>();
 
@@ -3342,7 +3383,7 @@ namespace Outils
             return Liste;
         }
 
-        public static Body2 eChercherCorps(this PartDoc piece, String nomCorps, Boolean VisibleOnly)
+        public static Body2 eChercherCorps(this PartDoc piece, String nomCorps, Boolean VisibleOnly = true)
         {
             Object[] Corps = (Object[])piece.GetBodies2((int)swBodyType_e.swSolidBody, VisibleOnly);
 

@@ -30,6 +30,17 @@ namespace Outils
             return false;
         }
 
+        public static Boolean AddIfNotExist<T>(this HashSet<T> list, T value)
+        {
+            if (!list.Contains(value))
+            {
+                list.Add(value);
+                return true;
+            }
+
+            return false;
+        }
+
         public static T Last<T>(this List<T> list)
         {
             return list[list.Count - 1];

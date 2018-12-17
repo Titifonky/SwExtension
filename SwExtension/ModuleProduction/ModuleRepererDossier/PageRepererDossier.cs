@@ -5,6 +5,7 @@ using SwExtension;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace ModuleProduction
 {
@@ -18,14 +19,14 @@ namespace ModuleProduction
         public class PageRepererDossier : BoutonPMPManager
         {
             private Parametre CombinerCorpsIdentiques;
-            private Parametre CombinerAvecPrecedenteCampagne;
+            private Parametre CombinerAvecCampagne;
             private Parametre ExporterFichierCorps;
 
             private ModelDoc2 MdlBase = null;
             private int _IndiceCampagne = 0;
             private String DossierPiece = "";
             private String FichierNomenclature = "";
-            private SortedDictionary<int, Corps> ListeCorps = new SortedDictionary<int, Corps>();
+            private SortedDictionary<int, SortedDictionary<int, Corps>> ListeCorps = new SortedDictionary<int, SortedDictionary<int, Corps>>();
 
             private int IndiceCampagne
             {
@@ -42,7 +43,7 @@ namespace ModuleProduction
                 try
                 {
                     CombinerCorpsIdentiques = _Config.AjouterParam("CombinerCorpsIdentiques", true, "Combiner les corps identiques des différents modèles");
-                    CombinerAvecPrecedenteCampagne = _Config.AjouterParam("CombinerAvecPrecedenteCampagne", true, "Combiner les corps avec les précédentes campagnes");
+                    CombinerAvecCampagne = _Config.AjouterParam("CombinerAvecPrecedenteCampagne", true, "Combiner les corps avec les précédentes campagnes");
                     ExporterFichierCorps = _Config.AjouterParam("ExporterFichierCorps", true, "Exporter les corps dans des fichiers");
 
                     MdlBase = App.Sw.ActiveDoc;
@@ -56,7 +57,7 @@ namespace ModuleProduction
 
             private CtrlTextBox _Texte_IndiceCampagne;
             private CtrlCheckBox _CheckBox_CombinerCorps;
-            private CtrlCheckBox _CheckBox_CombinerAvecPrecedenteCampagne;
+            private CtrlCheckBox _CheckBox_CombinerAvecCampagne;
             private CtrlCheckBox _CheckBox_ExporterFichierCorps;
             private CtrlCheckBox _CheckBox_SupprimerReperes;
 
@@ -73,20 +74,17 @@ namespace ModuleProduction
                     _CheckBox_SupprimerReperes = G.AjouterCheckBox("Supprimer les repères de la précédente campagne");
                     _CheckBox_ExporterFichierCorps = G.AjouterCheckBox(ExporterFichierCorps);
                     _CheckBox_CombinerCorps = G.AjouterCheckBox(CombinerCorpsIdentiques);
-                    _CheckBox_CombinerAvecPrecedenteCampagne = G.AjouterCheckBox(CombinerAvecPrecedenteCampagne);
+                    _CheckBox_CombinerAvecCampagne = G.AjouterCheckBox(CombinerAvecCampagne);
 
                     _CheckBox_ExporterFichierCorps.OnUnCheck += _CheckBox_CombinerCorps.UnCheck;
                     _CheckBox_ExporterFichierCorps.OnIsCheck += _CheckBox_CombinerCorps.IsEnable;
-                    _CheckBox_ExporterFichierCorps.OnUnCheck += _CheckBox_CombinerAvecPrecedenteCampagne.UnCheck;
-                    _CheckBox_ExporterFichierCorps.OnIsCheck += _CheckBox_CombinerAvecPrecedenteCampagne.IsEnable;
+                    _CheckBox_ExporterFichierCorps.OnUnCheck += _CheckBox_CombinerAvecCampagne.UnCheck;
+                    _CheckBox_ExporterFichierCorps.OnIsCheck += _CheckBox_CombinerAvecCampagne.IsEnable;
 
-                    if (!_CheckBox_ExporterFichierCorps.IsChecked)
-                    {
-                        _CheckBox_CombinerCorps.IsChecked = _CheckBox_ExporterFichierCorps.IsChecked;
-                        _CheckBox_CombinerCorps.IsEnabled = _CheckBox_ExporterFichierCorps.IsChecked;
-                        _CheckBox_CombinerAvecPrecedenteCampagne.IsChecked = _CheckBox_ExporterFichierCorps.IsChecked;
-                        _CheckBox_CombinerAvecPrecedenteCampagne.IsEnabled = _CheckBox_ExporterFichierCorps.IsChecked;
-                    }
+                    _CheckBox_CombinerCorps.OnUnCheck += _CheckBox_CombinerAvecCampagne.UnCheck;
+                    _CheckBox_CombinerCorps.OnIsCheck += _CheckBox_CombinerAvecCampagne.IsEnable;
+
+                    _CheckBox_ExporterFichierCorps.ApplyParam();
                 }
                 catch (Exception e)
                 { this.LogMethode(new Object[] { e }); }
@@ -108,7 +106,7 @@ namespace ModuleProduction
                     // Aquisition de la liste des corps déjà repérées
                     // et recherche de l'indice nomenclature max
                     int IndiceNomenclature = 1;
-                    using (var sr = new StreamReader(FichierNomenclature))
+                    using (var sr = new StreamReader(FichierNomenclature, Encoding.GetEncoding(1252)))
                     {
                         // On lit la première ligne contenant l'entête des colonnes
                         String ligne = sr.ReadLine();
@@ -123,7 +121,10 @@ namespace ModuleProduction
                                 {
                                     var c = new Corps(ligne);
                                     IndiceNomenclature = Math.Max(IndiceNomenclature, c.Campagne);
-                                    ListeCorps.Add(c.Repere, c);
+                                    if (!ListeCorps.ContainsKey(c.Campagne))
+                                        ListeCorps.Add(c.Campagne, new SortedDictionary<int, Corps>());
+
+                                    ListeCorps[c.Campagne].Add(c.Repere, c);
                                 }
                             }
                             if (NbCorps > 0)
@@ -146,6 +147,9 @@ namespace ModuleProduction
                         IndiceCampagne = IndiceLaser + 1;
                     else
                         IndiceCampagne = IndiceNomenclature;
+
+                    if (IndiceCampagne == 1)
+                        _CheckBox_CombinerAvecCampagne.Visible = false;
                 }
                 catch (Exception e) { this.LogErreur(new Object[] { e }); }
             }
@@ -157,9 +161,10 @@ namespace ModuleProduction
                 Cmd.MdlBase = App.Sw.ActiveDoc;
                 Cmd.IndiceCampagne = IndiceCampagne;
                 Cmd.CombinerCorpsIdentiques = _CheckBox_CombinerCorps.IsChecked;
+                Cmd.CombinerAvecCampagne = _CheckBox_CombinerAvecCampagne.IsChecked;
                 Cmd.SupprimerReperes = _CheckBox_SupprimerReperes.IsChecked;
                 Cmd.ExporterFichierCorps = _CheckBox_ExporterFichierCorps.IsChecked;
-                Cmd.ListeCorpsExistant = ListeCorps;
+                Cmd.ListeCampagnes = ListeCorps;
                 Cmd.FichierNomenclature = FichierNomenclature;
 
                 Cmd.Executer();
@@ -168,7 +173,7 @@ namespace ModuleProduction
 
         public class Corps
         {
-            public Body2 SwCorps;
+            public Body2 SwCorps = null;
             public int Campagne;
             public int Repere;
             public int Nb = 0;
