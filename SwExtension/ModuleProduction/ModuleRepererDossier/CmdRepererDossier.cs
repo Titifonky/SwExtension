@@ -61,6 +61,8 @@ namespace ModuleProduction
                             // On supprime les repères de la campagne actuelle
                             String ext = eTypeDoc.Piece.GetEnumInfo<ExtFichier>();
 
+                            // On recherche les repères appartenant aux campagnes précédentes
+                            // pour ne pas supprimer les fichiers
                             HashSet<int> FichierAsauvegarder = new HashSet<int>();
                             foreach (var listecorps in ListeCampagnes)
                             {
@@ -69,6 +71,7 @@ namespace ModuleProduction
                                         FichierAsauvegarder.AddIfNotExist(repere);
                             }
 
+                            // On nettoie les fichiers précedement crées
                             if (ListeCampagnes.ContainsKey(IndiceCampagne))
                             {
                                 foreach (var repere in ListeCampagnes[IndiceCampagne].Keys)
@@ -111,22 +114,22 @@ namespace ModuleProduction
                         }
                     }
 
+                    MdlBase.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
+
                     // On cree la liste pour cette campagne
                     // Si elle existe, on reinitialise les quantité à 0
-                    if(!ListeCampagnes.ContainsKey(IndiceCampagne))
+                    if (!ListeCampagnes.ContainsKey(IndiceCampagne))
                         ListeCampagnes.Add(IndiceCampagne, new SortedDictionary<int, Corps>());
                     else
                         foreach (var corps in ListeCampagnes[IndiceCampagne].Values)
                             corps.Nb = 0;
 
                     // On recherche l'indice de repere max
-                    foreach (var l in ListeCampagnes.Values)
-                    {
-                        foreach (var rep in l.Keys)
-                            _GenRepereDossier = Math.Max(_GenRepereDossier, rep);
-                    }
-                    
+                    foreach (var listecorps in ListeCampagnes.Values)
+                        foreach (var repere in listecorps.Keys)
+                            _GenRepereDossier = Math.Max(_GenRepereDossier, repere);
 
+                    // On liste les composants
                     var lst = MdlBase.ListerComposants(false);
 
                     // On boucle sur les modeles
@@ -245,9 +248,9 @@ namespace ModuleProduction
                                     
                                 }
 
+                                Corps corps = null;
                                 if (!Combiner)
                                 {
-                                    Corps corps = null;
                                     Repere = GetRepere(param, nomCfg);
 
                                     // Création d'un nouveau repère si
@@ -282,11 +285,8 @@ namespace ModuleProduction
                                 }
                                 else
                                 {
-                                    Corps corps = null;
                                     if (ListeCampagnes[IndiceCampagne].ContainsKey(Repere))
-                                    {
                                         corps = ListeCampagnes[IndiceCampagne][Repere];
-                                    }
                                     else
                                     {
                                         corps = new Corps(SwCorps, TypeCorps, MateriauCorps);
@@ -302,8 +302,9 @@ namespace ModuleProduction
                                     }
 
                                     corps.Nb += nbCorps;
-                                    corps.AjouterModele(mdl, nomCfg, IdDossier, NomCorps);
+                                    
                                 }
+                                corps.AjouterModele(mdl, nomCfg, IdDossier, NomCorps);
                                 ListIdDossiers.Add(IdDossier);
                             }
                             mdl.ePropAdd(CONST_PRODUCTION.ID_CONFIG, IdCfg, nomCfg);
