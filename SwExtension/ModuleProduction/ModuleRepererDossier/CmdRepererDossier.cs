@@ -25,7 +25,7 @@ namespace ModuleProduction
             public Boolean ExporterFichierCorps = false;
             public String FichierNomenclature = "";
             public String CheminDossierPieces = "";
-            public SortedDictionary<int, SortedDictionary<int, Corps>> ListeCampagnes = new SortedDictionary<int, SortedDictionary<int, Corps>>();
+            public SortedDictionary<int, Corps> ListeCampagnes = new SortedDictionary<int, Corps>();
             public SortedDictionary<int, String> ListeCorpsCharge = new SortedDictionary<int, String>();
 
             private int _GenRepereDossier = 0;
@@ -64,12 +64,16 @@ namespace ModuleProduction
                             // On recherche les repères appartenant aux campagnes précédentes
                             // pour ne pas supprimer les fichiers
                             HashSet<int> FichierAsauvegarder = new HashSet<int>();
-                            foreach (var listecorps in ListeCampagnes)
+                            foreach (var corps in ListeCampagnes.Values)
                             {
-                                if (listecorps.Key != IndiceCampagne)
-                                    foreach (var repere in listecorps.Value.Keys)
-                                        FichierAsauvegarder.AddIfNotExist(repere);
+                                if(corps.Campagne.Min < IndiceCampagne)
+                                    FichierAsauvegarder.AddIfNotExist(corps.Repere);
                             }
+
+                            /////////////////////////////////////////////////////////////////////////
+                            /////////////////////////////////////////////////////////////////////////
+                            /////////////////////////////////////////////////////////////////////////
+                            /////////////////////////////////////////////////////////////////////////
 
                             // On nettoie les fichiers précedement crées
                             if (ListeCampagnes.ContainsKey(IndiceCampagne))

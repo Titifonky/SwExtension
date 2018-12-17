@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Linq;
 
 namespace ModuleProduction
 {
@@ -26,7 +27,7 @@ namespace ModuleProduction
             private int _IndiceCampagne = 0;
             private String DossierPiece = "";
             private String FichierNomenclature = "";
-            private SortedDictionary<int, SortedDictionary<int, Corps>> ListeCorps = new SortedDictionary<int, SortedDictionary<int, Corps>>();
+            private SortedDictionary<int, Corps> ListeCorps = new SortedDictionary<int, Corps>();
 
             private int IndiceCampagne
             {
@@ -120,11 +121,11 @@ namespace ModuleProduction
                                 if (!String.IsNullOrWhiteSpace(ligne))
                                 {
                                     var c = new Corps(ligne);
-                                    IndiceNomenclature = Math.Max(IndiceNomenclature, c.Campagne);
-                                    if (!ListeCorps.ContainsKey(c.Campagne))
-                                        ListeCorps.Add(c.Campagne, new SortedDictionary<int, Corps>());
-
-                                    ListeCorps[c.Campagne].Add(c.Repere, c);
+                                    IndiceNomenclature = Math.Max(IndiceNomenclature, c.Campagne.Min);
+                                    if (ListeCorps.ContainsKey(c.Repere))
+                                        ListeCorps[c.Repere].Campagne.Add(c.Campagne.Min);
+                                    else
+                                        ListeCorps.Add(c.Repere, c);
                                 }
                             }
                             if (NbCorps > 0)
@@ -174,7 +175,7 @@ namespace ModuleProduction
         public class Corps
         {
             public Body2 SwCorps = null;
-            public int Campagne;
+            public SortedSet<int> Campagne = new SortedSet<int>();
             public int Repere;
             public int Nb = 0;
             public eTypeCorps TypeCorps;
@@ -205,14 +206,14 @@ namespace ModuleProduction
                 TypeCorps = typeCorps;
                 Materiau = materiau;
                 Dimension = dimension;
-                Campagne = campagne;
+                Campagne.Add(campagne);
                 Repere = repere;
             }
 
             public Corps(String ligne)
             {
                 var tab = ligne.Split(new char[] { '\t' });
-                Campagne = tab[0].eToInteger();
+                Campagne.Add(tab[0].eToInteger());
                 Repere = tab[1].eToInteger();
                 Nb = tab[2].eToInteger();
                 TypeCorps = (eTypeCorps)Enum.Parse(typeof(eTypeCorps), tab[3]);
