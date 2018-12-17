@@ -616,6 +616,8 @@ namespace ModuleProduction
 
                 foreach (var mdl in ListeMdl)
                 {
+                    if (mdl.TypeDoc() != eTypeDoc.Piece) continue;
+
                     mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
                     {
                         mdl.ePropSuppr(CONST_PRODUCTION.ID_PIECE);
