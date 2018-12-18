@@ -25,7 +25,7 @@ namespace ModuleProduction
             public Boolean ExporterFichierCorps = false;
             public String FichierNomenclature = "";
             public String CheminDossierPieces = "";
-            public SortedDictionary<int, Corps> ListeCampagnes = new SortedDictionary<int, Corps>();
+            public SortedDictionary<int, Corps> ListeCorpsExistant = new SortedDictionary<int, Corps>();
             public SortedDictionary<int, String> ListeCorpsCharge = new SortedDictionary<int, String>();
 
             private int _GenRepereDossier = 0;
@@ -48,7 +48,7 @@ namespace ModuleProduction
                     if (SupprimerReperes)
                     {
                         // Si aucun corps n'a déjà été repéré, on reinitialise tout
-                        if (ListeCampagnes.Count == 0)
+                        if (ListeCorpsExistant.Count == 0)
                         {
                             NettoyerModele();
 
@@ -63,37 +63,29 @@ namespace ModuleProduction
 
                             // On recherche les repères appartenant aux campagnes précédentes
                             // pour ne pas supprimer les fichiers
-                            HashSet<int> FichierAsauvegarder = new HashSet<int>();
-                            foreach (var corps in ListeCampagnes.Values)
+                            SortedDictionary<int, Corps> FichierAsauvegarder = new SortedDictionary<int, Corps>();
+                            foreach (var corps in ListeCorpsExistant.Values)
                             {
                                 if(corps.Campagne.Min < IndiceCampagne)
-                                    FichierAsauvegarder.AddIfNotExist(corps.Repere);
+                                    FichierAsauvegarder.Add(corps.Repere, corps);
                             }
-
-                            /////////////////////////////////////////////////////////////////////////
-                            /////////////////////////////////////////////////////////////////////////
-                            /////////////////////////////////////////////////////////////////////////
-                            /////////////////////////////////////////////////////////////////////////
-
+                            
                             // On nettoie les fichiers précedement crées
-                            if (ListeCampagnes.ContainsKey(IndiceCampagne))
+                            foreach (var repere in ListeCorpsExistant.Keys)
                             {
-                                foreach (var repere in ListeCampagnes[IndiceCampagne].Keys)
-                                {
-                                    if (FichierAsauvegarder.Contains(repere)) continue;
+                                if (FichierAsauvegarder.ContainsKey(repere)) continue;
 
-                                    String fichier = Path.Combine(CheminDossierPieces, CONSTANTES.PREFIXE_REF_DOSSIER + repere + ext);
-                                    if (File.Exists(fichier))
-                                        File.Delete(fichier);
-                                }
-
-                                ListeCampagnes.Remove(IndiceCampagne);
+                                String fichier = Path.Combine(CheminDossierPieces, CONSTANTES.PREFIXE_REF_DOSSIER + repere + ext);
+                                if (File.Exists(fichier))
+                                    File.Delete(fichier);
                             }
+
+                            ListeCorpsExistant = FichierAsauvegarder;
                         }
                     }
 
                     // On charge les corps existant à partir des fichiers
-                    if (CombinerCorpsIdentiques && CombinerAvecCampagne && (ListeCampagnes.Count > 0))
+                    if (CombinerCorpsIdentiques && CombinerAvecCampagne && (ListeCorpsExistant.Count > 0))
                     {
                         WindowLog.SautDeLigne();
                         WindowLog.Ecrire("Chargement des corps existants :");
@@ -101,35 +93,37 @@ namespace ModuleProduction
                         {
                             int rep = Path.GetFileNameWithoutExtension(file.Name).Replace(CONSTANTES.PREFIXE_REF_DOSSIER, "").eToInteger();
 
-                            foreach (var listecorps in ListeCampagnes.Values)
+                            if (ListeCorpsExistant.ContainsKey(rep))
                             {
-                                if (listecorps.ContainsKey(rep))
-                                {
-                                    WindowLog.EcrireF("- {0}", Path.GetFileNameWithoutExtension(file.Name));
-                                    ListeCorpsCharge.Add(rep, file.FullName);
-                                    ModelDoc2 mdl = Sw.eOuvrir(file.FullName);
-                                    mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
+                                WindowLog.EcrireF("- {0}", Path.GetFileNameWithoutExtension(file.Name));
+                                ListeCorpsCharge.Add(rep, file.FullName);
+                                ModelDoc2 mdl = Sw.eOuvrir(file.FullName);
+                                mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
 
-                                    var Piece = mdl.ePartDoc();
-                                    listecorps[rep].SwCorps = Piece.ePremierCorps();
-                                    break;
-                                }
+                                var Piece = mdl.ePartDoc();
+                                ListeCorpsExistant[rep].SwCorps = Piece.ePremierCorps();
+                                break;
                             }
                         }
                     }
+
+                    /////////////////////////////////////////////////////////////////////////
+                    /////////////////////////////////////////////////////////////////////////
+                    /////////////////////////////////////////////////////////////////////////
+                    /////////////////////////////////////////////////////////////////////////
 
                     MdlBase.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
 
                     // On cree la liste pour cette campagne
                     // Si elle existe, on reinitialise les quantité à 0
-                    if (!ListeCampagnes.ContainsKey(IndiceCampagne))
-                        ListeCampagnes.Add(IndiceCampagne, new SortedDictionary<int, Corps>());
+                    if (!ListeCorpsExistant.ContainsKey(IndiceCampagne))
+                        ListeCorpsExistant.Add(IndiceCampagne, new SortedDictionary<int, Corps>());
                     else
-                        foreach (var corps in ListeCampagnes[IndiceCampagne].Values)
+                        foreach (var corps in ListeCorpsExistant[IndiceCampagne].Values)
                             corps.Nb = 0;
 
                     // On recherche l'indice de repere max
-                    foreach (var listecorps in ListeCampagnes.Values)
+                    foreach (var listecorps in ListeCorpsExistant.Values)
                         foreach (var repere in listecorps.Keys)
                             _GenRepereDossier = Math.Max(_GenRepereDossier, repere);
 
@@ -229,11 +223,11 @@ namespace ModuleProduction
                                     // On recherche s'il existe des corps identiques
                                     // Si oui, on applique le même repère au parametre
 
-                                    foreach (var campagne in ListeCampagnes.Keys)
+                                    foreach (var campagne in ListeCorpsExistant.Keys)
                                     {
                                         if (CombinerAvecCampagne || (campagne == IndiceCampagne))
                                         {
-                                            var listecorps = ListeCampagnes[campagne];
+                                            var listecorps = ListeCorpsExistant[campagne];
                                             foreach (var CorpsTest in listecorps.Values)
                                             {
                                                 if (CorpsTest.SwCorps.IsNull() || (MateriauCorps != CorpsTest.Materiau) || (TypeCorps != CorpsTest.TypeCorps)) continue;
@@ -261,20 +255,20 @@ namespace ModuleProduction
                                     if (InitConfig ||
                                         NouveauDossier ||
                                         !ListIdDossiers.Contains(IdDossier) ||
-                                        !ListeCampagnes[IndiceCampagne].ContainsKey(Repere))
+                                        !ListeCorpsExistant[IndiceCampagne].ContainsKey(Repere))
                                     {
                                         Repere = GenRepereDossier;
                                         SetRepere(param, Repere, nomCfg);
                                     }
 
-                                    if (NouveauDossier || !ListeCampagnes[IndiceCampagne].ContainsKey(Repere))
+                                    if (NouveauDossier || !ListeCorpsExistant[IndiceCampagne].ContainsKey(Repere))
                                     {
                                         corps = new Corps(SwCorps, TypeCorps, MateriauCorps);
                                         corps.Campagne = IndiceCampagne;
-                                        ListeCampagnes[IndiceCampagne].Add(Repere, corps);
+                                        ListeCorpsExistant[IndiceCampagne].Add(Repere, corps);
                                     }
                                     else
-                                        corps = ListeCampagnes[IndiceCampagne][Repere];
+                                        corps = ListeCorpsExistant[IndiceCampagne][Repere];
 
                                     corps.Nb = nbCorps;
 
@@ -289,12 +283,12 @@ namespace ModuleProduction
                                 }
                                 else
                                 {
-                                    if (ListeCampagnes[IndiceCampagne].ContainsKey(Repere))
-                                        corps = ListeCampagnes[IndiceCampagne][Repere];
+                                    if (ListeCorpsExistant[IndiceCampagne].ContainsKey(Repere))
+                                        corps = ListeCorpsExistant[IndiceCampagne][Repere];
                                     else
                                     {
                                         corps = new Corps(SwCorps, TypeCorps, MateriauCorps);
-                                        ListeCampagnes[IndiceCampagne].Add(Repere, corps);
+                                        ListeCorpsExistant[IndiceCampagne].Add(Repere, corps);
 
                                         corps.Campagne = IndiceCampagne;
                                         corps.Repere = Repere;
@@ -341,7 +335,7 @@ namespace ModuleProduction
 
                         String ext = eTypeDoc.Piece.GetEnumInfo<ExtFichier>();
 
-                        foreach (var corps in ListeCampagnes[IndiceCampagne].Values)
+                        foreach (var corps in ListeCorpsExistant[IndiceCampagne].Values)
                         {
                             if (corps.ListeModele.Count == 0) continue;
 
@@ -402,7 +396,7 @@ namespace ModuleProduction
 
                     // Petit récap
                     WindowLog.SautDeLigne();
-                    WindowLog.EcrireF("Nb de corps unique : {0}", ListeCampagnes[IndiceCampagne].Count);
+                    WindowLog.EcrireF("Nb de corps unique : {0}", ListeCorpsExistant[IndiceCampagne].Count);
 
                     int nbtt = 0;
 
@@ -410,7 +404,7 @@ namespace ModuleProduction
                     {
                         sw.WriteLine(String.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}", "Campagne", "Repere", "Nb", "Type", "Dimension", "Materiau"));
 
-                        foreach (var listecorps in ListeCampagnes.Values)
+                        foreach (var listecorps in ListeCorpsExistant.Values)
                         {
                             foreach (var corps in listecorps.Values)
                             {

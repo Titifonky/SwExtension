@@ -57,10 +57,10 @@ namespace ModuleProduction
             }
 
             private CtrlTextBox _Texte_IndiceCampagne;
+            private CtrlCheckBox _CheckBox_SupprimerReperes;
             private CtrlCheckBox _CheckBox_CombinerCorps;
             private CtrlCheckBox _CheckBox_CombinerAvecCampagne;
             private CtrlCheckBox _CheckBox_ExporterFichierCorps;
-            private CtrlCheckBox _CheckBox_SupprimerReperes;
 
             protected void Calque()
             {
@@ -68,11 +68,11 @@ namespace ModuleProduction
                 {
                     Groupe G;
 
-                    G = _Calque.AjouterGroupe("Options");
+                    G = _Calque.AjouterGroupe("Reperage");
 
                     _Texte_IndiceCampagne = G.AjouterTexteBox("Indice de la campagne de repérage :");
                     _Texte_IndiceCampagne.LectureSeule = true;
-                    _CheckBox_SupprimerReperes = G.AjouterCheckBox("Supprimer les repères de la précédente campagne");
+                    _CheckBox_SupprimerReperes = G.AjouterCheckBox("Mettre à jour la campagne précédente");
                     _CheckBox_ExporterFichierCorps = G.AjouterCheckBox(ExporterFichierCorps);
                     _CheckBox_CombinerCorps = G.AjouterCheckBox(CombinerCorpsIdentiques);
                     _CheckBox_CombinerAvecCampagne = G.AjouterCheckBox(CombinerAvecCampagne);
@@ -121,11 +121,9 @@ namespace ModuleProduction
                                 if (!String.IsNullOrWhiteSpace(ligne))
                                 {
                                     var c = new Corps(ligne);
-                                    IndiceNomenclature = Math.Max(IndiceNomenclature, c.Campagne.Min);
-                                    if (ListeCorps.ContainsKey(c.Repere))
-                                        ListeCorps[c.Repere].Campagne.Add(c.Campagne.Min);
-                                    else
-                                        ListeCorps.Add(c.Repere, c);
+                                    
+                                    IndiceNomenclature = Math.Max(IndiceNomenclature, c.Campagne.Keys.Max());
+                                    ListeCorps.Add(c.Repere, c);
                                 }
                             }
                             if (NbCorps > 0)
@@ -165,7 +163,7 @@ namespace ModuleProduction
                 Cmd.CombinerAvecCampagne = _CheckBox_CombinerAvecCampagne.IsChecked;
                 Cmd.SupprimerReperes = _CheckBox_SupprimerReperes.IsChecked;
                 Cmd.ExporterFichierCorps = _CheckBox_ExporterFichierCorps.IsChecked;
-                Cmd.ListeCampagnes = ListeCorps;
+                Cmd.ListeCorpsExistant = ListeCorps;
                 Cmd.FichierNomenclature = FichierNomenclature;
 
                 Cmd.Executer();
@@ -175,7 +173,7 @@ namespace ModuleProduction
         public class Corps
         {
             public Body2 SwCorps = null;
-            public SortedSet<int> Campagne = new SortedSet<int>();
+            public SortedDictionary<int, int> Campagne = new SortedDictionary<int, int>();
             public int Repere;
             public int Nb = 0;
             public eTypeCorps TypeCorps;
@@ -206,19 +204,21 @@ namespace ModuleProduction
                 TypeCorps = typeCorps;
                 Materiau = materiau;
                 Dimension = dimension;
-                Campagne.Add(campagne);
+                Campagne.Add(campagne, 0);
                 Repere = repere;
             }
 
             public Corps(String ligne)
             {
                 var tab = ligne.Split(new char[] { '\t' });
-                Campagne.Add(tab[0].eToInteger());
-                Repere = tab[1].eToInteger();
-                Nb = tab[2].eToInteger();
-                TypeCorps = (eTypeCorps)Enum.Parse(typeof(eTypeCorps), tab[3]);
-                Dimension = tab[4];
-                Materiau = tab[5];
+                Repere = tab[0].eToInteger();
+                TypeCorps = (eTypeCorps)Enum.Parse(typeof(eTypeCorps), tab[1]);
+                Dimension = tab[2];
+                Materiau = tab[3];
+                int cp = 1;
+                Campagne = new SortedDictionary<int, int>();
+                for (int i = 4; i < tab.Length; i++)
+                    Campagne.Add(cp++, tab[i].eToInteger());
             }
 
             public void AjouterModele(ModelDoc2 mdl, String config, int iDDossier, String nomCorps)
