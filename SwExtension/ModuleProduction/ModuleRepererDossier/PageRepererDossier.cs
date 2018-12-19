@@ -4,9 +4,7 @@ using SolidWorks.Interop.sldworks;
 using SwExtension;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace ModuleProduction.ModuleRepererDossier
 {
@@ -23,8 +21,6 @@ namespace ModuleProduction.ModuleRepererDossier
 
         private ModelDoc2 MdlBase = null;
         private int _IndiceCampagne = 0;
-        private String DossierPiece = "";
-        private String FichierNomenclature = "";
         private SortedDictionary<int, Corps> ListeCorps = new SortedDictionary<int, Corps>();
 
         private int IndiceCampagne
@@ -113,9 +109,9 @@ namespace ModuleProduction.ModuleRepererDossier
                 // Recherche du dernier indice de la campagne de repérage
 
                 // Création du dossier pièces s'il n'existe pas
-                MdlBase.CreerDossier(CONST_PRODUCTION.DOSSIER_PIECES, out DossierPiece);
+                MdlBase.CreerDossier(CONST_PRODUCTION.DOSSIER_PIECES);
                 // Recherche de la nomenclature
-                MdlBase.CreerFichierTexte(CONST_PRODUCTION.DOSSIER_PIECES, CONST_PRODUCTION.FICHIER_NOMENC, out FichierNomenclature);
+                MdlBase.CreerFichierTexte(CONST_PRODUCTION.DOSSIER_PIECES, CONST_PRODUCTION.FICHIER_NOMENC);
 
                 // Recherche des exports laser, tole ou tube, existant
                 var IndiceLaser = Math.Max(MdlBase.RechercherIndiceDossier(CONST_PRODUCTION.DOSSIER_LASERTOLE),
@@ -126,27 +122,9 @@ namespace ModuleProduction.ModuleRepererDossier
 
                 // Aquisition de la liste des corps déjà repérées
                 // et recherche de l'indice nomenclature max
-                using (var sr = new StreamReader(FichierNomenclature, Encoding.GetEncoding(1252)))
-                {
-                    // On lit la première ligne contenant l'entête des colonnes
-                    String ligne = sr.ReadLine();
-                    if (ligne.IsRef())
-                    {
-                        int NbCorps = 0;
+                ListeCorps = MdlBase.ChargerNomenclature();
 
-                        while ((ligne = sr.ReadLine()) != null)
-                        {
-                            NbCorps++;
-                            if (!String.IsNullOrWhiteSpace(ligne))
-                            {
-                                var c = new Corps(ligne);
-                                ListeCorps.Add(c.Repere, c);
-                            }
-                        }
-                        if (NbCorps > 0)
-                            WindowLog.EcrireF("{0} pièce(s) sont référencé(s)", NbCorps);
-                    }
-                }
+                WindowLog.EcrireF("{0} pièce(s) sont référencé(s)", ListeCorps.Count);
 
                 // S'il n'y a aucun corps, on désactive les options
                 if (ListeCorps.Count == 0)
@@ -204,110 +182,8 @@ namespace ModuleProduction.ModuleRepererDossier
 
             Cmd.ExporterFichierCorps = _CheckBox_ExporterFichierCorps.IsChecked;
             Cmd.ListeCorpsExistant = ListeCorps;
-            Cmd.FichierNomenclature = FichierNomenclature;
 
             Cmd.Executer();
-        }
-    }
-
-    public class Corps
-    {
-        public Body2 SwCorps = null;
-        public SortedDictionary<int, int> Campagne = new SortedDictionary<int, int>();
-        public int Repere;
-        public eTypeCorps TypeCorps;
-        /// <summary>
-        /// Epaisseur de la tôle ou section
-        /// </summary>
-        public String Dimension;
-        public String Materiau;
-        public ModelDoc2 Modele = null;
-        private long _TailleFichier = long.MaxValue;
-        public String NomConfig = "";
-        public int IdDossier = -1;
-        public String NomCorps = "";
-
-        public static String Entete(int indiceCampagne)
-        {
-            String entete = String.Format("{0}\t{1}\t{2}\t{3}", "Repere", "Type", "Dimension", "Materiau");
-            for (int i = 0; i < indiceCampagne; i++)
-                entete += String.Format("\t{0}", i + 1);
-
-            return entete;
-        }
-
-        public override string ToString()
-        {
-            String Ligne = String.Format("{0}\t{1}\t{2}\t{3}", Repere, TypeCorps, Dimension, Materiau);
-
-            for (int i = 0; i < Campagne.Keys.Max(); i++)
-            {
-                int nb = 0;
-                if (Campagne.ContainsKey(i + 1))
-                    nb = Campagne[i + 1];
-
-                Ligne += String.Format("\t{0}", nb);
-            }
-
-            return Ligne;
-        }
-
-        public void InitCampagne(int indiceCampagne)
-        {
-            if (Campagne.ContainsKey(indiceCampagne))
-                Campagne[indiceCampagne] = 0;
-            else
-                Campagne.Add(indiceCampagne, 0);
-        }
-
-        public void InitDimension(BodyFolder dossier, Body2 corps)
-        {
-            if (TypeCorps == eTypeCorps.Tole)
-                Dimension = corps.eEpaisseurCorpsOuDossier(dossier).ToString();
-            else
-                Dimension = dossier.eProfilDossier();
-        }
-
-        public Corps(Body2 swCorps, eTypeCorps typeCorps, String materiau)
-        {
-            SwCorps = swCorps;
-            TypeCorps = typeCorps;
-            Materiau = materiau;
-        }
-
-        public Corps(eTypeCorps typeCorps, String materiau, String dimension, int campagne, int repere)
-        {
-            TypeCorps = typeCorps;
-            Materiau = materiau;
-            Dimension = dimension;
-            Campagne.Add(campagne, 0);
-            Repere = repere;
-        }
-
-        public Corps(String ligne)
-        {
-            var tab = ligne.Split(new char[] { '\t' });
-            Repere = tab[0].eToInteger();
-            TypeCorps = (eTypeCorps)Enum.Parse(typeof(eTypeCorps), tab[1]);
-            Dimension = tab[2];
-            Materiau = tab[3];
-            int cp = 1;
-            Campagne = new SortedDictionary<int, int>();
-            for (int i = 4; i < tab.Length; i++)
-                Campagne.Add(cp++, tab[i].eToInteger());
-        }
-
-        public void AjouterModele(ModelDoc2 mdl, String config, int idDossier, String nomCorps)
-        {
-            long t = new FileInfo(mdl.GetPathName()).Length;
-            if (t < _TailleFichier)
-            {
-                _TailleFichier = t;
-                Modele = mdl;
-                NomConfig = config;
-                IdDossier = idDossier;
-                NomCorps = nomCorps;
-            }
         }
     }
 }

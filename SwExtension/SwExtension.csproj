@@ -90,11 +90,13 @@
     <Compile Include="Macros\BoutonMasquerCorpsVue.cs" />
     <Compile Include="Macros\BoutonSelectionnerCorpsIdentiques.cs" />
     <Compile Include="Macros\BoutonAfficherLogDebug.cs" />
-    <Compile Include="ModuleProduction\ModuleCreerDvp\CmdProduireDvp.cs" />
-    <Compile Include="ModuleProduction\ModuleCreerDvp\PageProduireDVP.cs" />
+    <Compile Include="ModuleProduction\ModuleGenererConfigDvp\CmdGenererConfigDvp.cs" />
+    <Compile Include="ModuleProduction\ModuleGenererConfigDvp\PageGenererConfigDvp.cs" />
+    <Compile Include="ModuleProduction\ModuleProduireDvp\CmdProduireDvp.cs" />
+    <Compile Include="ModuleProduction\ModuleProduireDvp\PageProduireDVP.cs" />
     <Compile Include="ModuleProduction\ModuleRepererDossier\CmdRepererDossier.cs" />
     <Compile Include="ModuleProduction\ModuleRepererDossier\PageRepererDossier.cs" />
-    <Compile Include="ModuleProduction\OutilsCommun.cs" />
+    <Compile Include="ModuleProduction\OutilsProd.cs" />
     <Compile Include="ModuleLaser\BoutonVerifierNumerotation.cs" />
     <Compile Include="ModuleLaser\BoutonExportStructure.cs" />
     <Compile Include="Macros\Test2.cs" />

@@ -22,29 +22,35 @@ namespace ModuleProduction
         public const String ID_DOSSIERS = "ID_DOSSIERS";
     }
 
-    public static class OutilsCommun
+    public static class OutilsProd
     {
 
-        public static Configuration CreerConfigDepliee(this ModelDoc2 mdl, String NomConfigDepliee, String NomConfigPliee)
+        public static Boolean CreerConfigDepliee(this ModelDoc2 mdl, String NomConfigDepliee, String NomConfigPliee)
         {
-            return mdl.ConfigurationManager.AddConfiguration(NomConfigDepliee, NomConfigDepliee, "", 0, NomConfigPliee, "");
+            var cfg = mdl.ConfigurationManager.AddConfiguration(NomConfigDepliee, NomConfigDepliee, "", 0, NomConfigPliee, "");
+            if (cfg.IsRef())
+                return true;
+
+            return false;
         }
 
-        public static String RefPiece(this ModelDoc2 mdl, String Pattern, String configPliee, String noDossier)
+        public static List<Feature> ListeFonctionsDepliee(this ModelDoc2 mdl)
         {
-            //<Nom_Piece>-<Nom_Config>-<No_Dossier>
+            List<Feature> Liste = new List<Feature>();
+            var DossierDepliee = (FlatPatternFolder)mdl.FeatureManager.GetFlatPatternFolder();
+            Object[] Depliee = (object[])DossierDepliee.GetFlatPatterns();
+            foreach (Feature f in Depliee)
+                Liste.Add(f);
 
-            String result = Pattern;
-
-            result = result.Replace("<Nom_Piece>", mdl.eNomSansExt());
-            result = result.Replace("<Nom_Config>", configPliee);
-            result = result.Replace("<No_Dossier>", noDossier);
-            return result;
+            return Liste;
         }
 
-        public static void DeplierTole(this Body2 Tole, ModelDoc2 mdl, String nomConfigDepliee)
+        public static void DeplierTole(this ModelDoc2 mdl, String nomConfigDepliee)
         {
-            Feature FonctionDepliee = Tole.eFonctionEtatDepliee();
+            var liste = mdl.ListeFonctionsDepliee();
+            if (liste.Count == 0) return;
+
+            Feature FonctionDepliee = mdl.ListeFonctionsDepliee()[0];
             FonctionDepliee.eModifierEtat(swFeatureSuppressionAction_e.swUnSuppressFeature, nomConfigDepliee);
             FonctionDepliee.eModifierEtat(swFeatureSuppressionAction_e.swUnSuppressDependent, nomConfigDepliee);
 
@@ -66,30 +72,14 @@ namespace ModuleProduction
 
             mdl.UnblankSketch();
             mdl.eEffacerSelection();
-
-            //// Si des corps autre que la tole dépliée sont encore visible dans la config, on les cache et on recontruit tout
-            //foreach (Body2 pCorps in mdl.ePartDoc().eListeCorps(false))
-            //{
-            //    if ((pCorps.Name == CONSTANTES.NOM_CORPS_DEPLIEE))
-            //        pCorps.eVisible(true);
-            //    else
-            //        pCorps.eVisible(false);
-            //}
-
         }
 
-        public static void PlierTole(this Body2 Tole, ModelDoc2 mdl, String nomConfigPliee)
+        public static void PlierTole(this ModelDoc2 mdl, String nomConfigPliee)
         {
-            var tmpTole = Tole;
+            var liste = mdl.ListeFonctionsDepliee();
+            if (liste.Count == 0) return;
 
-            if (tmpTole.IsNull())
-            {
-                tmpTole = mdl.ePartDoc().eChercherCorps(CONSTANTES.NOM_CORPS_DEPLIEE, false);
-
-                if (tmpTole.IsNull()) return;
-            }
-
-            Feature FonctionDepliee = tmpTole.eFonctionEtatDepliee();
+            Feature FonctionDepliee = mdl.ListeFonctionsDepliee()[0];
 
             FonctionDepliee.eModifierEtat(swFeatureSuppressionAction_e.swSuppressFeature, nomConfigPliee);
 
@@ -109,98 +99,6 @@ namespace ModuleProduction
 
             mdl.BlankSketch();
             mdl.eEffacerSelection();
-        }
-
-        public static List<string> ListeMateriaux(this ModelDoc2 mdl, eTypeCorps TypeCorps)
-        {
-            List<string> ListeMateriaux = new List<string>();
-
-            if (mdl.TypeDoc() == eTypeDoc.Assemblage)
-            {
-
-                App.ModelDoc2.eRecParcourirComposants(
-                    c =>
-                    {
-                        if (!c.IsHidden(false) && !c.ExcludeFromBOM && (c.TypeDoc() == eTypeDoc.Piece))
-                        {
-                            var LstDossier = c.eListeDesDossiersDePiecesSoudees();
-                            foreach (var dossier in LstDossier)
-                            {
-                                if (!dossier.eEstExclu() && TypeCorps.HasFlag(dossier.eTypeDeDossier()))
-                                {
-                                    //String Materiau = dossier.eGetMateriau();
-                                    String Materiau = dossier.ePremierCorps().eGetMateriauCorpsOuComp(c);
-
-                                    ListeMateriaux.AddIfNotExist(Materiau);
-                                }
-                            }
-                        }
-
-                        return false;
-                    }
-                );
-            }
-            else if (mdl.TypeDoc() == eTypeDoc.Piece)
-            {
-                var LstDossier = mdl.ePartDoc().eListeDesDossiersDePiecesSoudees();
-                foreach (var dossier in LstDossier)
-                {
-                    if (!dossier.eEstExclu() && TypeCorps.HasFlag(dossier.eTypeDeDossier()))
-                    {
-                        String Materiau = dossier.eGetMateriau();
-
-                        ListeMateriaux.AddIfNotExist(Materiau);
-                    }
-                }
-            }
-
-            return ListeMateriaux;
-        }
-
-        public static List<string> ListeEp(this ModelDoc2 mdl)
-        {
-            List<string> ListeEp = new List<string>();
-
-            if (mdl.TypeDoc() == eTypeDoc.Assemblage)
-            {
-
-                App.ModelDoc2.eRecParcourirComposants(
-                    c =>
-                    {
-                        if (!c.IsHidden(false) && !c.ExcludeFromBOM && (c.TypeDoc() == eTypeDoc.Piece))
-                        {
-                            foreach (var corps in c.eListeCorps())
-                            {
-                                if (corps.eTypeDeCorps() == eTypeCorps.Tole)
-                                    ListeEp.AddIfNotExist(corps.eEpaisseurCorps().ToString());
-                            }
-                        }
-
-                        return false;
-                    }
-                );
-            }
-            else if (mdl.TypeDoc() == eTypeDoc.Piece)
-            {
-                var LstDossier = mdl.ePartDoc().eListeDesDossiersDePiecesSoudees();
-                foreach (var dossier in LstDossier)
-                {
-                    if (!dossier.eEstExclu() && dossier.eEstUnDossierDeToles())
-                    {
-                        Double Ep = dossier.eEpaisseur1ErCorpsOuDossier();
-
-                        // On laisse les epaisseurs négatives pour pouvoir les localiser.
-                        //if (Ep == -1)
-                        //    continue;
-
-                        ListeEp.AddIfNotExist(Ep.ToString());
-                    }
-                }
-            }
-
-            ListeEp.Sort(new WindowsStringComparer());
-
-            return ListeEp;
         }
 
         /// <summary>
@@ -401,28 +299,22 @@ namespace ModuleProduction
             return "Ind " + ChaineIndice.Last();
         }
 
-        public static Boolean CreerDossier(this ModelDoc2 mdl, String dossier, out String chemin)
+        public static String CreerDossier(this ModelDoc2 mdl, String dossier)
         {
-            chemin = Path.Combine(mdl.eDossier(), dossier);
+            var chemin = Path.Combine(mdl.eDossier(), dossier);
             if (!Directory.Exists(chemin))
-            {
                 Directory.CreateDirectory(chemin);
-                return true;
-            }
 
-            return false;
+            return chemin;
         }
 
-        public static Boolean CreerFichierTexte(this ModelDoc2 mdl, String dossier, String fichier, out String chemin)
+        public static String CreerFichierTexte(this ModelDoc2 mdl, String dossier, String fichier)
         {
-            chemin = Path.Combine(mdl.eDossier(), dossier, fichier + ".txt");
+            var chemin = Path.Combine(mdl.eDossier(), dossier, fichier + ".txt");
             if (!File.Exists(chemin))
-            {
                 File.WriteAllText(chemin, "", Encoding.GetEncoding(1252));
-                return true;
-            }
 
-            return false;
+            return chemin;
         }
 
         public static int RechercherIndiceDossier(this ModelDoc2 mdl, String dossier)
@@ -435,6 +327,168 @@ namespace ModuleProduction
                     indice = Math.Max(indice, new DirectoryInfo(d).Name.eToInteger());
 
             return indice;
+        }
+
+        public static String DossierPiece(this ModelDoc2 mdl)
+        {
+            return Path.Combine(mdl.eDossier(), CONST_PRODUCTION.DOSSIER_PIECES);
+        }
+
+        public static String FichierNomenclature(this ModelDoc2 mdl)
+        {
+            return Path.Combine(mdl.eDossier(), CONST_PRODUCTION.DOSSIER_PIECES, CONST_PRODUCTION.FICHIER_NOMENC + ".txt");
+        }
+
+        public static String DossierLaserTole(this ModelDoc2 mdl)
+        {
+            return Path.Combine(mdl.eDossier(), CONST_PRODUCTION.DOSSIER_LASERTOLE);
+        }
+
+        public static String DossierLaserTube(this ModelDoc2 mdl)
+        {
+            return Path.Combine(mdl.eDossier(), CONST_PRODUCTION.DOSSIER_LASERTUBE);
+        }
+
+        public static SortedDictionary<int, Corps> ChargerNomenclature(this ModelDoc2 mdl)
+        {
+            SortedDictionary<int, Corps> Liste = new SortedDictionary<int, Corps>();
+
+            var chemin = mdl.FichierNomenclature();
+
+            if (File.Exists(chemin))
+            {
+                using (var sr = new StreamReader(chemin, Encoding.GetEncoding(1252)))
+                {
+                    // On lit la première ligne contenant l'entête des colonnes
+                    String ligne = sr.ReadLine();
+                    if (ligne.IsRef())
+                    {
+                        while ((ligne = sr.ReadLine()) != null)
+                        {
+                            if (!String.IsNullOrWhiteSpace(ligne))
+                            {
+                                var c = new Corps(ligne);
+                                Liste.Add(c.Repere, c);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return Liste;
+        }
+
+        public static String ExtPiece = eTypeDoc.Piece.GetEnumInfo<ExtFichier>();
+    }
+
+    public class Corps
+    {
+        public Body2 SwCorps = null;
+        public SortedDictionary<int, int> Campagne = new SortedDictionary<int, int>();
+        public int Repere;
+        public eTypeCorps TypeCorps;
+        /// <summary>
+        /// Epaisseur de la tôle ou section
+        /// </summary>
+        public String Dimension;
+        public String Materiau;
+        public ModelDoc2 Modele = null;
+        private long _TailleFichier = long.MaxValue;
+        public String NomConfig = "";
+        public int IdDossier = -1;
+        public String NomCorps = "";
+
+        public static String Entete(int indiceCampagne)
+        {
+            String entete = String.Format("{0}\t{1}\t{2}\t{3}", "Repere", "Type", "Dimension", "Materiau");
+            for (int i = 0; i < indiceCampagne; i++)
+                entete += String.Format("\t{0}", i + 1);
+
+            return entete;
+        }
+
+        public override string ToString()
+        {
+            String Ligne = String.Format("{0}\t{1}\t{2}\t{3}", Repere, TypeCorps, Dimension, Materiau);
+
+            for (int i = 0; i < Campagne.Keys.Max(); i++)
+            {
+                int nb = 0;
+                if (Campagne.ContainsKey(i + 1))
+                    nb = Campagne[i + 1];
+
+                Ligne += String.Format("\t{0}", nb);
+            }
+
+            return Ligne;
+        }
+
+        public void InitCampagne(int indiceCampagne)
+        {
+            if (Campagne.ContainsKey(indiceCampagne))
+                Campagne[indiceCampagne] = 0;
+            else
+                Campagne.Add(indiceCampagne, 0);
+        }
+
+        public void InitDimension(BodyFolder dossier, Body2 corps)
+        {
+            if (TypeCorps == eTypeCorps.Tole)
+                Dimension = corps.eEpaisseurCorpsOuDossier(dossier).ToString();
+            else
+                Dimension = dossier.eProfilDossier();
+        }
+
+        public Corps(Body2 swCorps, eTypeCorps typeCorps, String materiau)
+        {
+            SwCorps = swCorps;
+            TypeCorps = typeCorps;
+            Materiau = materiau;
+        }
+
+        public Corps(eTypeCorps typeCorps, String materiau, String dimension, int campagne, int repere)
+        {
+            TypeCorps = typeCorps;
+            Materiau = materiau;
+            Dimension = dimension;
+            Campagne.Add(campagne, 0);
+            Repere = repere;
+        }
+
+        public Corps(String ligne)
+        {
+            var tab = ligne.Split(new char[] { '\t' });
+            Repere = tab[0].eToInteger();
+            TypeCorps = (eTypeCorps)Enum.Parse(typeof(eTypeCorps), tab[1]);
+            Dimension = tab[2];
+            Materiau = tab[3];
+            int cp = 1;
+            Campagne = new SortedDictionary<int, int>();
+            for (int i = 4; i < tab.Length; i++)
+                Campagne.Add(cp++, tab[i].eToInteger());
+        }
+
+        public void AjouterModele(ModelDoc2 mdl, String config, int idDossier, String nomCorps)
+        {
+            long t = new FileInfo(mdl.GetPathName()).Length;
+            if (t < _TailleFichier)
+            {
+                _TailleFichier = t;
+                Modele = mdl;
+                NomConfig = config;
+                IdDossier = idDossier;
+                NomCorps = nomCorps;
+            }
+        }
+
+        public String NomFichier(ModelDoc2 mdlBase)
+        {
+            return Path.Combine(mdlBase.DossierPiece(), RepereComplet + OutilsProd.ExtPiece);
+        }
+
+        public String RepereComplet
+        {
+            get { return CONSTANTES.PREFIXE_REF_DOSSIER + Repere; }
         }
     }
 }

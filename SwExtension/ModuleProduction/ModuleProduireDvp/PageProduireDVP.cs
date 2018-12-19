@@ -20,7 +20,6 @@ namespace ModuleProduction.ModuleProduireDvp
         private Parametre AfficherLignePliage;
         private Parametre AfficherNotePliage;
 
-        private Parametre ComposantsExterne;
         private Parametre InscrireNomTole;
         private Parametre TailleInscription;
         //private Parametre FormatInscription;
@@ -54,8 +53,6 @@ namespace ModuleProduction.ModuleProduireDvp
         }
 
         private CtrlTextListBox _TextListBox_Materiaux;
-        private CtrlCheckBox _CheckBox_ForcerMateriau;
-        private CtrlTextComboBox _TextComboBox_ForcerMateriau;
 
         private CtrlTextListBox _TextListBox_Ep;
 
@@ -63,15 +60,11 @@ namespace ModuleProduction.ModuleProduireDvp
         private CtrlTextBox _Texte_Quantite;
         private CtrlTextBox _Texte_TailleInscription;
 
-        private CtrlCheckBox _CheckBox_ComposantsExterne;
         private CtrlCheckBox _CheckBox_AfficherLignePliage;
         private CtrlCheckBox _CheckBox_AfficherNotePliage;
         private CtrlCheckBox _CheckBox_InscrireNomTole;
         private CtrlCheckBox _CheckBox_OrienterDvp;
         private CtrlEnumComboBox<eOrientation, Intitule> _EnumComboBox_OrientationDvp;
-        private CtrlCheckBox _CheckBox_FermerPlan;
-        private CtrlCheckBox _CheckBox_ConvertirEsquisse;
-        private CtrlCheckBox _CheckBox_MajPlans;
 
         protected void Calque()
         {
@@ -95,22 +88,12 @@ namespace ModuleProduction.ModuleProduireDvp
                 _Texte_Quantite.Text = Quantite();
                 _Texte_Quantite.ValiderTexte += ValiderTextIsInteger;
 
-                _CheckBox_ComposantsExterne = G.AjouterCheckBox(ComposantsExterne);
-
                 G = _Calque.AjouterGroupe("Materiaux :");
 
                 _TextListBox_Materiaux = G.AjouterTextListBox();
                 _TextListBox_Materiaux.TouteHauteur = true;
                 _TextListBox_Materiaux.Height = 50;
                 _TextListBox_Materiaux.SelectionMultiple = true;
-
-                _CheckBox_ForcerMateriau = G.AjouterCheckBox("Forcer le materiau");
-                _TextComboBox_ForcerMateriau = G.AjouterTextComboBox();
-                _TextComboBox_ForcerMateriau.Editable = true;
-                _TextComboBox_ForcerMateriau.LectureSeule = false;
-                _TextComboBox_ForcerMateriau.NotifieSurSelection = false;
-                _TextComboBox_ForcerMateriau.IsEnabled = false;
-                _CheckBox_ForcerMateriau.OnIsCheck += _TextComboBox_ForcerMateriau.IsEnable;
 
                 G = _Calque.AjouterGroupe("Ep :");
 
@@ -150,16 +133,6 @@ namespace ModuleProduction.ModuleProduireDvp
 
                 _CheckBox_OrienterDvp.OnIsCheck += _EnumComboBox_OrientationDvp.IsEnable;
                 _EnumComboBox_OrientationDvp.IsEnabled = _CheckBox_OrienterDvp.IsChecked;
-
-                _CheckBox_FermerPlan = G.AjouterCheckBox(FermerPlan);
-                _CheckBox_MajPlans = G.AjouterCheckBox("Mettre à jour les dvps existant");
-                _CheckBox_MajPlans.IsChecked = false;
-
-                G = _Calque.AjouterGroupe("Fichiers volumineux");
-                G.Expanded = true;
-
-                _CheckBox_ConvertirEsquisse = G.AjouterCheckBox(ConvertirEsquisse);
-
             }
             catch (Exception e)
             { this.LogMethode(new Object[] { e }); }
@@ -179,31 +152,32 @@ namespace ModuleProduction.ModuleProduireDvp
 
         private List<String> ListeMateriaux;
         private List<String> ListeEp;
+        private SortedDictionary<int, Corps> ListeCorps;
 
         protected void Rechercher_Infos()
         {
-            WindowLog.Ecrire("Recherche des materiaux : ");
+            WindowLog.Ecrire("Recherche des materiaux et epaisseurs ");
 
-            ListeMateriaux = App.ModelDoc2.ListeMateriaux(eTypeCorps.Tole);
+            ListeCorps = App.ModelDoc2.ChargerNomenclature();
 
-            foreach (var m in ListeMateriaux)
-                WindowLog.Ecrire(" - " + m);
+            ListeMateriaux = new List<String>();
+            ListeEp = new List<String>();
+
+            foreach (var corps in ListeCorps.Values)
+            {
+                if (corps.TypeCorps != eTypeCorps.Tole) continue;
+
+                ListeMateriaux.AddIfNotExist(corps.Materiau);
+                ListeEp.AddIfNotExist(corps.Dimension);
+            }
 
             WindowLog.SautDeLigne();
+
+            ListeMateriaux.Sort(new WindowsStringComparer());
+            ListeEp.Sort(new WindowsStringComparer());
 
             _TextListBox_Materiaux.Liste = ListeMateriaux;
             _TextListBox_Materiaux.ToutSelectionner(false);
-            _TextComboBox_ForcerMateriau.Liste = ListeMateriaux;
-            _TextComboBox_ForcerMateriau.Index = 0;
-
-            WindowLog.Ecrire("Recherche des ep de tôle : ");
-
-            ListeEp = App.ModelDoc2.ListeEp();
-
-            foreach (var m in ListeEp)
-                WindowLog.Ecrire(" - ep" + m);
-
-            WindowLog.SautDeLigne();
 
             _TextListBox_Ep.Liste = ListeEp;
             _TextListBox_Ep.ToutSelectionner(false);
@@ -214,21 +188,17 @@ namespace ModuleProduction.ModuleProduireDvp
             CmdProduireDvp Cmd = new CmdProduireDvp();
 
             Cmd.MdlBase = App.Sw.ActiveDoc;
+            Cmd.ListeCorps = ListeCorps;
+            Cmd.RefFichier = _Texte_RefFichier.Text.Trim();
+            Cmd.Quantite = _Texte_Quantite.Text.eToInteger();
             Cmd.ListeMateriaux = _TextListBox_Materiaux.ListSelectedText.Count > 0 ? _TextListBox_Materiaux.ListSelectedText : _TextListBox_Materiaux.Liste;
             Cmd.ListeEp = _TextListBox_Ep.ListSelectedText.Count > 0 ? _TextListBox_Ep.ListSelectedText : _TextListBox_Ep.Liste;
-            Cmd.ForcerMateriau = _CheckBox_ForcerMateriau.IsChecked ? _TextComboBox_ForcerMateriau.Text : null;
-            Cmd.Quantite = _Texte_Quantite.Text.eToInteger();
             Cmd.AfficherLignePliage = _CheckBox_AfficherLignePliage.IsChecked;
             Cmd.AfficherNotePliage = _CheckBox_AfficherNotePliage.IsChecked;
             Cmd.InscrireNomTole = _CheckBox_InscrireNomTole.IsChecked;
+            Cmd.TailleInscription = _Texte_TailleInscription.Text.eToInteger();
             Cmd.OrienterDvp = _CheckBox_OrienterDvp.IsChecked;
             Cmd.OrientationDvp = _EnumComboBox_OrientationDvp.Val;
-            Cmd.FermerPlan = _CheckBox_FermerPlan.IsChecked;
-            Cmd.MajPlans = _CheckBox_MajPlans.IsChecked;
-            Cmd.ConvertirEsquisse = _CheckBox_ConvertirEsquisse.IsChecked;
-            Cmd.ComposantsExterne = _CheckBox_ComposantsExterne.IsChecked;
-            Cmd.RefFichier = _Texte_RefFichier.Text.Trim();
-            Cmd.TailleInscription = _Texte_TailleInscription.Text.eToInteger();
 
             Cmd.Executer();
         }

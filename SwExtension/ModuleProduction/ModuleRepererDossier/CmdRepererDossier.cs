@@ -21,11 +21,9 @@ namespace ModuleProduction.ModuleRepererDossier
         public Boolean CombinerCorpsIdentiques = false;
         public Boolean CombinerAvecCampagne = false;
         public Boolean ExporterFichierCorps = false;
-        public String FichierNomenclature = "";
-        public String CheminDossierPieces = "";
+        
         public SortedDictionary<int, Corps> ListeCorpsExistant = new SortedDictionary<int, Corps>();
         public SortedDictionary<int, String> ListeCorpsCharge = new SortedDictionary<int, String>();
-        private String ExtPiece = eTypeDoc.Piece.GetEnumInfo<ExtFichier>();
 
         private int _GenRepereDossier = 0;
         private int GenRepereDossier { get { return ++_GenRepereDossier; } }
@@ -42,15 +40,13 @@ namespace ModuleProduction.ModuleRepererDossier
         {
             try
             {
-                CheminDossierPieces = Path.Combine(MdlBase.eDossier(), CONST_PRODUCTION.DOSSIER_PIECES);
-
                 // Si aucun corps n'a déjà été repéré, on reinitialise tout
                 if (ListeCorpsExistant.Count == 0)
                 {
                     NettoyerModele();
 
                     // On supprime tout les fichiers
-                    foreach (FileInfo file in new DirectoryInfo(CheminDossierPieces).GetFiles())
+                    foreach (FileInfo file in new DirectoryInfo(MdlBase.DossierPiece()).GetFiles())
                         file.Delete();
                 }
 
@@ -83,7 +79,7 @@ namespace ModuleProduction.ModuleRepererDossier
                     {
                         if (FichierAsauvegarder.ContainsKey(repere)) continue;
 
-                        String fichier = Path.Combine(CheminDossierPieces, CONSTANTES.PREFIXE_REF_DOSSIER + repere + ExtPiece);
+                        String fichier = Path.Combine(MdlBase.DossierPiece(), CONSTANTES.PREFIXE_REF_DOSSIER + repere + OutilsProd.ExtPiece);
                         if (File.Exists(fichier))
                             File.Delete(fichier);
                     }
@@ -110,7 +106,7 @@ namespace ModuleProduction.ModuleRepererDossier
                     WindowLog.SautDeLigne();
                     WindowLog.EcrireF("Chargement des corps existants ({0}):", ListeCorpsExistant.Count);
 
-                    foreach (FileInfo file in new DirectoryInfo(CheminDossierPieces).GetFiles("*" + ExtPiece))
+                    foreach (FileInfo file in new DirectoryInfo(MdlBase.DossierPiece()).GetFiles("*" + OutilsProd.ExtPiece))
                     {
                         int rep = Path.GetFileNameWithoutExtension(file.Name).Replace(CONSTANTES.PREFIXE_REF_DOSSIER, "").eToInteger();
 
@@ -314,14 +310,14 @@ namespace ModuleProduction.ModuleRepererDossier
                     {
                         if (corps.Modele.IsNull()) continue;
 
-                        var cheminFichier = Path.Combine(CheminDossierPieces, CONSTANTES.PREFIXE_REF_DOSSIER + corps.Repere + ExtPiece);
+                        var cheminFichier = Path.Combine(MdlBase.DossierPiece(), CONSTANTES.PREFIXE_REF_DOSSIER + corps.Repere + OutilsProd.ExtPiece);
                         if (File.Exists(cheminFichier)) continue;
 
                         corps.Modele.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
                         corps.Modele.ShowConfiguration2(corps.NomConfig);
                         corps.Modele.EditRebuild3();
 
-                        var mdlFichier = Sw.eCreerDocument(CheminDossierPieces, CONSTANTES.PREFIXE_REF_DOSSIER + corps.Repere, eTypeDoc.Piece);
+                        var mdlFichier = Sw.eCreerDocument(MdlBase.DossierPiece(), CONSTANTES.PREFIXE_REF_DOSSIER + corps.Repere, eTypeDoc.Piece);
                         mdlFichier.eActiver();
                         var Piece = mdlFichier.ePartDoc();
                         var fonc = Piece.InsertPart3(corps.Modele.GetPathName(), 90241, corps.NomConfig);
@@ -336,10 +332,8 @@ namespace ModuleProduction.ModuleRepererDossier
 
                             Corps.eSelect();
                             mdlFichier.FeatureManager.InsertDeleteBody2(true);
-
-                            mdlFichier.EditRebuild3();
-                            mdlFichier.LockAllExternalReferences();
-                            fonc.UpdateExternalFileReferences((int)swExternalFileReferencesConfig_e.swExternalFileReferencesCurrentConfig, "", (int)swExternalFileReferencesUpdate_e.swExternalFileReferencesLockAll);
+                            //mdlFichier.LockAllExternalReferences();
+                            //fonc.UpdateExternalFileReferences((int)swExternalFileReferencesConfig_e.swExternalFileReferencesCurrentConfig, "", (int)swExternalFileReferencesUpdate_e.swExternalFileReferencesLockAll);
                             mdlFichier.EditRebuild3();
 
                             mdlFichier.eSauver();
@@ -359,7 +353,7 @@ namespace ModuleProduction.ModuleRepererDossier
 
                 int nbtt = 0;
 
-                using (var sw = new StreamWriter(FichierNomenclature, false, Encoding.GetEncoding(1252)))
+                using (var sw = new StreamWriter(MdlBase.FichierNomenclature() , false, Encoding.GetEncoding(1252)))
                 {
                     sw.WriteLine(Corps.Entete(IndiceCampagne));
 

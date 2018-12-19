@@ -4,6 +4,7 @@ using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using SwExtension;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -13,19 +14,15 @@ namespace ModuleProduction.ModuleProduireDvp
     public class CmdProduireDvp : Cmd
     {
         public ModelDoc2 MdlBase = null;
+        public SortedDictionary<int, Corps> ListeCorps = new SortedDictionary<int, Corps>();
         public List<String> ListeMateriaux = new List<String>();
         public List<String> ListeEp = new List<String>();
-        public String ForcerMateriau = null;
         public int Quantite = 1;
         public Boolean AfficherLignePliage = false;
         public Boolean AfficherNotePliage = false;
         public Boolean InscrireNomTole = false;
         public Boolean OrienterDvp = false;
         public eOrientation OrientationDvp = eOrientation.Portrait;
-        public Boolean FermerPlan = false;
-        public Boolean ConvertirEsquisse = false;
-        public Boolean MajPlans = false;
-        public Boolean ComposantsExterne = false;
         public String RefFichier = "";
         public int TailleInscription = 5;
 
@@ -39,118 +36,69 @@ namespace ModuleProduction.ModuleProduireDvp
         {
             try
             {
-                if (ConvertirEsquisse)
-                {
-                    WindowLog.Ecrire("Attention !!!");
-                    WindowLog.Ecrire("Les dvp seront convertis en esquisse");
-                    WindowLog.SautDeLigne();
-                }
+                var IndiceCampagne = 0;
+                foreach (var corps in ListeCorps.Values)
+                    IndiceCampagne = Math.Max(IndiceCampagne, corps.Campagne.Keys.Max());
 
-                CreerDossierDVP();
+                var dossierLaserTole = MdlBase.CreerDossier(CONST_PRODUCTION.DOSSIER_LASERTOLE);
 
-                eTypeCorps Filtre = eTypeCorps.Tole;
+                DossierDVP = Directory.CreateDirectory(Path.Combine(dossierLaserTole, IndiceCampagne.ToString())).FullName;
+
                 HashSet<String> HashMateriaux = new HashSet<string>(ListeMateriaux);
                 HashSet<String> HashEp = new HashSet<string>(ListeEp);
 
-                var dic = MdlBase.DenombrerDossiers(ComposantsExterne,
-                    fDossier =>
-                    {
-                        BodyFolder swDossier = fDossier.GetSpecificFeature2();
-
-                        if (Filtre.HasFlag(swDossier.eTypeDeDossier()) && HashMateriaux.Contains(swDossier.eGetMateriau()))
-                        {
-                            String Ep = swDossier.ePremierCorps().eEpaisseurCorps().ToString();
-
-                            if(HashEp.Contains(Ep))
-                                return true;
-                        }
-
-                        return false;
-                    }
-                    );
-
-                int MdlPct = 0;
-                foreach (var mdl in dic.Keys)
+                foreach (var corps in ListeCorps.Values)
                 {
-                    mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
+                    if (corps.TypeCorps != eTypeCorps.Tole ||
+                        !HashMateriaux.Contains(corps.Materiau) ||
+                        !HashEp.Contains(corps.Dimension)
+                        ) continue;
 
-                    WindowLog.SautDeLigne();
-                    WindowLog.EcrireF("[{1}/{2}] {0}", mdl.eNomSansExt(), ++MdlPct, dic.Count);
+                    var cheminFichier = corps.NomFichier(MdlBase);
+                    if (!File.Exists(cheminFichier)) continue;
+
                     
 
-                    int CfgPct = 0;
-                    foreach (var NomConfigPliee in dic[mdl].Keys)
+                    var mdlCorps = Sw.eOuvrir(cheminFichier);
+                    if (mdlCorps.IsNull()) continue;
+
+                    WindowLog.EcrireF("{0}", corps.Repere);
+
+                    var listeCfgPliee = mdlCorps.eListeNomConfiguration(eTypeConfig.Pliee);
+                    var NomConfigPliee = listeCfgPliee[0];
+
+                    var listeCfgDepliee = mdlCorps.eListeNomConfiguration(eTypeConfig.Depliee);
+                    if (listeCfgDepliee.Count == 0) continue;
+
+                    var NomConfigDepliee = listeCfgDepliee[0];
+
+                    var QuantiteTole = Quantite * corps.Campagne.Max().Value;
+
+                    if (!mdlCorps.ShowConfiguration2(NomConfigDepliee))
                     {
-                        WindowLog.SautDeLigne();
-                        WindowLog.EcrireF("  [{1}/{2}] Config : \"{0}\"", NomConfigPliee, ++CfgPct, dic[mdl].Count);
-                        mdl.ShowConfiguration2(NomConfigPliee);
-                        mdl.EditRebuild3();
-                        PartDoc Piece = mdl.ePartDoc();
-
-                        var ListeDossier = dic[mdl][NomConfigPliee];
-                        int DrPct = 0;
-                        foreach (var t in ListeDossier)
-                        {
-                            var IdDossier = t.Key;
-                            var QuantiteTole = t.Value * Quantite;
-
-                            Feature fDossier = Piece.FeatureById(IdDossier);
-                            BodyFolder dossier = fDossier.GetSpecificFeature2();
-
-                            var RefDossier = dossier.eProp(CONSTANTES.REF_DOSSIER);
-
-                            Body2 Tole = dossier.eCorpsDeTolerie();
-
-                            WindowLog.SautDeLigne();
-                            WindowLog.EcrireF("    - [{1}/{2}] Dossier : \"{0}\" x{3}", RefDossier, ++DrPct, ListeDossier.Count, QuantiteTole);
-
-                            String Materiau = Tole.eGetMateriauCorpsOuPiece(Piece, NomConfigPliee);
-
-                            Materiau = ForcerMateriau.IsRefAndNotEmpty(Materiau);
-
-                            Double Epaisseur = Tole.eEpaisseurCorps();
-                            String NomConfigDepliee = Sw.eNomConfigDepliee(NomConfigPliee, RefDossier);
-
-                            WindowLog.EcrireF("      Ep {0} / Materiau {1}", Epaisseur, Materiau);
-                            WindowLog.EcrireF("          Config {0}", NomConfigDepliee);
-
-                            if (ConvertirEsquisse)
-                            {
-                                if (!mdl.eListeNomConfiguration().Contains(NomConfigDepliee))
-                                    mdl.CreerConfigDepliee(NomConfigDepliee, NomConfigPliee);
-
-                                WindowLog.EcrireF("          Configuration crée : {0}", NomConfigDepliee);
-                                mdl.ShowConfiguration2(NomConfigDepliee);
-                                Tole.DeplierTole(mdl, NomConfigDepliee);
-                            }
-                            else if (!mdl.ShowConfiguration2(NomConfigDepliee))
-                            {
-                                DicErreur.Add(mdl.eNomSansExt() + " -> cfg : " + NomConfigPliee + " - No : " + RefDossier + " = " + NomConfigDepliee);
-                                WindowLog.EcrireF("La configuration n'éxiste pas");
-                                continue;
-                            }
-
-                            mdl.EditRebuild3();
-
-                            DrawingDoc dessin = CreerPlan(Materiau, Epaisseur);
-                            dessin.eModelDoc2().eActiver();
-                            Sheet Feuille = dessin.eFeuilleActive();
-
-                            View v = CreerVueToleDvp(dessin, Feuille, Piece, NomConfigDepliee, RefDossier, Materiau, QuantiteTole, Epaisseur);
-
-                            if (ConvertirEsquisse)
-                            {
-                                mdl.ShowConfiguration2(NomConfigPliee);
-                                mdl.EditRebuild3();
-                                mdl.DeleteConfiguration2(NomConfigDepliee);
-                            }
-                        }
-
-                        NouvelleLigne = true;
+                        WindowLog.EcrireF("  - Pas de configuration dvp");
+                        continue;
                     }
 
-                    if (mdl.GetPathName() != MdlBase.GetPathName())
-                        App.Sw.CloseDoc(mdl.GetPathName());
+                    mdlCorps.EditRebuild3();
+
+                    DrawingDoc dessin = CreerPlan(corps.Materiau, corps.Dimension.eToDouble());
+                    dessin.eModelDoc2().eActiver();
+                    Sheet Feuille = dessin.eFeuilleActive();
+
+                    try
+                    {
+                        View v = CreerVueToleDvp(dessin, Feuille, mdlCorps.ePartDoc(), NomConfigDepliee, corps.RepereComplet, corps.Materiau, QuantiteTole, corps.Dimension.eToDouble());
+                    }
+                    catch (Exception e)
+                    {
+                        WindowLog.Ecrire("  - Erreur");
+                        this.LogMethode(new Object[] { e });
+                    }
+
+                    mdlCorps.ShowConfiguration2(NomConfigPliee);
+
+                    App.Sw.CloseDoc(mdlCorps.GetPathName());
                 }
 
                 foreach (DrawingDoc dessin in DicDessins.Values)
@@ -161,29 +109,6 @@ namespace ModuleProduction.ModuleProduireDvp
                     dessin.eModelDoc2().ViewZoomtofit2();
                     dessin.eModelDoc2().Save3((int)swSaveAsOptions_e.swSaveAsOptions_SaveReferenced + (int)swSaveAsOptions_e.swSaveAsOptions_Silent, ref Errors, ref Warnings);
                 }
-
-                if (FermerPlan)
-                {
-                    foreach (ModelDoc2 dessin in DicDessins.Values)
-                        App.Sw.CloseDoc(dessin.GetPathName());
-                }
-
-                if (DicErreur.Count > 0)
-                {
-                    WindowLog.SautDeLigne();
-
-                    WindowLog.Ecrire("Liste des erreurs :");
-                    foreach (var item in DicErreur)
-                        WindowLog.Ecrire(" - " + item);
-
-                    WindowLog.SautDeLigne();
-                }
-                else
-                {
-                    WindowLog.Ecrire("Pas d'erreur");
-                }
-
-                File.WriteAllText(Path.Combine(DossierDVP, "Log_CreerDvp.txt"), WindowLog.Resume);
             }
             catch (Exception e)
             {
@@ -247,13 +172,6 @@ namespace ModuleProduction.ModuleProduireDvp
             z.PointMax.Y = Math.Max(z.PointMax.Y, z.PointMin.Y + g.Ht);
         }
 
-        private void CreerDossierDVP()
-        {
-            DossierDVP = System.IO.Path.Combine(MdlBase.eDossier(), CONSTANTES.DOSSIER_DVP);
-            if (!System.IO.Directory.Exists(DossierDVP))
-                System.IO.Directory.CreateDirectory(DossierDVP);
-        }
-
         private DrawingDoc CreerPlan(String materiau, Double epaisseur)
         {
             String Fichier = String.Format("{0}{1} - Ep{2}",
@@ -264,26 +182,6 @@ namespace ModuleProduction.ModuleProduireDvp
 
             if (DicDessins.ContainsKey(Fichier))
                 return DicDessins[Fichier];
-
-            if (MajPlans)
-            {
-                var di = new DirectoryInfo(DossierDVP);
-                var NomFichierExt = Fichier + eTypeDoc.Dessin.GetEnumInfo<ExtFichier>();
-                var r = di.GetFiles(NomFichierExt, SearchOption.TopDirectoryOnly);
-                if (r.Length > 0)
-                {
-                    int Erreur = 0, Warning = 0;
-                    DrawingDoc dessin = App.Sw.OpenDoc6(Path.Combine(DossierDVP, NomFichierExt),
-                        (int)swDocumentTypes_e.swDocDRAWING,
-                        (int)swOpenDocOptions_e.swOpenDocOptions_Silent,
-                        "",
-                        ref Erreur,
-                        ref Warning).eDrawingDoc();
-                    DicDessins.Add(Fichier, dessin);
-
-                    return dessin;
-                }
-            }
 
             DrawingDoc Dessin = Sw.eCreerDocument(DossierDVP, Fichier, eTypeDoc.Dessin, CONSTANTES.MODELE_DE_DESSIN_LASER).eDrawingDoc();
 
@@ -310,29 +208,7 @@ namespace ModuleProduction.ModuleProduireDvp
 
         public View CreerVueToleDvp(DrawingDoc dessin, Sheet feuille, PartDoc piece, String configDepliee, String Ref, String materiau, int quantite, Double epaisseur)
         {
-            // Si des corps autre que la tole dépliée sont encore visible dans la config, on les cache et on recontruit tout
-            foreach (Body2 pCorps in piece.eListeCorps(false))
-            {
-                if ((pCorps.Name == CONSTANTES.NOM_CORPS_DEPLIEE))
-                    pCorps.eVisible(true);
-                else
-                    pCorps.eVisible(false);
-            }
-
             var NomVue = piece.eModelDoc2().eNomSansExt() + " - " + configDepliee;
-
-            if (MajPlans)
-            {
-                foreach (var vue in feuille.eListeDesVues())
-                {
-                    if (vue.GetName2() == NomVue)
-                    {
-                        vue.eSelectionner(dessin);
-                        dessin.eModelDoc2().Extension.DeleteSelection2((int)swDeleteSelectionOptions_e.swDelete_Advanced);
-                        break;
-                    }
-                }
-            }
 
             dessin.eModelDoc2().eEffacerSelection();
 
@@ -381,15 +257,6 @@ namespace ModuleProduction.ModuleProduireDvp
                     Annotation.SetLeader3((int)swLeaderStyle_e.swNO_LEADER, (int)swLeaderSide_e.swLS_SMART, true, true, false, false);
                 }
 
-                if (ConvertirEsquisse)
-                {
-                    String titre = Vue.GetName2();
-                    Vue.ReplaceViewWithSketch();
-                    Vue = feuille.eListeDesVues().Last();
-                    Vue.SetName2(titre);
-                    g = new GeomVue(Vue);
-                }
-
                 PositionnerVue(feuille, Vue, g);
 
                 return Vue;
@@ -404,25 +271,28 @@ namespace ModuleProduction.ModuleProduireDvp
 
             MathUtility SwMath = App.Sw.GetMathUtility();
 
-            ModelDoc2 mdl = dessin.eModelDoc2();
+            ModelDoc2 Dessin = dessin.eModelDoc2();
 
-            Body2 c = piece.eChercherCorps(CONSTANTES.NOM_CORPS_DEPLIEE, true);
+            var liste = piece.eModelDoc2().ListeFonctionsDepliee();
+            if (liste.Count == 0) return null;
+
+            Feature FonctionDepliee = piece.eModelDoc2().ListeFonctionsDepliee()[0];
 
             GeomVue g = null;
 
-            c.eFonctionEtatDepliee().eParcourirSousFonction(
+            FonctionDepliee.eParcourirSousFonction(
                 f =>
                 {
                     if (f.Name.StartsWith(CONSTANTES.LIGNES_DE_PLIAGE))
                     {
                         String NomSelection = f.Name + "@" + vue.RootDrawingComponent.Name + "@" + vue.Name;
-                        mdl.Extension.SelectByID2(NomSelection, "SKETCH", 0, 0, 0, false, 0, null, 0);
+                        Dessin.Extension.SelectByID2(NomSelection, "SKETCH", 0, 0, 0, false, 0, null, 0);
                         if (AfficherLignePliage)
-                            mdl.UnblankSketch();
+                            Dessin.UnblankSketch();
                         else
-                            mdl.BlankSketch();
+                            Dessin.BlankSketch();
 
-                        mdl.eEffacerSelection();
+                        Dessin.eEffacerSelection();
                     }
                     else if (f.Name.StartsWith(CONSTANTES.CUBE_DE_VISUALISATION))
                     {

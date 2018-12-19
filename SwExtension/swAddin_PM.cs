@@ -8,6 +8,7 @@ using ModuleImporterInfos;
 using ModuleInsererPercage;
 using ModuleProduction.ModuleRepererDossier;
 using ModuleProduction.ModuleProduireDvp;
+using ModuleProduction.ModuleGenererConfigDvp;
 using ModuleLaser;
 using ModuleLaser.ModuleCreerConfigDvp;
 using ModuleLaser.ModuleCreerDvp;
@@ -108,6 +109,7 @@ namespace SwExtension
 
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde("Rd", typeof(PageRepererDossier));
+                _Mnu.AjouterCmde("Gd", typeof(PageGenererConfigDvp));
                 _Mnu.AjouterCmde("Pd", typeof(PageProduireDvp));
 
                 //==================================================================================================

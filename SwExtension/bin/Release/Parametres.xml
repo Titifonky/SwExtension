@@ -203,4 +203,8 @@
     <Parametre name="FermerPlan" intitule="Fermer les plans" tip="Fermer les plans après génération des dvps" type="System.Boolean">False</Parametre>
     <Parametre name="ConvertirEsquisse" intitule="Convertir les dvp en esquisse" tip="Le lien entre le dvp et le modèle est cassé, la config dvp est supprimée après la création de la vue" type="System.Boolean">False</Parametre>
   </Module>
+  <Module name="GenererConfigDvp" intitule="Générer les config. dvp">
+    <Parametre name="SupprimerLesAnciennesConfigs" intitule="Supprimer les anciennes configs dvp" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="MasquerEsquisses" intitule="Masquer toutes les esquisses" tip="" type="System.Boolean">False</Parametre>
+  </Module>
 </Parametres>
