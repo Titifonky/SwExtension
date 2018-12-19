@@ -6,8 +6,8 @@ using ModuleExportFichier.ModuleDxfDwg;
 using ModuleExportFichier.ModulePdf;
 using ModuleImporterInfos;
 using ModuleInsererPercage;
-using ModuleProduction;
 using ModuleProduction.ModuleRepererDossier;
+using ModuleProduction.ModuleProduireDvp;
 using ModuleLaser;
 using ModuleLaser.ModuleCreerConfigDvp;
 using ModuleLaser.ModuleCreerDvp;
@@ -108,6 +108,7 @@ namespace SwExtension
 
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde("Rd", typeof(PageRepererDossier));
+                _Mnu.AjouterCmde("Pd", typeof(PageProduireDvp));
 
                 //==================================================================================================
                 _Mnu = _eListeMenu.Add("Escalier", "Fonctions d'aide à la création d'escalier");

@@ -90,6 +90,8 @@
     <Compile Include="Macros\BoutonMasquerCorpsVue.cs" />
     <Compile Include="Macros\BoutonSelectionnerCorpsIdentiques.cs" />
     <Compile Include="Macros\BoutonAfficherLogDebug.cs" />
+    <Compile Include="ModuleProduction\ModuleCreerDvp\CmdProduireDvp.cs" />
+    <Compile Include="ModuleProduction\ModuleCreerDvp\PageProduireDVP.cs" />
     <Compile Include="ModuleProduction\ModuleRepererDossier\CmdRepererDossier.cs" />
     <Compile Include="ModuleProduction\ModuleRepererDossier\PageRepererDossier.cs" />
     <Compile Include="ModuleProduction\OutilsCommun.cs" />

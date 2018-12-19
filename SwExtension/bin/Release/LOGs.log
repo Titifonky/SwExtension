@@ -1,59 +1,31 @@
-14:47:55,808 | 
+15:04:38,972 | 
  
-14:47:55,818 | ====================================================================================================
-14:47:55,818 | |                                                                                                  |
-14:47:55,818 | |                                          DEBUG                                                   |
-14:47:55,818 | |                                                                                                  |
-14:47:55,818 | ====================================================================================================
-14:47:55,818 | 
+15:04:38,972 | ====================================================================================================
+15:04:38,972 | |                                                                                                  |
+15:04:38,972 | |                                          DEBUG                                                   |
+15:04:38,972 | |                                                                                                  |
+15:04:38,972 | ====================================================================================================
+15:04:38,972 | 
  
-14:48:32,148 | 			PageRepererDossier..ctor  ->  Est initialisé : True
-14:48:32,212 | 				-> ## 02:48:32     0     0      REPÉRER LES DOSSIERS
-14:48:32,238 | 				-> ## 02:48:32     0     0  ========================
-14:48:32,252 | 				-> ## 02:48:32     0     0  
-14:48:32,268 | 			PageRepererDossier.Command  ->  Show
-14:48:32,338 | 				-> ## 02:48:32     0     0  Recherche des éléments existants :
-14:48:32,372 | 				-> ## 02:48:32     0     0  11 pièce(s) sont référencé(s)
-14:48:32,442 | 				-> ## 02:48:32     0     0  Executé en 0s159
-14:48:32,472 | 				-> ## 02:48:32     0     0  
-14:48:35,018 | 				-> ## 02:48:35     3     3  
-14:48:35,042 | 				-> ## 02:48:35     3     0  PC01 "0"
-14:48:35,108 | 				-> ## 02:48:35     3     0       Article-liste-des-pièces-soudées2 -> 1
-14:48:35,868 | 				-> ## 02:48:35     4     1  
-14:48:35,888 | 				-> ## 02:48:35     4     0  PC01 "1"
-14:48:35,918 | 				-> ## 02:48:35     4     0       P2<1> -> 2
-14:48:35,958 | 				-> ## 02:48:35     4     0       P3<1> -> 3
-14:48:38,018 | 				-> ## 02:48:38     6     2  
-14:48:38,042 | 				-> ## 02:48:38     6     0  PL01 "0"
-14:48:38,088 | 				-> ## 02:48:38     6     0       P4<1> -> 4
-14:48:38,122 | 				-> ## 02:48:38     6     0       P5<1> -> 5
-14:48:39,997 | 				-> ## 02:48:39     8     2  
-14:48:40,022 | 				-> ## 02:48:40     8     0  PL02 "0"
-14:48:40,127 | 				-> ## 02:48:40     8     0       P6<1> -> 6
-14:48:40,248 | 				-> ## 02:48:40     8     0       P7<1> -> 7
-14:48:40,322 | 				-> ## 02:48:40     8     0       P8<1> -> 8
-14:48:42,608 | 				-> ## 02:48:42    10     2  
-14:48:42,622 | 				-> ## 02:48:42    10     0  PL03 "0"
-14:48:42,658 | 				-> ## 02:48:42    11     0       P9<1> -> 9
-14:48:42,688 | 				-> ## 02:48:42    11     0       P10<1> -> 10
-14:48:44,018 | 				-> ## 02:48:44    12     1  
-14:48:44,042 | 				-> ## 02:48:44    12     0  PM01 "1"
-14:48:44,068 | 				-> ## 02:48:44    12     0       Article-liste-des-pièces-soudées1 -> 11
-14:48:47,818 | 				-> ## 02:48:47    16     4  
-14:48:47,842 | 				-> ## 02:48:47    16     0  Export des corps :
-14:48:47,878 | 				-> ## 02:48:47    16     0  
-14:48:47,912 | 				-> ## 02:48:47    16     0  Nb de corps unique : 11
-14:48:47,942 | 				-> ## 02:48:47    16     0  1 P1 ×13
-14:48:47,981 | 				-> ## 02:48:47    16     0  1 P2 ×1
-14:48:48,008 | 				-> ## 02:48:48    16     0  1 P3 ×1
-14:48:48,042 | 				-> ## 02:48:48    16     0  1 P4 ×1
-14:48:48,057 | 				-> ## 02:48:48    16     0  1 P5 ×1
-14:48:48,078 | 				-> ## 02:48:48    16     0  1 P6 ×1
-14:48:48,108 | 				-> ## 02:48:48    16     0  1 P7 ×1
-14:48:48,138 | 				-> ## 02:48:48    16     0  1 P8 ×1
-14:48:48,178 | 				-> ## 02:48:48    16     0  1 P9 ×1
-14:48:48,218 | 				-> ## 02:48:48    16     0  1 P10 ×2
-14:48:48,238 | 				-> ## 02:48:48    16     0  1 P11 ×14
-14:48:48,278 | 				-> ## 02:48:48    16     0  Nb total de corps : 37
-14:48:48,318 | 				-> ## 02:48:48    16     0  
-14:48:48,342 | 				-> ## 02:48:48    16     0  Executé en 14s229
+15:04:51,542 | 			PageProduireDvp..ctor  ->  Est initialisé : True
+15:04:51,552 | 				-> ## 03:04:51     0     0      CREER LES DVP DE TÔLE
+15:04:51,552 | 				-> ## 03:04:51     0     0  ========================
+15:04:51,552 | 				-> ## 03:04:51     0     0  
+15:04:51,573 | 			PageProduireDvp.Calque  ->  System.NullReferenceException: La référence d'objet n'est pas définie à une instance d'un objet.
+   à Outils.Sw.eRefFichier(ModelDoc2 mdl) dans E:\Mes documents\Projets Visual Studio\SwExtension\SwExtension\Outils\Sw.cs:ligne 2961
+   à ModuleProduction.ModuleProduireDvp.PageProduireDvp.Calque() dans E:\Mes documents\Projets Visual Studio\SwExtension\SwExtension\ModuleProduction\ModuleCreerDvp\PageProduireDVP.cs:ligne 84
+15:04:51,573 | 			PageProduireDvp.Command  ->  Show
+15:04:51,576 | 				-> ## 03:04:51     0     0  Executé en 0s20
+15:04:51,576 | 				-> ## 03:04:51     0     0  
+15:05:11,795 | 			PageProduireDvp..ctor  ->  Est initialisé : True
+15:05:11,827 | 				-> ## 03:05:11     0     0      CREER LES DVP DE TÔLE
+15:05:11,842 | 				-> ## 03:05:11     0     0  ========================
+15:05:11,856 | 				-> ## 03:05:11     0     0  
+15:05:11,866 | 			PageProduireDvp.Calque  ->  System.NullReferenceException: La référence d'objet n'est pas définie à une instance d'un objet.
+   à Outils.CtrlCheckBox..ctor(Groupe groupe, Int32 options, Parametre param, Boolean avecLabel) dans E:\Mes documents\Projets Visual Studio\SwExtension\SwExtension\Outils\PMPControls.cs:ligne 834
+   à ModuleProduction.ModuleProduireDvp.PageProduireDvp.Calque() dans E:\Mes documents\Projets Visual Studio\SwExtension\SwExtension\ModuleProduction\ModuleCreerDvp\PageProduireDVP.cs:ligne 98
+15:05:11,866 | 			PageProduireDvp.Command  ->  Show
+15:05:11,926 | 				-> ## 03:05:11     0     0  Recherche des materiaux : 
+15:05:11,956 | 				-> ## 03:05:11     0     0  
+15:05:11,996 | 				-> ## 03:05:11     0     0  Executé en 0s119
+15:05:12,023 | 				-> ## 03:05:12     0     0  

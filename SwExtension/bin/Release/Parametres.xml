@@ -192,4 +192,15 @@
     <Parametre name="CombinerAvecPrecedenteCampagne" intitule="Combiner les corps avec les précédentes campagnes" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="ExporterFichierCorps" intitule="Exporter les corps dans des fichiers" tip="" type="System.Boolean">True</Parametre>
   </Module>
+  <Module name="ProduireDvp" intitule="Creer les dvp de tôle">
+    <Parametre name="PropQuantite" intitule="Propriete &quot;Quantite&quot;" tip="Recherche cette propriete" type="System.String">Quantite</Parametre>
+    <Parametre name="AfficherLignePliage" intitule="Afficher les lignes de pliage" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="AfficherNotePliage" intitule="Afficher les notes de pliage" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="InscrireNomTole" intitule="Inscrire la réf du dvp sur la tole" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="TailleInscription" intitule="Ht des inscriptions en mm" tip="Ht des inscriptions en mm" type="System.Int32">5</Parametre>
+    <Parametre name="OrienterDvp" intitule="Orienter les dvps" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="OrientationDvp" intitule="" tip="" type="Outils.eOrientation">Portrait</Parametre>
+    <Parametre name="FermerPlan" intitule="Fermer les plans" tip="Fermer les plans après génération des dvps" type="System.Boolean">False</Parametre>
+    <Parametre name="ConvertirEsquisse" intitule="Convertir les dvp en esquisse" tip="Le lien entre le dvp et le modèle est cassé, la config dvp est supprimée après la création de la vue" type="System.Boolean">False</Parametre>
+  </Module>
 </Parametres>
