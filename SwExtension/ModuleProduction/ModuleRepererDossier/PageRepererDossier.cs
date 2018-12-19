@@ -57,7 +57,8 @@ namespace ModuleProduction
             }
 
             private CtrlTextBox _Texte_IndiceCampagne;
-            private CtrlCheckBox _CheckBox_SupprimerReperes;
+            private CtrlCheckBox _CheckBox_MajCampagnePrecedente;
+            private CtrlCheckBox _CheckBox_ReinitCampagneActuelle;
             private CtrlCheckBox _CheckBox_CombinerCorps;
             private CtrlCheckBox _CheckBox_CombinerAvecCampagne;
             private CtrlCheckBox _CheckBox_ExporterFichierCorps;
@@ -72,10 +73,24 @@ namespace ModuleProduction
 
                     _Texte_IndiceCampagne = G.AjouterTexteBox("Indice de la campagne de repérage :");
                     _Texte_IndiceCampagne.LectureSeule = true;
-                    _CheckBox_SupprimerReperes = G.AjouterCheckBox("Mettre à jour la campagne précédente");
+
+                    _CheckBox_ReinitCampagneActuelle = G.AjouterCheckBox("Reinitialiser la campagne actuelle");
+                    _CheckBox_MajCampagnePrecedente = G.AjouterCheckBox("Mettre à jour la campagne précédente (en cas d'oubli)");
+
+                    _CheckBox_ReinitCampagneActuelle.OnCheck += delegate { _CheckBox_MajCampagnePrecedente.IsEnabled = false; _CheckBox_MajCampagnePrecedente.IsChecked = false; };
+                    _CheckBox_ReinitCampagneActuelle.OnUnCheck += delegate { if (IndiceCampagne > 1) _CheckBox_MajCampagnePrecedente.IsEnabled = true; };
+
+                    _CheckBox_MajCampagnePrecedente.OnCheck += delegate { _CheckBox_ReinitCampagneActuelle.IsEnabled = false; _CheckBox_ReinitCampagneActuelle.IsChecked = false; };
+                    _CheckBox_MajCampagnePrecedente.OnUnCheck += delegate {  _CheckBox_ReinitCampagneActuelle.IsEnabled = true; };
+
+                    _CheckBox_MajCampagnePrecedente.OnCheck += delegate {  if(_CheckBox_MajCampagnePrecedente.IsEnabled && (IndiceCampagne > 1)) IndiceCampagne -= 1; };
+                    _CheckBox_MajCampagnePrecedente.OnUnCheck += delegate { if (_CheckBox_MajCampagnePrecedente.IsEnabled) IndiceCampagne += 1; };
+
+                    G = _Calque.AjouterGroupe("Options");
                     _CheckBox_ExporterFichierCorps = G.AjouterCheckBox(ExporterFichierCorps);
                     _CheckBox_CombinerCorps = G.AjouterCheckBox(CombinerCorpsIdentiques);
                     _CheckBox_CombinerAvecCampagne = G.AjouterCheckBox(CombinerAvecCampagne);
+                    _CheckBox_CombinerAvecCampagne.Indent = 1;
 
                     _CheckBox_ExporterFichierCorps.OnUnCheck += _CheckBox_CombinerCorps.UnCheck;
                     _CheckBox_ExporterFichierCorps.OnIsCheck += _CheckBox_CombinerCorps.IsEnable;
@@ -104,9 +119,15 @@ namespace ModuleProduction
                     // Recherche de la nomenclature
                     MdlBase.CreerFichierTexte(CONST_PRODUCTION.DOSSIER_PIECES, CONST_PRODUCTION.FICHIER_NOMENC, out FichierNomenclature);
 
+                    // Recherche des exports laser, tole ou tube, existant
+                    var IndiceLaser = Math.Max(MdlBase.RechercherIndiceDossier(CONST_PRODUCTION.DOSSIER_LASERTOLE),
+                                                  MdlBase.RechercherIndiceDossier(CONST_PRODUCTION.DOSSIER_LASERTUBE)
+                                                  );
+
+                    IndiceCampagne = IndiceLaser + 1;
+
                     // Aquisition de la liste des corps déjà repérées
                     // et recherche de l'indice nomenclature max
-                    int IndiceNomenclature = 1;
                     using (var sr = new StreamReader(FichierNomenclature, Encoding.GetEncoding(1252)))
                     {
                         // On lit la première ligne contenant l'entête des colonnes
@@ -121,8 +142,6 @@ namespace ModuleProduction
                                 if (!String.IsNullOrWhiteSpace(ligne))
                                 {
                                     var c = new Corps(ligne);
-                                    
-                                    IndiceNomenclature = Math.Max(IndiceNomenclature, c.Campagne.Keys.Max());
                                     ListeCorps.Add(c.Repere, c);
                                 }
                             }
@@ -131,24 +150,45 @@ namespace ModuleProduction
                         }
                     }
 
-                    // Recherche des exports laser, tole ou tube, existant
-                    var IndiceLaser = Math.Max(MdlBase.RechercherIndiceDossier(CONST_PRODUCTION.DOSSIER_LASERTOLE),
-                                                  MdlBase.RechercherIndiceDossier(CONST_PRODUCTION.DOSSIER_LASERTUBE)
-                                                  );
-
+                    // S'il n'y a aucun corps, on désactive les options
                     if (ListeCorps.Count == 0)
                     {
-                        _CheckBox_SupprimerReperes.IsChecked = true;
-                        _CheckBox_SupprimerReperes.IsEnabled = false;
+                        _CheckBox_MajCampagnePrecedente.IsEnabled = false;
+                        _CheckBox_MajCampagnePrecedente.Visible = false;
+
+                        _CheckBox_ReinitCampagneActuelle.IsEnabled = false;
+                        _CheckBox_ReinitCampagneActuelle.Visible = false;
                     }
 
-                    if (IndiceLaser >= IndiceNomenclature)
-                        IndiceCampagne = IndiceLaser + 1;
-                    else
-                        IndiceCampagne = IndiceNomenclature;
+                    // Si aucun corps n'a déjà été comptabilisé pour cette campagne,
+                    // on ne propose pas la réinitialisation
+                    Boolean ReinitCampagneActuelle = false;
+                    foreach (var corps in ListeCorps.Values)
+                    {
+                        if(corps.Campagne.Keys.Max() >= IndiceCampagne)
+                        {
+                            ReinitCampagneActuelle = true;
+                            break;
+                        }
+                    }
 
+                    if (!ReinitCampagneActuelle)
+                    {
+                        _CheckBox_ReinitCampagneActuelle.IsEnabled = false;
+                        _CheckBox_ReinitCampagneActuelle.Visible = false;
+                    }
+
+
+                    // Si c'est la première campagne, on désactive des options
                     if (IndiceCampagne == 1)
+                    {
+                        _CheckBox_MajCampagnePrecedente.IsEnabled = false;
+                        _CheckBox_MajCampagnePrecedente.Visible = false;
+
+                        _CheckBox_CombinerAvecCampagne.IsChecked = false;
+                        _CheckBox_CombinerAvecCampagne.IsEnabled = false;
                         _CheckBox_CombinerAvecCampagne.Visible = false;
+                    }
                 }
                 catch (Exception e) { this.LogErreur(new Object[] { e }); }
             }
@@ -161,7 +201,9 @@ namespace ModuleProduction
                 Cmd.IndiceCampagne = IndiceCampagne;
                 Cmd.CombinerCorpsIdentiques = _CheckBox_CombinerCorps.IsChecked;
                 Cmd.CombinerAvecCampagne = _CheckBox_CombinerAvecCampagne.IsChecked;
-                Cmd.SupprimerReperes = _CheckBox_SupprimerReperes.IsChecked;
+                Cmd.ReinitCampagneActuelle = _CheckBox_ReinitCampagneActuelle.IsChecked;
+                Cmd.MajCampagnePrecedente = _CheckBox_MajCampagnePrecedente.IsChecked;
+                
                 Cmd.ExporterFichierCorps = _CheckBox_ExporterFichierCorps.IsChecked;
                 Cmd.ListeCorpsExistant = ListeCorps;
                 Cmd.FichierNomenclature = FichierNomenclature;
@@ -175,22 +217,58 @@ namespace ModuleProduction
             public Body2 SwCorps = null;
             public SortedDictionary<int, int> Campagne = new SortedDictionary<int, int>();
             public int Repere;
-            public int Nb = 0;
             public eTypeCorps TypeCorps;
             /// <summary>
             /// Epaisseur de la tôle ou section
             /// </summary>
             public String Dimension;
             public String Materiau;
+            public ModelDoc2 Modele = null;
+            private long _TailleFichier = long.MaxValue;
+            public String NomConfig = "";
+            public int IdDossier = -1;
+            public String NomCorps = "";
 
-            /// <summary>
-            /// SortedDictionary
-            ///     |- Modele / SortedDictionary
-            ///         |- NomConfig / SortedDictionary
-            ///             |- Id dossier / NomCorps
-            /// </summary>
-            public SortedDictionary<ModelDoc2, SortedDictionary<String, SortedDictionary<int, String>>> ListeModele = new SortedDictionary<ModelDoc2, SortedDictionary<String, SortedDictionary<int, String>>>(new CompareModelDoc2());
+            public static String Entete(int indiceCampagne)
+            {
+                String entete = String.Format("{0}\t{1}\t{2}\t{3}", "Repere", "Type", "Dimension", "Materiau");
+                for (int i = 0; i < indiceCampagne; i++)
+                    entete += String.Format("\t{0}", i + 1);
 
+                return entete;
+            }
+
+            public override string ToString()
+            {
+                String Ligne = String.Format("{0}\t{1}\t{2}\t{3}", Repere, TypeCorps, Dimension, Materiau);
+
+                for (int i = 0; i < Campagne.Keys.Max(); i++)
+                {
+                    int nb = 0;
+                    if (Campagne.ContainsKey(i + 1))
+                        nb = Campagne[i + 1];
+
+                    Ligne += String.Format("\t{0}", nb);
+                }
+
+                return Ligne;
+            }
+
+            public void InitCampagne(int indiceCampagne)
+            {
+                if (Campagne.ContainsKey(indiceCampagne))
+                    Campagne[indiceCampagne] = 0;
+                else
+                    Campagne.Add(indiceCampagne, 0);
+            }
+
+            public void InitDimension(BodyFolder dossier, Body2 corps)
+            {
+                if (TypeCorps == eTypeCorps.Tole)
+                    Dimension = corps.eEpaisseurCorpsOuDossier(dossier).ToString();
+                else
+                    Dimension = dossier.eProfilDossier();
+            }
 
             public Corps(Body2 swCorps, eTypeCorps typeCorps, String materiau)
             {
@@ -221,37 +299,17 @@ namespace ModuleProduction
                     Campagne.Add(cp++, tab[i].eToInteger());
             }
 
-            public void AjouterModele(ModelDoc2 mdl, String config, int iDDossier, String nomCorps)
+            public void AjouterModele(ModelDoc2 mdl, String config, int idDossier, String nomCorps)
             {
-                if (ListeModele.ContainsKey(mdl))
+                long t = new FileInfo(mdl.GetPathName()).Length;
+                if (t < _TailleFichier)
                 {
-                    var lCfg = ListeModele[mdl];
-                    if (lCfg.ContainsKey(config))
-                    {
-                        var lDossier = lCfg[config];
-                        if (!lDossier.ContainsKey(iDDossier))
-                            lDossier.Add(iDDossier, nomCorps);
-                    }
-                    else
-                    {
-                        var lDossier = new SortedDictionary<int, String>();
-                        lDossier.Add(iDDossier, nomCorps);
-                        lCfg.Add(config, lDossier);
-                    }
+                    _TailleFichier = t;
+                    Modele = mdl;
+                    NomConfig = config;
+                    IdDossier = idDossier;
+                    NomCorps = nomCorps;
                 }
-                else
-                {
-                    var lDossier = new SortedDictionary<int, String>();
-                    lDossier.Add(iDDossier, nomCorps);
-                    var lCfg = new SortedDictionary<String, SortedDictionary<int, String>>(new WindowsStringComparer());
-                    lCfg.Add(config, lDossier);
-                    ListeModele.Add(mdl, lCfg);
-                }
-            }
-
-            public void AjouterModele(Component2 comp, int iDDossier, String nomCorps)
-            {
-                AjouterModele(comp.eModelDoc2(), comp.eNomConfiguration(), iDDossier, nomCorps);
             }
         }
     }
