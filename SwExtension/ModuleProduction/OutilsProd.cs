@@ -13,6 +13,7 @@ namespace ModuleProduction
     public static class CONST_PRODUCTION
     {
         public const String DOSSIER_PIECES = "Pieces";
+        public const String DOSSIER_PIECES_APERCU = "Apercu";
         public const String FICHIER_NOMENC = "Nomenclature";
         public const String DOSSIER_LASERTOLE = "Laser tole";
         public const String DOSSIER_LASERTUBE = "Laser tube";

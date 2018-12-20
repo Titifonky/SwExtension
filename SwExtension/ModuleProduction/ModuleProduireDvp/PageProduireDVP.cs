@@ -2,9 +2,13 @@
 using Outils;
 using SolidWorks.Interop.sldworks;
 using SwExtension;
+using SwExtension.Outils;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Windows.Media.Imaging;
 
 namespace ModuleProduction.ModuleProduireDvp
 {
@@ -51,6 +55,8 @@ namespace ModuleProduction.ModuleProduireDvp
             catch (Exception e)
             { this.LogMethode(new Object[] { e }); }
         }
+
+        private ModelDoc2 MdlBase;
 
         private CtrlTextListBox _TextListBox_Materiaux;
 
@@ -158,8 +164,8 @@ namespace ModuleProduction.ModuleProduireDvp
         {
             WindowLog.Ecrire("Recherche des materiaux et epaisseurs ");
 
-            ListeCorps = App.ModelDoc2.ChargerNomenclature();
-
+            MdlBase = App.ModelDoc2;
+            ListeCorps = MdlBase.ChargerNomenclature();
             ListeMateriaux = new List<String>();
             ListeEp = new List<String>();
 
@@ -169,6 +175,7 @@ namespace ModuleProduction.ModuleProduireDvp
 
                 ListeMateriaux.AddIfNotExist(corps.Materiau);
                 ListeEp.AddIfNotExist(corps.Dimension);
+                Apercu(corps.NomFichier(MdlBase));
             }
 
             WindowLog.SautDeLigne();
@@ -181,6 +188,23 @@ namespace ModuleProduction.ModuleProduireDvp
 
             _TextListBox_Ep.Liste = ListeEp;
             _TextListBox_Ep.ToutSelectionner(false);
+        }
+
+        private String Apercu(String cheminFichier, ThumbnailSize taille = ThumbnailSize.T256)
+        {
+            String Dossier = Path.Combine(Path.GetDirectoryName(cheminFichier), CONST_PRODUCTION.DOSSIER_PIECES_APERCU);
+            Directory.CreateDirectory(Dossier);
+            String CheminFichier = Path.Combine(Dossier, Path.GetFileNameWithoutExtension(cheminFichier) + ".png");
+            if (!File.Exists(CheminFichier))
+            {
+                Bitmap thumbnail = WindowsThumbnailProvider.GetThumbnail(cheminFichier, (int)taille, (int)taille, ThumbnailOptions.None);
+                Image img = WindowsThumbnailProvider.AutoCrop(thumbnail);
+                img.Save(CheminFichier, ImageFormat.Png);
+                thumbnail.Dispose();
+                img.Dispose();
+            }
+
+            return CheminFichier;
         }
 
         protected void RunOkCommand()
