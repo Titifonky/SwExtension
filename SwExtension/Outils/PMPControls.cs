@@ -605,6 +605,36 @@ namespace Outils
         }
     }
 
+    public class CtrlImage : Control
+    {
+        private PropertyManagerPageBitmap _swImage;
+
+        public PropertyManagerPageBitmap swImage { get { return _swImage; } }
+
+        public void Chemin(String cheminCouleur, String cheminMasque)
+        {
+            swImage.SetBitmapByName(cheminCouleur, cheminMasque);
+        }
+
+        private void Init(String intitule, int options, String tip = "")
+        {
+            _swImage = _Groupe.swGroup.AddControl2(Id, (int)swPropertyManagerPageControlType_e.swControlType_Bitmap,
+                                                                                        intitule,
+                                                                                        (int)swPropertyManagerPageControlLeftAlign_e.swControlAlign_Indent,
+                                                                                        options,
+                                                                                        tip);
+            _swControl = (PropertyManagerPageControl)_swImage;
+
+            _Groupe.Page.DicControl.Add(Id, this);
+        }
+
+        public CtrlImage(Groupe groupe, String info, int options, String tip)
+            : base(groupe)
+        {
+            Init(info, options, tip);
+        }
+    }
+
     public class CtrlLabel : Control
     {
         private PropertyManagerPageLabel _swLabel;

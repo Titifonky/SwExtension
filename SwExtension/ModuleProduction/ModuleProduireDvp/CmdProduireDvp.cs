@@ -57,15 +57,19 @@ namespace ModuleProduction.ModuleProduireDvp
                     var cheminFichier = corps.NomFichier(MdlBase);
                     if (!File.Exists(cheminFichier)) continue;
 
-                    
-
                     var mdlCorps = Sw.eOuvrir(cheminFichier);
                     if (mdlCorps.IsNull()) continue;
 
-                    WindowLog.EcrireF("{0}", corps.Repere);
+                    WindowLog.EcrireF("{0}", corps.RepereComplet);
+
+                    //mdlCorps.LockAllExternalReferences();
+                    mdlCorps.UnlockAllExternalReferences();
 
                     var listeCfgPliee = mdlCorps.eListeNomConfiguration(eTypeConfig.Pliee);
                     var NomConfigPliee = listeCfgPliee[0];
+
+                    if(mdlCorps.eNomConfigActive() != NomConfigPliee)
+                        mdlCorps.ShowConfiguration2(NomConfigPliee);
 
                     var listeCfgDepliee = mdlCorps.eListeNomConfiguration(eTypeConfig.Depliee);
                     if (listeCfgDepliee.Count == 0) continue;
@@ -95,6 +99,10 @@ namespace ModuleProduction.ModuleProduireDvp
                         WindowLog.Ecrire("  - Erreur");
                         this.LogMethode(new Object[] { e });
                     }
+                    finally
+                    {
+                        WindowLog.Ecrire("  - Ok");
+                    }
 
                     mdlCorps.ShowConfiguration2(NomConfigPliee);
 
@@ -120,8 +128,6 @@ namespace ModuleProduction.ModuleProduireDvp
         {
             return String.Format("{0}-{1}-{2}", mdl.eNomSansExt(), configPliee, noDossier);
         }
-
-        private Boolean NouvelleLigne = false;
 
         private Dictionary<String, eZone> DicPoint = new Dictionary<string, eZone>();
 
@@ -149,6 +155,8 @@ namespace ModuleProduction.ModuleProduireDvp
                 z.PointMax.X = z.PointMin.X; z.PointMax.Y = z.PointMin.Y;
                 DicPoint.Add(feuille.GetName(), z);
             }
+
+            Boolean NouvelleLigne = false;
 
             if (z.PointMax.X > 10)
                 NouvelleLigne = true;
