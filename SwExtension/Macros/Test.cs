@@ -22,21 +22,44 @@ namespace Macros
             if (mdl.TypeDoc() != eTypeDoc.Piece)
                 return;
 
-            
+            var piece = mdl.ePartDoc();
+            var corps = piece.ePremierCorps();
+            var fDepliee = piece.eListeFonctionsDepliee()[0];
+            FlatPatternFeatureData fDeplieeInfo = fDepliee.GetDefinition();
+            Face2 face = fDeplieeInfo.FixedFace2;
+            Surface surface = face.GetSurface();
 
-            foreach (var cfg in mdl.eListeNomConfiguration(eTypeConfig.Racine))
+            Boolean Reverse = face.FaceInSurfaceSense();
+
+            Double[] Param = surface.PlaneParams;
+
+            if (Reverse)
             {
-                mdl.ShowConfiguration2(cfg);
-                mdl.EditRebuild3();
-
-                Configuration C = mdl.GetConfigurationByName(cfg);
-                WindowLog.EcrireF("Config {0} -> {1}", C.Name, C.GetID());
-
-                PartDoc piece = mdl.ePartDoc();
-
-                foreach (var f in piece.eListeDesFonctionsDePiecesSoudees())
-                    WindowLog.EcrireF("  Dossier {0} -> {1}", f.Name, f.GetID());
+                Param[0] = Param[0] * -1;
+                Param[1] = Param[1] * -1;
+                Param[2] = Param[2] * -1;
             }
+
+            Point Origine = new Point(Param[3], Param[4], Param[5]);
+            Vecteur Normale = new Vecteur(Param[0], Param[1], Param[2]);
+
+            corps.eSelect(mdl, 1, false);
+            WindowLog.EcrireF("AngleX : {0}", Normale.AngleX());
+            WindowLog.EcrireF("AngleY : {0}", Normale.AngleY());
+            WindowLog.EcrireF("AngleZ : {0}", Normale.AngleZ());
+            var Rotate = (Feature)mdl.FeatureManager.InsertMoveCopyBody2(0, 0, 0, 0,
+                Origine.X,
+                Origine.Y,
+                Origine.Z,
+                Normale.AngleX(),
+                Normale.AngleY(),
+                Normale.AngleZ(),
+                false, 0);
+
+            if (Rotate.IsRef())
+                WindowLog.Ecrire("Rotation ok");
+
+            mdl.eSauver();
         }
 
         //String cheminbloc = "E:\\Mes documents\\SolidWorks\\2018\\Blocs\\Macro\\REPERAGE_DOSSIER.sldblk";

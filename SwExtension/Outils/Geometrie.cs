@@ -17,6 +17,7 @@ namespace Outils
             return _R2;
         }
     }
+
     public struct Point
     {
         public Double X;
@@ -299,6 +300,27 @@ namespace Outils
                 return true;
 
             return false;
+        }
+
+        public Double AngleX()
+        {
+            Vecteur V = new Vecteur(0, Y, Z);
+            Vecteur Vo = new Vecteur(0, 0, Z);
+            return Vo.Angle(V);
+        }
+
+        public Double AngleY()
+        {
+            Vecteur V = new Vecteur(X, 0, Z);
+            Vecteur Vo = new Vecteur(0, 0, Z);
+            return Vo.Angle(V);
+        }
+
+        public Double AngleZ()
+        {
+            Vecteur V = new Vecteur(X, Y, 0);
+            Vecteur Vo = new Vecteur(0, Y, 0);
+            return Vo.Angle(V);
         }
 
         public Double AnglePlXZ()

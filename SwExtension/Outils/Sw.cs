@@ -4471,6 +4471,17 @@ namespace Outils
 
         //========================================================================================
 
+        public static List<Feature> eListeFonctionsDepliee(this PartDoc piece)
+        {
+            List<Feature> Liste = new List<Feature>();
+            var DossierDepliee = (FlatPatternFolder)piece.eModelDoc2().FeatureManager.GetFlatPatternFolder();
+            Object[] Depliee = (object[])DossierDepliee.GetFlatPatterns();
+            foreach (Feature f in Depliee)
+                Liste.Add(f);
+
+            return Liste;
+        }
+
         public static Feature eFonctionTolerie(this Body2 corps)
         {
             foreach (Feature pFonc in corps.GetFeatures())

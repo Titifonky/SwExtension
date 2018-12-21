@@ -78,11 +78,11 @@ namespace ModuleProduction.ModuleGenererConfigDvp
                     {
                         mdl.ShowConfiguration2(NomConfigDepliee);
                         mdl.EditRebuild3();
-                        mdl.DeplierTole(NomConfigDepliee);
+                        Piece.DeplierTole(NomConfigDepliee);
 
                         mdl.ShowConfiguration2(NomCfgPliee);
                         mdl.EditRebuild3();
-                        mdl.PlierTole(NomCfgPliee);
+                        Piece.PlierTole(NomCfgPliee);
                         WindowLog.EcrireF("  - Dvp crée : {0}", NomConfigDepliee);
                     }
                     catch (Exception e)

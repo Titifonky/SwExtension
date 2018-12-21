@@ -35,23 +35,13 @@ namespace ModuleProduction
             return false;
         }
 
-        public static List<Feature> ListeFonctionsDepliee(this ModelDoc2 mdl)
+        public static void DeplierTole(this PartDoc piece, String nomConfigDepliee)
         {
-            List<Feature> Liste = new List<Feature>();
-            var DossierDepliee = (FlatPatternFolder)mdl.FeatureManager.GetFlatPatternFolder();
-            Object[] Depliee = (object[])DossierDepliee.GetFlatPatterns();
-            foreach (Feature f in Depliee)
-                Liste.Add(f);
-
-            return Liste;
-        }
-
-        public static void DeplierTole(this ModelDoc2 mdl, String nomConfigDepliee)
-        {
-            var liste = mdl.ListeFonctionsDepliee();
+            var mdl = piece.eModelDoc2();
+            var liste = piece.eListeFonctionsDepliee();
             if (liste.Count == 0) return;
 
-            Feature FonctionDepliee = mdl.ListeFonctionsDepliee()[0];
+            Feature FonctionDepliee = liste[0];
             FonctionDepliee.eModifierEtat(swFeatureSuppressionAction_e.swUnSuppressFeature, nomConfigDepliee);
             FonctionDepliee.eModifierEtat(swFeatureSuppressionAction_e.swUnSuppressDependent, nomConfigDepliee);
 
@@ -75,12 +65,13 @@ namespace ModuleProduction
             mdl.eEffacerSelection();
         }
 
-        public static void PlierTole(this ModelDoc2 mdl, String nomConfigPliee)
+        public static void PlierTole(this PartDoc piece, String nomConfigPliee)
         {
-            var liste = mdl.ListeFonctionsDepliee();
+            var mdl = piece.eModelDoc2();
+            var liste = piece.eListeFonctionsDepliee();
             if (liste.Count == 0) return;
 
-            Feature FonctionDepliee = mdl.ListeFonctionsDepliee()[0];
+            Feature FonctionDepliee = liste[0];
 
             FonctionDepliee.eModifierEtat(swFeatureSuppressionAction_e.swSuppressFeature, nomConfigPliee);
 

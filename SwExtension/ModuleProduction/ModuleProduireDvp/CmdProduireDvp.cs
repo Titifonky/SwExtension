@@ -281,10 +281,10 @@ namespace ModuleProduction.ModuleProduireDvp
 
             ModelDoc2 Dessin = dessin.eModelDoc2();
 
-            var liste = piece.eModelDoc2().ListeFonctionsDepliee();
+            var liste = piece.eListeFonctionsDepliee();
             if (liste.Count == 0) return null;
 
-            Feature FonctionDepliee = piece.eModelDoc2().ListeFonctionsDepliee()[0];
+            Feature FonctionDepliee = piece.eListeFonctionsDepliee()[0];
 
             GeomVue g = null;
 
