@@ -42,6 +42,24 @@ namespace Macros
 
             Point Origine = new Point(Param[3], Param[4], Param[5]);
             Vecteur Normale = new Vecteur(Param[0], Param[1], Param[2]);
+            
+
+            MathUtility Mu = App.Sw.GetMathUtility();
+            
+            MathVector NormAxeZ = Normale.MathVector().Normalise();
+            MathVector NormAxeX = Mu.CreateVector(new Double[] { Param[2], 0, -1 * Param[0] }).Normalise();
+            MathVector NormAxeY = NormAxeZ.Cross(NormAxeX).Normalise();
+
+            MathVector NormTrans = Mu.CreateVector(new Double[] { 0, 0, 0 });
+            MathTransform mtNormale = Mu.ComposeTransform(NormAxeX, NormAxeY, NormAxeZ, NormTrans, 1);
+
+            MathVector AxeX = Mu.CreateVector(new Double[] { 1, 0, 0 });
+            MathVector AxeY = Mu.CreateVector(new Double[] { 0, 1, 0 });
+            MathVector AxeZ = Mu.CreateVector(new Double[] { 0, 0, 1 });
+            MathVector Trans = Mu.CreateVector(new Double[] { 0, 0,0 });
+            MathTransform mtAxeZ = Mu.ComposeTransform(AxeX, AxeY, AxeZ, Trans, 1);
+
+            MathTransform mtRotate = mtAxeZ.Multiply(mtNormale.Inverse());
 
             corps.eSelect(mdl, 1, false);
             WindowLog.EcrireF("AngleX : {0}", Normale.AngleX());
@@ -52,8 +70,8 @@ namespace Macros
                 Origine.Y,
                 Origine.Z,
                 Normale.AngleX(),
-                Normale.AngleY(),
                 Normale.AngleZ(),
+                0,
                 false, 0);
 
             if (Rotate.IsRef())
