@@ -56,10 +56,15 @@ namespace Macros
             MathVector AxeX = Mu.CreateVector(new Double[] { 1, 0, 0 });
             MathVector AxeY = Mu.CreateVector(new Double[] { 0, 1, 0 });
             MathVector AxeZ = Mu.CreateVector(new Double[] { 0, 0, 1 });
-            MathVector Trans = Mu.CreateVector(new Double[] { 0, 0,0 });
+            MathVector Trans = Mu.CreateVector(new Double[] { 0, 0, 0 });
             MathTransform mtAxeZ = Mu.ComposeTransform(AxeX, AxeY, AxeZ, Trans, 1);
 
             MathTransform mtRotate = mtAxeZ.Multiply(mtNormale.Inverse());
+
+            Double[] Data = mtRotate.ArrayData;
+            Double Ax = Math.Atan2(Data[7], Data[8]);
+            Double Ay = Math.Atan2(Data[6], Math.Sqrt( Math.Pow(Data[7], 2) + Math.Pow(Data[8], 2)));
+            Double Az = Math.Atan2(Data[3], Data[0]);
 
             corps.eSelect(mdl, 1, false);
             WindowLog.EcrireF("AngleX : {0}", Normale.AngleX());
@@ -69,9 +74,9 @@ namespace Macros
                 Origine.X,
                 Origine.Y,
                 Origine.Z,
-                Normale.AngleX(),
-                Normale.AngleZ(),
-                0,
+                Ax,
+                Ay,
+                Az,
                 false, 0);
 
             if (Rotate.IsRef())
