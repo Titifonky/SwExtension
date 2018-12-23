@@ -5,6 +5,9 @@ using SolidWorks.Interop.swconst;
 using SwExtension;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -43,7 +46,7 @@ namespace ModuleProduction.ModuleRepererDossier
                 // Si aucun corps n'a déjà été repéré, on reinitialise tout
                 if (ListeCorpsExistant.Count == 0)
                 {
-                    NettoyerModele();
+                    //NettoyerModele();
 
                     // On supprime tout les fichiers
                     foreach (FileInfo file in new DirectoryInfo(MdlBase.DossierPiece()).GetFiles())
@@ -334,8 +337,9 @@ namespace ModuleProduction.ModuleRepererDossier
                             mdlFichier.FeatureManager.InsertDeleteBody2(true);
                             //mdlFichier.LockAllExternalReferences();
                             //fonc.UpdateExternalFileReferences((int)swExternalFileReferencesConfig_e.swExternalFileReferencesCurrentConfig, "", (int)swExternalFileReferencesUpdate_e.swExternalFileReferencesLockAll);
+                            OrienterVue(mdlFichier);
+                            SauverVue(mdlFichier, mdlFichier.GetPathName());
                             mdlFichier.EditRebuild3();
-
                             mdlFichier.eSauver();
                         }
                         else
@@ -370,6 +374,132 @@ namespace ModuleProduction.ModuleRepererDossier
                 MdlBase.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
             }
             catch (Exception e) { this.LogErreur(new Object[] { e }); }
+        }
+
+        private void OrienterVue(ModelDoc2 mdl)
+        {
+            var fDepliee = mdl.ePartDoc().eListeFonctionsDepliee()[0];
+            FlatPatternFeatureData fDeplieeInfo = fDepliee.GetDefinition();
+            Face2 face = fDeplieeInfo.FixedFace2;
+            Surface surface = face.GetSurface();
+
+            Boolean Reverse = face.FaceInSurfaceSense();
+
+            Double[] Param = surface.PlaneParams;
+
+            if (Reverse)
+            {
+                Param[0] = Param[0] * -1;
+                Param[1] = Param[1] * -1;
+                Param[2] = Param[2] * -1;
+            }
+
+            Vecteur Normale = new Vecteur(Param[0], Param[1], Param[2]);
+            MathTransform mtNormale = MathRepere(Normale.MathVector());
+            MathTransform mtAxeZ = MathRepere(new Vecteur(1, 1, 1).MathVector()); ;
+
+            MathTransform mtRotate = mtAxeZ.Multiply(mtNormale.Inverse());
+
+            ModelView mv = mdl.ActiveView;
+            mv.Orientation3 = mtRotate;
+            mv.Activate();
+            mdl.ViewZoomtofit2();
+            mdl.GraphicsRedraw2();
+        }
+
+        private MathTransform MathRepere(MathVector X)
+        {
+            MathUtility Mu = App.Sw.GetMathUtility();
+            MathVector NormAxeX = null, NormAxeY = null, NormAxeZ = null;
+
+            if (X.ArrayData[0] == 0 && X.ArrayData[2] == 0)
+            {
+                NormAxeZ = Mu.CreateVector(new Double[] { 0, 1, 0 });
+                NormAxeX = Mu.CreateVector(new Double[] { 1, 0, 0 });
+                NormAxeY = Mu.CreateVector(new Double[] { 0, 0, -1 });
+            }
+            else
+            {
+                NormAxeZ = X.Normalise();
+                NormAxeX = Mu.CreateVector(new Double[] { X.ArrayData[2], 0, -1 * X.ArrayData[0] }).Normalise();
+                NormAxeY = NormAxeZ.Cross(NormAxeX).Normalise();
+            }
+
+            MathVector NormTrans = Mu.CreateVector(new Double[] { 0, 0, 0 });
+            MathTransform Mt = Mu.ComposeTransform(NormAxeX, NormAxeY, NormAxeZ, NormTrans, 1);
+            return Mt;
+        }
+
+        private void SauverVue(ModelDoc2 mdl, String cheminFichier)
+        {
+            String Dossier = Path.Combine(Path.GetDirectoryName(cheminFichier), CONST_PRODUCTION.DOSSIER_PIECES_APERCU);
+            Directory.CreateDirectory(Dossier);
+            String CheminImg = Path.Combine(Dossier, Path.GetFileNameWithoutExtension(cheminFichier) + ".bmp");
+            mdl.SaveBMP(CheminImg, 0, 0);
+            Bitmap bmp = resizeImage(80, 80, CheminImg);
+            bmp.Save(CheminImg);
+        }
+
+        public Bitmap resizeImage(int newWidth, int newHeight, string stPhotoPath)
+        {
+            Bitmap img = new Bitmap(stPhotoPath);
+            Bitmap imageSource = img.Clone(new Rectangle(0, 0, img.Width, img.Height), PixelFormat.Format32bppRgb);
+            Image imgPhoto = SwExtension.Outils.WindowsThumbnailProvider.AutoCrop(imageSource);
+            img.Dispose();
+            imageSource.Dispose();
+
+            int sourceWidth = imgPhoto.Width;
+            int sourceHeight = imgPhoto.Height;
+
+            //Consider vertical pics
+            if (sourceWidth < sourceHeight)
+            {
+                int buff = newWidth;
+
+                newWidth = newHeight;
+                newHeight = buff;
+            }
+
+            int sourceX = 0, sourceY = 0, destX = 0, destY = 0;
+            float nPercent = 0, nPercentW = 0, nPercentH = 0;
+
+            nPercentW = ((float)newWidth / (float)sourceWidth);
+            nPercentH = ((float)newHeight / (float)sourceHeight);
+            if (nPercentH < nPercentW)
+            {
+                nPercent = nPercentH;
+                destX = System.Convert.ToInt16((newWidth -
+                          (sourceWidth * nPercent)) / 2);
+            }
+            else
+            {
+                nPercent = nPercentW;
+                destY = System.Convert.ToInt16((newHeight -
+                          (sourceHeight * nPercent)) / 2);
+            }
+
+            int destWidth = (int)(sourceWidth * nPercent);
+            int destHeight = (int)(sourceHeight * nPercent);
+
+
+            Bitmap bmPhoto = new Bitmap(newWidth, newHeight,
+                          PixelFormat.Format32bppRgb);
+
+            bmPhoto.SetResolution(imgPhoto.HorizontalResolution,
+                         imgPhoto.VerticalResolution);
+
+            Graphics grPhoto = Graphics.FromImage(bmPhoto);
+            grPhoto.Clear(Color.White);
+            grPhoto.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+            grPhoto.DrawImage(imgPhoto,
+                new Rectangle(destX, destY, destWidth, destHeight),
+                new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight),
+                GraphicsUnit.Pixel);
+
+            grPhoto.Dispose();
+            imgPhoto.Dispose();
+            return bmPhoto;
         }
 
         private Dimension GetParam(ModelDoc2 mdl, Feature fDossier, String nomCfg, ref int indexDimension, out Boolean nouveauDossier)

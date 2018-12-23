@@ -58,14 +58,14 @@ namespace ModuleProduction.ModuleProduireDvp
 
         private ModelDoc2 MdlBase;
 
-        private CtrlTextListBox _TextListBox_Materiaux;
-
-        private CtrlTextListBox _TextListBox_Ep;
+        
 
         private CtrlTextBox _Texte_RefFichier;
+        private CtrlTextComboBox _TextComboBox_ListeCampagnes;
         private CtrlTextBox _Texte_Quantite;
+        private CtrlTextListBox _TextListBox_Materiaux;
+        private CtrlTextListBox _TextListBox_Ep;
         private CtrlTextBox _Texte_TailleInscription;
-
         private CtrlCheckBox _CheckBox_AfficherLignePliage;
         private CtrlCheckBox _CheckBox_AfficherNotePliage;
         private CtrlCheckBox _CheckBox_InscrireNomTole;
@@ -82,7 +82,6 @@ namespace ModuleProduction.ModuleProduireDvp
 
                 _Texte_RefFichier = G.AjouterTexteBox("Référence du fichier :", "la référence est ajoutée au début du nom de chaque fichier généré");
 
-                String Ref = App.ModelDoc2.eRefFichier();
                 _Texte_RefFichier.Text = Ref;
                 _Texte_RefFichier.LectureSeule = false;
 
@@ -93,6 +92,12 @@ namespace ModuleProduction.ModuleProduireDvp
                 _Texte_Quantite = G.AjouterTexteBox("Quantité :", "Multiplier les quantités par");
                 _Texte_Quantite.Text = Quantite();
                 _Texte_Quantite.ValiderTexte += ValiderTextIsInteger;
+
+                _TextComboBox_ListeCampagnes = G.AjouterTextComboBox("Campagne à exporter :", "");
+                _TextComboBox_ListeCampagnes.Editable = true;
+                _TextComboBox_ListeCampagnes.LectureSeule = false;
+                _TextComboBox_ListeCampagnes.NotifieSurSelection = true;
+                _TextComboBox_ListeCampagnes.IsEnabled = true;
 
                 G = _Calque.AjouterGroupe("Materiaux :");
 
@@ -144,6 +149,11 @@ namespace ModuleProduction.ModuleProduireDvp
             { this.LogMethode(new Object[] { e }); }
         }
 
+        private String Ref
+        {
+            get { return App.ModelDoc2.eRefFichier(); }
+        }
+
         private String Quantite()
         {
             CustomPropertyManager PM = App.ModelDoc2.Extension.get_CustomPropertyManager("");
@@ -156,6 +166,7 @@ namespace ModuleProduction.ModuleProduireDvp
             return "1";
         }
 
+        private List<String> ListeCampagnes;
         private List<String> ListeMateriaux;
         private List<String> ListeEp;
         private SortedDictionary<int, Corps> ListeCorps;
@@ -168,43 +179,34 @@ namespace ModuleProduction.ModuleProduireDvp
             ListeCorps = MdlBase.ChargerNomenclature();
             ListeMateriaux = new List<String>();
             ListeEp = new List<String>();
+            ListeCampagnes = new List<String>();
 
             foreach (var corps in ListeCorps.Values)
             {
                 if (corps.TypeCorps != eTypeCorps.Tole) continue;
 
+                foreach(var cp in corps.Campagne.Keys)
+                    ListeCampagnes.AddIfNotExist(cp.ToString());
+
                 ListeMateriaux.AddIfNotExist(corps.Materiau);
                 ListeEp.AddIfNotExist(corps.Dimension);
-                Apercu(corps.NomFichier(MdlBase));
+                var ch = Path.Combine(MdlBase.eDossier(), CONST_PRODUCTION.DOSSIER_PIECES, CONST_PRODUCTION.DOSSIER_PIECES_APERCU, corps.RepereComplet + ".bmp");
             }
 
             WindowLog.SautDeLigne();
 
+            ListeCampagnes.Sort(new WindowsStringComparer());
             ListeMateriaux.Sort(new WindowsStringComparer());
             ListeEp.Sort(new WindowsStringComparer());
+
+            _TextComboBox_ListeCampagnes.Liste = ListeCampagnes;
+            _TextComboBox_ListeCampagnes.Text = ListeCampagnes.Last();
 
             _TextListBox_Materiaux.Liste = ListeMateriaux;
             _TextListBox_Materiaux.ToutSelectionner(false);
 
             _TextListBox_Ep.Liste = ListeEp;
             _TextListBox_Ep.ToutSelectionner(false);
-        }
-
-        private String Apercu(String cheminFichier, ThumbnailSize taille = ThumbnailSize.T256)
-        {
-            String Dossier = Path.Combine(Path.GetDirectoryName(cheminFichier), CONST_PRODUCTION.DOSSIER_PIECES_APERCU);
-            Directory.CreateDirectory(Dossier);
-            String CheminFichier = Path.Combine(Dossier, Path.GetFileNameWithoutExtension(cheminFichier) + ".png");
-            if (!File.Exists(CheminFichier))
-            {
-                Bitmap thumbnail = WindowsThumbnailProvider.GetThumbnail(cheminFichier, (int)taille, (int)taille, ThumbnailOptions.None);
-                Image img = WindowsThumbnailProvider.AutoCrop(thumbnail);
-                img.Save(CheminFichier, ImageFormat.Png);
-                thumbnail.Dispose();
-                img.Dispose();
-            }
-
-            return CheminFichier;
         }
 
         protected void RunOkCommand()

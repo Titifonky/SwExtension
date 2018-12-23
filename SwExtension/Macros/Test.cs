@@ -23,7 +23,6 @@ namespace Macros
                 return;
 
             var piece = mdl.ePartDoc();
-            var corps = piece.ePremierCorps();
             var fDepliee = piece.eListeFonctionsDepliee()[0];
             FlatPatternFeatureData fDeplieeInfo = fDepliee.GetDefinition();
             Face2 face = fDeplieeInfo.FixedFace2;
@@ -41,7 +40,7 @@ namespace Macros
             }
 
             Point Origine = new Point(Param[3], Param[4], Param[5]);
-            Vecteur Normale = new Vecteur(Param[0], Param[1], Param[2]);
+            Vecteur Normale = new Vecteur(Param[0] * -1, Param[1] * -1, Param[2] * -1);
             
 
             MathUtility Mu = App.Sw.GetMathUtility();
@@ -60,29 +59,12 @@ namespace Macros
             MathTransform mtAxeZ = Mu.ComposeTransform(AxeX, AxeY, AxeZ, Trans, 1);
 
             MathTransform mtRotate = mtAxeZ.Multiply(mtNormale.Inverse());
-
-            Double[] Data = mtRotate.ArrayData;
-            Double Ax = Math.Atan2(Data[7], Data[8]);
-            Double Ay = Math.Atan2(Data[6], Math.Sqrt( Math.Pow(Data[7], 2) + Math.Pow(Data[8], 2)));
-            Double Az = Math.Atan2(Data[3], Data[0]);
-
-            corps.eSelect(mdl, 1, false);
-            WindowLog.EcrireF("AngleX : {0}", Normale.AngleX());
-            WindowLog.EcrireF("AngleY : {0}", Normale.AngleY());
-            WindowLog.EcrireF("AngleZ : {0}", Normale.AngleZ());
-            var Rotate = (Feature)mdl.FeatureManager.InsertMoveCopyBody2(0, 0, 0, 0,
-                Origine.X,
-                Origine.Y,
-                Origine.Z,
-                Ax,
-                Ay,
-                Az,
-                false, 0);
-
-            if (Rotate.IsRef())
-                WindowLog.Ecrire("Rotation ok");
-
-            mdl.eSauver();
+            ModelView mv = mdl.ActiveView;
+            mv.Orientation3 = mtRotate;
+            mv.Activate();
+            mdl.ViewZoomtofit2();
+            mdl.GraphicsRedraw2();
+            //mdl.eSauver();
         }
 
         //String cheminbloc = "E:\\Mes documents\\SolidWorks\\2018\\Blocs\\Macro\\REPERAGE_DOSSIER.sldblk";

@@ -268,6 +268,11 @@ namespace Outils
             return new CtrlLabel(this, titre, Option, tip);
         }
 
+        public CtrlImage AjouterImage(String titre, String tip = "")
+        {
+            return new CtrlImage(this, titre, Option, tip);
+        }
+
         public CtrlTextBox AjouterTexteBox(String labelTitre = "", String labelTip = "")
         {
             return new CtrlTextBox(this, Option, labelTitre, labelTip);
@@ -611,9 +616,15 @@ namespace Outils
 
         public PropertyManagerPageBitmap swImage { get { return _swImage; } }
 
-        public void Chemin(String cheminCouleur, String cheminMasque)
+        public Boolean Chemin(String cheminCouleur, String cheminMasque)
         {
-            swImage.SetBitmapByName(cheminCouleur, cheminMasque);
+            try
+            {
+                return swImage.SetBitmapByName(cheminCouleur, cheminMasque);
+            }
+            catch (Exception e) { LogDebugging.Log.Message( e ); }
+
+            return false;
         }
 
         private void Init(String intitule, int options, String tip = "")

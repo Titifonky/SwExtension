@@ -2958,7 +2958,19 @@ namespace Outils
 
         public static String eRefFichier(this ModelDoc2 mdl)
         {
-            var Ref = String.Format("{0}-{1}", mdl.eProp(CONSTANTES.PROPRIETE_NOCLIENT), mdl.eProp(CONSTANTES.PROPRIETE_NOCOMMANDE)).Trim();
+            var pt = mdl.eDossier().Split(Path.DirectorySeparatorChar);
+            for (int i = 0; i < pt.Length; i++)
+            {
+
+            }
+            String noClient = mdl.eProp(CONSTANTES.PROPRIETE_NOCLIENT);
+            String noCommande = mdl.eProp(CONSTANTES.PROPRIETE_NOCOMMANDE);
+
+            var Ref = String.Format("{0}-{1}", noClient, noCommande).Trim();
+            var tab = noCommande.Split(new Char[] { '-' });
+
+            if ((tab.Length > 1) && (mdl.eNomDossier() != tab[1]))
+                Ref += String.Format("-{1}", mdl.eNomDossier()).Trim();
 
             return (Ref.StartsWith("-") || Ref.EndsWith("-")) ? "" : Ref;
         }
