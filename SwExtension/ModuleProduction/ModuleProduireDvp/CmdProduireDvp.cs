@@ -19,6 +19,7 @@ namespace ModuleProduction.ModuleProduireDvp
         public List<String> ListeEp = new List<String>();
         public int Quantite = 1;
         public int IndiceCampagne = 0;
+        public Boolean MettreAjourCampagne = false;
         public Boolean AfficherLignePliage = false;
         public Boolean AfficherNotePliage = false;
         public Boolean InscrireNomTole = false;

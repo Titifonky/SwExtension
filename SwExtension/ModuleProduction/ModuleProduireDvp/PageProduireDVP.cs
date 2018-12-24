@@ -2,13 +2,10 @@
 using Outils;
 using SolidWorks.Interop.sldworks;
 using SwExtension;
-using SwExtension.Outils;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Windows.Media.Imaging;
 
 namespace ModuleProduction.ModuleProduireDvp
 {
@@ -26,8 +23,6 @@ namespace ModuleProduction.ModuleProduireDvp
 
         private Parametre InscrireNomTole;
         private Parametre TailleInscription;
-        //private Parametre FormatInscription;
-        //private List<String> ChampsInscription = new List<string>() { "<Nom_Piece>", "<Nom_Config>", "<No_Dossier>" };
         private Parametre FermerPlan;
         private Parametre OrienterDvp;
         private Parametre OrientationDvp;
@@ -59,11 +54,12 @@ namespace ModuleProduction.ModuleProduireDvp
         private ModelDoc2 MdlBase;
 
         private CtrlTextBox _Texte_RefFichier;
-        private CtrlTextComboBox _TextComboBox_ListeCampagnes;
+        private CtrlTextBox _TextBox_Campagne;
         private CtrlTextBox _Texte_Quantite;
         private CtrlTextListBox _TextListBox_Materiaux;
         private CtrlTextListBox _TextListBox_Ep;
         private CtrlTextBox _Texte_TailleInscription;
+        private CtrlCheckBox _CheckBox_MettreAjourCampagne;
         private CtrlCheckBox _CheckBox_AfficherLignePliage;
         private CtrlCheckBox _CheckBox_AfficherNotePliage;
         private CtrlCheckBox _CheckBox_InscrireNomTole;
@@ -91,10 +87,10 @@ namespace ModuleProduction.ModuleProduireDvp
 
                 
 
-                _TextComboBox_ListeCampagnes = G.AjouterTextComboBox("Campagne à exporter :", "");
-                _TextComboBox_ListeCampagnes.Editable = false;
-                _TextComboBox_ListeCampagnes.LectureSeule = true;
-                _TextComboBox_ListeCampagnes.OnSelectionChanged += delegate { _Texte_RefFichier.Text = String.Format("{0}_{1}", Ref, _TextComboBox_ListeCampagnes.Text); };
+                _TextBox_Campagne = G.AjouterTexteBox("Campagne :", "");
+                _TextBox_Campagne.LectureSeule = true;
+
+                _CheckBox_MettreAjourCampagne = G.AjouterCheckBox("Mettre à jour la campagne");
 
                 _Texte_Quantite = G.AjouterTexteBox("Quantité :", "Multiplier les quantités par");
                 _Texte_Quantite.Text = Quantite();
@@ -174,7 +170,7 @@ namespace ModuleProduction.ModuleProduireDvp
             return "1";
         }
 
-        private List<String> ListeCampagnes;
+        private int Campagne;
         private List<String> ListeMateriaux;
         private List<String> ListeEp;
         private SortedDictionary<int, Corps> ListeCorps;
@@ -186,14 +182,14 @@ namespace ModuleProduction.ModuleProduireDvp
             ListeCorps = MdlBase.ChargerNomenclature();
             ListeMateriaux = new List<String>();
             ListeEp = new List<String>();
-            ListeCampagnes = new List<String>();
+            Campagne = 1;
 
             foreach (var corps in ListeCorps.Values)
             {
                 if (corps.TypeCorps != eTypeCorps.Tole) continue;
 
-                foreach(var cp in corps.Campagne.Keys)
-                    ListeCampagnes.AddIfNotExist(cp.ToString());
+                foreach (var cp in corps.Campagne.Keys)
+                    Campagne = Math.Max(Campagne, cp);
 
                 ListeMateriaux.AddIfNotExist(corps.Materiau);
                 ListeEp.AddIfNotExist(corps.Dimension);
@@ -202,13 +198,10 @@ namespace ModuleProduction.ModuleProduireDvp
 
             WindowLog.SautDeLigne();
 
-            ListeCampagnes.Sort(new WindowsStringComparer());
             ListeMateriaux.Sort(new WindowsStringComparer());
             ListeEp.Sort(new WindowsStringComparer());
 
-            _TextComboBox_ListeCampagnes.Liste = ListeCampagnes;
-            _TextComboBox_ListeCampagnes.SelectedIndex = ListeCampagnes.Count - 1;
-
+            _TextBox_Campagne.Text = Campagne.ToString();
             _TextListBox_Materiaux.Liste = ListeMateriaux;
             _TextListBox_Materiaux.ToutSelectionner(false);
 
@@ -224,7 +217,8 @@ namespace ModuleProduction.ModuleProduireDvp
             Cmd.ListeCorps = ListeCorps;
             Cmd.RefFichier = _Texte_RefFichier.Text.Trim();
             Cmd.Quantite = _Texte_Quantite.Text.eToInteger();
-            Cmd.IndiceCampagne = _TextComboBox_ListeCampagnes.Text.eToInteger();
+            Cmd.IndiceCampagne = _TextBox_Campagne.Text.eToInteger();
+            Cmd.MettreAjourCampagne = _CheckBox_MettreAjourCampagne.IsChecked;
             Cmd.ListeMateriaux = _TextListBox_Materiaux.ListSelectedText.Count > 0 ? _TextListBox_Materiaux.ListSelectedText : _TextListBox_Materiaux.Liste;
             Cmd.ListeEp = _TextListBox_Ep.ListSelectedText.Count > 0 ? _TextListBox_Ep.ListSelectedText : _TextListBox_Ep.Liste;
             Cmd.AfficherLignePliage = _CheckBox_AfficherLignePliage.IsChecked;

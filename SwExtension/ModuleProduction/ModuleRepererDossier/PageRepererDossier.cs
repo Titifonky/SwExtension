@@ -51,6 +51,7 @@ namespace ModuleProduction.ModuleRepererDossier
         }
 
         private CtrlTextBox _Texte_IndiceCampagne;
+        private CtrlCheckBox _CheckBox_NettoyerModele;
         private CtrlCheckBox _CheckBox_MajCampagnePrecedente;
         private CtrlCheckBox _CheckBox_ReinitCampagneActuelle;
         private CtrlCheckBox _CheckBox_CombinerCorps;
@@ -68,6 +69,7 @@ namespace ModuleProduction.ModuleRepererDossier
                 _Texte_IndiceCampagne = G.AjouterTexteBox("Indice de la campagne de repérage :");
                 _Texte_IndiceCampagne.LectureSeule = true;
 
+                _CheckBox_NettoyerModele = G.AjouterCheckBox("Nettoyer les modèles");
                 _CheckBox_ReinitCampagneActuelle = G.AjouterCheckBox("Reinitialiser la campagne actuelle");
                 _CheckBox_MajCampagnePrecedente = G.AjouterCheckBox("Mettre à jour la campagne précédente (en cas d'oubli)");
 
@@ -129,6 +131,9 @@ namespace ModuleProduction.ModuleRepererDossier
                 // S'il n'y a aucun corps, on désactive les options
                 if (ListeCorps.Count == 0)
                 {
+                    _CheckBox_NettoyerModele.IsEnabled = false;
+                    _CheckBox_NettoyerModele.Visible = false;
+
                     _CheckBox_MajCampagnePrecedente.IsEnabled = false;
                     _CheckBox_MajCampagnePrecedente.Visible = false;
 
@@ -175,6 +180,7 @@ namespace ModuleProduction.ModuleRepererDossier
 
             Cmd.MdlBase = App.Sw.ActiveDoc;
             Cmd.IndiceCampagne = IndiceCampagne;
+            Cmd.NettoyerModele = _CheckBox_NettoyerModele.IsChecked;
             Cmd.CombinerCorpsIdentiques = _CheckBox_CombinerCorps.IsChecked;
             Cmd.CombinerAvecCampagne = _CheckBox_CombinerAvecCampagne.IsChecked;
             Cmd.ReinitCampagneActuelle = _CheckBox_ReinitCampagneActuelle.IsChecked;

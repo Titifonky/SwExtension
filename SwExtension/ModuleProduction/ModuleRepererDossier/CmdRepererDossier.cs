@@ -19,6 +19,7 @@ namespace ModuleProduction.ModuleRepererDossier
         public ModelDoc2 MdlBase = null;
         public int IndiceCampagne = 0;
 
+        public Boolean NettoyerModele = false;
         public Boolean ReinitCampagneActuelle = false;
         public Boolean MajCampagnePrecedente = false;
         public Boolean CombinerCorpsIdentiques = false;
@@ -46,7 +47,8 @@ namespace ModuleProduction.ModuleRepererDossier
                 // Si aucun corps n'a déjà été repéré, on reinitialise tout
                 if (ListeCorpsExistant.Count == 0)
                 {
-                    //NettoyerModele();
+                    if(NettoyerModele)
+                        Nettoyer();
 
                     // On supprime tout les fichiers
                     foreach (FileInfo file in new DirectoryInfo(MdlBase.DossierPiece()).GetFiles())
@@ -676,7 +678,7 @@ namespace ModuleProduction.ModuleRepererDossier
             return Esquisse;
         }
 
-        private void NettoyerModele()
+        private void Nettoyer()
         {
             WindowLog.Ecrire("Nettoyer les modeles");
             List<ModelDoc2> ListeMdl = new List<ModelDoc2>();
