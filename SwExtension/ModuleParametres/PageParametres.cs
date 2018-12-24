@@ -17,7 +17,7 @@ namespace ModuleParametres
         public PageParametres()
         {
             OnCalque += Calque;
-            OnRunAfterActivation += delegate { _TextComboBox.Index = 0; };
+            OnRunAfterActivation += delegate { _TextComboBox.SelectedIndex = 0; };
             OnRunAfterClose += RunAfterClose;
         }
 

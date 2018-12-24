@@ -197,7 +197,7 @@ namespace ModuleLaser.ModuleCreerDvp
             _TextListBox_Materiaux.Liste = ListeMateriaux;
             _TextListBox_Materiaux.ToutSelectionner(false);
             _TextComboBox_ForcerMateriau.Liste = ListeMateriaux;
-            _TextComboBox_ForcerMateriau.Index = 0;
+            _TextComboBox_ForcerMateriau.SelectedIndex = 0;
 
             WindowLog.Ecrire("Recherche des ep de tôle : ");
 

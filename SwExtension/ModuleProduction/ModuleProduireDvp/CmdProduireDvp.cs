@@ -18,6 +18,7 @@ namespace ModuleProduction.ModuleProduireDvp
         public List<String> ListeMateriaux = new List<String>();
         public List<String> ListeEp = new List<String>();
         public int Quantite = 1;
+        public int IndiceCampagne = 0;
         public Boolean AfficherLignePliage = false;
         public Boolean AfficherNotePliage = false;
         public Boolean InscrireNomTole = false;
@@ -28,18 +29,12 @@ namespace ModuleProduction.ModuleProduireDvp
 
         private Dictionary<String, DrawingDoc> DicDessins = new Dictionary<string, DrawingDoc>();
 
-        private List<String> DicErreur = new List<String>();
-
         private String DossierDVP = "";
 
         protected override void Command()
         {
             try
             {
-                var IndiceCampagne = 0;
-                foreach (var corps in ListeCorps.Values)
-                    IndiceCampagne = Math.Max(IndiceCampagne, corps.Campagne.Keys.Max());
-
                 var dossierLaserTole = MdlBase.CreerDossier(CONST_PRODUCTION.DOSSIER_LASERTOLE);
 
                 DossierDVP = Directory.CreateDirectory(Path.Combine(dossierLaserTole, IndiceCampagne.ToString())).FullName;

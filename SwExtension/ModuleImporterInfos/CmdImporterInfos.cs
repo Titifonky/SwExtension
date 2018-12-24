@@ -27,7 +27,7 @@ namespace ModuleImporterInfos
                 AjouterInfos(MdlBase);
 
                 if (MdlBase.TypeDoc() == eTypeDoc.Assemblage)
-                    MdlBase.eRecParcourirComposants(c => AjouterInfos(c.eModelDoc2()));
+                    MdlBase.eRecParcourirComposants(c => { if (c.IsHidden(true)) return false; AjouterInfos(c.eModelDoc2()); return false; });
 
                 if (ToutReconstruire)
                     MdlBase.ForceRebuild3(false);
@@ -50,7 +50,7 @@ namespace ModuleImporterInfos
             WindowLog.SautDeLigne();
         }
 
-        private Boolean AjouterInfos(ModelDoc2 Mdl)
+        private void AjouterInfos(ModelDoc2 Mdl)
         {
             try
             {
@@ -66,8 +66,6 @@ namespace ModuleImporterInfos
             }
             catch (Exception e)
             { this.LogMethode(new Object[] { e }); }
-
-            return false;
         }
     }
 }

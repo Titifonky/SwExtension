@@ -2958,19 +2958,49 @@ namespace Outils
 
         public static String eRefFichier(this ModelDoc2 mdl)
         {
-            var pt = mdl.eDossier().Split(Path.DirectorySeparatorChar);
-            for (int i = 0; i < pt.Length; i++)
+            String Ref = "";
+
+            try
             {
+                String noClient = mdl.eProp(CONSTANTES.PROPRIETE_NOCLIENT);
+                String noCommande = mdl.eProp(CONSTANTES.PROPRIETE_NOCOMMANDE);
 
+                Ref = String.Format("{0}-{1}", noClient, noCommande).Trim();
             }
-            String noClient = mdl.eProp(CONSTANTES.PROPRIETE_NOCLIENT);
-            String noCommande = mdl.eProp(CONSTANTES.PROPRIETE_NOCOMMANDE);
+            catch (Exception e)
+            { Log.Message(e); }
 
-            var Ref = String.Format("{0}-{1}", noClient, noCommande).Trim();
-            var tab = noCommande.Split(new Char[] { '-' });
+            return (Ref.StartsWith("-") || Ref.EndsWith("-")) ? "" : Ref;
+        }
 
-            if ((tab.Length > 1) && (mdl.eNomDossier() != tab[1]))
-                Ref += String.Format("-{1}", mdl.eNomDossier()).Trim();
+        public static String eRefFichierComplet(this ModelDoc2 mdl)
+        {
+            String Ref = "";
+
+            try
+            {
+                String noClient = mdl.eProp(CONSTANTES.PROPRIETE_NOCLIENT);
+                Boolean Ajouter = false;
+                String[] pt = mdl.eDossier().Split(Path.DirectorySeparatorChar);
+
+                for (int i = 0; i < pt.Length; i++)
+                {
+                    if (Ajouter)
+                        Ref += pt[i].Split(new Char[] { ' ' })[0].Trim() + "-";
+
+                    if (!Ajouter && ((pt[i] == noClient) || (pt[i].StartsWith(noClient + " "))))
+                        Ajouter = true;
+                }
+
+                Ref = Ref.Trim();
+            }
+            catch (Exception e)
+            { Log.Message(e); }
+
+            if (String.IsNullOrWhiteSpace(Ref))
+                Ref = mdl.eRefFichier();
+            else
+                Ref = Ref.Remove(Ref.Length - 1).Trim();
 
             return (Ref.StartsWith("-") || Ref.EndsWith("-")) ? "" : Ref;
         }

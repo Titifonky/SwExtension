@@ -1217,11 +1217,11 @@ namespace Outils
 
         protected List<String> _Lst = new List<String>();
 
-        private int _Index = 0;
+        private int _SelectedIndex = 0;
 
-        public int Index
+        public int SelectedIndex
         {
-            get { return _Index; }
+            get { return _SelectedIndex; }
             set
             {
                 if(GetStyle(swPropMgrPageComboBoxStyle_e.swPropMgrPageComboBoxStyle_EditableText))
@@ -1320,7 +1320,7 @@ namespace Outils
             if (_Init)
                 _swComboBox.CurrentSelection = (short)Index;
 
-            _Index = Index;
+            _SelectedIndex = Index;
 
             OnSetParameter(Index);
 
@@ -1359,6 +1359,18 @@ namespace Outils
                     _swComboBox.EditText = value;
 
                 ComboboxEditChanged(this, value);
+            }
+        }
+
+        public new int SelectedIndex
+        {
+            get { return base.SelectedIndex; }
+            set
+            {
+                _Text = _Lst[value];
+                _swComboBox.CurrentSelection = (short)value;
+
+                SelectionChanged(this, value);
             }
         }
 
@@ -1486,7 +1498,7 @@ namespace Outils
 
         public T Val
         {
-            get { return _Lst[Index].GetEnumFromAtt<T, D>(); }
+            get { return _Lst[SelectedIndex].GetEnumFromAtt<T, D>(); }
             set { SelectionChanged(this, IndexList(value)); }
         }
 

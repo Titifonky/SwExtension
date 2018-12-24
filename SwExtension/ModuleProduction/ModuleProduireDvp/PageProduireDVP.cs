@@ -58,8 +58,6 @@ namespace ModuleProduction.ModuleProduireDvp
 
         private ModelDoc2 MdlBase;
 
-        
-
         private CtrlTextBox _Texte_RefFichier;
         private CtrlTextComboBox _TextComboBox_ListeCampagnes;
         private CtrlTextBox _Texte_Quantite;
@@ -76,6 +74,8 @@ namespace ModuleProduction.ModuleProduireDvp
         {
             try
             {
+                MdlBase = App.ModelDoc2;
+
                 Groupe G;
 
                 G = _Calque.AjouterGroupe("Fichier");
@@ -89,15 +89,16 @@ namespace ModuleProduction.ModuleProduireDvp
                 if (String.IsNullOrWhiteSpace(Ref))
                     _Texte_RefFichier.BackgroundColor(Color.Red, true);
 
+                
+
+                _TextComboBox_ListeCampagnes = G.AjouterTextComboBox("Campagne à exporter :", "");
+                _TextComboBox_ListeCampagnes.Editable = false;
+                _TextComboBox_ListeCampagnes.LectureSeule = true;
+                _TextComboBox_ListeCampagnes.OnSelectionChanged += delegate { _Texte_RefFichier.Text = String.Format("{0}_{1}", Ref, _TextComboBox_ListeCampagnes.Text); };
+
                 _Texte_Quantite = G.AjouterTexteBox("Quantité :", "Multiplier les quantités par");
                 _Texte_Quantite.Text = Quantite();
                 _Texte_Quantite.ValiderTexte += ValiderTextIsInteger;
-
-                _TextComboBox_ListeCampagnes = G.AjouterTextComboBox("Campagne à exporter :", "");
-                _TextComboBox_ListeCampagnes.Editable = true;
-                _TextComboBox_ListeCampagnes.LectureSeule = false;
-                _TextComboBox_ListeCampagnes.NotifieSurSelection = true;
-                _TextComboBox_ListeCampagnes.IsEnabled = true;
 
                 G = _Calque.AjouterGroupe("Materiaux :");
 
@@ -148,19 +149,26 @@ namespace ModuleProduction.ModuleProduireDvp
             catch (Exception e)
             { this.LogMethode(new Object[] { e }); }
         }
+        private String _Ref = "";
 
         private String Ref
         {
-            get { return App.ModelDoc2.eRefFichier(); }
+            get
+            {
+                if(String.IsNullOrWhiteSpace(_Ref))
+                    _Ref = MdlBase.eRefFichierComplet();
+
+                return _Ref;
+            }
         }
 
         private String Quantite()
         {
-            CustomPropertyManager PM = App.ModelDoc2.Extension.get_CustomPropertyManager("");
+            CustomPropertyManager PM = MdlBase.Extension.get_CustomPropertyManager("");
 
-            if (App.ModelDoc2.ePropExiste(PropQuantite.GetValeur<String>()))
+            if (MdlBase.ePropExiste(PropQuantite.GetValeur<String>()))
             {
-                return Math.Max(App.ModelDoc2.eProp(PropQuantite.GetValeur<String>()).eToInteger(), 1).ToString();
+                return Math.Max(MdlBase.eProp(PropQuantite.GetValeur<String>()).eToInteger(), 1).ToString();
             }
 
             return "1";
@@ -175,7 +183,6 @@ namespace ModuleProduction.ModuleProduireDvp
         {
             WindowLog.Ecrire("Recherche des materiaux et epaisseurs ");
 
-            MdlBase = App.ModelDoc2;
             ListeCorps = MdlBase.ChargerNomenclature();
             ListeMateriaux = new List<String>();
             ListeEp = new List<String>();
@@ -200,7 +207,7 @@ namespace ModuleProduction.ModuleProduireDvp
             ListeEp.Sort(new WindowsStringComparer());
 
             _TextComboBox_ListeCampagnes.Liste = ListeCampagnes;
-            _TextComboBox_ListeCampagnes.Text = ListeCampagnes.Last();
+            _TextComboBox_ListeCampagnes.SelectedIndex = ListeCampagnes.Count - 1;
 
             _TextListBox_Materiaux.Liste = ListeMateriaux;
             _TextListBox_Materiaux.ToutSelectionner(false);
@@ -217,6 +224,7 @@ namespace ModuleProduction.ModuleProduireDvp
             Cmd.ListeCorps = ListeCorps;
             Cmd.RefFichier = _Texte_RefFichier.Text.Trim();
             Cmd.Quantite = _Texte_Quantite.Text.eToInteger();
+            Cmd.IndiceCampagne = _TextComboBox_ListeCampagnes.Text.eToInteger();
             Cmd.ListeMateriaux = _TextListBox_Materiaux.ListSelectedText.Count > 0 ? _TextListBox_Materiaux.ListSelectedText : _TextListBox_Materiaux.Liste;
             Cmd.ListeEp = _TextListBox_Ep.ListSelectedText.Count > 0 ? _TextListBox_Ep.ListSelectedText : _TextListBox_Ep.Liste;
             Cmd.AfficherLignePliage = _CheckBox_AfficherLignePliage.IsChecked;
