@@ -427,7 +427,13 @@ namespace ModuleProduction
                 Campagne.Add(indiceCampagne, 0);
         }
 
-        public void InitDimension(BodyFolder dossier, Body2 corps)
+        public void InitCaracteristiques(BodyFolder dossier, Body2 corps)
+        {
+            InitDimension(dossier, corps);
+            InitVolume(dossier, corps);
+        }
+
+        private void InitDimension(BodyFolder dossier, Body2 corps)
         {
             if (TypeCorps == eTypeCorps.Tole)
                 Dimension = corps.eEpaisseurCorpsOuDossier(dossier).ToString();
@@ -435,12 +441,12 @@ namespace ModuleProduction
                 Dimension = dossier.eProfilDossier();
         }
 
-        public void InitVolume(BodyFolder dossier, Body2 corps)
+        private void InitVolume(BodyFolder dossier, Body2 corps)
         {
             if (TypeCorps == eTypeCorps.Tole)
-                Dimension = Math.Round(((Double[])corps.GetMassProperties(1))[3], 9).ToString();
+                Volume = Math.Round(((Double[])corps.GetMassProperties(1))[3], 9).ToString();
             else
-                Dimension = dossier.eLongueurDossier();
+                Volume = dossier.eLongueurDossier();
         }
 
         public Corps(Body2 swCorps, eTypeCorps typeCorps, String materiau)

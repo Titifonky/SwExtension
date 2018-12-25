@@ -25,6 +25,7 @@ namespace ModuleProduction.ModuleRepererDossier
         public Boolean CombinerCorpsIdentiques = false;
         public Boolean CombinerAvecCampagne = false;
         public Boolean ExporterFichierCorps = false;
+        public Boolean CreerDvp = false;
         
         public SortedDictionary<int, Corps> ListeCorpsExistant = new SortedDictionary<int, Corps>();
         public SortedDictionary<int, String> ListeCorpsCharge = new SortedDictionary<int, String>();
@@ -202,7 +203,7 @@ namespace ModuleProduction.ModuleRepererDossier
                                     // Si le dossier est la racine d'un sous-ensemble soudé, il n'y a rien dedans
                                     if (Dossier.IsRef() && (Dossier.eNbCorps() > 0) &&
                                     (eTypeCorps.Barre | eTypeCorps.Tole).HasFlag(Dossier.eTypeDeDossier()))
-                                    return true;
+                                        return true;
 
                                 return false;
                             }
@@ -224,6 +225,7 @@ namespace ModuleProduction.ModuleRepererDossier
                             eTypeCorps TypeCorps = Dossier.eTypeDeDossier();
                             var nbCorps = Dossier.eNbCorps() * NbConfig;
 
+                            WindowLog.Ecrire(fDossier.Name);
                             Boolean Combiner = false;
                             int Repere = -1;
 
@@ -276,8 +278,7 @@ namespace ModuleProduction.ModuleRepererDossier
 
                             corps.Campagne[IndiceCampagne] += nbCorps;
                             corps.Repere = Repere;
-                            corps.InitDimension(Dossier, SwCorps);
-                            corps.InitVolume(Dossier, SwCorps);
+                            corps.InitCaracteristiques(Dossier, SwCorps);
                             corps.AjouterModele(mdl, nomCfg, IdDossier, NomCorps);
 
                             ListIdDossiers.Add(IdDossier);
@@ -338,6 +339,10 @@ namespace ModuleProduction.ModuleRepererDossier
 
                             Corps.eSelect();
                             mdlFichier.FeatureManager.InsertDeleteBody2(true);
+
+                            if (CreerDvp)
+                                ModuleGenererConfigDvp.CmdGenererConfigDvp.CreerDvp(corps, mdlFichier.DossierPiece(), false, false);
+                            
                             //mdlFichier.LockAllExternalReferences();
                             //fonc.UpdateExternalFileReferences((int)swExternalFileReferencesConfig_e.swExternalFileReferencesCurrentConfig, "", (int)swExternalFileReferencesUpdate_e.swExternalFileReferencesLockAll);
                             OrienterVue(mdlFichier);

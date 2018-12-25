@@ -55,6 +55,7 @@ namespace ModuleProduction.ModuleProduireDvp
 
         private CtrlTextBox _Texte_RefFichier;
         private CtrlTextBox _TextBox_Campagne;
+        private CtrlCheckBox _CheckBox_Quantite_Diff;
         private CtrlTextBox _Texte_Quantite;
         private CtrlTextListBox _TextListBox_Materiaux;
         private CtrlTextListBox _TextListBox_Ep;
@@ -85,14 +86,16 @@ namespace ModuleProduction.ModuleProduireDvp
                 if (String.IsNullOrWhiteSpace(Ref))
                     _Texte_RefFichier.BackgroundColor(Color.Red, true);
 
-                
-
                 _TextBox_Campagne = G.AjouterTexteBox("Campagne :", "");
                 _TextBox_Campagne.LectureSeule = true;
 
                 _CheckBox_MettreAjourCampagne = G.AjouterCheckBox("Mettre à jour la campagne");
 
-                _Texte_Quantite = G.AjouterTexteBox("Quantité :", "Multiplier les quantités par");
+                G = _Calque.AjouterGroupe("Quantité :");
+
+                _CheckBox_Quantite_Diff = G.AjouterCheckBox("Calculer la différence");
+
+                _Texte_Quantite = G.AjouterTexteBox("Multiplier par quantité :", "Multiplier les quantités par");
                 _Texte_Quantite.Text = Quantite();
                 _Texte_Quantite.ValiderTexte += ValiderTextIsInteger;
 
@@ -151,7 +154,7 @@ namespace ModuleProduction.ModuleProduireDvp
         {
             get
             {
-                if(String.IsNullOrWhiteSpace(_Ref))
+                if (String.IsNullOrWhiteSpace(_Ref))
                     _Ref = MdlBase.eRefFichierComplet();
 
                 return _Ref;
@@ -193,7 +196,6 @@ namespace ModuleProduction.ModuleProduireDvp
 
                 ListeMateriaux.AddIfNotExist(corps.Materiau);
                 ListeEp.AddIfNotExist(corps.Dimension);
-                var ch = Path.Combine(MdlBase.eDossier(), CONST_PRODUCTION.DOSSIER_PIECES, CONST_PRODUCTION.DOSSIER_PIECES_APERCU, corps.RepereComplet + ".bmp");
             }
 
             WindowLog.SautDeLigne();
@@ -207,6 +209,12 @@ namespace ModuleProduction.ModuleProduireDvp
 
             _TextListBox_Ep.Liste = ListeEp;
             _TextListBox_Ep.ToutSelectionner(false);
+
+            if (Campagne == 1)
+            {
+                _CheckBox_Quantite_Diff.IsEnabled = false;
+                _CheckBox_Quantite_Diff.Visible = false;
+            }
         }
 
         protected void RunOkCommand()
@@ -216,6 +224,7 @@ namespace ModuleProduction.ModuleProduireDvp
             Cmd.MdlBase = App.Sw.ActiveDoc;
             Cmd.ListeCorps = ListeCorps;
             Cmd.RefFichier = _Texte_RefFichier.Text.Trim();
+            Cmd.Quantite_Diff = _CheckBox_Quantite_Diff.IsChecked;
             Cmd.Quantite = _Texte_Quantite.Text.eToInteger();
             Cmd.IndiceCampagne = _TextBox_Campagne.Text.eToInteger();
             Cmd.MettreAjourCampagne = _CheckBox_MettreAjourCampagne.IsChecked;

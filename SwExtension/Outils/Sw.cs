@@ -1859,6 +1859,11 @@ namespace Outils
 
         public static ModelDoc2 eOuvrir(String chemin, String config = "")
         {
+            ModelDoc2 mdl = eEstOuvert(Path.GetFileName(chemin));
+
+            if (mdl.IsRef())
+                return mdl;
+
             String Ext = Path.GetExtension(chemin).ToUpperInvariant();
 
             swDocumentTypes_e TypeExt = swDocumentTypes_e.swDocNONE;
@@ -1869,8 +1874,6 @@ namespace Outils
             else if (eTypeDoc.Dessin.GetEnumInfo<ExtFichier>() == Ext)
                 TypeExt = swDocumentTypes_e.swDocDRAWING;
 
-            ModelDoc2 mdl = null;
-
             if (TypeExt != swDocumentTypes_e.swDocNONE)
             {
                 int errors = 0, warnings = 0;
@@ -1878,6 +1881,18 @@ namespace Outils
             }
 
             return mdl;
+        }
+
+        public static ModelDoc2 eEstOuvert(String nomFichier)
+        {
+            var Modeles = (object[])App.Sw.GetDocuments();
+            var test = nomFichier.ToUpperInvariant();
+
+            foreach (ModelDoc2  mdl in Modeles)
+                if (Path.GetFileName(mdl.GetPathName()).ToUpperInvariant() == test)
+                    return mdl;
+
+            return null;
         }
 
         public static void eSauver(this ModelDoc2 modele)

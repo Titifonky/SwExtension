@@ -23,6 +23,7 @@ namespace ModuleProduction.ModuleProduireDvp
         public Boolean AfficherLignePliage = false;
         public Boolean AfficherNotePliage = false;
         public Boolean InscrireNomTole = false;
+        public Boolean Quantite_Diff = false;
         public Boolean OrienterDvp = false;
         public eOrientation OrientationDvp = eOrientation.Portrait;
         public String RefFichier = "";

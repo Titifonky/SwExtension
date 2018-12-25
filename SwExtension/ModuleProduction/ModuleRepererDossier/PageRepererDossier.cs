@@ -57,6 +57,7 @@ namespace ModuleProduction.ModuleRepererDossier
         private CtrlCheckBox _CheckBox_CombinerCorps;
         private CtrlCheckBox _CheckBox_CombinerAvecCampagne;
         private CtrlCheckBox _CheckBox_ExporterFichierCorps;
+        private CtrlCheckBox _CheckBox_CreerDvp;
 
         protected void Calque()
         {
@@ -86,6 +87,7 @@ namespace ModuleProduction.ModuleRepererDossier
                 _CheckBox_ExporterFichierCorps = G.AjouterCheckBox(ExporterFichierCorps);
                 _CheckBox_CombinerCorps = G.AjouterCheckBox(CombinerCorpsIdentiques);
                 _CheckBox_CombinerAvecCampagne = G.AjouterCheckBox(CombinerAvecCampagne);
+                _CheckBox_CreerDvp = G.AjouterCheckBox("Creer les configs dvp des tôles");
                 _CheckBox_CombinerAvecCampagne.Indent = 1;
 
                 _CheckBox_ExporterFichierCorps.OnUnCheck += _CheckBox_CombinerCorps.UnCheck;
@@ -185,7 +187,7 @@ namespace ModuleProduction.ModuleRepererDossier
             Cmd.CombinerAvecCampagne = _CheckBox_CombinerAvecCampagne.IsChecked;
             Cmd.ReinitCampagneActuelle = _CheckBox_ReinitCampagneActuelle.IsChecked;
             Cmd.MajCampagnePrecedente = _CheckBox_MajCampagnePrecedente.IsChecked;
-
+            Cmd.CreerDvp = _CheckBox_CreerDvp.IsChecked;
             Cmd.ExporterFichierCorps = _CheckBox_ExporterFichierCorps.IsChecked;
             Cmd.ListeCorpsExistant = ListeCorps;
 
