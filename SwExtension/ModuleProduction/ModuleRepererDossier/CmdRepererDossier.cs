@@ -277,6 +277,7 @@ namespace ModuleProduction.ModuleRepererDossier
                             corps.Campagne[IndiceCampagne] += nbCorps;
                             corps.Repere = Repere;
                             corps.InitDimension(Dossier, SwCorps);
+                            corps.InitVolume(Dossier, SwCorps);
                             corps.AjouterModele(mdl, nomCfg, IdDossier, NomCorps);
 
                             ListIdDossiers.Add(IdDossier);

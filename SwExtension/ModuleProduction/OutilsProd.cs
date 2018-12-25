@@ -383,6 +383,10 @@ namespace ModuleProduction
         /// Epaisseur de la tôle ou section
         /// </summary>
         public String Dimension;
+        /// <summary>
+        /// Longueur de la barre ou volume de la tôle
+        /// </summary>
+        public String Volume;
         public String Materiau;
         public ModelDoc2 Modele = null;
         private long _TailleFichier = long.MaxValue;
@@ -401,7 +405,7 @@ namespace ModuleProduction
 
         public override string ToString()
         {
-            String Ligne = String.Format("{0}\t{1}\t{2}\t{3}", Repere, TypeCorps, Dimension, Materiau);
+            String Ligne = String.Format("{0}\t{1}\t{2}\t{3}\t{4}", Repere, TypeCorps, Dimension, Volume, Materiau);
 
             for (int i = 0; i < Campagne.Keys.Max(); i++)
             {
@@ -431,6 +435,14 @@ namespace ModuleProduction
                 Dimension = dossier.eProfilDossier();
         }
 
+        public void InitVolume(BodyFolder dossier, Body2 corps)
+        {
+            if (TypeCorps == eTypeCorps.Tole)
+                Dimension = Math.Round(((Double[])corps.GetMassProperties(1))[3], 9).ToString();
+            else
+                Dimension = dossier.eLongueurDossier();
+        }
+
         public Corps(Body2 swCorps, eTypeCorps typeCorps, String materiau)
         {
             SwCorps = swCorps;
@@ -453,10 +465,11 @@ namespace ModuleProduction
             Repere = tab[0].eToInteger();
             TypeCorps = (eTypeCorps)Enum.Parse(typeof(eTypeCorps), tab[1]);
             Dimension = tab[2];
-            Materiau = tab[3];
+            Volume = tab[3];
+            Materiau = tab[4];
             int cp = 1;
             Campagne = new SortedDictionary<int, int>();
-            for (int i = 4; i < tab.Length; i++)
+            for (int i = 5; i < tab.Length; i++)
                 Campagne.Add(cp++, tab[i].eToInteger());
         }
 

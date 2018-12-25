@@ -4697,6 +4697,20 @@ namespace Outils
             return Profil;
         }
 
+        public static String eLongueurDossier(this BodyFolder dossier)
+        {
+            String Profil = "";
+            try
+            {
+                if (dossier.ePropExiste(CONSTANTES.PROFIL_LONGUEUR))
+                    Profil = dossier.eProp(CONSTANTES.PROFIL_LONGUEUR);
+            }
+            catch (Exception e)
+            { Log.Message(e); }
+
+            return Profil;
+        }
+
         public static int eNbIntersection(this Component2 compBase, Body2 corpsBase, Component2 compTest, Body2 corpsTest)
         {
             int NbInt = 0;
