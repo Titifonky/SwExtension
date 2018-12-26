@@ -32,79 +32,38 @@ namespace ModuleProduction.ModuleProduireDvp
         private Dictionary<String, DrawingDoc> DicDessins = new Dictionary<string, DrawingDoc>();
 
         private String DossierDVP = "";
+        HashSet<String> HashMateriaux;
+        HashSet<String> HashEp;
+
+        private void Init()
+        {
+            DossierDVP = Directory.CreateDirectory(Path.Combine(MdlBase.CreerDossier(CONST_PRODUCTION.DOSSIER_LASERTOLE), IndiceCampagne.ToString())).FullName;
+
+            HashMateriaux = new HashSet<string>(ListeMateriaux);
+            HashEp = new HashSet<string>(ListeEp);
+        }
 
         protected override void Command()
         {
             try
             {
-                var dossierLaserTole = MdlBase.CreerDossier(CONST_PRODUCTION.DOSSIER_LASERTOLE);
+                Init();
 
-                DossierDVP = Directory.CreateDirectory(Path.Combine(dossierLaserTole, IndiceCampagne.ToString())).FullName;
+                var fenetre = new AffichageTole();
+                fenetre.ShowDialog();
+            }
+            catch (Exception e)
+            {
+                this.LogErreur(new Object[] { e });
+            }
+        }
 
-                HashSet<String> HashMateriaux = new HashSet<string>(ListeMateriaux);
-                HashSet<String> HashEp = new HashSet<string>(ListeEp);
-
+        private void Start()
+        {
+            try
+            {
                 foreach (var corps in ListeCorps.Values)
-                {
-                    if (corps.TypeCorps != eTypeCorps.Tole ||
-                        !HashMateriaux.Contains(corps.Materiau) ||
-                        !HashEp.Contains(corps.Dimension)
-                        ) continue;
-
-                    var cheminFichier = corps.NomFichier(MdlBase);
-                    if (!File.Exists(cheminFichier)) continue;
-
-                    var mdlCorps = Sw.eOuvrir(cheminFichier);
-                    if (mdlCorps.IsNull()) continue;
-
-                    WindowLog.EcrireF("{0}", corps.RepereComplet);
-
-                    //mdlCorps.LockAllExternalReferences();
-                    mdlCorps.UnlockAllExternalReferences();
-
-                    var listeCfgPliee = mdlCorps.eListeNomConfiguration(eTypeConfig.Pliee);
-                    var NomConfigPliee = listeCfgPliee[0];
-
-                    if(mdlCorps.eNomConfigActive() != NomConfigPliee)
-                        mdlCorps.ShowConfiguration2(NomConfigPliee);
-
-                    var listeCfgDepliee = mdlCorps.eListeNomConfiguration(eTypeConfig.Depliee);
-                    if (listeCfgDepliee.Count == 0) continue;
-
-                    var NomConfigDepliee = listeCfgDepliee[0];
-
-                    var QuantiteTole = Quantite * corps.Campagne.Max().Value;
-
-                    if (!mdlCorps.ShowConfiguration2(NomConfigDepliee))
-                    {
-                        WindowLog.EcrireF("  - Pas de configuration dvp");
-                        continue;
-                    }
-
-                    mdlCorps.EditRebuild3();
-
-                    DrawingDoc dessin = CreerPlan(corps.Materiau, corps.Dimension.eToDouble());
-                    dessin.eModelDoc2().eActiver();
-                    Sheet Feuille = dessin.eFeuilleActive();
-
-                    try
-                    {
-                        View v = CreerVueToleDvp(dessin, Feuille, mdlCorps.ePartDoc(), NomConfigDepliee, corps.RepereComplet, corps.Materiau, QuantiteTole, corps.Dimension.eToDouble());
-                    }
-                    catch (Exception e)
-                    {
-                        WindowLog.Ecrire("  - Erreur");
-                        this.LogMethode(new Object[] { e });
-                    }
-                    finally
-                    {
-                        WindowLog.Ecrire("  - Ok");
-                    }
-
-                    mdlCorps.ShowConfiguration2(NomConfigPliee);
-
-                    App.Sw.CloseDoc(mdlCorps.GetPathName());
-                }
+                    CreerVue(corps);
 
                 foreach (DrawingDoc dessin in DicDessins.Values)
                 {
@@ -119,6 +78,68 @@ namespace ModuleProduction.ModuleProduireDvp
             {
                 this.LogErreur(new Object[] { e });
             }
+        }
+
+        private void CreerVue(Corps corps)
+        {
+            if (corps.TypeCorps != eTypeCorps.Tole ||
+                        !HashMateriaux.Contains(corps.Materiau) ||
+                        !HashEp.Contains(corps.Dimension)
+                        ) return;
+
+            var cheminFichier = corps.NomFichier(MdlBase);
+            if (!File.Exists(cheminFichier)) return;
+
+            var mdlCorps = Sw.eOuvrir(cheminFichier);
+            if (mdlCorps.IsNull()) return;
+
+            WindowLog.EcrireF("{0}", corps.RepereComplet);
+
+            //mdlCorps.LockAllExternalReferences();
+            mdlCorps.UnlockAllExternalReferences();
+
+            var listeCfgPliee = mdlCorps.eListeNomConfiguration(eTypeConfig.Pliee);
+            var NomConfigPliee = listeCfgPliee[0];
+
+            if (mdlCorps.eNomConfigActive() != NomConfigPliee)
+                mdlCorps.ShowConfiguration2(NomConfigPliee);
+
+            var listeCfgDepliee = mdlCorps.eListeNomConfiguration(eTypeConfig.Depliee);
+            if (listeCfgDepliee.Count == 0) return;
+
+            var NomConfigDepliee = listeCfgDepliee[0];
+
+            var QuantiteTole = Quantite * corps.Campagne.Max().Value;
+
+            if (!mdlCorps.ShowConfiguration2(NomConfigDepliee))
+            {
+                WindowLog.EcrireF("  - Pas de configuration dvp");
+                return;
+            }
+
+            mdlCorps.EditRebuild3();
+
+            DrawingDoc dessin = CreerPlan(corps.Materiau, corps.Dimension.eToDouble());
+            dessin.eModelDoc2().eActiver();
+            Sheet Feuille = dessin.eFeuilleActive();
+
+            try
+            {
+                View v = CreerVueToleDvp(dessin, Feuille, mdlCorps.ePartDoc(), NomConfigDepliee, corps.RepereComplet, corps.Materiau, QuantiteTole, corps.Dimension.eToDouble());
+            }
+            catch (Exception e)
+            {
+                WindowLog.Ecrire("  - Erreur");
+                this.LogMethode(new Object[] { e });
+            }
+            finally
+            {
+                WindowLog.Ecrire("  - Ok");
+            }
+
+            mdlCorps.ShowConfiguration2(NomConfigPliee);
+
+            App.Sw.CloseDoc(mdlCorps.GetPathName());
         }
 
         private String cmdRefPiece(ModelDoc2 mdl, String configPliee, String noDossier)

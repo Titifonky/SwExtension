@@ -20,3 +20,4 @@ E:\Mes documents\Projets Visual Studio\SwExtension\SwExtension\bin\Release\Trian
 E:\Mes documents\Projets Visual Studio\SwExtension\SwExtension\bin\Release\Triangle.pdb
 E:\Mes documents\Projets Visual Studio\SwExtension\SwExtension\bin\Release\clipper_library.dll
 E:\Mes documents\Projets Visual Studio\SwExtension\SwExtension\bin\Release\clipper_library.pdb
+E:\Mes documents\Projets Visual Studio\SwExtension\SwExtension\obj\Release\ModuleProduction.ModuleProduireDvp.AffichageTole.resources

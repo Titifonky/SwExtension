@@ -94,6 +94,12 @@
     <Compile Include="Macros\BoutonAfficherLogDebug.cs" />
     <Compile Include="ModuleProduction\ModuleGenererConfigDvp\CmdGenererConfigDvp.cs" />
     <Compile Include="ModuleProduction\ModuleGenererConfigDvp\PageGenererConfigDvp.cs" />
+    <Compile Include="ModuleProduction\ModuleProduireDvp\AffichageTole.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModuleProduction\ModuleProduireDvp\AffichageTole.Designer.cs">
+      <DependentUpon>AffichageTole.cs</DependentUpon>
+    </Compile>
     <Compile Include="ModuleProduction\ModuleProduireDvp\CmdProduireDvp.cs" />
     <Compile Include="ModuleProduction\ModuleProduireDvp\PageProduireDVP.cs" />
     <Compile Include="ModuleProduction\ModuleRepererDossier\CmdRepererDossier.cs" />
@@ -211,6 +217,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ModuleProduction\ModuleProduireDvp\AffichageTole.resx">
+      <DependentUpon>AffichageTole.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="NotePad.resx">
       <DependentUpon>NotePad.cs</DependentUpon>
     </EmbeddedResource>
