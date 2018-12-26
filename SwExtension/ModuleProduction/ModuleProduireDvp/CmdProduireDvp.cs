@@ -49,8 +49,6 @@ namespace ModuleProduction.ModuleProduireDvp
             {
                 Init();
 
-                var fenetre = new AffichageTole();
-                fenetre.ShowDialog();
             }
             catch (Exception e)
             {
@@ -87,7 +85,7 @@ namespace ModuleProduction.ModuleProduireDvp
                         !HashEp.Contains(corps.Dimension)
                         ) return;
 
-            var cheminFichier = corps.NomFichier(MdlBase);
+            var cheminFichier = corps.CheminFichierMdl;
             if (!File.Exists(cheminFichier)) return;
 
             var mdlCorps = Sw.eOuvrir(cheminFichier);

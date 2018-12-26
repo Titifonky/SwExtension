@@ -4,6 +4,7 @@ using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -359,7 +360,7 @@ namespace ModuleProduction
                         {
                             if (!String.IsNullOrWhiteSpace(ligne))
                             {
-                                var c = new Corps(ligne);
+                                var c = new Corps(ligne, mdl);
                                 Liste.Add(c.Repere, c);
                             }
                         }
@@ -465,7 +466,7 @@ namespace ModuleProduction
             Repere = repere;
         }
 
-        public Corps(String ligne)
+        public Corps(String ligne, ModelDoc2 mdlBase)
         {
             var tab = ligne.Split(new char[] { '\t' });
             Repere = tab[0].eToInteger();
@@ -477,6 +478,9 @@ namespace ModuleProduction
             Campagne = new SortedDictionary<int, int>();
             for (int i = 5; i < tab.Length; i++)
                 Campagne.Add(cp++, tab[i].eToInteger());
+
+            _CheminFichierMdl = Path.Combine(mdlBase.DossierPiece(), RepereComplet + OutilsProd.ExtPiece);
+            _CheminFichierImage = Path.Combine(mdlBase.DossierPiece(), CONST_PRODUCTION.DOSSIER_PIECES_APERCU, RepereComplet + ".bmp");
         }
 
         public void AjouterModele(ModelDoc2 mdl, String config, int idDossier, String nomCorps)
@@ -492,14 +496,33 @@ namespace ModuleProduction
             }
         }
 
-        public String NomFichier(ModelDoc2 mdlBase)
+        private String _CheminFichierMdl = "";
+
+        public String CheminFichierMdl
         {
-            return Path.Combine(mdlBase.DossierPiece(), RepereComplet + OutilsProd.ExtPiece);
+            get { return _CheminFichierMdl; }
         }
+
+        private String _CheminFichierImage = "";
 
         public String RepereComplet
         {
             get { return CONSTANTES.PREFIXE_REF_DOSSIER + Repere; }
+        }
+
+        private Bitmap _Image = null;
+
+        private Bitmap Image
+        {
+            get
+            {
+                if (_Image.IsNull())
+                    _Image = new Bitmap(_CheminFichierImage);
+
+                return _Image;
+            }
+
+            set {  _Image = value; }
         }
     }
 }

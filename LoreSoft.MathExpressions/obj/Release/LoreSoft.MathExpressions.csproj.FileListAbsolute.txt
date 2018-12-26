@@ -23,10 +23,3 @@ F:\Mes documents\Projets Visual Studio\Gestion_App V6\LoreSoft.MathExpressions\o
 F:\Mes documents\Projets Visual Studio\Gestion_App V6\LoreSoft.MathExpressions\obj\Release\LoreSoft.MathExpressions.dll
 F:\Mes documents\Projets Visual Studio\Gestion_App V6\LoreSoft.MathExpressions\obj\Release\LoreSoft.MathExpressions.pdb
 F:\Mes documents\Projets Visual Studio\Gestion_App V6\LoreSoft.MathExpressions\obj\Release\LoreSoft.MathExpressions.csprojResolveAssemblyReference.cache
-E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\bin\Release\LoreSoft.MathExpressions.dll
-E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\bin\Release\LoreSoft.MathExpressions.pdb
-E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\obj\Release\LoreSoft.MathExpressions.Properties.Resources.resources
-E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\obj\Release\LoreSoft.MathExpressions.csproj.GenerateResource.Cache
-E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\obj\Release\LoreSoft.MathExpressions.dll
-E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\obj\Release\LoreSoft.MathExpressions.pdb
-E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\obj\Release\LoreSoft.MathExpressions.csprojResolveAssemblyReference.cache

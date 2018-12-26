@@ -44,6 +44,7 @@
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="SolidWorks.Interop.sldworks">
       <HintPath>C:\Program Files\SOLIDWORKS Corp\SOLIDWORKS (2)\api\redist\SolidWorks.Interop.sldworks.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -68,6 +69,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -94,11 +96,8 @@
     <Compile Include="Macros\BoutonAfficherLogDebug.cs" />
     <Compile Include="ModuleProduction\ModuleGenererConfigDvp\CmdGenererConfigDvp.cs" />
     <Compile Include="ModuleProduction\ModuleGenererConfigDvp\PageGenererConfigDvp.cs" />
-    <Compile Include="ModuleProduction\ModuleProduireDvp\AffichageTole.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ModuleProduction\ModuleProduireDvp\AffichageTole.Designer.cs">
-      <DependentUpon>AffichageTole.cs</DependentUpon>
+    <Compile Include="ModuleProduction\ModuleProduireDvp\AffichageToleWPF.xaml.cs">
+      <DependentUpon>AffichageToleWPF.xaml</DependentUpon>
     </Compile>
     <Compile Include="ModuleProduction\ModuleProduireDvp\CmdProduireDvp.cs" />
     <Compile Include="ModuleProduction\ModuleProduireDvp\PageProduireDVP.cs" />
@@ -217,9 +216,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ModuleProduction\ModuleProduireDvp\AffichageTole.resx">
-      <DependentUpon>AffichageTole.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="NotePad.resx">
       <DependentUpon>NotePad.cs</DependentUpon>
     </EmbeddedResource>
@@ -243,6 +239,12 @@
       <Project>{b6813448-fce2-429c-81b5-9722fea839b8}</Project>
       <Name>LoreSoft.MathExpressions</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="ModuleProduction\ModuleProduireDvp\AffichageToleWPF.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
