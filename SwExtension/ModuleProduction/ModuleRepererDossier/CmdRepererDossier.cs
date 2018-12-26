@@ -340,9 +340,9 @@ namespace ModuleProduction.ModuleRepererDossier
                             Corps.eSelect();
                             mdlFichier.FeatureManager.InsertDeleteBody2(true);
 
-                            if (CreerDvp)
-                                ModuleGenererConfigDvp.CmdGenererConfigDvp.CreerDvp(corps, mdlFichier.DossierPiece(), false, false);
-                            
+                            if ((corps.TypeCorps == eTypeCorps.Tole) && CreerDvp)
+                                ModuleGenererConfigDvp.CmdGenererConfigDvp.CreerDvp(corps, MdlBase.DossierPiece(), false, false);
+
                             //mdlFichier.LockAllExternalReferences();
                             //fonc.UpdateExternalFileReferences((int)swExternalFileReferencesConfig_e.swExternalFileReferencesCurrentConfig, "", (int)swExternalFileReferencesUpdate_e.swExternalFileReferencesLockAll);
                             OrienterVue(mdlFichier);
@@ -386,31 +386,35 @@ namespace ModuleProduction.ModuleRepererDossier
 
         private void OrienterVue(ModelDoc2 mdl)
         {
-            var fDepliee = mdl.ePartDoc().eListeFonctionsDepliee()[0];
-            FlatPatternFeatureData fDeplieeInfo = fDepliee.GetDefinition();
-            Face2 face = fDeplieeInfo.FixedFace2;
-            Surface surface = face.GetSurface();
-
-            Boolean Reverse = face.FaceInSurfaceSense();
-
-            Double[] Param = surface.PlaneParams;
-
-            if (Reverse)
+            var ListeDepliee = mdl.ePartDoc().eListeFonctionsDepliee();
+            if (ListeDepliee.Count > 0)
             {
-                Param[0] = Param[0] * -1;
-                Param[1] = Param[1] * -1;
-                Param[2] = Param[2] * -1;
+                var fDepliee = ListeDepliee[0];
+                FlatPatternFeatureData fDeplieeInfo = fDepliee.GetDefinition();
+                Face2 face = fDeplieeInfo.FixedFace2;
+                Surface surface = face.GetSurface();
+
+                Boolean Reverse = face.FaceInSurfaceSense();
+
+                Double[] Param = surface.PlaneParams;
+
+                if (Reverse)
+                {
+                    Param[0] = Param[0] * -1;
+                    Param[1] = Param[1] * -1;
+                    Param[2] = Param[2] * -1;
+                }
+
+                Vecteur Normale = new Vecteur(Param[0], Param[1], Param[2]);
+                MathTransform mtNormale = MathRepere(Normale.MathVector());
+                MathTransform mtAxeZ = MathRepere(new Vecteur(1, 1, 1).MathVector()); ;
+
+                MathTransform mtRotate = mtAxeZ.Multiply(mtNormale.Inverse());
+
+                ModelView mv = mdl.ActiveView;
+                mv.Orientation3 = mtRotate;
+                mv.Activate();
             }
-
-            Vecteur Normale = new Vecteur(Param[0], Param[1], Param[2]);
-            MathTransform mtNormale = MathRepere(Normale.MathVector());
-            MathTransform mtAxeZ = MathRepere(new Vecteur(1, 1, 1).MathVector()); ;
-
-            MathTransform mtRotate = mtAxeZ.Multiply(mtNormale.Inverse());
-
-            ModelView mv = mdl.ActiveView;
-            mv.Orientation3 = mtRotate;
-            mv.Activate();
             mdl.ViewZoomtofit2();
             mdl.GraphicsRedraw2();
         }
@@ -686,7 +690,7 @@ namespace ModuleProduction.ModuleRepererDossier
 
         private void Nettoyer()
         {
-            WindowLog.Ecrire("Nettoyer les modeles");
+            WindowLog.Ecrire("Nettoyer les modeles :");
             List<ModelDoc2> ListeMdl = new List<ModelDoc2>();
             if (MdlBase.TypeDoc() == eTypeDoc.Piece)
                 ListeMdl.Add(MdlBase);
@@ -741,7 +745,7 @@ namespace ModuleProduction.ModuleRepererDossier
             int warnings = 0;
             MdlBase.Save3((int)swSaveAsOptions_e.swSaveAsOptions_Silent + (int)swSaveAsOptions_e.swSaveAsOptions_SaveReferenced, ref errors, ref warnings);
 
-            WindowLog.Ecrire("\nNettoyage terminé");
+            WindowLog.Ecrire("- Nettoyage terminé");
         }
     }
 }

@@ -133,9 +133,6 @@ namespace ModuleProduction.ModuleRepererDossier
                 // S'il n'y a aucun corps, on désactive les options
                 if (ListeCorps.Count == 0)
                 {
-                    _CheckBox_NettoyerModele.IsEnabled = false;
-                    _CheckBox_NettoyerModele.Visible = false;
-
                     _CheckBox_MajCampagnePrecedente.IsEnabled = false;
                     _CheckBox_MajCampagnePrecedente.Visible = false;
 
@@ -171,6 +168,11 @@ namespace ModuleProduction.ModuleRepererDossier
                     _CheckBox_CombinerAvecCampagne.IsChecked = false;
                     _CheckBox_CombinerAvecCampagne.IsEnabled = false;
                     _CheckBox_CombinerAvecCampagne.Visible = false;
+                }
+                else
+                {
+                    _CheckBox_NettoyerModele.IsEnabled = false;
+                    _CheckBox_NettoyerModele.Visible = false;
                 }
             }
             catch (Exception e) { this.LogErreur(new Object[] { e }); }

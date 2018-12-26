@@ -1862,7 +1862,10 @@ namespace Outils
             ModelDoc2 mdl = eEstOuvert(Path.GetFileName(chemin));
 
             if (mdl.IsRef())
+            {
+                mdl.eActiver();
                 return mdl;
+            }
 
             String Ext = Path.GetExtension(chemin).ToUpperInvariant();
 
@@ -4533,8 +4536,11 @@ namespace Outils
             List<Feature> Liste = new List<Feature>();
             var DossierDepliee = (FlatPatternFolder)piece.eModelDoc2().FeatureManager.GetFlatPatternFolder();
             Object[] Depliee = (object[])DossierDepliee.GetFlatPatterns();
-            foreach (Feature f in Depliee)
-                Liste.Add(f);
+            if (Depliee.IsRef())
+            {
+                foreach (Feature f in Depliee)
+                    Liste.Add(f);
+            }
 
             return Liste;
         }

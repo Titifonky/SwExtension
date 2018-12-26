@@ -56,7 +56,7 @@ namespace ModuleProduction.ModuleGenererConfigDvp
                 var mdl = Sw.eOuvrir(chemin);
                 if (mdl.IsNull()) return;
 
-                WindowLog.EcrireF("{0}", Repere);
+                WindowLog.EcrireF("{0} -> dvp", Repere);
 
                 var NomCfgPliee = mdl.eNomConfigActive();
                 var Piece = mdl.ePartDoc();
