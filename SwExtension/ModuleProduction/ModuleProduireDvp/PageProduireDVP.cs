@@ -213,7 +213,6 @@ namespace ModuleProduction.ModuleProduireDvp
 
             if (Campagne == 1)
             {
-                _CheckBox_Quantite_Diff.IsChecked = false;
                 _CheckBox_Quantite_Diff.IsEnabled = false;
                 _CheckBox_Quantite_Diff.Visible = false;
             }

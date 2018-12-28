@@ -95,7 +95,8 @@
                                             <Expander.Header>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="{Binding Name}" FontSize="15" FontWeight="Bold" Margin="10,0,0,0" VerticalAlignment="Bottom"/>
-                                                    <TextBlock Text="{Binding ItemCount}" Margin="25,0,0,0" VerticalAlignment="Bottom"/>
+                                                    <TextBlock Text="nb" Margin="25,0,0,0" VerticalAlignment="Bottom"/>
+                                                    <TextBlock Text="{Binding ItemCount}" Margin="4,0,0,0" VerticalAlignment="Bottom"/>
                                                 </StackPanel>
                                             </Expander.Header>
                                             <ItemsPresenter />
