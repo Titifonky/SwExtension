@@ -4,10 +4,10 @@ using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using SwExtension;
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Text;
 
 namespace ModuleProduction.ModuleProduireDvp
 {
@@ -32,15 +32,33 @@ namespace ModuleProduction.ModuleProduireDvp
         private Dictionary<String, DrawingDoc> DicDessins = new Dictionary<string, DrawingDoc>();
 
         private String DossierDVP = "";
-        HashSet<String> HashMateriaux;
-        HashSet<String> HashEp;
 
         private void Init()
         {
             DossierDVP = Directory.CreateDirectory(Path.Combine(MdlBase.CreerDossier(CONST_PRODUCTION.DOSSIER_LASERTOLE), IndiceCampagne.ToString())).FullName;
 
-            HashMateriaux = new HashSet<string>(ListeMateriaux);
-            HashEp = new HashSet<string>(ListeEp);
+            var ListeExistant = MdlBase.ChargerProduction(MdlBase.DossierLaserTole());
+
+            SortedDictionary<int, Corps> ListeCorpsFiltre = new SortedDictionary<int, Corps>();
+            foreach (var corps in ListeCorps.Values)
+            {
+                if ((corps.TypeCorps == eTypeCorps.Tole) ||
+                        ListeMateriaux.Contains(corps.Materiau) ||
+                        ListeEp.Contains(corps.Dimension)
+                        )
+                {
+                    var qte = corps.Campagne[IndiceCampagne];
+
+                    if (Quantite_Diff && ListeExistant.ContainsKey(corps.Repere))
+                        qte = Math.Max(0, qte - ListeExistant[corps.Repere].Qte);
+
+                    corps.Qte = qte;
+                    ListeCorpsFiltre.Add(corps.Repere, corps);
+                }
+            }
+
+
+            ListeCorps = ListeCorpsFiltre;
         }
 
         protected override void Command()
@@ -48,7 +66,9 @@ namespace ModuleProduction.ModuleProduireDvp
             try
             {
                 Init();
-
+                AffichageElementWPF Fenetre = new AffichageElementWPF(ListeCorps);
+                Fenetre.OnValider += Start;
+                Fenetre.ShowDialog();
             }
             catch (Exception e)
             {
@@ -65,11 +85,22 @@ namespace ModuleProduction.ModuleProduireDvp
 
                 foreach (DrawingDoc dessin in DicDessins.Values)
                 {
-                    int Errors = 0, Warnings = 0;
                     dessin.eModelDoc2().eActiver();
                     dessin.eFeuilleActive().eAjusterAutourDesVues();
                     dessin.eModelDoc2().ViewZoomtofit2();
-                    dessin.eModelDoc2().Save3((int)swSaveAsOptions_e.swSaveAsOptions_SaveReferenced + (int)swSaveAsOptions_e.swSaveAsOptions_Silent, ref Errors, ref Warnings);
+                    dessin.eModelDoc2().eSauver();
+                }
+
+                var cheminNomenclature = Path.Combine(MdlBase.eDossier(), MdlBase.DossierLaserTole(), IndiceCampagne.ToString(), CONST_PRODUCTION.FICHIER_NOMENC + ".txt");
+                using (var sw = new StreamWriter(cheminNomenclature, false, Encoding.GetEncoding(1252)))
+                {
+                    sw.WriteLine(Corps.EnteteCampagne(IndiceCampagne));
+
+                    foreach (var corps in ListeCorps.Values)
+                    {
+                        sw.WriteLine(corps.LigneCampagne());
+                        WindowLog.EcrireF("{2} P{0} ×{1}", corps.Repere, corps.Qte, IndiceCampagne);
+                    }
                 }
             }
             catch (Exception e)
@@ -80,16 +111,16 @@ namespace ModuleProduction.ModuleProduireDvp
 
         private void CreerVue(Corps corps)
         {
-            if (corps.TypeCorps != eTypeCorps.Tole ||
-                        !HashMateriaux.Contains(corps.Materiau) ||
-                        !HashEp.Contains(corps.Dimension)
-                        ) return;
-
             var cheminFichier = corps.CheminFichierMdl;
             if (!File.Exists(cheminFichier)) return;
 
             var mdlCorps = Sw.eOuvrir(cheminFichier);
             if (mdlCorps.IsNull()) return;
+
+            var QuantiteTole = Quantite * (corps.Qte + corps.QteSup);
+
+            if (QuantiteTole == 0)
+                return;
 
             WindowLog.EcrireF("{0}", corps.RepereComplet);
 
@@ -107,7 +138,7 @@ namespace ModuleProduction.ModuleProduireDvp
 
             var NomConfigDepliee = listeCfgDepliee[0];
 
-            var QuantiteTole = Quantite * corps.Campagne.Max().Value;
+            
 
             if (!mdlCorps.ShowConfiguration2(NomConfigDepliee))
             {
@@ -198,8 +229,9 @@ namespace ModuleProduction.ModuleProduireDvp
 
         private DrawingDoc CreerPlan(String materiau, Double epaisseur)
         {
-            String Fichier = String.Format("{0}{1} - Ep{2}",
-                                            String.IsNullOrWhiteSpace(RefFichier) ? "" : RefFichier + " - ",
+            String Fichier = String.Format("{0}{1} - {2} - Ep{3}",
+                                            String.IsNullOrWhiteSpace(RefFichier) ? "" : RefFichier + "-",
+                                            IndiceCampagne.ToString(),
                                             materiau.eGetSafeFilename("-"),
                                             epaisseur.ToString().Replace('.', ',')
                                             ).Trim();

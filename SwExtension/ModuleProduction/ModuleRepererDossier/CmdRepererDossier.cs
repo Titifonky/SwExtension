@@ -367,11 +367,11 @@ namespace ModuleProduction.ModuleRepererDossier
 
                 using (var sw = new StreamWriter(MdlBase.FichierNomenclature() , false, Encoding.GetEncoding(1252)))
                 {
-                    sw.WriteLine(Corps.Entete(IndiceCampagne));
+                    sw.WriteLine(Corps.EnteteNomenclature(IndiceCampagne));
 
                     foreach (var corps in ListeCorpsExistant.Values)
                     {
-                        sw.WriteLine(corps.ToString());
+                        sw.WriteLine(corps.LigneNomenclature());
                         nbtt += corps.Campagne[IndiceCampagne];
                         WindowLog.EcrireF("{2} P{0} ×{1}", corps.Repere, corps.Campagne[IndiceCampagne], IndiceCampagne);
                     }
@@ -448,7 +448,7 @@ namespace ModuleProduction.ModuleRepererDossier
             Directory.CreateDirectory(Dossier);
             String CheminImg = Path.Combine(Dossier, Path.GetFileNameWithoutExtension(cheminFichier) + ".bmp");
             mdl.SaveBMP(CheminImg, 0, 0);
-            Bitmap bmp = resizeImage(80, 80, CheminImg);
+            Bitmap bmp = resizeImage(100, 100, CheminImg);
             bmp.Save(CheminImg);
         }
 
@@ -456,7 +456,7 @@ namespace ModuleProduction.ModuleRepererDossier
         {
             Bitmap img = new Bitmap(stPhotoPath);
             Bitmap imageSource = img.Clone(new Rectangle(0, 0, img.Width, img.Height), PixelFormat.Format32bppRgb);
-            Image imgPhoto = SwExtension.Outils.WindowsThumbnailProvider.AutoCrop(imageSource);
+            Image imgPhoto = imageSource.AutoCrop();
             img.Dispose();
             imageSource.Dispose();
 

@@ -5,7 +5,6 @@ using SwExtension;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 
 namespace ModuleProduction.ModuleProduireDvp
 {
@@ -17,6 +16,7 @@ namespace ModuleProduction.ModuleProduireDvp
     public class PageProduireDvp : BoutonPMPManager
     {
         private Parametre ConvertirEsquisse;
+        private Parametre QuantiteDiff;
         private Parametre PropQuantite;
         private Parametre AfficherLignePliage;
         private Parametre AfficherNotePliage;
@@ -33,6 +33,7 @@ namespace ModuleProduction.ModuleProduireDvp
             try
             {
                 PropQuantite = _Config.AjouterParam("PropQuantite", CONSTANTES.PROPRIETE_QUANTITE, "Propriete \"Quantite\"", "Recherche cette propriete");
+                QuantiteDiff = _Config.AjouterParam("QuantiteDiff", true, "Calculer la différence");
                 AfficherLignePliage = _Config.AjouterParam("AfficherLignePliage", true, "Afficher les lignes de pliage");
                 AfficherNotePliage = _Config.AjouterParam("AfficherNotePliage", true, "Afficher les notes de pliage");
                 InscrireNomTole = _Config.AjouterParam("InscrireNomTole", true, "Inscrire la réf du dvp sur la tole");
@@ -93,7 +94,7 @@ namespace ModuleProduction.ModuleProduireDvp
 
                 G = _Calque.AjouterGroupe("Quantité :");
 
-                _CheckBox_Quantite_Diff = G.AjouterCheckBox("Calculer la différence");
+                _CheckBox_Quantite_Diff = G.AjouterCheckBox(QuantiteDiff);
 
                 _Texte_Quantite = G.AjouterTexteBox("Multiplier par quantité :", "Multiplier les quantités par");
                 _Texte_Quantite.Text = Quantite();
@@ -212,6 +213,7 @@ namespace ModuleProduction.ModuleProduireDvp
 
             if (Campagne == 1)
             {
+                _CheckBox_Quantite_Diff.IsChecked = false;
                 _CheckBox_Quantite_Diff.IsEnabled = false;
                 _CheckBox_Quantite_Diff.Visible = false;
             }

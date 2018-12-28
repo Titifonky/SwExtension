@@ -4,10 +4,14 @@ using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Windows.Media.Imaging;
 
 namespace ModuleProduction
 {
@@ -371,40 +375,91 @@ namespace ModuleProduction
             return Liste;
         }
 
+        public static SortedDictionary<int, Corps> ChargerProduction(this ModelDoc2 mdl, String dossierProduction)
+        {
+            SortedDictionary<int, Corps> Liste = new SortedDictionary<int, Corps>();
+
+            List<String> ListeChemin = new List<String>();
+
+            if (Directory.Exists(dossierProduction))
+                foreach (var d in Directory.EnumerateDirectories(dossierProduction, "*", SearchOption.TopDirectoryOnly))
+                {
+                    var cheminFichier = Path.Combine(d, CONST_PRODUCTION.FICHIER_NOMENC + ".txt");
+
+                    if (File.Exists(cheminFichier))
+                    {
+                        using (var sr = new StreamReader(cheminFichier, Encoding.GetEncoding(1252)))
+                        {
+                            // On lit la première ligne contenant l'entête des colonnes
+                            String ligne = sr.ReadLine();
+
+                            if (ligne.IsRef())
+                            {
+                                // On la split pour récupérer l'indice de la campagne
+                                var tab = ligne.Split(new char[] { '\t' });
+                                var IndiceCampagne = tab.Last().eToInteger();
+
+                                while ((ligne = sr.ReadLine()) != null)
+                                {
+                                    if (!String.IsNullOrWhiteSpace(ligne))
+                                    {
+                                        var c = new Corps(ligne, mdl, IndiceCampagne);
+
+                                        if (Liste.ContainsKey(c.Repere))
+                                        {
+                                            var tmp = c.Campagne.First();
+                                            Liste[c.Repere].Campagne.Add(tmp.Key, tmp.Value);
+                                            Liste[c.Repere].Qte += tmp.Value;
+                                        }
+                                        else
+                                        {
+                                            Liste.Add(c.Repere, c);
+                                            c.Qte = c.Campagne.First().Value;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            return Liste;
+        }
+
         public static String ExtPiece = eTypeDoc.Piece.GetEnumInfo<ExtFichier>();
     }
 
     public class Corps
     {
-        public Body2 SwCorps = null;
+        public Body2 SwCorps { get; set; }
         public SortedDictionary<int, int> Campagne = new SortedDictionary<int, int>();
-        public int Repere;
-        public eTypeCorps TypeCorps;
+        public int Repere { get; set; }
+        public eTypeCorps TypeCorps { get; set; }
         /// <summary>
         /// Epaisseur de la tôle ou section
         /// </summary>
-        public String Dimension;
+        public String Dimension { get; set; }
         /// <summary>
         /// Longueur de la barre ou volume de la tôle
         /// </summary>
-        public String Volume;
-        public String Materiau;
-        public ModelDoc2 Modele = null;
+        public String Volume { get; set; }
+        public String Materiau { get; set; }
+        public ModelDoc2 Modele { get; set; }
         private long _TailleFichier = long.MaxValue;
-        public String NomConfig = "";
-        public int IdDossier = -1;
-        public String NomCorps = "";
+        public String NomConfig { get; set; }
+        public int IdDossier { get; set; }
+        public String NomCorps { get; set; }
 
-        public static String Entete(int indiceCampagne)
+        public static String EnteteNomenclature(int indiceCampagne)
         {
-            String entete = String.Format("{0}\t{1}\t{2}\t{3}", "Repere", "Type", "Dimension", "Materiau");
+            String entete = String.Format("{0}\t{1}\t{2}\t{3}\t{4}", "Repere", "Type", "Dimension", "Volume", "Materiau");
             for (int i = 0; i < indiceCampagne; i++)
                 entete += String.Format("\t{0}", i + 1);
 
             return entete;
         }
 
-        public override string ToString()
+        public string LigneNomenclature()
         {
             String Ligne = String.Format("{0}\t{1}\t{2}\t{3}\t{4}", Repere, TypeCorps, Dimension, Volume, Materiau);
 
@@ -417,6 +472,18 @@ namespace ModuleProduction
                 Ligne += String.Format("\t{0}", nb);
             }
 
+            return Ligne;
+        }
+
+        public static String EnteteCampagne(int indiceCampagne)
+        {
+            String entete = String.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}", "Repere", "Type", "Dimension", "Volume", "Materiau", indiceCampagne);
+            return entete;
+        }
+
+        public string LigneCampagne()
+        {
+            String Ligne = String.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}", Repere, TypeCorps, Dimension, Volume, Materiau, Qte);
             return Ligne;
         }
 
@@ -466,7 +533,7 @@ namespace ModuleProduction
             Repere = repere;
         }
 
-        public Corps(String ligne, ModelDoc2 mdlBase)
+        public Corps(String ligne, ModelDoc2 mdlBase, int indiceCampagne = 1)
         {
             var tab = ligne.Split(new char[] { '\t' });
             Repere = tab[0].eToInteger();
@@ -474,7 +541,7 @@ namespace ModuleProduction
             Dimension = tab[2];
             Volume = tab[3];
             Materiau = tab[4];
-            int cp = 1;
+            int cp = indiceCampagne;
             Campagne = new SortedDictionary<int, int>();
             for (int i = 5; i < tab.Length; i++)
                 Campagne.Add(cp++, tab[i].eToInteger());
@@ -497,32 +564,117 @@ namespace ModuleProduction
         }
 
         private String _CheminFichierMdl = "";
-
         public String CheminFichierMdl
         {
             get { return _CheminFichierMdl; }
         }
 
         private String _CheminFichierImage = "";
+        public String CheminFichierImage
+        {
+            get { return _CheminFichierImage; }
+        }
 
         public String RepereComplet
         {
             get { return CONSTANTES.PREFIXE_REF_DOSSIER + Repere; }
         }
 
-        private Bitmap _Image = null;
-
-        private Bitmap Image
+        private BitmapImage _Apercu = null;
+        public BitmapImage Apercu
         {
             get
             {
-                if (_Image.IsNull())
-                    _Image = new Bitmap(_CheminFichierImage);
+                if (_Apercu.IsNull())
+                    _Apercu = (new Bitmap(_CheminFichierImage)).ToBitmapImage();
 
-                return _Image;
+                return _Apercu;
             }
 
-            set {  _Image = value; }
+            set {  _Apercu = value; }
         }
+
+        private String _Qte_Exp = "0";
+        public String Qte_Exp
+        {
+            get { return _Qte_Exp; }
+            set
+            {
+                // Si la valeur se termine par .0 on le supprime
+                Regex rgx = new Regex(@"\.0$");
+                value = rgx.Replace(value, "");
+
+                // Pour eviter des mises à jour intempestives
+                if (Set(ref _Qte_Exp, value))
+                {
+                    try
+                    {
+                        // Pour eviter des calcules intempetifs
+                        Double? Eval = value.Evaluer();
+                        if (Eval != null)
+                            Qte = (int)Eval;
+                    }
+                    catch { }
+                }
+            }
+        }
+
+        private int _Qte = 0;
+        public int Qte
+        {
+            get { return _Qte; }
+            set { _Qte = value; _Qte_Exp = value.ToString(); }
+        }
+
+        private String _QteSup_Exp = "0";
+        public String QteSup_Exp
+        {
+            get { return _QteSup_Exp; }
+            set
+            {
+                // Si la valeur se termine par .0 on le supprime
+                Regex rgx = new Regex(@"\.0$");
+                value = rgx.Replace(value, "");
+
+                // Pour eviter des mises à jour intempestives
+                if (Set(ref _QteSup_Exp, value))
+                {
+                    try
+                    {
+                        // Pour eviter des calcules intempetifs
+                        Double? Eval = value.Evaluer();
+                        if (Eval != null)
+                            _QteSup = (int)Eval;
+                    }
+                    catch { }
+                }
+            }
+        }
+
+        private int _QteSup = 0;
+        public int QteSup
+        {
+            get { return _QteSup; }
+            set { _QteSup = value; _QteSup_Exp = value.ToString(); }
+        }
+
+        #region Notification WPF
+
+        protected bool Set<U>(ref U field, U value, [CallerMemberName]string propertyName = "")
+        {
+            if (EqualityComparer<U>.Default.Equals(field, value)) { return false; }
+            field = value;
+            OnPropertyChanged(propertyName);
+            return true;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged([CallerMemberName] String NomProp = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(NomProp));
+        }
+
+        #endregion
     }
 }

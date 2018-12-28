@@ -96,11 +96,12 @@
     <Compile Include="Macros\BoutonAfficherLogDebug.cs" />
     <Compile Include="ModuleProduction\ModuleGenererConfigDvp\CmdGenererConfigDvp.cs" />
     <Compile Include="ModuleProduction\ModuleGenererConfigDvp\PageGenererConfigDvp.cs" />
-    <Compile Include="ModuleProduction\ModuleProduireDvp\AffichageToleWPF.xaml.cs">
-      <DependentUpon>AffichageToleWPF.xaml</DependentUpon>
+    <Compile Include="ModuleProduction\AffichageElementWPF.xaml.cs">
+      <DependentUpon>AffichageElementWPF.xaml</DependentUpon>
     </Compile>
     <Compile Include="ModuleProduction\ModuleProduireDvp\CmdProduireDvp.cs" />
     <Compile Include="ModuleProduction\ModuleProduireDvp\PageProduireDVP.cs" />
+    <Compile Include="ModuleProduction\Vue.cs" />
     <Compile Include="ModuleProduction\ModuleRepererDossier\CmdRepererDossier.cs" />
     <Compile Include="ModuleProduction\ModuleRepererDossier\PageRepererDossier.cs" />
     <Compile Include="ModuleProduction\OutilsProd.cs" />
@@ -241,7 +242,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="ModuleProduction\ModuleProduireDvp\AffichageToleWPF.xaml">
+    <Page Include="ModuleProduction\AffichageElementWPF.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
