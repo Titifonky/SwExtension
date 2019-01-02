@@ -89,14 +89,14 @@ namespace ModuleMarcheConfig
                     Edge E_Droit = ListeArrete[1];
 
                     // Création des segements
-                    Segment S1 = new Segment(E_Gauche);
-                    Segment Sf = new Segment(E_Face);
+                    gSegment S1 = new gSegment(E_Gauche);
+                    gSegment Sf = new gSegment(E_Face);
 
                     // Orientation des segements
                     S1.OrienterDe(Sf);
                     Sf.OrienterVers(S1);
 
-                    Vecteur Normal = new Vecteur((Double[])dessus.Normal);
+                    gVecteur Normal = new gVecteur((Double[])dessus.Normal);
 
                     // Verification du sens de rotation et modification des cotes si nécessaire
                     if (Sf.Vecteur.RotationTrigo(S1.Vecteur, Normal))
@@ -105,9 +105,9 @@ namespace ModuleMarcheConfig
                         E_Droit = ListeArrete[0];
                     }
 
-                    Segment F = new Segment(E_Face);
-                    Segment G = new Segment(E_Gauche);
-                    Segment D = new Segment(E_Droit);
+                    gSegment F = new gSegment(E_Face);
+                    gSegment G = new gSegment(E_Gauche);
+                    gSegment D = new gSegment(E_Droit);
 
                     G.OrienterDe(F);
                     D.OrienterDe(F);
@@ -116,8 +116,8 @@ namespace ModuleMarcheConfig
                     Double gAg1 = G.Vecteur.Angle(F.Vecteur);
                     Double gAg2 = D.Vecteur.Angle(F.Vecteur.Inverse());
 
-                    Double gLg1 = new Point(0, 0, 0).Distance(F.Start);
-                    Double gLg2 = new Point(0, 0, 0).Distance(F.End);
+                    Double gLg1 = new gPoint(0, 0, 0).Distance(F.Start);
+                    Double gLg2 = new gPoint(0, 0, 0).Distance(F.End);
                     Double gLc1 = G.Lg;
                     Double gLc2 = D.Lg;
 

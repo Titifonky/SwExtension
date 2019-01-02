@@ -334,7 +334,7 @@ namespace ModuleVoronoi
 
         private TriangleNet.Geometry.Point Echelle(TriangleNet.Geometry.Point centre, TriangleNet.Geometry.Point point, double f)
         {
-            Vecteur v = new Vecteur(point.X - centre.X, point.Y - centre.Y, 0);
+            gVecteur v = new gVecteur(point.X - centre.X, point.Y - centre.Y, 0);
             v.Multiplier(f);
             double x = centre.X + v.X;
             double y = centre.Y + v.Y;

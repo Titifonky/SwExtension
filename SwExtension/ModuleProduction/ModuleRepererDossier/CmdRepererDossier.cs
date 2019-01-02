@@ -21,12 +21,11 @@ namespace ModuleProduction.ModuleRepererDossier
 
         public Boolean NettoyerModele = false;
         public Boolean ReinitCampagneActuelle = false;
-        public Boolean MajCampagnePrecedente = false;
         public Boolean CombinerCorpsIdentiques = false;
         public Boolean CombinerAvecCampagne = false;
         public Boolean ExporterFichierCorps = false;
         public Boolean CreerDvp = false;
-        
+
         public SortedDictionary<int, Corps> ListeCorpsExistant = new SortedDictionary<int, Corps>();
         public SortedDictionary<int, String> ListeCorpsCharge = new SortedDictionary<int, String>();
 
@@ -48,11 +47,11 @@ namespace ModuleProduction.ModuleRepererDossier
                 // Si aucun corps n'a déjà été repéré, on reinitialise tout
                 if (ListeCorpsExistant.Count == 0)
                 {
-                    if(NettoyerModele)
+                    if (NettoyerModele)
                         Nettoyer();
 
                     // On supprime tout les fichiers
-                    foreach (FileInfo file in new DirectoryInfo(MdlBase.DossierPiece()).GetFiles())
+                    foreach (FileInfo file in new DirectoryInfo(MdlBase.pDossierPiece()).GetFiles())
                         file.Delete();
                 }
 
@@ -85,7 +84,7 @@ namespace ModuleProduction.ModuleRepererDossier
                     {
                         if (FichierAsauvegarder.ContainsKey(repere)) continue;
 
-                        String fichier = Path.Combine(MdlBase.DossierPiece(), CONSTANTES.PREFIXE_REF_DOSSIER + repere + OutilsProd.ExtPiece);
+                        String fichier = Path.Combine(MdlBase.pDossierPiece(), CONSTANTES.PREFIXE_REF_DOSSIER + repere + OutilsProd.ExtPiece);
                         if (File.Exists(fichier))
                             File.Delete(fichier);
                     }
@@ -93,7 +92,6 @@ namespace ModuleProduction.ModuleRepererDossier
                     ListeCorpsExistant = FichierAsauvegarder;
                 }
 
-                // On initialise les quantités de cette campagne à 0;
                 // On supprime les campagnes superieures à l'indice actuelle
                 foreach (var corps in ListeCorpsExistant.Values)
                 {
@@ -112,7 +110,7 @@ namespace ModuleProduction.ModuleRepererDossier
                     WindowLog.SautDeLigne();
                     WindowLog.EcrireF("Chargement des corps existants ({0}):", ListeCorpsExistant.Count);
 
-                    foreach (FileInfo file in new DirectoryInfo(MdlBase.DossierPiece()).GetFiles("*" + OutilsProd.ExtPiece))
+                    foreach (FileInfo file in new DirectoryInfo(MdlBase.pDossierPiece()).GetFiles("*" + OutilsProd.ExtPiece))
                     {
                         int rep = Path.GetFileNameWithoutExtension(file.Name).Replace(CONSTANTES.PREFIXE_REF_DOSSIER, "").eToInteger();
 
@@ -136,7 +134,7 @@ namespace ModuleProduction.ModuleRepererDossier
                     _GenRepereDossier = ListeCorpsExistant.Keys.Max();
 
                 // On liste les composants
-                var ListeComposants = MdlBase.ListerComposants(false);
+                var ListeComposants = MdlBase.pListerComposants(false);
 
                 // On boucle sur les modeles
                 foreach (var mdl in ListeComposants.Keys)
@@ -200,10 +198,10 @@ namespace ModuleProduction.ModuleRepererDossier
                             {
                                 BodyFolder Dossier = swD.GetSpecificFeature2();
 
-                                    // Si le dossier est la racine d'un sous-ensemble soudé, il n'y a rien dedans
-                                    if (Dossier.IsRef() && (Dossier.eNbCorps() > 0) &&
-                                    (eTypeCorps.Barre | eTypeCorps.Tole).HasFlag(Dossier.eTypeDeDossier()))
-                                        return true;
+                                // Si le dossier est la racine d'un sous-ensemble soudé, il n'y a rien dedans
+                                if (Dossier.IsRef() && (Dossier.eNbCorps() > 0) &&
+                                (eTypeCorps.Barre | eTypeCorps.Tole).HasFlag(Dossier.eTypeDeDossier()))
+                                    return true;
 
                                 return false;
                             }
@@ -269,7 +267,7 @@ namespace ModuleProduction.ModuleRepererDossier
                             Corps corps = null;
                             if (NouveauDossier || !ListeCorpsExistant.ContainsKey(Repere))
                             {
-                                corps = new Corps(SwCorps, TypeCorps, MateriauCorps);
+                                corps = new Corps(SwCorps, TypeCorps, MateriauCorps, MdlBase);
                                 corps.InitCampagne(IndiceCampagne);
                                 ListeCorpsExistant.Add(Repere, corps);
                             }
@@ -315,43 +313,56 @@ namespace ModuleProduction.ModuleRepererDossier
 
                     foreach (var corps in ListeCorpsExistant.Values)
                     {
-                        if (corps.Modele.IsNull()) continue;
+                        // Pour sauvegarder la quantité correcte dans la nomenclature
+                        // on met à jour la propriété
+                        corps.MajQuantite();
 
-                        var cheminFichier = Path.Combine(MdlBase.DossierPiece(), CONSTANTES.PREFIXE_REF_DOSSIER + corps.Repere + OutilsProd.ExtPiece);
-                        if (File.Exists(cheminFichier)) continue;
+                        if (corps.Modele.IsNull() || File.Exists(corps.CheminFichierRepere)) continue;
+
+                        WindowLog.EcrireF("- {0} exporté", CONSTANTES.PREFIXE_REF_DOSSIER + corps.Repere);
 
                         corps.Modele.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
                         corps.Modele.ShowConfiguration2(corps.NomConfig);
                         corps.Modele.EditRebuild3();
 
-                        var mdlFichier = Sw.eCreerDocument(MdlBase.DossierPiece(), CONSTANTES.PREFIXE_REF_DOSSIER + corps.Repere, eTypeDoc.Piece);
+                        // Sauvegarde du fichier de base
+                        int Errors = 0, Warning = 0;
+                        corps.Modele.Extension.SaveAs(corps.CheminFichierRepere, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, (int)(swSaveAsOptions_e.swSaveAsOptions_Copy | swSaveAsOptions_e.swSaveAsOptions_Silent), null, ref Errors, ref Warning);
+
+                        var mdlFichier = Sw.eOuvrir(corps.CheminFichierRepere, corps.NomConfig);
                         mdlFichier.eActiver();
+
+                        mdlFichier.Extension.BreakAllExternalFileReferences2(true);
+
+                        foreach (var nomCfg in mdlFichier.eListeNomConfiguration())
+                            if (nomCfg != corps.NomConfig)
+                                mdlFichier.DeleteConfiguration2(nomCfg);
+
                         var Piece = mdlFichier.ePartDoc();
-                        var fonc = Piece.InsertPart3(corps.Modele.GetPathName(), 90241, corps.NomConfig);
-                        if (fonc.IsRef())
-                        {
-                            WindowLog.EcrireF("- {0} exporté", CONSTANTES.PREFIXE_REF_DOSSIER + corps.Repere);
-                            Body2 Corps = null;
 
-                            foreach (var c in Piece.eListeCorps(true))
-                                if (c.Name.EndsWith("-<" + corps.NomCorps + ">"))
-                                    Corps = c;
+                        
+                        Body2 Corps = null;
 
-                            Corps.eSelect();
-                            mdlFichier.FeatureManager.InsertDeleteBody2(true);
+                        foreach (var c in Piece.eListeCorps(true))
+                            if (c.Name == corps.NomCorps)
+                                Corps = c;
 
-                            if ((corps.TypeCorps == eTypeCorps.Tole) && CreerDvp)
-                                ModuleGenererConfigDvp.CmdGenererConfigDvp.CreerDvp(corps, MdlBase.DossierPiece(), false, false);
+                        Corps.eSelect();
+                        mdlFichier.FeatureManager.InsertDeleteBody2(true);
 
-                            //mdlFichier.LockAllExternalReferences();
-                            //fonc.UpdateExternalFileReferences((int)swExternalFileReferencesConfig_e.swExternalFileReferencesCurrentConfig, "", (int)swExternalFileReferencesUpdate_e.swExternalFileReferencesLockAll);
-                            OrienterVue(mdlFichier);
-                            SauverVue(mdlFichier, mdlFichier.GetPathName());
-                            mdlFichier.EditRebuild3();
-                            mdlFichier.eSauver();
-                        }
-                        else
-                            WindowLog.EcrireF("- {0} erreur", CONSTANTES.PREFIXE_REF_DOSSIER + corps.Repere);
+                        if ((corps.TypeCorps == eTypeCorps.Tole) && CreerDvp)
+                            ModuleGenererConfigDvp.CmdGenererConfigDvp.CreerDvp(corps, MdlBase.pDossierPiece(), false, false);
+
+                        mdlFichier.FeatureManager.EditFreeze2((int)swMoveFreezeBarTo_e.swMoveFreezeBarToEnd, "", true, true);
+
+                        if (corps.TypeCorps == eTypeCorps.Tole)
+                            OrienterVueTole(mdlFichier);
+                        else if (corps.TypeCorps == eTypeCorps.Barre)
+                            OrienterVueBarre(mdlFichier);
+
+                        SauverVue(mdlFichier, mdlFichier.GetPathName());
+                        mdlFichier.EditRebuild3();
+                        mdlFichier.eSauver();
 
                         App.Sw.CloseDoc(mdlFichier.GetPathName());
                     }
@@ -365,7 +376,7 @@ namespace ModuleProduction.ModuleRepererDossier
 
                 int nbtt = 0;
 
-                using (var sw = new StreamWriter(MdlBase.FichierNomenclature() , false, Encoding.GetEncoding(1252)))
+                using (var sw = new StreamWriter(MdlBase.pFichierNomenclature(), false, Encoding.GetEncoding(1252)))
                 {
                     sw.WriteLine(Corps.EnteteNomenclature(IndiceCampagne));
 
@@ -380,11 +391,14 @@ namespace ModuleProduction.ModuleRepererDossier
                 WindowLog.EcrireF("Nb total de corps : {0}", nbtt);
 
                 MdlBase.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
+
+                var aff = new AffichageElementWPF(ListeCorpsExistant,  IndiceCampagne);
+                aff.ShowDialog();
             }
             catch (Exception e) { this.LogErreur(new Object[] { e }); }
         }
 
-        private void OrienterVue(ModelDoc2 mdl)
+        private void OrienterVueTole(ModelDoc2 mdl)
         {
             var ListeDepliee = mdl.ePartDoc().eListeFonctionsDepliee();
             if (ListeDepliee.Count > 0)
@@ -405,9 +419,9 @@ namespace ModuleProduction.ModuleRepererDossier
                     Param[2] = Param[2] * -1;
                 }
 
-                Vecteur Normale = new Vecteur(Param[0], Param[1], Param[2]);
+                gVecteur Normale = new gVecteur(Param[0], Param[1], Param[2]);
                 MathTransform mtNormale = MathRepere(Normale.MathVector());
-                MathTransform mtAxeZ = MathRepere(new Vecteur(1, 1, 1).MathVector()); ;
+                MathTransform mtAxeZ = MathRepere(new gVecteur(1, 1, 1).MathVector()); ;
 
                 MathTransform mtRotate = mtAxeZ.Multiply(mtNormale.Inverse());
 
@@ -415,6 +429,25 @@ namespace ModuleProduction.ModuleRepererDossier
                 mv.Orientation3 = mtRotate;
                 mv.Activate();
             }
+            mdl.ViewZoomtofit2();
+            mdl.GraphicsRedraw2();
+        }
+
+        private void OrienterVueBarre(ModelDoc2 mdl)
+        {
+            var corps = mdl.ePartDoc().ePremierCorps();
+
+            var analyse = new AnalyseGeomBarre(corps, mdl);
+
+            MathTransform mtNormale = MathRepere(analyse.PlanSection.Normale.MathVector());
+            MathTransform mtAxeZ = MathRepere(new gVecteur(1, 1, 1).MathVector()); ;
+
+            MathTransform mtRotate = mtAxeZ.Multiply(mtNormale.Inverse());
+
+            ModelView mv = mdl.ActiveView;
+            mv.Orientation3 = mtRotate;
+            mv.Activate();
+
             mdl.ViewZoomtofit2();
             mdl.GraphicsRedraw2();
         }

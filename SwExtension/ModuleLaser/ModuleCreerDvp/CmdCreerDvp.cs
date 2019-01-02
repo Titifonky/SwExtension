@@ -477,7 +477,7 @@ namespace ModuleLaser.ModuleCreerDvp
         {
             MathUtility SwMath = App.Sw.GetMathUtility();
 
-            List<Point> LstPt = new List<Point>();
+            List<gPoint> LstPt = new List<gPoint>();
             foreach (SketchPoint s in esquisse.GetSketchPoints2())
             {
                 MathPoint point = SwMath.CreatePoint(new Double[3] { s.X, s.Y, s.Z });
@@ -486,27 +486,27 @@ namespace ModuleLaser.ModuleCreerDvp
                 point = point.MultiplyTransform(SketchXform);
                 MathTransform ViewXform = vue.ModelToViewTransform;
                 point = point.MultiplyTransform(ViewXform);
-                Point swViewStartPt = new Point(point);
+                gPoint swViewStartPt = new gPoint(point);
                 LstPt.Add(swViewStartPt);
             }
 
             // On recherche le point le point le plus à droite puis le plus haut
-            LstPt.Sort(new PointComparer(ListSortDirection.Descending, p => p.X));
-            LstPt.Sort(new PointComparer(ListSortDirection.Descending, p => p.Y));
+            LstPt.Sort(new gPointComparer(ListSortDirection.Descending, p => p.X));
+            LstPt.Sort(new gPointComparer(ListSortDirection.Descending, p => p.Y));
 
             // On le supprime
             LstPt.RemoveAt(0);
 
             // On recherche le point le point le plus à gauche puis le plus bas 
-            LstPt.Sort(new PointComparer(ListSortDirection.Ascending, p => p.X));
-            LstPt.Sort(new PointComparer(ListSortDirection.Ascending, p => p.Y));
+            LstPt.Sort(new gPointComparer(ListSortDirection.Ascending, p => p.X));
+            LstPt.Sort(new gPointComparer(ListSortDirection.Ascending, p => p.Y));
 
 
             // C'est le point de rotation
-            Point pt1 = LstPt[0];
+            gPoint pt1 = LstPt[0];
 
             // On recherche le plus loin
-            Point pt2;
+            gPoint pt2;
             Double d1 = pt1.Distance(LstPt[1]);
             Double d2 = pt1.Distance(LstPt[2]);
 
@@ -522,7 +522,7 @@ namespace ModuleLaser.ModuleCreerDvp
             else
                 pt2 = LstPt[2];
 
-            Vecteur v = new Vecteur(pt1, pt2);
+            gVecteur v = new gVecteur(pt1, pt2);
 
             return Math.Atan2(v.Y, v.X);
         }
@@ -544,9 +544,9 @@ namespace ModuleLaser.ModuleCreerDvp
             {
                 MathUtility SwMath = App.Sw.GetMathUtility();
 
-                Point ptCentreVue = new Point(vue.Position);
-                Point ptMin = new Point(Double.PositiveInfinity, Double.PositiveInfinity, 0);
-                Point ptMax = new Point(Double.NegativeInfinity, Double.NegativeInfinity, 0);
+                gPoint ptCentreVue = new gPoint(vue.Position);
+                gPoint ptMin = new gPoint(Double.PositiveInfinity, Double.PositiveInfinity, 0);
+                gPoint ptMax = new gPoint(Double.NegativeInfinity, Double.NegativeInfinity, 0);
 
                 foreach (SketchPoint s in esquisse.GetSketchPoints2())
                 {
@@ -556,7 +556,7 @@ namespace ModuleLaser.ModuleCreerDvp
                     swStartPoint = swStartPoint.MultiplyTransform(SketchXform);
                     MathTransform ViewXform = vue.ModelToViewTransform;
                     swStartPoint = swStartPoint.MultiplyTransform(ViewXform);
-                    Point swViewStartPt = new Point(swStartPoint);
+                    gPoint swViewStartPt = new gPoint(swStartPoint);
                     ptMin.Min(swViewStartPt);
                     ptMax.Max(swViewStartPt);
                 }
@@ -574,7 +574,7 @@ namespace ModuleLaser.ModuleCreerDvp
             {
                 MathUtility SwMath = App.Sw.GetMathUtility();
 
-                Point ptCentreVue = new Point(vue.Position);
+                gPoint ptCentreVue = new gPoint(vue.Position);
                 Double[] pArr = vue.GetOutline();
                 ptMinX = pArr[0];
                 ptMinY = pArr[1];
@@ -595,7 +595,7 @@ namespace ModuleLaser.ModuleCreerDvp
                 ptCentreRectangleY = (ptMinY + ptMaxY) * 0.5;
             }
 
-            public void Agrandir(Point p)
+            public void Agrandir(gPoint p)
             {
                 ptMinX = Math.Min(ptMinX, p.X);
                 ptMinY = Math.Min(ptMinY, p.Y);
@@ -609,8 +609,8 @@ namespace ModuleLaser.ModuleCreerDvp
             public void Agrandir(Note p)
             {
                 Double[] dimNote = (Double[])p.GetExtent();
-                Agrandir(new Point(dimNote[0], dimNote[1], dimNote[2]));
-                Agrandir(new Point(dimNote[3], dimNote[4], dimNote[5]));
+                Agrandir(new gPoint(dimNote[0], dimNote[1], dimNote[2]));
+                Agrandir(new gPoint(dimNote[3], dimNote[4], dimNote[5]));
 
                 MajCentreRectangle();
             }

@@ -96,14 +96,14 @@ namespace ModuleMarcheConfig
                     Edge E_Droit = ListeArrete[1];
 
                     // Création des segements
-                    Segment S1 = new Segment(E_Gauche);
-                    Segment Sf = new Segment(E_Face);
+                    gSegment S1 = new gSegment(E_Gauche);
+                    gSegment Sf = new gSegment(E_Face);
 
                     // Orientation des segements
                     S1.OrienterDe(Sf);
                     Sf.OrienterVers(S1);
 
-                    Vecteur Normal = new Vecteur((Double[])dessus.Normal);
+                    gVecteur Normal = new gVecteur((Double[])dessus.Normal);
 
                     // Verification du sens de rotation et modification des cotes si nécessaire
                     if (Sf.Vecteur.RotationTrigo(S1.Vecteur, Normal))

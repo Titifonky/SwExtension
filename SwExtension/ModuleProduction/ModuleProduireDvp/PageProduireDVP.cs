@@ -5,6 +5,8 @@ using SwExtension;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
+using System.Linq;
 
 namespace ModuleProduction.ModuleProduireDvp
 {
@@ -181,41 +183,51 @@ namespace ModuleProduction.ModuleProduireDvp
 
         protected void Rechercher_Infos()
         {
-            WindowLog.Ecrire("Recherche des materiaux et epaisseurs ");
-
-            ListeCorps = MdlBase.ChargerNomenclature();
-            ListeMateriaux = new List<String>();
-            ListeEp = new List<String>();
-            Campagne = 1;
-
-            foreach (var corps in ListeCorps.Values)
+            try
             {
-                if (corps.TypeCorps != eTypeCorps.Tole) continue;
+                WindowLog.Ecrire("Recherche des materiaux et epaisseurs ");
 
-                foreach (var cp in corps.Campagne.Keys)
-                    Campagne = Math.Max(Campagne, cp);
+                ListeCorps = MdlBase.pChargerNomenclature(eTypeCorps.Tole);
+                ListeMateriaux = new List<String>();
+                ListeEp = new List<String>();
+                Campagne = 1;
 
-                ListeMateriaux.AddIfNotExist(corps.Materiau);
-                ListeEp.AddIfNotExist(corps.Dimension);
+                foreach (var corps in ListeCorps.Values)
+                {
+                    if (corps.TypeCorps != eTypeCorps.Tole) continue;
+
+                    Campagne = Math.Max(Campagne, corps.Campagne.Keys.Max());
+
+                    ListeMateriaux.AddIfNotExist(corps.Materiau);
+                    ListeEp.AddIfNotExist(corps.Dimension);
+                }
+
+                WindowLog.SautDeLigne();
+
+                ListeMateriaux.Sort(new WindowsStringComparer());
+                ListeEp.Sort(new WindowsStringComparer());
+
+                _TextBox_Campagne.Text = Campagne.ToString();
+                _TextListBox_Materiaux.Liste = ListeMateriaux;
+                _TextListBox_Materiaux.ToutSelectionner(false);
+
+                _TextListBox_Ep.Liste = ListeEp;
+                _TextListBox_Ep.ToutSelectionner(false);
+
+                if (Campagne == 1)
+                {
+                    _CheckBox_Quantite_Diff.IsEnabled = false;
+                    _CheckBox_Quantite_Diff.Visible = false;
+                }
+
+                if (!File.Exists(Path.Combine(MdlBase.pDossierLaserTole(), Campagne.ToString(), CONST_PRODUCTION.FICHIER_NOMENC)))
+                {
+                    _CheckBox_MettreAjourCampagne.IsEnabled = false;
+                    _CheckBox_MettreAjourCampagne.Visible = false;
+                }
             }
-
-            WindowLog.SautDeLigne();
-
-            ListeMateriaux.Sort(new WindowsStringComparer());
-            ListeEp.Sort(new WindowsStringComparer());
-
-            _TextBox_Campagne.Text = Campagne.ToString();
-            _TextListBox_Materiaux.Liste = ListeMateriaux;
-            _TextListBox_Materiaux.ToutSelectionner(false);
-
-            _TextListBox_Ep.Liste = ListeEp;
-            _TextListBox_Ep.ToutSelectionner(false);
-
-            if (Campagne == 1)
-            {
-                _CheckBox_Quantite_Diff.IsEnabled = false;
-                _CheckBox_Quantite_Diff.Visible = false;
-            }
+            catch (Exception e)
+            { this.LogMethode(new Object[] { e }); }
         }
 
         protected void RunOkCommand()

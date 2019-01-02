@@ -19,7 +19,7 @@ namespace ModuleProduction
     {
         public const String DOSSIER_PIECES = "Pieces";
         public const String DOSSIER_PIECES_APERCU = "Apercu";
-        public const String FICHIER_NOMENC = "Nomenclature";
+        public const String FICHIER_NOMENC = "Nomenclature.txt";
         public const String DOSSIER_LASERTOLE = "Laser tole";
         public const String DOSSIER_LASERTUBE = "Laser tube";
         public const String MAX_INDEXDIM = "MAX_INDEXDIM";
@@ -31,7 +31,7 @@ namespace ModuleProduction
     public static class OutilsProd
     {
 
-        public static Boolean CreerConfigDepliee(this ModelDoc2 mdl, String NomConfigDepliee, String NomConfigPliee)
+        public static Boolean pCreerConfigDepliee(this ModelDoc2 mdl, String NomConfigDepliee, String NomConfigPliee)
         {
             var cfg = mdl.ConfigurationManager.AddConfiguration(NomConfigDepliee, NomConfigDepliee, "", 0, NomConfigPliee, "");
             if (cfg.IsRef())
@@ -40,7 +40,7 @@ namespace ModuleProduction
             return false;
         }
 
-        public static void DeplierTole(this PartDoc piece, String nomConfigDepliee)
+        public static void pDeplierTole(this PartDoc piece, String nomConfigDepliee)
         {
             var mdl = piece.eModelDoc2();
             var liste = piece.eListeFonctionsDepliee();
@@ -70,7 +70,7 @@ namespace ModuleProduction
             mdl.eEffacerSelection();
         }
 
-        public static void PlierTole(this PartDoc piece, String nomConfigPliee)
+        public static void pPlierTole(this PartDoc piece, String nomConfigPliee)
         {
             var mdl = piece.eModelDoc2();
             var liste = piece.eListeFonctionsDepliee();
@@ -110,7 +110,7 @@ namespace ModuleProduction
         /// <param name="composantsExterne"></param>
         /// <param name="filtreTypeCorps"></param>
         /// <returns></returns>
-        public static SortedDictionary<ModelDoc2, SortedDictionary<String, int>> ListerComposants(this ModelDoc2 mdlBase, Boolean composantsExterne)
+        public static SortedDictionary<ModelDoc2, SortedDictionary<String, int>> pListerComposants(this ModelDoc2 mdlBase, Boolean composantsExterne)
         {
             SortedDictionary<ModelDoc2, SortedDictionary<String, int>> dic = new SortedDictionary<ModelDoc2, SortedDictionary<String, int>>(new CompareModelDoc2());
 
@@ -180,13 +180,13 @@ namespace ModuleProduction
         /// <param name="composantsExterne"></param>
         /// <param name="filtreDossier"></param>
         /// <returns></returns>
-        public static SortedDictionary<ModelDoc2, SortedDictionary<String, SortedDictionary<int, int>>> DenombrerDossiers(this ModelDoc2 mdlBase, Boolean composantsExterne, Predicate<Feature> filtreDossier = null, Boolean fermerFichier = false)
+        public static SortedDictionary<ModelDoc2, SortedDictionary<String, SortedDictionary<int, int>>> pDenombrerDossiers(this ModelDoc2 mdlBase, Boolean composantsExterne, Predicate<Feature> filtreDossier = null, Boolean fermerFichier = false)
         {
 
             SortedDictionary<ModelDoc2, SortedDictionary<String, SortedDictionary<int, int>>> dic = new SortedDictionary<ModelDoc2, SortedDictionary<String, SortedDictionary<int, int>>>(new CompareModelDoc2());
             try
             {
-                var ListeComposants = mdlBase.ListerComposants(composantsExterne);
+                var ListeComposants = mdlBase.pListerComposants(composantsExterne);
 
                 var ListeDossiers = new Dictionary<String, Dossier>();
 
@@ -285,7 +285,7 @@ namespace ModuleProduction
 
         private const String ChaineIndice = "ZYXWVUTSRQPONMLKJIHGFEDCBA";
 
-        public static String ChercherIndice(List<String> liste)
+        public static String pChercherIndice(List<String> liste)
         {
             for (int i = 0; i < ChaineIndice.Length; i++)
             {
@@ -296,7 +296,7 @@ namespace ModuleProduction
             return "Ind " + ChaineIndice.Last();
         }
 
-        public static String CreerDossier(this ModelDoc2 mdl, String dossier)
+        public static String pCreerDossier(this ModelDoc2 mdl, String dossier)
         {
             var chemin = Path.Combine(mdl.eDossier(), dossier);
             if (!Directory.Exists(chemin))
@@ -305,16 +305,16 @@ namespace ModuleProduction
             return chemin;
         }
 
-        public static String CreerFichierTexte(this ModelDoc2 mdl, String dossier, String fichier)
+        public static String pCreerFichierTexte(this ModelDoc2 mdl, String dossier, String fichier)
         {
-            var chemin = Path.Combine(mdl.eDossier(), dossier, fichier + ".txt");
+            var chemin = Path.Combine(mdl.eDossier(), dossier, fichier);
             if (!File.Exists(chemin))
                 File.WriteAllText(chemin, "", Encoding.GetEncoding(1252));
 
             return chemin;
         }
 
-        public static int RechercherIndiceDossier(this ModelDoc2 mdl, String dossier)
+        public static int pRechercherIndiceDossier(this ModelDoc2 mdl, String dossier)
         {
             int indice = 0;
             String chemin = Path.Combine(mdl.eDossier(), dossier);
@@ -326,31 +326,33 @@ namespace ModuleProduction
             return indice;
         }
 
-        public static String DossierPiece(this ModelDoc2 mdl)
+        public static String pDossierPiece(this ModelDoc2 mdl)
         {
             return Path.Combine(mdl.eDossier(), CONST_PRODUCTION.DOSSIER_PIECES);
         }
 
-        public static String FichierNomenclature(this ModelDoc2 mdl)
+        public static String pFichierNomenclature(this ModelDoc2 mdl)
         {
-            return Path.Combine(mdl.eDossier(), CONST_PRODUCTION.DOSSIER_PIECES, CONST_PRODUCTION.FICHIER_NOMENC + ".txt");
+            return Path.Combine(mdl.eDossier(), CONST_PRODUCTION.DOSSIER_PIECES, CONST_PRODUCTION.FICHIER_NOMENC);
         }
 
-        public static String DossierLaserTole(this ModelDoc2 mdl)
+        public static String pDossierLaserTole(this ModelDoc2 mdl)
         {
             return Path.Combine(mdl.eDossier(), CONST_PRODUCTION.DOSSIER_LASERTOLE);
         }
 
-        public static String DossierLaserTube(this ModelDoc2 mdl)
+        public static String pDossierLaserTube(this ModelDoc2 mdl)
         {
             return Path.Combine(mdl.eDossier(), CONST_PRODUCTION.DOSSIER_LASERTUBE);
         }
 
-        public static SortedDictionary<int, Corps> ChargerNomenclature(this ModelDoc2 mdl)
+        //public static String FichierNomenclature
+
+        public static SortedDictionary<int, Corps> pChargerNomenclature(this ModelDoc2 mdl, eTypeCorps type = eTypeCorps.Tous)
         {
             SortedDictionary<int, Corps> Liste = new SortedDictionary<int, Corps>();
 
-            var chemin = mdl.FichierNomenclature();
+            var chemin = mdl.pFichierNomenclature();
 
             if (File.Exists(chemin))
             {
@@ -365,7 +367,8 @@ namespace ModuleProduction
                             if (!String.IsNullOrWhiteSpace(ligne))
                             {
                                 var c = new Corps(ligne, mdl);
-                                Liste.Add(c.Repere, c);
+                                if (type.HasFlag(c.TypeCorps))
+                                    Liste.Add(c.Repere, c);
                             }
                         }
                     }
@@ -375,7 +378,7 @@ namespace ModuleProduction
             return Liste;
         }
 
-        public static SortedDictionary<int, Corps> ChargerProduction(this ModelDoc2 mdl, String dossierProduction)
+        public static SortedDictionary<int, Corps> pChargerProduction(this ModelDoc2 mdl, String dossierProduction)
         {
             SortedDictionary<int, Corps> Liste = new SortedDictionary<int, Corps>();
 
@@ -384,7 +387,7 @@ namespace ModuleProduction
             if (Directory.Exists(dossierProduction))
                 foreach (var d in Directory.EnumerateDirectories(dossierProduction, "*", SearchOption.TopDirectoryOnly))
                 {
-                    var cheminFichier = Path.Combine(d, CONST_PRODUCTION.FICHIER_NOMENC + ".txt");
+                    var cheminFichier = Path.Combine(d, CONST_PRODUCTION.FICHIER_NOMENC);
 
                     if (File.Exists(cheminFichier))
                     {
@@ -429,11 +432,636 @@ namespace ModuleProduction
         public static String ExtPiece = eTypeDoc.Piece.GetEnumInfo<ExtFichier>();
     }
 
-    public class Corps
+    public class AnalyseGeomBarre
     {
+        public Body2 Corps = null;
+
+        public ModelDoc2 Mdl = null;
+
+        public gPlan PlanSection;
+        public gPoint ExtremPoint1;
+        public gPoint ExtremPoint2;
+        public ListFaceGeom FaceSectionExt = null;
+        public List<ListFaceGeom> ListeFaceSectionInt = null;
+
+        public AnalyseGeomBarre(Body2 corps, ModelDoc2 mdl)
+        {
+            Corps = corps;
+            Mdl = mdl;
+
+            AnalyserFaces();
+        }
+
+        #region ANALYSE DE LA GEOMETRIE ET RECHERCHE DU PROFIL
+
+        private void AnalyserFaces()
+        {
+            try
+            {
+                List<FaceGeom> ListeFaceCorps = new List<FaceGeom>();
+
+                // Tri des faces pour retrouver celles issues de la même
+                foreach (var Face in Corps.eListeDesFaces())
+                {
+                    var faceExt = new FaceGeom(Face);
+
+                    Boolean Ajouter = true;
+
+                    foreach (var f in ListeFaceCorps)
+                    {
+                        // Si elles sont identiques, la face "faceExt" est ajoutée à la liste
+                        // de face de "f"
+                        if (f.FaceExtIdentique(faceExt))
+                        {
+                            Ajouter = false;
+                            break;
+                        }
+                    }
+
+                    // S'il n'y avait pas de face identique, on l'ajoute.
+                    if (Ajouter)
+                        ListeFaceCorps.Add(faceExt);
+
+                }
+
+                List<FaceGeom> ListeFaceGeom = new List<FaceGeom>();
+                PlanSection = RechercherFaceProfil(ListeFaceCorps, ref ListeFaceGeom);
+                ListeFaceSectionInt = TrierFacesConnectees(ListeFaceGeom);
+
+                // Plan de la section et infos
+                {
+                    var v = PlanSection.Normale;
+                    Double X = 0, Y = 0, Z = 0;
+                    Corps.GetExtremePoint(v.X, v.Y, v.Z, out X, out Y, out Z);
+                    ExtremPoint1 = new gPoint(X, Y, Z);
+                    v.Inverser();
+                    Corps.GetExtremePoint(v.X, v.Y, v.Z, out X, out Y, out Z);
+                    ExtremPoint2 = new gPoint(X, Y, Z);
+                }
+
+                // =================================================================================
+
+                // On recherche la face exterieure
+                // s'il y a plusieurs boucles de surfaces
+                if (ListeFaceSectionInt.Count > 1)
+                {
+                    {
+                        // Si la section n'est composé que de cylindre fermé
+                        Boolean EstUnCylindre = true;
+                        ListFaceGeom Ext = null;
+                        Double RayonMax = 0;
+                        foreach (var fg in ListeFaceSectionInt)
+                        {
+                            if (fg.ListeFaceGeom.Count == 1)
+                            {
+                                var f = fg.ListeFaceGeom[0];
+
+                                if (f.Type == eTypeFace.Cylindre)
+                                {
+                                    if (RayonMax < f.Rayon)
+                                    {
+                                        RayonMax = f.Rayon;
+                                        Ext = fg;
+                                    }
+                                }
+                                else
+                                {
+                                    EstUnCylindre = false;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (EstUnCylindre)
+                        {
+                            FaceSectionExt = Ext;
+                            ListeFaceSectionInt.Remove(Ext);
+                        }
+                        else
+                            FaceSectionExt = null;
+                    }
+
+                    {
+                        // Methode plus longue pour determiner la face exterieur
+                        if (FaceSectionExt == null)
+                        {
+                            // On créer un vecteur perpendiculaire à l'axe du profil
+                            var vect = this.PlanSection.Normale;
+
+                            if (vect.X == 0)
+                                vect = vect.Vectoriel(new gVecteur(1, 0, 0));
+                            else
+                                vect = vect.Vectoriel(new gVecteur(0, 0, 1));
+
+                            vect.Normaliser();
+
+                            // On récupère le point extreme dans cette direction
+                            Double X = 0, Y = 0, Z = 0;
+                            Corps.GetExtremePoint(vect.X, vect.Y, vect.Z, out X, out Y, out Z);
+                            var Pt = new gPoint(X, Y, Z);
+
+                            // La liste de face la plus proche est considérée comme la peau exterieur du profil
+                            Double distMin = 1E30;
+                            foreach (var Ext in ListeFaceSectionInt)
+                            {
+                                foreach (var fg in Ext.ListeFaceGeom)
+                                {
+                                    foreach (var f in fg.ListeSwFace)
+                                    {
+                                        Double[] res = f.GetClosestPointOn(Pt.X, Pt.Y, Pt.Z);
+                                        var PtOnSurface = new gPoint(res);
+
+                                        var dist = Pt.Distance(PtOnSurface);
+                                        if (dist < 1E-6)
+                                        {
+                                            distMin = dist;
+                                            FaceSectionExt = Ext;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (FaceSectionExt.IsRef()) break;
+                            }
+
+                            // On supprime la face exterieur de la liste des faces
+                            ListeFaceSectionInt.Remove(FaceSectionExt);
+                        }
+                    }
+                }
+                else
+                {
+                    FaceSectionExt = ListeFaceSectionInt[0];
+                    ListeFaceSectionInt.RemoveAt(0);
+                }
+            }
+            catch (Exception e) { this.LogErreur(new Object[] { e }); }
+
+        }
+
+        private gPlan RechercherFaceProfil(List<FaceGeom> listeFaceGeom, ref List<FaceGeom> faceExt)
+        {
+            gPlan? p = null;
+            try
+            {
+                // On recherche les faces de la section
+                foreach (var fg in listeFaceGeom)
+                {
+                    if (EstUneFaceProfil(fg))
+                    {
+                        faceExt.Add(fg);
+
+                        // Si c'est un cylindre ou une extrusion, on recupère le plan
+                        if ((p == null) && (fg.Type == eTypeFace.Cylindre || fg.Type == eTypeFace.Extrusion))
+                            p = new gPlan(fg.Origine, fg.Direction);
+                    }
+                }
+
+                // S'il n'y a que des faces plane, il faut calculer le plan de la section
+                // a partir de deux plan non parallèle
+                if (p == null)
+                {
+                    gVecteur? v1 = null;
+                    foreach (var fg in faceExt)
+                    {
+                        if (v1 == null)
+                            v1 = fg.Normale;
+                        else
+                        {
+                            var vtmp = ((gVecteur)v1).Vectoriel(fg.Normale);
+                            if (Math.Abs(vtmp.Norme) > 1E-8)
+                                p = new gPlan(fg.Origine, vtmp);
+                        }
+
+                    }
+                }
+            }
+            catch (Exception e) { this.LogErreur(new Object[] { e }); }
+
+            return (gPlan)p;
+        }
+
+        private Boolean EstUneFaceProfil(FaceGeom fg)
+        {
+            foreach (var f in fg.ListeSwFace)
+            {
+                Byte[] Tab = Mdl.Extension.GetPersistReference3(f);
+                String S = System.Text.Encoding.Default.GetString(Tab);
+
+                int Pos_moSideFace = S.IndexOf("moSideFace3IntSurfIdRep_c");
+
+                int Pos_moVertexRef = S.Position("moVertexRef");
+
+                int Pos_moDerivedSurfIdRep = S.Position("moDerivedSurfIdRep_c");
+
+                int Pos_moFromSkt = Math.Min(S.Position("moFromSktEntSurfIdRep_c"), S.Position("moFromSktEnt3IntSurfIdRep_c"));
+
+                int Pos_moEndFace = Math.Min(S.Position("moEndFaceSurfIdRep_c"), S.Position("moEndFace3IntSurfIdRep_c"));
+
+                if (Pos_moSideFace != -1 && Pos_moSideFace < Pos_moEndFace && Pos_moSideFace < Pos_moFromSkt && Pos_moSideFace < Pos_moVertexRef && Pos_moSideFace < Pos_moDerivedSurfIdRep)
+                    return true;
+            }
+
+            return false;
+        }
+
+        private List<ListFaceGeom> TrierFacesConnectees(List<FaceGeom> listeFace)
+        {
+            List<FaceGeom> listeTmp = new List<FaceGeom>(listeFace);
+            List<ListFaceGeom> ListeTri = null;
+
+            if (listeTmp.Count > 0)
+            {
+                ListeTri = new List<ListFaceGeom>() { new ListFaceGeom(listeTmp[0]) };
+                listeTmp.RemoveAt(0);
+
+                while (listeTmp.Count > 0)
+                {
+                    var l = ListeTri.Last();
+
+                    int i = 0;
+                    while (i < listeTmp.Count)
+                    {
+                        var f = listeTmp[i];
+
+                        if (l.AjouterFaceConnectee(f))
+                        {
+                            listeTmp.RemoveAt(i);
+                            i = -1;
+                        }
+                        i++;
+                    }
+
+                    if (listeTmp.Count > 0)
+                    {
+                        ListeTri.Add(new ListFaceGeom(listeTmp[0]));
+                        listeTmp.RemoveAt(0);
+                    }
+                }
+            }
+
+            // On recherche les cylindres uniques
+            // et on les marque comme fermé s'ils ont plus de deux boucle
+            foreach (var l in ListeTri)
+            {
+                if (l.ListeFaceGeom.Count == 1)
+                {
+                    var f = l.ListeFaceGeom[0];
+                    if (f.ListeSwFace.Count == 1)
+                    {
+                        var cpt = 0;
+
+                        foreach (var loop in f.SwFace.eListeDesBoucles())
+                            if (loop.IsOuter()) cpt++;
+
+                        if (cpt > 1)
+                            l.Fermer = true;
+                    }
+                }
+            }
+
+            return ListeTri;
+        }
+
+        public enum eTypeFace
+        {
+            Inconnu = 1,
+            Plan = 2,
+            Cylindre = 3,
+            Extrusion = 4
+        }
+
+        public enum eOrientation
+        {
+            Indefini = 1,
+            Coplanaire = 2,
+            Colineaire = 3,
+            MemeOrigine = 4
+        }
+
+        public class FaceGeom
+        {
+            public Face2 SwFace = null;
+            private Surface Surface = null;
+
+            public gPoint Origine;
+            public gVecteur Normale;
+            public gVecteur Direction;
+            public Double Rayon = 0;
+            public eTypeFace Type = eTypeFace.Inconnu;
+
+            public List<Face2> ListeSwFace = new List<Face2>();
+
+            public List<Face2> ListeFacesConnectee
+            {
+                get
+                {
+                    var liste = new List<Face2>();
+
+                    liste.AddRange(ListeSwFace[0].eListeDesFacesContigues());
+                    for (int i = 1; i < ListeSwFace.Count; i++)
+                    {
+                        var l = ListeSwFace[i].eListeDesFacesContigues();
+
+                        foreach (var f in l)
+                        {
+                            liste.AddIfNotExist(f);
+                        }
+                    }
+
+                    return liste;
+                }
+            }
+
+            public FaceGeom(Face2 swface)
+            {
+                SwFace = swface;
+
+                Surface = (Surface)SwFace.GetSurface();
+
+                ListeSwFace.Add(SwFace);
+
+                switch ((swSurfaceTypes_e)Surface.Identity())
+                {
+                    case swSurfaceTypes_e.PLANE_TYPE:
+                        Type = eTypeFace.Plan;
+                        GetInfoPlan();
+                        break;
+
+                    case swSurfaceTypes_e.CYLINDER_TYPE:
+                        Type = eTypeFace.Cylindre;
+                        GetInfoCylindre();
+                        break;
+
+                    case swSurfaceTypes_e.EXTRU_TYPE:
+                        Type = eTypeFace.Extrusion;
+                        GetInfoExtrusion();
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+
+            public Boolean FaceExtIdentique(FaceGeom fe, Double arrondi = 1E-10)
+            {
+                if (Type != fe.Type)
+                    return false;
+
+                if (!Origine.Comparer(fe.Origine, arrondi))
+                    return false;
+
+                switch (Type)
+                {
+                    case eTypeFace.Inconnu:
+                        return false;
+                    case eTypeFace.Plan:
+                        if (!Normale.EstColineaire(fe.Normale, arrondi))
+                            return false;
+                        break;
+                    case eTypeFace.Cylindre:
+                        if (!Direction.EstColineaire(fe.Direction, arrondi) || (Math.Abs(Rayon - fe.Rayon) > arrondi))
+                            return false;
+                        break;
+                    case eTypeFace.Extrusion:
+                        if (!Direction.EstColineaire(fe.Direction, arrondi))
+                            return false;
+                        break;
+                    default:
+                        break;
+                }
+
+                ListeSwFace.Add(fe.SwFace);
+                return true;
+            }
+
+            private void GetInfoPlan()
+            {
+                Boolean Reverse = SwFace.FaceInSurfaceSense();
+
+                if (Surface.IsPlane())
+                {
+                    Double[] Param = Surface.PlaneParams;
+
+                    if (Reverse)
+                    {
+                        Param[0] = Param[0] * -1;
+                        Param[1] = Param[1] * -1;
+                        Param[2] = Param[2] * -1;
+                    }
+
+                    Origine = new gPoint(Param[3], Param[4], Param[5]);
+                    Normale = new gVecteur(Param[0], Param[1], Param[2]);
+                }
+            }
+
+            private void GetInfoCylindre()
+            {
+                if (Surface.IsCylinder())
+                {
+                    Double[] Param = Surface.CylinderParams;
+
+                    Origine = new gPoint(Param[0], Param[1], Param[2]);
+                    Direction = new gVecteur(Param[3], Param[4], Param[5]);
+                    Rayon = Param[6];
+
+                    var UV = (Double[])SwFace.GetUVBounds();
+                    Boolean Reverse = SwFace.FaceInSurfaceSense();
+
+                    var ev1 = (Double[])Surface.Evaluate((UV[0] + UV[1]) * 0.5, (UV[2] + UV[3]) * 0.5, 0, 0);
+                    if (Reverse)
+                    {
+                        ev1[3] = -ev1[3];
+                        ev1[4] = -ev1[4];
+                        ev1[5] = -ev1[5];
+                    }
+
+                    Normale = new gVecteur(ev1[3], ev1[4], ev1[5]);
+                }
+            }
+
+            private void GetInfoExtrusion()
+            {
+                if (Surface.IsSwept())
+                {
+                    Double[] Param = Surface.GetExtrusionsurfParams();
+                    Direction = new gVecteur(Param[0], Param[1], Param[2]);
+
+                    Curve C = Surface.GetProfileCurve();
+                    C = C.GetBaseCurve();
+
+                    Double StartParam = 0, EndParam = 0;
+                    Boolean IsClosed = false, IsPeriodic = false;
+
+                    if (C.GetEndParams(out StartParam, out EndParam, out IsClosed, out IsPeriodic))
+                    {
+                        Double[] Eval = C.Evaluate(StartParam);
+
+                        Origine = new gPoint(Eval[0], Eval[1], Eval[2]);
+                    }
+
+                    var UV = (Double[])SwFace.GetUVBounds();
+                    Boolean Reverse = SwFace.FaceInSurfaceSense();
+
+                    var ev1 = (Double[])Surface.Evaluate((UV[0] + UV[1]) * 0.5, (UV[2] + UV[3]) * 0.5, 0, 0);
+                    if (Reverse)
+                    {
+                        ev1[3] = -ev1[3];
+                        ev1[4] = -ev1[4];
+                        ev1[5] = -ev1[5];
+                    }
+
+                    Normale = new gVecteur(ev1[3], ev1[4], ev1[5]);
+                }
+            }
+        }
+
+        public class ListFaceGeom
+        {
+            public Boolean Fermer = false;
+
+            public List<FaceGeom> ListeFaceGeom = new List<FaceGeom>();
+
+            public Double DistToExtremPoint1 = 1E30;
+            public Double DistToExtremPoint2 = 1E30;
+
+            // Initialisation avec une face
+            public ListFaceGeom(FaceGeom f)
+            {
+                ListeFaceGeom.Add(f);
+            }
+
+            public List<Face2> ListeFaceSw()
+            {
+                var liste = new List<Face2>();
+
+                foreach (var fl in ListeFaceGeom)
+                    liste.AddRange(fl.ListeSwFace);
+
+                return liste;
+            }
+
+            public Boolean AjouterFaceConnectee(FaceGeom f)
+            {
+                var Ajouter = false;
+                var Connection = 0;
+
+                int r = ListeFaceGeom.Count;
+
+                for (int i = 0; i < r; i++)
+                {
+                    var l = ListeFaceGeom[i].ListeFacesConnectee;
+
+                    foreach (var swf in f.ListeSwFace)
+                    {
+                        if (l.eContient(swf))
+                        {
+                            if (Ajouter == false)
+                            {
+                                ListeFaceGeom.Add(f);
+                                Ajouter = true;
+                            }
+
+                            Connection++;
+                            break;
+                        }
+                    }
+
+                }
+
+                if (Connection > 1)
+                    Fermer = true;
+
+                return Ajouter;
+            }
+
+            public void CalculerDistance(gPoint extremPoint1, gPoint extremPoint2)
+            {
+                foreach (var f in ListeFaceSw())
+                {
+                    {
+                        Double[] res = f.GetClosestPointOn(extremPoint1.X, extremPoint1.Y, extremPoint1.Z);
+                        var dist = extremPoint1.Distance(new gPoint(res));
+                        if (dist < DistToExtremPoint1) DistToExtremPoint1 = dist;
+                    }
+
+                    {
+                        Double[] res = f.GetClosestPointOn(extremPoint2.X, extremPoint2.Y, extremPoint2.Z);
+                        var dist = extremPoint2.Distance(new gPoint(res));
+                        if (dist < DistToExtremPoint2) DistToExtremPoint2 = dist;
+                    }
+                }
+            }
+        }
+
+        private eOrientation Orientation(FaceGeom f1, FaceGeom f2)
+        {
+            var val = eOrientation.Indefini;
+            if (f1.Type == eTypeFace.Plan && f2.Type == eTypeFace.Plan)
+            {
+                val = Orientation(f1.Origine, f1.Normale, f2.Origine, f2.Normale);
+            }
+            else if (f1.Type == eTypeFace.Plan && (f2.Type == eTypeFace.Cylindre || f2.Type == eTypeFace.Extrusion))
+            {
+                gPlan P = new gPlan(f2.Origine, f2.Direction);
+                if (P.SurLePlan(f1.Origine, 1E-10) && P.SurLePlan(f1.Origine.Composer(f1.Normale), 1E-10))
+                {
+                    val = eOrientation.Coplanaire;
+                }
+            }
+            else if (f2.Type == eTypeFace.Plan && (f1.Type == eTypeFace.Cylindre || f1.Type == eTypeFace.Extrusion))
+            {
+                gPlan P = new gPlan(f1.Origine, f1.Direction);
+                if (P.SurLePlan(f2.Origine, 1E-10) && P.SurLePlan(f2.Origine.Composer(f2.Normale), 1E-10))
+                {
+                    val = eOrientation.Coplanaire;
+                }
+            }
+
+
+            return val;
+        }
+
+        private eOrientation Orientation(gPoint p1, gVecteur v1, gPoint p2, gVecteur v2)
+        {
+            if (p1.Distance(p2) < 1E-10)
+                return eOrientation.MemeOrigine;
+
+            gVecteur Vtmp = new gVecteur(p1, p2);
+
+            if ((v1.Vectoriel(Vtmp).Norme < 1E-10) && (v2.Vectoriel(Vtmp).Norme < 1E-10))
+                return eOrientation.Colineaire;
+
+            gVecteur Vn1 = (new gVecteur(p1, p2)).Vectoriel(v1);
+            gVecteur Vn2 = (new gVecteur(p2, p1)).Vectoriel(v2);
+
+            gVecteur Vn = Vn1.Vectoriel(Vn2);
+
+            if (Vn.Norme < 1E-10)
+                return eOrientation.Coplanaire;
+
+            return eOrientation.Indefini;
+        }
+
+        #endregion
+    }
+
+    public class Corps : INotifyPropertyChanged
+    {
+        public ModelDoc2 MdlBase { get; set; }
         public Body2 SwCorps { get; set; }
         public SortedDictionary<int, int> Campagne = new SortedDictionary<int, int>();
-        public int Repere { get; set; }
+        private int _Repere = -1;
+        public int Repere
+        {
+            get { return _Repere; }
+            set { _Repere = value; InitChemins(); }
+        }
+
+        public String RepereComplet
+        {
+            get { return CONSTANTES.PREFIXE_REF_DOSSIER + Repere; }
+        }
+
         public eTypeCorps TypeCorps { get; set; }
         /// <summary>
         /// Epaisseur de la tôle ou section
@@ -483,7 +1111,20 @@ namespace ModuleProduction
 
         public string LigneCampagne()
         {
-            String Ligne = String.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}", Repere, TypeCorps, Dimension, Volume, Materiau, Qte);
+            // On calcul la différence entre le total de la campagne précédente
+            // et celui de la campagne actuelle
+            var IndiceCampagne = Campagne.Keys.Max();
+            var qteCampagneActuelle = 0;
+
+            if (Dvp)
+            {
+                if (IndiceCampagne > 1)
+                    qteCampagneActuelle = Math.Max(0, Campagne[IndiceCampagne] - Campagne[IndiceCampagne - 1]);
+                else
+                    qteCampagneActuelle = Campagne[IndiceCampagne];
+            }
+
+            String Ligne = String.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}", Repere, TypeCorps, Dimension, Volume, Materiau, qteCampagneActuelle);
             return Ligne;
         }
 
@@ -517,37 +1158,36 @@ namespace ModuleProduction
                 Volume = dossier.eLongueurDossier();
         }
 
-        public Corps(Body2 swCorps, eTypeCorps typeCorps, String materiau)
+        public Corps(Body2 swCorps, eTypeCorps typeCorps, String materiau, ModelDoc2 mdlBase)
         {
+            MdlBase = mdlBase;
+
             SwCorps = swCorps;
             TypeCorps = typeCorps;
             Materiau = materiau;
         }
 
-        public Corps(eTypeCorps typeCorps, String materiau, String dimension, int campagne, int repere)
-        {
-            TypeCorps = typeCorps;
-            Materiau = materiau;
-            Dimension = dimension;
-            Campagne.Add(campagne, 0);
-            Repere = repere;
-        }
-
         public Corps(String ligne, ModelDoc2 mdlBase, int indiceCampagne = 1)
         {
+            MdlBase = mdlBase;
+
             var tab = ligne.Split(new char[] { '\t' });
             Repere = tab[0].eToInteger();
             TypeCorps = (eTypeCorps)Enum.Parse(typeof(eTypeCorps), tab[1]);
             Dimension = tab[2];
             Volume = tab[3];
             Materiau = tab[4];
+
             int cp = indiceCampagne;
             Campagne = new SortedDictionary<int, int>();
             for (int i = 5; i < tab.Length; i++)
                 Campagne.Add(cp++, tab[i].eToInteger());
+        }
 
-            _CheminFichierMdl = Path.Combine(mdlBase.DossierPiece(), RepereComplet + OutilsProd.ExtPiece);
-            _CheminFichierImage = Path.Combine(mdlBase.DossierPiece(), CONST_PRODUCTION.DOSSIER_PIECES_APERCU, RepereComplet + ".bmp");
+        public void InitChemins()
+        {
+            _CheminFichierRepere = Path.Combine(MdlBase.pDossierPiece(), RepereComplet + OutilsProd.ExtPiece);
+            _CheminFichierApercu = Path.Combine(MdlBase.pDossierPiece(), CONST_PRODUCTION.DOSSIER_PIECES_APERCU, RepereComplet + ".bmp");
         }
 
         public void AjouterModele(ModelDoc2 mdl, String config, int idDossier, String nomCorps)
@@ -563,21 +1203,16 @@ namespace ModuleProduction
             }
         }
 
-        private String _CheminFichierMdl = "";
-        public String CheminFichierMdl
+        private String _CheminFichierRepere = "";
+        public String CheminFichierRepere
         {
-            get { return _CheminFichierMdl; }
+            get { return _CheminFichierRepere; }
         }
 
-        private String _CheminFichierImage = "";
-        public String CheminFichierImage
+        private String _CheminFichierApercu = "";
+        public String CheminFichierApercu
         {
-            get { return _CheminFichierImage; }
-        }
-
-        public String RepereComplet
-        {
-            get { return CONSTANTES.PREFIXE_REF_DOSSIER + Repere; }
+            get { return _CheminFichierApercu; }
         }
 
         private BitmapImage _Apercu = null;
@@ -586,12 +1221,22 @@ namespace ModuleProduction
             get
             {
                 if (_Apercu.IsNull())
-                    _Apercu = (new Bitmap(_CheminFichierImage)).ToBitmapImage();
+                    _Apercu = (new Bitmap(_CheminFichierApercu)).ToBitmapImage();
 
                 return _Apercu;
             }
 
-            set {  _Apercu = value; }
+            set { _Apercu = value; }
+        }
+
+        private Boolean _Dvp = true;
+        public Boolean Dvp
+        {
+            get { return _Dvp; }
+            set
+            {
+                Set(ref _Dvp, value);
+            }
         }
 
         private String _Qte_Exp = "0";
@@ -623,7 +1268,7 @@ namespace ModuleProduction
         public int Qte
         {
             get { return _Qte; }
-            set { _Qte = value; _Qte_Exp = value.ToString(); }
+            set { Set(ref _Qte, value); Qte_Exp = value.ToString(); }
         }
 
         private String _QteSup_Exp = "0";
@@ -656,6 +1301,11 @@ namespace ModuleProduction
         {
             get { return _QteSup; }
             set { _QteSup = value; _QteSup_Exp = value.ToString(); }
+        }
+
+        public void MajQuantite()
+        {
+            Qte = Campagne.Max().Value;
         }
 
         #region Notification WPF

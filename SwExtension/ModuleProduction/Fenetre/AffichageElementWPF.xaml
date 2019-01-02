@@ -13,22 +13,41 @@
         Name="windowControlerToles" WindowStyle="None" WindowStartupLocation="CenterScreen"
         >
     <Window.Resources>
-        <DataTemplate x:Key="xListeTolesTemplate">
+        <DataTemplate x:Key="xRepere">
             <StackPanel Width="105"
                         Height="Auto"
                         >
-                <Image Grid.Row="0" Width="100" Height="100" Source="{Binding CheminFichierImage}" HorizontalAlignment="Center"/>
+                <Image Grid.Row="0" Width="100" Height="100" Source="{Binding CheminFichierApercu}" HorizontalAlignment="Center"/>
                 <WrapPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding RepereComplet}" Margin="0,0,5,0"/>
+                    <TextBlock Text="{Binding RepereComplet}" FontSize="11" Margin="0,0,8,0"/>
+                    <TextBlock Text="x"/>
+                    <TextBlock Text="{Binding Qte_Exp}"/>
+                </WrapPanel>
+            </StackPanel>
+        </DataTemplate>
+
+        <local:PlainView x:Key="VueRepere"
+                         ItemTemplate="{StaticResource xRepere}" 
+                         />
+        
+        <DataTemplate x:Key="xDvp">
+            <StackPanel Width="105"
+                        Height="Auto"
+                        >
+                <Image Grid.Row="0" Width="100" Height="100" Source="{Binding CheminFichierApercu}" HorizontalAlignment="Center"/>
+                <WrapPanel Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding Dvp ,Mode=TwoWay}"/>
+                    <TextBlock Text="{Binding RepereComplet}" FontSize="11" Margin="0,0,8,0"/>
                     <TextBlock Text="x"/>
                     <TextBlock Text="{Binding Qte_Exp}"/>
                 </WrapPanel>
                 <TextBox Text="{Binding QteSup_Exp}"/>
+                <!--<TextBlock Text="{Binding Materiau}"/>-->
             </StackPanel>
         </DataTemplate>
 
-        <local:PlainView x:Key="tileView"
-                         ItemTemplate="{StaticResource xListeTolesTemplate}" 
+        <local:PlainView x:Key="VueDvp"
+                         ItemTemplate="{StaticResource xDvp}" 
                          />
 
         <Style TargetType="{x:Type ListView}"
@@ -65,25 +84,58 @@
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0"
-                        Content="Ok"
-                        Margin="5"
-                        Click="Valider_Click"
-                        Width="50"
-                        HorizontalAlignment="Left"
+            <Button Name="Bt_Valider"
+                    Grid.Column="0"
+                    Content="Ok"
+                    Margin="5"
+                    Click="Valider_Click"
+                    Width="50"
+                    HorizontalAlignment="Left"
                 />
-            <Button Grid.Column="1"
-                        Content="Annuler"
-                        Margin="5"
-                        Click="Annuler_Click"
-                        Width="50"
-                        HorizontalAlignment="Left"
+            <Button Name="Bt_Annuler"
+                    Grid.Column="1"
+                    Content="Annuler"
+                    Margin="5"
+                    Click="Annuler_Click"
+                    Width="50"
+                    HorizontalAlignment="Left"
                 />
+            <CheckBox Name="Ck_Filtrer"
+                      Grid.Column="2"
+                      Content="Afficher les quantités nulles"
+                      Margin="5"
+                      VerticalAlignment="Center"
+                      Checked="Afficher_Check"
+                      Unchecked="Masquer_Check"
+                      IsChecked="False"
+                      />
+            <CheckBox Name="Ck_Select"
+                      Grid.Column="3"
+                      Content="Selectionner tous les éléments"
+                      Margin="5"
+                      VerticalAlignment="Center"
+                      Checked="Select_Check"
+                      Unchecked="Deselect_Check"
+                      IsChecked="True"
+                      />
+            <ComboBox Name="Cb_SelectCampagne"
+                      Grid.Column="4"
+                      Margin="5"
+                      Width="Auto"
+                      MinWidth="80"
+                      SelectionChanged="SelectCampagne_SelectionChanged"
+                      />
+            
         </Grid>
         <ListView Grid.Row="1"
-                  Name="ListeViewTole">
+                  Name="ListeViewTole"
+                  >
             <ListView.GroupStyle>
                 <GroupStyle>
                     <GroupStyle.ContainerStyle>
@@ -95,7 +147,7 @@
                                             <Expander.Header>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="{Binding Name}" FontSize="15" FontWeight="Bold" Margin="10,0,0,0" VerticalAlignment="Bottom"/>
-                                                    <TextBlock Text="nb" Margin="25,0,0,0" VerticalAlignment="Bottom"/>
+                                                    <TextBlock Text="nb de repères :" Margin="25,0,0,0" VerticalAlignment="Bottom"/>
                                                     <TextBlock Text="{Binding ItemCount}" Margin="4,0,0,0" VerticalAlignment="Bottom"/>
                                                 </StackPanel>
                                             </Expander.Header>

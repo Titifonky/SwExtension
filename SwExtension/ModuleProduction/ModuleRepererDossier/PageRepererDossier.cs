@@ -4,6 +4,7 @@ using SolidWorks.Interop.sldworks;
 using SwExtension;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace ModuleProduction.ModuleRepererDossier
@@ -18,6 +19,7 @@ namespace ModuleProduction.ModuleRepererDossier
         private Parametre CombinerCorpsIdentiques;
         private Parametre CombinerAvecCampagne;
         private Parametre ExporterFichierCorps;
+        private Parametre CreerDvp;
 
         private ModelDoc2 MdlBase = null;
         private int _IndiceCampagne = 0;
@@ -40,6 +42,7 @@ namespace ModuleProduction.ModuleRepererDossier
                 CombinerCorpsIdentiques = _Config.AjouterParam("CombinerCorpsIdentiques", true, "Combiner les corps identiques des différents modèles");
                 CombinerAvecCampagne = _Config.AjouterParam("CombinerAvecPrecedenteCampagne", true, "Combiner les corps avec les précédentes campagnes");
                 ExporterFichierCorps = _Config.AjouterParam("ExporterFichierCorps", true, "Exporter les corps dans des fichiers");
+                CreerDvp = _Config.AjouterParam("CreerDvp", true, "Creer les configs dvp des tôles");
 
                 MdlBase = App.Sw.ActiveDoc;
                 OnCalque += Calque;
@@ -53,6 +56,7 @@ namespace ModuleProduction.ModuleRepererDossier
         private CtrlTextBox _Texte_IndiceCampagne;
         private CtrlCheckBox _CheckBox_NettoyerModele;
         private CtrlCheckBox _CheckBox_MajCampagnePrecedente;
+        private Boolean ReinitCampagneActuelle = false;
         private CtrlCheckBox _CheckBox_ReinitCampagneActuelle;
         private CtrlCheckBox _CheckBox_CombinerCorps;
         private CtrlCheckBox _CheckBox_CombinerAvecCampagne;
@@ -80,14 +84,34 @@ namespace ModuleProduction.ModuleRepererDossier
                 _CheckBox_MajCampagnePrecedente.OnCheck += delegate { _CheckBox_ReinitCampagneActuelle.IsEnabled = false; _CheckBox_ReinitCampagneActuelle.IsChecked = false; };
                 _CheckBox_MajCampagnePrecedente.OnUnCheck += delegate { _CheckBox_ReinitCampagneActuelle.IsEnabled = true; };
 
-                _CheckBox_MajCampagnePrecedente.OnCheck += delegate { if (_CheckBox_MajCampagnePrecedente.IsEnabled && (IndiceCampagne > 1)) IndiceCampagne -= 1; };
-                _CheckBox_MajCampagnePrecedente.OnUnCheck += delegate { if (_CheckBox_MajCampagnePrecedente.IsEnabled) IndiceCampagne += 1; };
+                _CheckBox_MajCampagnePrecedente.OnCheck += delegate
+                {
+                    if (_CheckBox_MajCampagnePrecedente.IsEnabled && (IndiceCampagne > 1))
+                        IndiceCampagne -= 1;
+
+                    if (ReinitCampagneActuelle)
+                    {
+                        _CheckBox_ReinitCampagneActuelle.IsEnabled = false;
+                        _CheckBox_ReinitCampagneActuelle.Visible = false;
+                    }
+                };
+                _CheckBox_MajCampagnePrecedente.OnUnCheck += delegate
+                {
+                    if (_CheckBox_MajCampagnePrecedente.IsEnabled)
+                        IndiceCampagne += 1;
+
+                    if (ReinitCampagneActuelle)
+                    {
+                        _CheckBox_ReinitCampagneActuelle.IsEnabled = true;
+                        _CheckBox_ReinitCampagneActuelle.Visible = true;
+                    }
+                };
 
                 G = _Calque.AjouterGroupe("Options");
                 _CheckBox_ExporterFichierCorps = G.AjouterCheckBox(ExporterFichierCorps);
                 _CheckBox_CombinerCorps = G.AjouterCheckBox(CombinerCorpsIdentiques);
                 _CheckBox_CombinerAvecCampagne = G.AjouterCheckBox(CombinerAvecCampagne);
-                _CheckBox_CreerDvp = G.AjouterCheckBox("Creer les configs dvp des tôles");
+                _CheckBox_CreerDvp = G.AjouterCheckBox(CreerDvp);
                 _CheckBox_CombinerAvecCampagne.Indent = 1;
 
                 _CheckBox_ExporterFichierCorps.OnUnCheck += _CheckBox_CombinerCorps.UnCheck;
@@ -113,20 +137,20 @@ namespace ModuleProduction.ModuleRepererDossier
                 // Recherche du dernier indice de la campagne de repérage
 
                 // Création du dossier pièces s'il n'existe pas
-                MdlBase.CreerDossier(CONST_PRODUCTION.DOSSIER_PIECES);
+                MdlBase.pCreerDossier(CONST_PRODUCTION.DOSSIER_PIECES);
                 // Recherche de la nomenclature
-                MdlBase.CreerFichierTexte(CONST_PRODUCTION.DOSSIER_PIECES, CONST_PRODUCTION.FICHIER_NOMENC);
+                MdlBase.pCreerFichierTexte(CONST_PRODUCTION.DOSSIER_PIECES, CONST_PRODUCTION.FICHIER_NOMENC);
 
                 // Recherche des exports laser, tole ou tube, existant
-                var IndiceLaser = Math.Max(MdlBase.RechercherIndiceDossier(CONST_PRODUCTION.DOSSIER_LASERTOLE),
-                                              MdlBase.RechercherIndiceDossier(CONST_PRODUCTION.DOSSIER_LASERTUBE)
+                var IndiceLaser = Math.Max(MdlBase.pRechercherIndiceDossier(CONST_PRODUCTION.DOSSIER_LASERTOLE),
+                                              MdlBase.pRechercherIndiceDossier(CONST_PRODUCTION.DOSSIER_LASERTUBE)
                                               );
 
                 IndiceCampagne = IndiceLaser + 1;
 
                 // Aquisition de la liste des corps déjà repérées
                 // et recherche de l'indice nomenclature max
-                ListeCorps = MdlBase.ChargerNomenclature();
+                ListeCorps = MdlBase.pChargerNomenclature();
 
                 WindowLog.EcrireF("{0} pièce(s) sont référencé(s)", ListeCorps.Count);
 
@@ -142,7 +166,6 @@ namespace ModuleProduction.ModuleRepererDossier
 
                 // Si aucun corps n'a déjà été comptabilisé pour cette campagne,
                 // on ne propose pas la réinitialisation
-                Boolean ReinitCampagneActuelle = false;
                 foreach (var corps in ListeCorps.Values)
                 {
                     if (corps.Campagne.Keys.Max() >= IndiceCampagne)
@@ -187,8 +210,7 @@ namespace ModuleProduction.ModuleRepererDossier
             Cmd.NettoyerModele = _CheckBox_NettoyerModele.IsChecked;
             Cmd.CombinerCorpsIdentiques = _CheckBox_CombinerCorps.IsChecked;
             Cmd.CombinerAvecCampagne = _CheckBox_CombinerAvecCampagne.IsChecked;
-            Cmd.ReinitCampagneActuelle = _CheckBox_ReinitCampagneActuelle.IsChecked;
-            Cmd.MajCampagnePrecedente = _CheckBox_MajCampagnePrecedente.IsChecked;
+            Cmd.ReinitCampagneActuelle = ReinitCampagneActuelle && _CheckBox_ReinitCampagneActuelle.IsChecked;
             Cmd.CreerDvp = _CheckBox_CreerDvp.IsChecked;
             Cmd.ExporterFichierCorps = _CheckBox_ExporterFichierCorps.IsChecked;
             Cmd.ListeCorpsExistant = ListeCorps;

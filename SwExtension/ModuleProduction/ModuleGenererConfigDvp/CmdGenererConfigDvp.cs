@@ -27,10 +27,13 @@ namespace ModuleProduction.ModuleGenererConfigDvp
         {
             try
             {
-                var ListeCorps = MdlBase.ChargerNomenclature();
+                var ListeCorps = MdlBase.pChargerNomenclature();
 
                 foreach (var corps in ListeCorps.Values)
-                    CreerDvp(corps, MdlBase.DossierPiece(), SupprimerLesAnciennesConfigs, MasquerEsquisses);
+                {
+                    WindowLog.EcrireF("{0} -> dvp", corps.Repere);
+                    CreerDvp(corps, MdlBase.pDossierPiece(), SupprimerLesAnciennesConfigs, MasquerEsquisses);
+                }
 
                 MdlBase.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
                 MdlBase.EditRebuild3();
@@ -56,8 +59,6 @@ namespace ModuleProduction.ModuleGenererConfigDvp
                 var mdl = Sw.eOuvrir(chemin);
                 if (mdl.IsNull()) return;
 
-                WindowLog.EcrireF("{0} -> dvp", Repere);
-
                 var NomCfgPliee = mdl.eNomConfigActive();
                 var Piece = mdl.ePartDoc();
                 var Tole = Piece.ePremierCorps();
@@ -81,7 +82,7 @@ namespace ModuleProduction.ModuleGenererConfigDvp
 
                 String NomConfigDepliee = Sw.eNomConfigDepliee(NomCfgPliee, Repere);
 
-                if (!mdl.CreerConfigDepliee(NomConfigDepliee, NomCfgPliee))
+                if (!mdl.pCreerConfigDepliee(NomConfigDepliee, NomCfgPliee))
                 {
                     WindowLog.Ecrire("       - Config non crée");
                     return;
@@ -90,11 +91,11 @@ namespace ModuleProduction.ModuleGenererConfigDvp
                 {
                     mdl.ShowConfiguration2(NomConfigDepliee);
                     mdl.EditRebuild3();
-                    Piece.DeplierTole(NomConfigDepliee);
+                    Piece.pDeplierTole(NomConfigDepliee);
 
                     mdl.ShowConfiguration2(NomCfgPliee);
                     mdl.EditRebuild3();
-                    Piece.PlierTole(NomCfgPliee);
+                    Piece.pPlierTole(NomCfgPliee);
                     WindowLog.EcrireF("  - Dvp crée : {0}", NomConfigDepliee);
                 }
                 catch (Exception e)

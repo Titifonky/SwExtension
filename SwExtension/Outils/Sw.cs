@@ -1886,6 +1886,37 @@ namespace Outils
             return mdl;
         }
 
+        public static ModelDoc2 eOuvrir(String chemin, eTypeDoc type, String config = "")
+        {
+            String Ext = type.GetEnumInfo<ExtFichier>();
+
+            String CheminComplet = chemin + Ext;
+
+            ModelDoc2 mdl = eEstOuvert(Path.GetFileName(CheminComplet));
+
+            if (mdl.IsRef())
+            {
+                mdl.eActiver();
+                return mdl;
+            }
+
+            swDocumentTypes_e TypeExt = swDocumentTypes_e.swDocNONE;
+            if (type == eTypeDoc.Piece)
+                TypeExt = swDocumentTypes_e.swDocPART;
+            else if (type == eTypeDoc.Assemblage)
+                TypeExt = swDocumentTypes_e.swDocASSEMBLY;
+            else if (type == eTypeDoc.Dessin)
+                TypeExt = swDocumentTypes_e.swDocDRAWING;
+
+            if (TypeExt != swDocumentTypes_e.swDocNONE)
+            {
+                int errors = 0, warnings = 0;
+                mdl = App.Sw.OpenDoc6(CheminComplet, (int)TypeExt, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, config, ref errors, ref warnings);
+            }
+
+            return mdl;
+        }
+
         public static ModelDoc2 eEstOuvert(String nomFichier)
         {
             var Modeles = (object[])App.Sw.GetDocuments();
@@ -4114,11 +4145,11 @@ namespace Outils
         /// <param name="corps"></param>
         /// <param name="direction"></param>
         /// <returns></returns>
-        public static Point ePointExtreme(this Body2 corps, Vecteur direction)
+        public static gPoint ePointExtreme(this Body2 corps, gVecteur direction)
         {
             Double oX = 0, oY = 0, oZ = 0;
             corps.GetExtremePoint(direction.X, direction.Y, direction.Z, out oX, out oY, out oZ);
-            return new Point(oX, oY, oZ);
+            return new gPoint(oX, oY, oZ);
         }
 
         /// <summary>
@@ -4812,7 +4843,7 @@ namespace Outils
         {
             ModelDoc2 mdl = dessin.eModelDoc2();
             ePoint p = vue.eZoneVue().CentreZone;
-            mdl.Extension.SelectByID2(vue.Name, "DRAWINGVIEW", p.X, p.Y, p.Z, ajouter, -1, null, 0);
+            mdl.Extension.SelectByID2(vue.Name, "DRAWINGVIEW", p.X, p.Y, p.Z, ajouter, 0, null, 0);
         }
 
         public static eZone eEnveloppeDesVues(this Sheet feuille)

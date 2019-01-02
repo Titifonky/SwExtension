@@ -180,9 +180,9 @@ namespace ModuleLaser.ModuleExportBarre
 
             public ModelDoc2 Mdl = null;
 
-            public Plan PlanSection;
-            public Point ExtremPoint1;
-            public Point ExtremPoint2;
+            public gPlan PlanSection;
+            public gPoint ExtremPoint1;
+            public gPoint ExtremPoint2;
             public ListFaceGeom FaceSectionExt = null;
             public List<ListFaceGeom> ListeFaceSectionInt = null;
             public List<ListFaceUsinage> ListeFaceUsinageExtremite = new List<ListFaceUsinage>();
@@ -320,19 +320,19 @@ namespace ModuleLaser.ModuleExportBarre
                 public Double DistToExtremPoint1 = 1E30;
                 public Double DistToExtremPoint2 = 1E30;
 
-                public void CalculerDistance(Point extremPoint1, Point extremPoint2)
+                public void CalculerDistance(gPoint extremPoint1, gPoint extremPoint2)
                 {
                     foreach (var f in ListeFaces)
                     {
                         {
                             Double[] res = f.GetClosestPointOn(extremPoint1.X, extremPoint1.Y, extremPoint1.Z);
-                            var dist = extremPoint1.Distance(new Point(res));
+                            var dist = extremPoint1.Distance(new gPoint(res));
                             if (dist < DistToExtremPoint1) DistToExtremPoint1 = dist;
                         }
 
                         {
                             Double[] res = f.GetClosestPointOn(extremPoint2.X, extremPoint2.Y, extremPoint2.Z);
-                            var dist = extremPoint2.Distance(new Point(res));
+                            var dist = extremPoint2.Distance(new gPoint(res));
                             if (dist < DistToExtremPoint2) DistToExtremPoint2 = dist;
                         }
                     }
@@ -480,10 +480,10 @@ namespace ModuleLaser.ModuleExportBarre
                         var v = PlanSection.Normale;
                         Double X = 0, Y = 0, Z = 0;
                         Corps.GetExtremePoint(v.X, v.Y, v.Z, out X, out Y, out Z);
-                        ExtremPoint1 = new Point(X, Y, Z);
+                        ExtremPoint1 = new gPoint(X, Y, Z);
                         v.Inverser();
                         Corps.GetExtremePoint(v.X, v.Y, v.Z, out X, out Y, out Z);
-                        ExtremPoint2 = new Point(X, Y, Z);
+                        ExtremPoint2 = new gPoint(X, Y, Z);
                     }
 
                     // =================================================================================
@@ -536,16 +536,16 @@ namespace ModuleLaser.ModuleExportBarre
                                 var vect = this.PlanSection.Normale;
 
                                 if (vect.X == 0)
-                                    vect = vect.Vectoriel(new Vecteur(1, 0, 0));
+                                    vect = vect.Vectoriel(new gVecteur(1, 0, 0));
                                 else
-                                    vect = vect.Vectoriel(new Vecteur(0, 0, 1));
+                                    vect = vect.Vectoriel(new gVecteur(0, 0, 1));
 
                                 vect.Normaliser();
 
                                 // On récupère le point extreme dans cette direction
                                 Double X = 0, Y = 0, Z = 0;
                                 Corps.GetExtremePoint(vect.X, vect.Y, vect.Z, out X, out Y, out Z);
-                                var Pt = new Point(X, Y, Z);
+                                var Pt = new gPoint(X, Y, Z);
 
                                 // La liste de face la plus proche est considérée comme la peau exterieur du profil
                                 Double distMin = 1E30;
@@ -556,7 +556,7 @@ namespace ModuleLaser.ModuleExportBarre
                                         foreach (var f in fg.ListeSwFace)
                                         {
                                             Double[] res = f.GetClosestPointOn(Pt.X, Pt.Y, Pt.Z);
-                                            var PtOnSurface = new Point(res);
+                                            var PtOnSurface = new gPoint(res);
 
                                             var dist = Pt.Distance(PtOnSurface);
                                             if (dist < 1E-6)
@@ -585,9 +585,9 @@ namespace ModuleLaser.ModuleExportBarre
 
             }
 
-            private Plan RechercherFaceProfil(List<FaceGeom> listeFaceGeom, ref List<FaceGeom> faceExt)
+            private gPlan RechercherFaceProfil(List<FaceGeom> listeFaceGeom, ref List<FaceGeom> faceExt)
             {
-                Plan? p = null;
+                gPlan? p = null;
                 try
                 {
                     // On recherche les faces de la section
@@ -599,7 +599,7 @@ namespace ModuleLaser.ModuleExportBarre
 
                             // Si c'est un cylindre ou une extrusion, on recupère le plan
                             if ((p == null) && (fg.Type == eTypeFace.Cylindre || fg.Type == eTypeFace.Extrusion))
-                                p = new Plan(fg.Origine, fg.Direction);
+                                p = new gPlan(fg.Origine, fg.Direction);
                         }
                     }
 
@@ -607,16 +607,16 @@ namespace ModuleLaser.ModuleExportBarre
                     // a partir de deux plan non parallèle
                     if (p == null)
                     {
-                        Vecteur? v1 = null;
+                        gVecteur? v1 = null;
                         foreach (var fg in faceExt)
                         {
                             if (v1 == null)
                                 v1 = fg.Normale;
                             else
                             {
-                                var vtmp = ((Vecteur)v1).Vectoriel(fg.Normale);
+                                var vtmp = ((gVecteur)v1).Vectoriel(fg.Normale);
                                 if (Math.Abs(vtmp.Norme) > 1E-8)
-                                    p = new Plan(fg.Origine, vtmp);
+                                    p = new gPlan(fg.Origine, vtmp);
                             }
 
                         }
@@ -624,7 +624,7 @@ namespace ModuleLaser.ModuleExportBarre
                 }
                 catch (Exception e) { this.LogErreur(new Object[] { e }); }
 
-                return (Plan)p;
+                return (gPlan)p;
             }
 
             private Boolean EstUneFaceProfil(FaceGeom fg)
@@ -730,9 +730,9 @@ namespace ModuleLaser.ModuleExportBarre
                 public Face2 SwFace = null;
                 private Surface Surface = null;
 
-                public Point Origine;
-                public Vecteur Normale;
-                public Vecteur Direction;
+                public gPoint Origine;
+                public gVecteur Normale;
+                public gVecteur Direction;
                 public Double Rayon = 0;
                 public eTypeFace Type = eTypeFace.Inconnu;
 
@@ -836,8 +836,8 @@ namespace ModuleLaser.ModuleExportBarre
                             Param[2] = Param[2] * -1;
                         }
 
-                        Origine = new Point(Param[3], Param[4], Param[5]);
-                        Normale = new Vecteur(Param[0], Param[1], Param[2]);
+                        Origine = new gPoint(Param[3], Param[4], Param[5]);
+                        Normale = new gVecteur(Param[0], Param[1], Param[2]);
                     }
                 }
 
@@ -847,8 +847,8 @@ namespace ModuleLaser.ModuleExportBarre
                     {
                         Double[] Param = Surface.CylinderParams;
 
-                        Origine = new Point(Param[0], Param[1], Param[2]);
-                        Direction = new Vecteur(Param[3], Param[4], Param[5]);
+                        Origine = new gPoint(Param[0], Param[1], Param[2]);
+                        Direction = new gVecteur(Param[3], Param[4], Param[5]);
                         Rayon = Param[6];
 
                         var UV = (Double[])SwFace.GetUVBounds();
@@ -862,7 +862,7 @@ namespace ModuleLaser.ModuleExportBarre
                             ev1[5] = -ev1[5];
                         }
 
-                        Normale = new Vecteur(ev1[3], ev1[4], ev1[5]);
+                        Normale = new gVecteur(ev1[3], ev1[4], ev1[5]);
                     }
                 }
 
@@ -871,7 +871,7 @@ namespace ModuleLaser.ModuleExportBarre
                     if (Surface.IsSwept())
                     {
                         Double[] Param = Surface.GetExtrusionsurfParams();
-                        Direction = new Vecteur(Param[0], Param[1], Param[2]);
+                        Direction = new gVecteur(Param[0], Param[1], Param[2]);
 
                         Curve C = Surface.GetProfileCurve();
                         C = C.GetBaseCurve();
@@ -883,7 +883,7 @@ namespace ModuleLaser.ModuleExportBarre
                         {
                             Double[] Eval = C.Evaluate(StartParam);
 
-                            Origine = new Point(Eval[0], Eval[1], Eval[2]);
+                            Origine = new gPoint(Eval[0], Eval[1], Eval[2]);
                         }
 
                         var UV = (Double[])SwFace.GetUVBounds();
@@ -897,7 +897,7 @@ namespace ModuleLaser.ModuleExportBarre
                             ev1[5] = -ev1[5];
                         }
 
-                        Normale = new Vecteur(ev1[3], ev1[4], ev1[5]);
+                        Normale = new gVecteur(ev1[3], ev1[4], ev1[5]);
                     }
                 }
             }
@@ -961,19 +961,19 @@ namespace ModuleLaser.ModuleExportBarre
                     return Ajouter;
                 }
 
-                public void CalculerDistance(Point extremPoint1, Point extremPoint2)
+                public void CalculerDistance(gPoint extremPoint1, gPoint extremPoint2)
                 {
                     foreach (var f in ListeFaceSw())
                     {
                         {
                             Double[] res = f.GetClosestPointOn(extremPoint1.X, extremPoint1.Y, extremPoint1.Z);
-                            var dist = extremPoint1.Distance(new Point(res));
+                            var dist = extremPoint1.Distance(new gPoint(res));
                             if (dist < DistToExtremPoint1) DistToExtremPoint1 = dist;
                         }
 
                         {
                             Double[] res = f.GetClosestPointOn(extremPoint2.X, extremPoint2.Y, extremPoint2.Z);
-                            var dist = extremPoint2.Distance(new Point(res));
+                            var dist = extremPoint2.Distance(new gPoint(res));
                             if (dist < DistToExtremPoint2) DistToExtremPoint2 = dist;
                         }
                     }
@@ -989,7 +989,7 @@ namespace ModuleLaser.ModuleExportBarre
                 }
                 else if (f1.Type == eTypeFace.Plan && (f2.Type == eTypeFace.Cylindre || f2.Type == eTypeFace.Extrusion))
                 {
-                    Plan P = new Plan(f2.Origine, f2.Direction);
+                    gPlan P = new gPlan(f2.Origine, f2.Direction);
                     if (P.SurLePlan(f1.Origine, 1E-10) && P.SurLePlan(f1.Origine.Composer(f1.Normale), 1E-10))
                     {
                         val = eOrientation.Coplanaire;
@@ -997,7 +997,7 @@ namespace ModuleLaser.ModuleExportBarre
                 }
                 else if (f2.Type == eTypeFace.Plan && (f1.Type == eTypeFace.Cylindre || f1.Type == eTypeFace.Extrusion))
                 {
-                    Plan P = new Plan(f1.Origine, f1.Direction);
+                    gPlan P = new gPlan(f1.Origine, f1.Direction);
                     if (P.SurLePlan(f2.Origine, 1E-10) && P.SurLePlan(f2.Origine.Composer(f2.Normale), 1E-10))
                     {
                         val = eOrientation.Coplanaire;
@@ -1008,20 +1008,20 @@ namespace ModuleLaser.ModuleExportBarre
                 return val;
             }
 
-            private eOrientation Orientation(Point p1, Vecteur v1, Point p2, Vecteur v2)
+            private eOrientation Orientation(gPoint p1, gVecteur v1, gPoint p2, gVecteur v2)
             {
                 if (p1.Distance(p2) < 1E-10)
                     return eOrientation.MemeOrigine;
 
-                Vecteur Vtmp = new Vecteur(p1, p2);
+                gVecteur Vtmp = new gVecteur(p1, p2);
 
                 if ((v1.Vectoriel(Vtmp).Norme < 1E-10) && (v2.Vectoriel(Vtmp).Norme < 1E-10))
                     return eOrientation.Colineaire;
 
-                Vecteur Vn1 = (new Vecteur(p1, p2)).Vectoriel(v1);
-                Vecteur Vn2 = (new Vecteur(p2, p1)).Vectoriel(v2);
+                gVecteur Vn1 = (new gVecteur(p1, p2)).Vectoriel(v1);
+                gVecteur Vn2 = (new gVecteur(p2, p1)).Vectoriel(v2);
 
-                Vecteur Vn = Vn1.Vectoriel(Vn2);
+                gVecteur Vn = Vn1.Vectoriel(Vn2);
 
                 if (Vn.Norme < 1E-10)
                     return eOrientation.Coplanaire;

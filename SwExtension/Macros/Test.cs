@@ -39,8 +39,8 @@ namespace Macros
                 Param[2] = Param[2] * -1;
             }
 
-            Point Origine = new Point(Param[3], Param[4], Param[5]);
-            Vecteur Normale = new Vecteur(Param[0] * -1, Param[1] * -1, Param[2] * -1);
+            gPoint Origine = new gPoint(Param[3], Param[4], Param[5]);
+            gVecteur Normale = new gVecteur(Param[0] * -1, Param[1] * -1, Param[2] * -1);
             
 
             MathUtility Mu = App.Sw.GetMathUtility();

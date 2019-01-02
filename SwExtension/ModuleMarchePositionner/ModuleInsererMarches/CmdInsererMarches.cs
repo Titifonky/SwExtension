@@ -60,8 +60,8 @@ namespace ModuleMarchePositionner
                         Transform = Transform.Multiply(compRepetTrans);
                         Transform = baseMarcheTrans.Multiply(Transform);
 
-                        Point pt = new Point(v);
-                        Segment sg = new Segment(e);
+                        gPoint pt = new gPoint(v);
+                        gSegment sg = new gSegment(e);
                         pt.MultiplyTransfom(bodyTrans);
                         sg.MultiplyTransfom(bodyTrans);
 
@@ -72,7 +72,7 @@ namespace ModuleMarchePositionner
                         {
                             foreach (Edge ed in face.eListeDesArretes())
                             {
-                                Segment s = new Segment(ed);
+                                gSegment s = new gSegment(ed);
 
                                 if (sg.Compare(s, arr))
                                     edge = ed;

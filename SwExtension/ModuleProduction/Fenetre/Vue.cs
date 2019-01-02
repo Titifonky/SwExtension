@@ -43,7 +43,6 @@ namespace ModuleProduction
             set { SetValue(ItemHeightProperty, value); }
         }
 
-
         protected override object DefaultStyleKey
         {
             get

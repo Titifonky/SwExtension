@@ -133,9 +133,9 @@ namespace ModuleMarcheConfig
                     Edge eFace = ArreteDevant(platine.eChercherContraintes(marche, false), f_Dessus);
                     Edge eArriere = ArreteArriere(f_Dessus, eBase, eFace);
 
-                    Segment F = new Segment(eFace);
-                    Segment C = new Segment(eBase);
-                    Segment A = new Segment(eArriere);
+                    gSegment F = new gSegment(eFace);
+                    gSegment C = new gSegment(eBase);
+                    gSegment A = new gSegment(eArriere);
 
                     C.OrienterDe(F);
                     A.OrienterDe(C);

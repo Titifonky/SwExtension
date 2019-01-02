@@ -35,22 +35,43 @@ namespace ModuleProduction.ModuleProduireDvp
 
         private void Init()
         {
-            DossierDVP = Directory.CreateDirectory(Path.Combine(MdlBase.CreerDossier(CONST_PRODUCTION.DOSSIER_LASERTOLE), IndiceCampagne.ToString())).FullName;
+            DossierDVP = Directory.CreateDirectory(Path.Combine(MdlBase.pCreerDossier(CONST_PRODUCTION.DOSSIER_LASERTOLE), IndiceCampagne.ToString())).FullName;
 
-            var ListeExistant = MdlBase.ChargerProduction(MdlBase.DossierLaserTole());
+            if(!MettreAjourCampagne)
+                File.Delete(Path.Combine(MdlBase.pDossierLaserTole(), IndiceCampagne.ToString(), CONST_PRODUCTION.FICHIER_NOMENC));
+
+            var ListeExistant = MdlBase.pChargerProduction(MdlBase.pDossierLaserTole());
 
             SortedDictionary<int, Corps> ListeCorpsFiltre = new SortedDictionary<int, Corps>();
             foreach (var corps in ListeCorps.Values)
             {
-                if ((corps.TypeCorps == eTypeCorps.Tole) ||
-                        ListeMateriaux.Contains(corps.Materiau) ||
+                if ((corps.TypeCorps == eTypeCorps.Tole) &&
+                        ListeMateriaux.Contains(corps.Materiau) &&
                         ListeEp.Contains(corps.Dimension)
                         )
                 {
                     var qte = corps.Campagne[IndiceCampagne];
 
                     if (Quantite_Diff && ListeExistant.ContainsKey(corps.Repere))
+                    {
                         qte = Math.Max(0, qte - ListeExistant[corps.Repere].Qte);
+
+                        // Si la quantité est supérieur à 0
+                        // on récupère la différence entre la quantité totale actuelle et
+                        // la quantité totale de la précédente campagne
+                        if (MettreAjourCampagne && (qte > 0))
+                        {
+                            var qteCampagnePrecedente = 0;
+                            var corpsExistant = ListeExistant[corps.Repere];
+                            foreach (var c in corpsExistant.Campagne)
+                            {
+                                if (c.Key != IndiceCampagne)
+                                    qteCampagnePrecedente += c.Value;
+                            }
+
+                            qte = corps.Campagne[IndiceCampagne] - qteCampagnePrecedente;
+                        }
+                    }
 
                     corps.Qte = qte;
                     ListeCorpsFiltre.Add(corps.Repere, corps);
@@ -81,7 +102,8 @@ namespace ModuleProduction.ModuleProduireDvp
             try
             {
                 foreach (var corps in ListeCorps.Values)
-                    CreerVue(corps);
+                    if(corps.Dvp)
+                        CreerVue(corps);
 
                 foreach (DrawingDoc dessin in DicDessins.Values)
                 {
@@ -91,15 +113,19 @@ namespace ModuleProduction.ModuleProduireDvp
                     dessin.eModelDoc2().eSauver();
                 }
 
-                var cheminNomenclature = Path.Combine(MdlBase.eDossier(), MdlBase.DossierLaserTole(), IndiceCampagne.ToString(), CONST_PRODUCTION.FICHIER_NOMENC + ".txt");
+                var cheminNomenclature = Path.Combine(MdlBase.eDossier(), MdlBase.pDossierLaserTole(), IndiceCampagne.ToString(), CONST_PRODUCTION.FICHIER_NOMENC);
                 using (var sw = new StreamWriter(cheminNomenclature, false, Encoding.GetEncoding(1252)))
                 {
                     sw.WriteLine(Corps.EnteteCampagne(IndiceCampagne));
 
+                    WindowLog.SautDeLigne();
+                    WindowLog.Ecrire("Resumé :");
                     foreach (var corps in ListeCorps.Values)
                     {
                         sw.WriteLine(corps.LigneCampagne());
-                        WindowLog.EcrireF("{2} P{0} ×{1}", corps.Repere, corps.Qte, IndiceCampagne);
+
+                        if(corps.Dvp && ((corps.Qte + corps.QteSup) > 0))
+                            WindowLog.EcrireF("{2} P{0} ×{1}", corps.Repere, corps.Qte, IndiceCampagne);
                     }
                 }
             }
@@ -111,18 +137,18 @@ namespace ModuleProduction.ModuleProduireDvp
 
         private void CreerVue(Corps corps)
         {
-            var cheminFichier = corps.CheminFichierMdl;
+            var QuantiteTotale = Quantite * (corps.Qte + corps.QteSup);
+
+            if (QuantiteTotale == 0)
+                return;
+
+            var cheminFichier = corps.CheminFichierRepere;
             if (!File.Exists(cheminFichier)) return;
 
             var mdlCorps = Sw.eOuvrir(cheminFichier);
             if (mdlCorps.IsNull()) return;
 
-            var QuantiteTole = Quantite * (corps.Qte + corps.QteSup);
-
-            if (QuantiteTole == 0)
-                return;
-
-            WindowLog.EcrireF("{0}", corps.RepereComplet);
+            WindowLog.EcrireF("{0}  x{1}", corps.RepereComplet, QuantiteTotale);
 
             //mdlCorps.LockAllExternalReferences();
             mdlCorps.UnlockAllExternalReferences();
@@ -138,8 +164,6 @@ namespace ModuleProduction.ModuleProduireDvp
 
             var NomConfigDepliee = listeCfgDepliee[0];
 
-            
-
             if (!mdlCorps.ShowConfiguration2(NomConfigDepliee))
             {
                 WindowLog.EcrireF("  - Pas de configuration dvp");
@@ -148,13 +172,28 @@ namespace ModuleProduction.ModuleProduireDvp
 
             mdlCorps.EditRebuild3();
 
-            DrawingDoc dessin = CreerPlan(corps.Materiau, corps.Dimension.eToDouble());
+            DrawingDoc dessin = CreerPlan(corps.Materiau, corps.Dimension.eToDouble(), MettreAjourCampagne);
             dessin.eModelDoc2().eActiver();
             Sheet Feuille = dessin.eFeuilleActive();
 
             try
             {
-                View v = CreerVueToleDvp(dessin, Feuille, mdlCorps.ePartDoc(), NomConfigDepliee, corps.RepereComplet, corps.Materiau, QuantiteTole, corps.Dimension.eToDouble());
+                if(MettreAjourCampagne)
+                {
+                    foreach (var vue in Feuille.eListeDesVues())
+                    {
+                        var mdl = vue.ReferencedDocument;
+                        if ((mdlCorps.eDossier() == mdl.eDossier()) && (mdlCorps.eDossier().ToLowerInvariant() == mdl.eDossier().ToLowerInvariant()))
+                        {
+                            vue.eSelectionner(dessin);
+                            dessin.eModelDoc2().EditDelete();
+                            dessin.eModelDoc2().eEffacerSelection();
+                            break;
+                        }
+                    }
+                }
+
+                View v = CreerVueToleDvp(dessin, Feuille, mdlCorps.ePartDoc(), NomConfigDepliee, corps.RepereComplet, corps.Materiau, QuantiteTotale, corps.Dimension.eToDouble());
             }
             catch (Exception e)
             {
@@ -227,7 +266,7 @@ namespace ModuleProduction.ModuleProduireDvp
             z.PointMax.Y = Math.Max(z.PointMax.Y, z.PointMin.Y + g.Ht);
         }
 
-        private DrawingDoc CreerPlan(String materiau, Double epaisseur)
+        private DrawingDoc CreerPlan(String materiau, Double epaisseur, Boolean mettreAJourExistant)
         {
             String Fichier = String.Format("{0}{1} - {2} - Ep{3}",
                                             String.IsNullOrWhiteSpace(RefFichier) ? "" : RefFichier + "-",
@@ -239,7 +278,19 @@ namespace ModuleProduction.ModuleProduireDvp
             if (DicDessins.ContainsKey(Fichier))
                 return DicDessins[Fichier];
 
-            DrawingDoc Dessin = Sw.eCreerDocument(DossierDVP, Fichier, eTypeDoc.Dessin, CONSTANTES.MODELE_DE_DESSIN_LASER).eDrawingDoc();
+            DrawingDoc Dessin = null;
+            ModelDoc2 Mdl = null;
+
+            if(mettreAJourExistant)
+                Mdl = Sw.eOuvrir(Path.Combine(DossierDVP, Fichier), eTypeDoc.Dessin);
+
+            if (Mdl.IsNull())
+                Dessin = Sw.eCreerDocument(DossierDVP, Fichier, eTypeDoc.Dessin, CONSTANTES.MODELE_DE_DESSIN_LASER).eDrawingDoc();
+            else
+            {
+                Dessin = Mdl.eDrawingDoc();
+                return Dessin;
+            }
 
             Dessin.eFeuilleActive().SetName(Fichier);
             DicDessins.Add(Fichier, Dessin);
@@ -403,7 +454,7 @@ namespace ModuleProduction.ModuleProduireDvp
         {
             MathUtility SwMath = App.Sw.GetMathUtility();
 
-            List<Point> LstPt = new List<Point>();
+            List<gPoint> LstPt = new List<gPoint>();
             foreach (SketchPoint s in esquisse.GetSketchPoints2())
             {
                 MathPoint point = SwMath.CreatePoint(new Double[3] { s.X, s.Y, s.Z });
@@ -412,27 +463,27 @@ namespace ModuleProduction.ModuleProduireDvp
                 point = point.MultiplyTransform(SketchXform);
                 MathTransform ViewXform = vue.ModelToViewTransform;
                 point = point.MultiplyTransform(ViewXform);
-                Point swViewStartPt = new Point(point);
+                gPoint swViewStartPt = new gPoint(point);
                 LstPt.Add(swViewStartPt);
             }
 
             // On recherche le point le point le plus à droite puis le plus haut
-            LstPt.Sort(new PointComparer(ListSortDirection.Descending, p => p.X));
-            LstPt.Sort(new PointComparer(ListSortDirection.Descending, p => p.Y));
+            LstPt.Sort(new gPointComparer(ListSortDirection.Descending, p => p.X));
+            LstPt.Sort(new gPointComparer(ListSortDirection.Descending, p => p.Y));
 
             // On le supprime
             LstPt.RemoveAt(0);
 
             // On recherche le point le point le plus à gauche puis le plus bas 
-            LstPt.Sort(new PointComparer(ListSortDirection.Ascending, p => p.X));
-            LstPt.Sort(new PointComparer(ListSortDirection.Ascending, p => p.Y));
+            LstPt.Sort(new gPointComparer(ListSortDirection.Ascending, p => p.X));
+            LstPt.Sort(new gPointComparer(ListSortDirection.Ascending, p => p.Y));
 
 
             // C'est le point de rotation
-            Point pt1 = LstPt[0];
+            gPoint pt1 = LstPt[0];
 
             // On recherche le plus loin
-            Point pt2;
+            gPoint pt2;
             Double d1 = pt1.Distance(LstPt[1]);
             Double d2 = pt1.Distance(LstPt[2]);
 
@@ -448,7 +499,7 @@ namespace ModuleProduction.ModuleProduireDvp
             else
                 pt2 = LstPt[2];
 
-            Vecteur v = new Vecteur(pt1, pt2);
+            gVecteur v = new gVecteur(pt1, pt2);
 
             return Math.Atan2(v.Y, v.X);
         }
@@ -470,9 +521,9 @@ namespace ModuleProduction.ModuleProduireDvp
             {
                 MathUtility SwMath = App.Sw.GetMathUtility();
 
-                Point ptCentreVue = new Point(vue.Position);
-                Point ptMin = new Point(Double.PositiveInfinity, Double.PositiveInfinity, 0);
-                Point ptMax = new Point(Double.NegativeInfinity, Double.NegativeInfinity, 0);
+                gPoint ptCentreVue = new gPoint(vue.Position);
+                gPoint ptMin = new gPoint(Double.PositiveInfinity, Double.PositiveInfinity, 0);
+                gPoint ptMax = new gPoint(Double.NegativeInfinity, Double.NegativeInfinity, 0);
 
                 foreach (SketchPoint s in esquisse.GetSketchPoints2())
                 {
@@ -482,7 +533,7 @@ namespace ModuleProduction.ModuleProduireDvp
                     swStartPoint = swStartPoint.MultiplyTransform(SketchXform);
                     MathTransform ViewXform = vue.ModelToViewTransform;
                     swStartPoint = swStartPoint.MultiplyTransform(ViewXform);
-                    Point swViewStartPt = new Point(swStartPoint);
+                    gPoint swViewStartPt = new gPoint(swStartPoint);
                     ptMin.Min(swViewStartPt);
                     ptMax.Max(swViewStartPt);
                 }
@@ -500,7 +551,7 @@ namespace ModuleProduction.ModuleProduireDvp
             {
                 MathUtility SwMath = App.Sw.GetMathUtility();
 
-                Point ptCentreVue = new Point(vue.Position);
+                gPoint ptCentreVue = new gPoint(vue.Position);
                 Double[] pArr = vue.GetOutline();
                 ptMinX = pArr[0];
                 ptMinY = pArr[1];
@@ -521,7 +572,7 @@ namespace ModuleProduction.ModuleProduireDvp
                 ptCentreRectangleY = (ptMinY + ptMaxY) * 0.5;
             }
 
-            public void Agrandir(Point p)
+            public void Agrandir(gPoint p)
             {
                 ptMinX = Math.Min(ptMinX, p.X);
                 ptMinY = Math.Min(ptMinY, p.Y);
@@ -535,8 +586,8 @@ namespace ModuleProduction.ModuleProduireDvp
             public void Agrandir(Note p)
             {
                 Double[] dimNote = (Double[])p.GetExtent();
-                Agrandir(new Point(dimNote[0], dimNote[1], dimNote[2]));
-                Agrandir(new Point(dimNote[3], dimNote[4], dimNote[5]));
+                Agrandir(new gPoint(dimNote[0], dimNote[1], dimNote[2]));
+                Agrandir(new gPoint(dimNote[3], dimNote[4], dimNote[5]));
 
                 MajCentreRectangle();
             }
