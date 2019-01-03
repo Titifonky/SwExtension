@@ -191,7 +191,7 @@ namespace ModuleProduction.ModuleProduireDvp
 
         protected void RunOkCommand()
         {
-            CmdProduireBarre Cmd = new CmdProduireBarre();
+            CmdProduireDvp Cmd = new CmdProduireDvp();
 
             Cmd.MdlBase = App.Sw.ActiveDoc;
             Cmd.ListeCorps = ListeCorps;

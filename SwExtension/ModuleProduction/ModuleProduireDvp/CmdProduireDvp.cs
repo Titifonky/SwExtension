@@ -11,7 +11,7 @@ using System.Text;
 
 namespace ModuleProduction.ModuleProduireDvp
 {
-    public class CmdProduireBarre : Cmd
+    public class CmdProduireDvp : Cmd
     {
         public ModelDoc2 MdlBase = null;
         public String RefFichier = "";
@@ -36,10 +36,53 @@ namespace ModuleProduction.ModuleProduireDvp
         {
             DossierDVP = Directory.CreateDirectory(Path.Combine(MdlBase.pDossierLaserTole(), IndiceCampagne.ToString())).FullName;
 
-            if(!MettreAjourCampagne)
-                File.Delete(Path.Combine(MdlBase.pDossierLaserTole(), CONST_PRODUCTION.FICHIER_NOMENC));
-
             MdlBase.pCalculerQuantite(ref ListeCorps, eTypeCorps.Tole, ListeMateriaux, ListeEp, IndiceCampagne, MettreAjourCampagne);
+        }
+
+        private void NettoyerFichier()
+        {
+            List<String> lstFichier = new List<String>();
+            foreach (var f in Directory.GetFiles(DossierDVP))
+            {
+                if (Path.GetExtension(f) != ".txt")
+                    lstFichier.Add(f);
+            }
+
+            if (MettreAjourCampagne)
+            {
+                List<String> ListeNomFichier = new List<string>();
+                foreach (var corps in ListeCorps.Values)
+                {
+                    if (corps.Campagne[IndiceCampagne] > 0)
+                    {
+                        ListeNomFichier.Add(NomFichierPlan(corps.Materiau, corps.Dimension.eToDouble()));
+                    }
+                }
+
+                List<String> ListeFichierAsauvegarder = new List<string>();
+                foreach (var nomFichier in ListeNomFichier)
+                {
+                    foreach (var f in lstFichier)
+                    {
+                        if (Path.GetFileNameWithoutExtension(f).StartsWith(nomFichier))
+                        {
+                            ListeFichierAsauvegarder.Add(f);
+                            break;
+                        }
+                    }
+                }
+
+                foreach (var f in lstFichier)
+                    if (!ListeFichierAsauvegarder.Contains(f))
+                        File.Delete(f);
+            }
+            else
+            {
+                File.Delete(Path.Combine(DossierDVP, CONST_PRODUCTION.FICHIER_NOMENC));
+
+                foreach (var f in lstFichier)
+                    File.Delete(f);
+            }
         }
 
         protected override void Command()
@@ -61,6 +104,8 @@ namespace ModuleProduction.ModuleProduireDvp
         {
             try
             {
+                NettoyerFichier();
+
                 foreach (var corps in ListeCorps.Values)
                     if(corps.Dvp)
                         CreerVue(corps);
@@ -76,13 +121,13 @@ namespace ModuleProduction.ModuleProduireDvp
                 var cheminNomenclature = Path.Combine(DossierDVP, CONST_PRODUCTION.FICHIER_NOMENC);
                 using (var sw = new StreamWriter(cheminNomenclature, false, Encoding.GetEncoding(1252)))
                 {
-                    sw.WriteLine(Corps.EnteteCampagne(IndiceCampagne, ListeCorps.CampagneDepartDecompte));
+                    sw.WriteLine(Corps.EnteteCampagne(IndiceCampagne));
 
                     WindowLog.SautDeLigne();
                     WindowLog.Ecrire("Resumé :");
                     foreach (var corps in ListeCorps.Values)
                     {
-                        sw.WriteLine(corps.LigneCampagne());
+                        sw.WriteLine(corps.LigneCampagne(ListeCorps.CampagneDepartDecompte));
 
                         if(corps.Dvp && ((corps.Qte + corps.QteSup) > 0))
                             WindowLog.EcrireF("{2} P{0} ×{1}", corps.Repere, corps.Qte, IndiceCampagne);
@@ -97,9 +142,10 @@ namespace ModuleProduction.ModuleProduireDvp
 
         private void CreerVue(Corps corps)
         {
-            var QuantiteTotale = Quantite * (corps.Qte + corps.QteSup);
+            var QuantiteDiff = Quantite * (corps.Qte + corps.QteSup);
+            var QuantiteTotale = Quantite * (corps.QuantiteDerniereCamapgne(ListeCorps.CampagneDepartDecompte) + corps.QteSup);
 
-            if (QuantiteTotale == 0)
+            if (QuantiteDiff == 0)
                 return;
 
             var cheminFichier = corps.CheminFichierRepere;
@@ -223,14 +269,19 @@ namespace ModuleProduction.ModuleProduireDvp
             z.PointMax.Y = Math.Max(z.PointMax.Y, z.PointMin.Y + g.Ht);
         }
 
-        private DrawingDoc CreerPlan(String materiau, Double epaisseur, Boolean mettreAJourExistant)
+        private String NomFichierPlan(String materiau, Double epaisseur)
         {
-            String Fichier = String.Format("{0}{1} - {2} - Ep{3}",
+            return String.Format("{0}{1} - {2} - Ep{3}",
                                             String.IsNullOrWhiteSpace(RefFichier) ? "" : RefFichier + "-",
                                             IndiceCampagne.ToString(),
                                             materiau.eGetSafeFilename("-"),
                                             epaisseur.ToString().Replace('.', ',')
                                             ).Trim();
+        }
+
+        private DrawingDoc CreerPlan(String materiau, Double epaisseur, Boolean mettreAJourExistant)
+        {
+            String Fichier = NomFichierPlan(materiau, epaisseur);
 
             if (DicDessins.ContainsKey(Fichier))
                 return DicDessins[Fichier];

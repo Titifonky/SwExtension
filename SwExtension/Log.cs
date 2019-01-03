@@ -261,7 +261,7 @@ namespace LogDebugging
             Log.Message("## " + ligne);
         }
 
-        internal static void Ecrire(List<String> listeMessage)
+        internal static void Ecrire(IEnumerable<String> listeMessage)
         {
             foreach (String s in listeMessage)
                 Ecrire(s);

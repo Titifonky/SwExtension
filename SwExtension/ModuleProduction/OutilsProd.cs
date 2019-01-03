@@ -9,6 +9,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Media.Imaging;
@@ -106,6 +107,25 @@ namespace ModuleProduction
 
             mdl.BlankSketch();
             mdl.eEffacerSelection();
+        }
+
+        public static void pMasquerEsquisses(this ModelDoc2 mdl)
+        {
+            mdl.eParcourirFonctions(
+                                    f =>
+                                    {
+                                        if (f.GetTypeName2() == FeatureType.swTnFlatPattern)
+                                            return true;
+                                        else if (f.GetTypeName2() == FeatureType.swTnProfileFeature)
+                                        {
+                                            f.eSelect(false);
+                                            mdl.BlankSketch();
+                                            mdl.eEffacerSelection();
+                                        }
+                                        return false;
+                                    },
+                                    true
+                                    );
         }
 
         /// <summary>
@@ -249,16 +269,16 @@ namespace ModuleProduction
                     // On lit la première ligne contenant l'entête des colonnes
                     String ligne = sr.ReadLine();
 
-                    // On récupère la campagne de départ
-                    if (ligne.StartsWith(CONST_PRODUCTION.CAMPAGNE_DEPART_DECOMPTE))
-                    {
-                        var tab = ligne.Split(new char[] { '\t' });
-                        Liste.CampagneDepartDecompte = tab[1].eToInteger();
-                        ligne = sr.ReadLine();
-                    }
-
                     if (ligne.IsRef())
                     {
+                        // On récupère la campagne de départ
+                        if (ligne.StartsWith(CONST_PRODUCTION.CAMPAGNE_DEPART_DECOMPTE))
+                        {
+                            var tab = ligne.Split(new char[] { '\t' });
+                            Liste.CampagneDepartDecompte = tab[1].eToInteger();
+                            ligne = sr.ReadLine();
+                        }
+
                         while ((ligne = sr.ReadLine()) != null)
                         {
                             if (!String.IsNullOrWhiteSpace(ligne))
@@ -275,15 +295,22 @@ namespace ModuleProduction
             return Liste;
         }
 
-        public static ListeSortedCorps pChargerProduction(this ModelDoc2 mdl, String dossierProduction, int campagneDepart = 1)
+        public static ListeSortedCorps pChargerProduction(this ModelDoc2 mdl, String dossierProduction, Boolean mettreAjourCampagne, int campagneDepart = 1)
         {
             var Liste = new ListeSortedCorps();
+
+            Liste.CampagneDepartDecompte = campagneDepart;
 
             List<String> ListeChemin = new List<String>();
 
             if (Directory.Exists(dossierProduction))
+            {
+                var IndiceMax = mdl.pRechercherIndiceDossier(dossierProduction);
+
                 foreach (var d in Directory.EnumerateDirectories(dossierProduction, "*", SearchOption.TopDirectoryOnly))
                 {
+                    if (!mettreAjourCampagne && ((new DirectoryInfo(d)).Name.eToInteger() == IndiceMax)) continue;
+
                     var cheminFichier = Path.Combine(d, CONST_PRODUCTION.FICHIER_NOMENC);
 
                     if (File.Exists(cheminFichier))
@@ -309,7 +336,7 @@ namespace ModuleProduction
                                         {
                                             var tmp = c.Campagne.First();
                                             Liste[c.Repere].Campagne.Add(tmp.Key, tmp.Value);
-                                            if(tmp.Key >= campagneDepart)
+                                            if (tmp.Key >= campagneDepart)
                                                 Liste[c.Repere].Qte += tmp.Value;
                                         }
                                         else
@@ -326,6 +353,7 @@ namespace ModuleProduction
                         }
                     }
                 }
+            }
 
             return Liste;
         }
@@ -337,14 +365,14 @@ namespace ModuleProduction
             ListeSortedCorps ListeExistant = new ListeSortedCorps();
 
             if (typeCorps == eTypeCorps.Tole)
-                ListeExistant = mdlBase.pChargerProduction(mdlBase.pDossierLaserTole(), listeCorps.CampagneDepartDecompte);
+                ListeExistant = mdlBase.pChargerProduction(mdlBase.pDossierLaserTole(), mettreAjourCampagne, listeCorps.CampagneDepartDecompte);
             else if (typeCorps == eTypeCorps.Barre)
-                ListeExistant = mdlBase.pChargerProduction(mdlBase.pDossierLaserTube(), listeCorps.CampagneDepartDecompte);
+                ListeExistant = mdlBase.pChargerProduction(mdlBase.pDossierLaserTube(), mettreAjourCampagne, listeCorps.CampagneDepartDecompte);
             else
                 return;
 
             ListeSortedCorps ListeCorpsFiltre = new ListeSortedCorps();
-            ListeCorpsFiltre.CampagneDepartDecompte = ListeExistant.CampagneDepartDecompte;
+            ListeCorpsFiltre.CampagneDepartDecompte = listeCorps.CampagneDepartDecompte;
 
             foreach (var corps in listeCorps.Values)
             {
@@ -385,6 +413,7 @@ namespace ModuleProduction
         }
     }
 
+    [ClassInterface(ClassInterfaceType.None)]
     public class ListeSortedCorps : SortedDictionary<int, Corps>
     {
         private int _CampagneDepartDecompte = 1;
@@ -1037,9 +1066,11 @@ namespace ModuleProduction
         public int IdDossier { get; set; }
         public String NomCorps { get; set; }
 
-        public static String EnteteNomenclature(int indiceCampagne)
+        public static String EnteteNomenclature(int indiceCampagne, int campagneDepartDecompte)
         {
-            String entete = String.Format("{0}\t{1}\t{2}\t{3}\t{4}", "Repere", "Type", "Dimension", "Volume", "Materiau");
+            String entete = String.Format("{0}\t{1}", CONST_PRODUCTION.CAMPAGNE_DEPART_DECOMPTE, campagneDepartDecompte);
+            entete += System.Environment.NewLine;
+            entete += String.Format("{0}\t{1}\t{2}\t{3}\t{4}", "Repere", "Type", "Dimension", "Volume", "Materiau");
             for (int i = 0; i < indiceCampagne; i++)
                 entete += String.Format("\t{0}", i + 1);
 
@@ -1062,15 +1093,13 @@ namespace ModuleProduction
             return Ligne;
         }
 
-        public static String EnteteCampagne(int indiceCampagne, int campagneDepartDecompte)
+        public static String EnteteCampagne(int indiceCampagne)
         {
-            String entete = String.Format("{0}\t{1}", CONST_PRODUCTION.CAMPAGNE_DEPART_DECOMPTE, campagneDepartDecompte);
-            entete += System.Environment.NewLine;
-            entete += String.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}", "Repere", "Type", "Dimension", "Volume", "Materiau", indiceCampagne);
+            String entete = String.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}", "Repere", "Type", "Dimension", "Volume", "Materiau", indiceCampagne);
             return entete;
         }
 
-        public string LigneCampagne()
+        public int QuantiteDerniereCamapgne(int campagneDepartDecompte)
         {
             // On calcul la différence entre le total de la campagne précédente
             // et celui de la campagne actuelle
@@ -1080,10 +1109,22 @@ namespace ModuleProduction
             if (Dvp)
             {
                 if (IndiceCampagne > 1)
-                    qteCampagneActuelle = Math.Max(0, Campagne[IndiceCampagne] - Campagne[IndiceCampagne - 1]);
+                {
+                    if (campagneDepartDecompte == IndiceCampagne)
+                        qteCampagneActuelle = Math.Max(0, Campagne[IndiceCampagne]);
+                    else
+                        qteCampagneActuelle = Math.Max(0, Campagne[IndiceCampagne] - Campagne[IndiceCampagne - 1]);
+                }
                 else
                     qteCampagneActuelle = Campagne[IndiceCampagne];
             }
+
+            return qteCampagneActuelle;
+        }
+
+        public string LigneCampagne(int campagneDepartDecompte)
+        {
+            var qteCampagneActuelle = QuantiteDerniereCamapgne(campagneDepartDecompte);
 
             String Ligne = String.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}", Repere, TypeCorps, Dimension, Volume, Materiau, qteCampagneActuelle);
             return Ligne;
@@ -1114,7 +1155,7 @@ namespace ModuleProduction
         private void InitVolume(BodyFolder dossier, Body2 corps)
         {
             if (TypeCorps == eTypeCorps.Tole)
-                Volume = String.Format("{0}x{1}", dossier.eLongueurToleDossier(), dossier.eLongueurToleDossier());
+                Volume = String.Format("{0}x{1}", dossier.eLongueurToleDossier(), dossier.eLargeurToleDossier());
             else
                 Volume = dossier.eLongueurProfilDossier();
         }

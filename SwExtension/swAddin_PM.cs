@@ -9,6 +9,7 @@ using ModuleInsererPercage;
 using ModuleProduction.ModuleRepererDossier;
 using ModuleProduction.ModuleProduireDvp;
 using ModuleProduction.ModuleGenererConfigDvp;
+using ModuleProduction.ModuleProduireBarre;
 using ModuleLaser;
 using ModuleLaser.ModuleCreerConfigDvp;
 using ModuleLaser.ModuleCreerDvp;
@@ -42,6 +43,7 @@ using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using ModuleProduction;
 
 namespace SwExtension
 {
@@ -109,8 +111,11 @@ namespace SwExtension
 
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde("Rd", typeof(PageRepererDossier));
-                _Mnu.AjouterCmde("Gd", typeof(PageGenererConfigDvp));
                 _Mnu.AjouterCmde("Pd", typeof(PageProduireDvp));
+                _Mnu.AjouterCmde("Pb", typeof(PageProduireBarre));
+                _Mnu.NouveauGroupe();
+                _Mnu.AjouterCmde("Gd", typeof(PageGenererConfigDvp));
+                _Mnu.AjouterCmde("Cr", typeof(BoutonControlerReperage));
 
                 //==================================================================================================
                 _Mnu = _eListeMenu.Add("Escalier", "Fonctions d'aide à la création d'escalier");

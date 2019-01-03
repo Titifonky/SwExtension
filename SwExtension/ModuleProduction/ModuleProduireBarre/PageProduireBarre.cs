@@ -47,7 +47,7 @@ namespace ModuleProduction.ModuleProduireBarre
         private CtrlCheckBox _CheckBox_MettreAjourCampagne;
         private CtrlTextBox _Texte_Quantite;
         private CtrlTextListBox _TextListBox_Materiaux;
-        private CtrlTextListBox _TextListBox_Ep;
+        private CtrlTextListBox _TextListBox_Profils;
         private CtrlCheckBox _CheckBox_ExporterBarres;
         private CtrlEnumComboBox<eTypeFichierExport, Intitule> _EnumComboBox_TypeExport;
         private CtrlCheckBox _CheckBox_ListerUsinages;
@@ -92,10 +92,10 @@ namespace ModuleProduction.ModuleProduireBarre
 
                 G = _Calque.AjouterGroupe("Profil :");
 
-                _TextListBox_Ep = G.AjouterTextListBox();
-                _TextListBox_Ep.TouteHauteur = true;
-                _TextListBox_Ep.Height = 50;
-                _TextListBox_Ep.SelectionMultiple = true;
+                _TextListBox_Profils = G.AjouterTextListBox();
+                _TextListBox_Profils.TouteHauteur = true;
+                _TextListBox_Profils.Height = 50;
+                _TextListBox_Profils.SelectionMultiple = true;
 
                 G = _Calque.AjouterGroupe("Options");
 
@@ -127,7 +127,7 @@ namespace ModuleProduction.ModuleProduireBarre
         {
             try
             {
-                WindowLog.Ecrire("Recherche des materiaux et epaisseurs ");
+                WindowLog.Ecrire("Recherche des materiaux et profils ");
 
                 ListeCorps = MdlBase.pChargerNomenclature(eTypeCorps.Barre);
                 ListeMateriaux = new List<String>();
@@ -148,13 +148,14 @@ namespace ModuleProduction.ModuleProduireBarre
                 ListeProfil.Sort(new WindowsStringComparer());
 
                 _TextBox_Campagne.Text = Campagne.ToString();
+
                 _TextListBox_Materiaux.Liste = ListeMateriaux;
                 _TextListBox_Materiaux.ToutSelectionner(false);
 
-                _TextListBox_Ep.Liste = ListeProfil;
-                _TextListBox_Ep.ToutSelectionner(false);
+                _TextListBox_Profils.Liste = ListeProfil;
+                _TextListBox_Profils.ToutSelectionner(false);
 
-                if (!File.Exists(Path.Combine(MdlBase.pDossierLaserTole(), Campagne.ToString(), CONST_PRODUCTION.FICHIER_NOMENC)))
+                if (!File.Exists(Path.Combine(MdlBase.pDossierLaserTube(), Campagne.ToString(), CONST_PRODUCTION.FICHIER_NOMENC)))
                 {
                     _CheckBox_MettreAjourCampagne.IsEnabled = false;
                     _CheckBox_MettreAjourCampagne.Visible = false;
@@ -170,11 +171,15 @@ namespace ModuleProduction.ModuleProduireBarre
 
             Cmd.MdlBase = App.Sw.ActiveDoc;
 
-            Cmd.ListeMateriaux = _TextListBox_Materiaux.ListSelectedText.Count > 0 ? _TextListBox_Materiaux.ListSelectedText : _TextListBox_Materiaux.Liste;
+            Cmd.ListeCorps = ListeCorps;
+            Cmd.RefFichier = _Texte_RefFichier.Text.Trim();
             Cmd.Quantite = _Texte_Quantite.Text.eToInteger();
+            Cmd.IndiceCampagne = _TextBox_Campagne.Text.eToInteger();
+            Cmd.MettreAjourCampagne = _CheckBox_MettreAjourCampagne.IsChecked;
+            Cmd.ListeMateriaux = _TextListBox_Materiaux.ListSelectedText.Count > 0 ? _TextListBox_Materiaux.ListSelectedText : _TextListBox_Materiaux.Liste;
+            Cmd.ListeProfil = _TextListBox_Profils.ListSelectedText.Count > 0 ? _TextListBox_Profils.ListSelectedText : _TextListBox_Profils.Liste;
             Cmd.CreerPdf3D = _CheckBox_CreerPdf3D.IsChecked;
             Cmd.TypeExport = _EnumComboBox_TypeExport.Val;
-            Cmd.RefFichier = _Texte_RefFichier.Text;
             Cmd.ExporterBarres = _CheckBox_ExporterBarres.IsChecked;
             Cmd.ListerUsinages = _CheckBox_ListerUsinages.IsChecked;
 

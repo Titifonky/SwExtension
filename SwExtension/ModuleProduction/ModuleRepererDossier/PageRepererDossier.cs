@@ -93,6 +93,8 @@ namespace ModuleProduction.ModuleRepererDossier
 
                     if (ReinitCampagneActuelle)
                         _CheckBox_ReinitCampagneActuelle.IsEnabled = false;
+
+                    _CheckBox_CampagneDepartDecompte.IsEnabled = false;
                 };
                 _CheckBox_MajCampagnePrecedente.OnUnCheck += delegate
                 {
@@ -104,6 +106,8 @@ namespace ModuleProduction.ModuleRepererDossier
                         _CheckBox_ReinitCampagneActuelle.IsEnabled = true;
                         _CheckBox_ReinitCampagneActuelle.Visible = true;
                     }
+
+                    _CheckBox_CampagneDepartDecompte.IsEnabled = true;
                 };
 
                 G = _Calque.AjouterGroupe("Options");
@@ -184,6 +188,9 @@ namespace ModuleProduction.ModuleRepererDossier
                 // Si c'est la première campagne, on désactive des options
                 if (IndiceCampagne == 1)
                 {
+                    _CheckBox_CampagneDepartDecompte.IsEnabled = false;
+                    _CheckBox_CampagneDepartDecompte.Visible = false;
+
                     _CheckBox_MajCampagnePrecedente.IsEnabled = false;
                     _CheckBox_MajCampagnePrecedente.Visible = false;
 

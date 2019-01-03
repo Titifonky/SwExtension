@@ -194,8 +194,6 @@
     <Parametre name="CreerDvp" intitule="Creer les configs dvp des tôles" tip="" type="System.Boolean">True</Parametre>
   </Module>
   <Module name="ProduireDvp" intitule="Creer les dvp de tôle">
-    <Parametre name="PropQuantite" intitule="Propriete &quot;Quantite&quot;" tip="Recherche cette propriete" type="System.String">Quantite</Parametre>
-    <Parametre name="QuantiteDiff" intitule="Calculer la différence" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="AfficherLignePliage" intitule="Afficher les lignes de pliage" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="AfficherNotePliage" intitule="Afficher les notes de pliage" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="InscrireNomTole" intitule="Inscrire la réf du dvp sur la tole" tip="" type="System.Boolean">True</Parametre>
@@ -203,10 +201,16 @@
     <Parametre name="OrienterDvp" intitule="Orienter les dvps" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="OrientationDvp" intitule="" tip="" type="Outils.eOrientation">Portrait</Parametre>
     <Parametre name="FermerPlan" intitule="Fermer les plans" tip="Fermer les plans après génération des dvps" type="System.Boolean">False</Parametre>
-    <Parametre name="ConvertirEsquisse" intitule="Convertir les dvp en esquisse" tip="Le lien entre le dvp et le modèle est cassé, la config dvp est supprimée après la création de la vue" type="System.Boolean">False</Parametre>
   </Module>
   <Module name="GenererConfigDvp" intitule="Générer les config. dvp">
     <Parametre name="SupprimerLesAnciennesConfigs" intitule="Supprimer les anciennes configs dvp" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="MasquerEsquisses" intitule="Masquer toutes les esquisses" tip="" type="System.Boolean">False</Parametre>
   </Module>
+  <Module name="ProduireBarre" intitule="Exporter les barres">
+    <Parametre name="TypeExport" intitule="Format :" tip="" type="Outils.eTypeFichierExport">ParasolidBinary</Parametre>
+    <Parametre name="ListerUsinages" intitule="Lister les usinages" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="ExporterBarres" intitule="Exporter les barres" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="CreerPdf3D" intitule="Créer les pdf 3D des barres" tip="" type="System.Boolean">True</Parametre>
+  </Module>
+  <Module name="ControlerReperage" intitule="Contrôler le reperage" />
 </Parametres>

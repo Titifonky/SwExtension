@@ -20,9 +20,9 @@
                 <Image Width="100" Height="100" Source="{Binding CheminFichierApercu}" HorizontalAlignment="Center"/>
                 <TextBlock Text="{Binding Volume}" FontSize="14"/>
                 <WrapPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding RepereComplet}" Margin="0,0,8,0" FontSize="14" VerticalAlignment="Bottom"/>
-                    <TextBlock Text="x" FontSize="14" VerticalAlignment="Bottom"/>
-                    <TextBlock Text="{Binding Qte_Exp, Mode=TwoWay}" FontSize="14" VerticalAlignment="Bottom"/>
+                    <TextBlock Text="{Binding RepereComplet}" Margin="0,0,8,0" FontSize="14" VerticalAlignment="Center"/>
+                    <TextBlock Text="x" FontSize="14" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding Qte_Exp, Mode=TwoWay}" FontSize="14" VerticalAlignment="Center"/>
                 </WrapPanel>
             </StackPanel>
         </DataTemplate>
@@ -38,10 +38,10 @@
                 <Image Width="100" Height="100" Source="{Binding CheminFichierApercu}" HorizontalAlignment="Center"/>
                 <TextBlock Text="{Binding Volume}" FontSize="14"/>
                 <WrapPanel Orientation="Horizontal">
-                    <CheckBox IsChecked="{Binding Dvp ,Mode=TwoWay}"/>
-                    <TextBlock Text="{Binding RepereComplet}" Margin="0,0,8,0" FontSize="14" VerticalAlignment="Bottom"/>
-                    <TextBlock Text="x" FontSize="14" VerticalAlignment="Bottom"/>
-                    <TextBlock Text="{Binding Qte_Exp, Mode=TwoWay}" FontSize="14" VerticalAlignment="Bottom"/>
+                    <CheckBox IsChecked="{Binding Dvp ,Mode=TwoWay}" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding RepereComplet}" Margin="0,0,8,0" FontSize="14" VerticalAlignment="Center"/>
+                    <TextBlock Text="x" FontSize="14" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding Qte_Exp, Mode=TwoWay}" FontSize="14" VerticalAlignment="Center"/>
                 </WrapPanel>
                 <TextBox Text="{Binding QteSup_Exp}" FontSize="14"/>
                 <!--<TextBlock Text="{Binding Materiau}"/>-->
@@ -145,16 +145,18 @@
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate>
-                                        <Expander IsExpanded="True" Padding="10,0,0,0">
-                                            <Expander.Header>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="{Binding Name}" FontSize="15" FontWeight="Bold" Margin="10,0,0,0" VerticalAlignment="Bottom"/>
-                                                    <TextBlock Text="nb de repères :" Margin="25,0,0,0" VerticalAlignment="Bottom"/>
-                                                    <TextBlock Text="{Binding ItemCount}" Margin="4,0,0,0" VerticalAlignment="Bottom"/>
-                                                </StackPanel>
-                                            </Expander.Header>
-                                            <ItemsPresenter/>
-                                        </Expander>
+                                        <Border BorderThickness="0,1,0,0" BorderBrush="Black" Margin="0,0,0,5">
+                                            <Expander IsExpanded="True" Padding="10,0,0,0">
+                                                <Expander.Header>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding Name}" FontSize="15" FontWeight="Bold" Margin="10,0,0,0" VerticalAlignment="Bottom"/>
+                                                        <TextBlock Text="nb de repères :" Margin="25,0,0,0" VerticalAlignment="Bottom"/>
+                                                        <TextBlock Text="{Binding ItemCount}" Margin="4,0,0,0" VerticalAlignment="Bottom"/>
+                                                    </StackPanel>
+                                                </Expander.Header>
+                                                <ItemsPresenter/>
+                                            </Expander>
+                                        </Border>
                                     </ControlTemplate>
                                 </Setter.Value>
                             </Setter>

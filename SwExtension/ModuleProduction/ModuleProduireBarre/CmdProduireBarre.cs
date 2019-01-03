@@ -5,7 +5,6 @@ using SolidWorks.Interop.swconst;
 using SwExtension;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -36,11 +35,59 @@ namespace ModuleProduction.ModuleProduireBarre
         {
             DossierBarre = Directory.CreateDirectory(Path.Combine(MdlBase.pDossierLaserTube(), IndiceCampagne.ToString())).FullName;
             DossierBarrePDF = Directory.CreateDirectory(Path.Combine(DossierBarre, "PDF")).FullName;
-
-            if (!MettreAjourCampagne)
-                File.Delete(Path.Combine(MdlBase.pDossierLaserTube(), IndiceCampagne.ToString(), CONST_PRODUCTION.FICHIER_NOMENC));
-
             MdlBase.pCalculerQuantite(ref ListeCorps, eTypeCorps.Barre, ListeMateriaux, ListeProfil, IndiceCampagne, MettreAjourCampagne);
+        }
+
+        private void NettoyerFichier()
+        {
+            List<String> lstFichier = new List<String>();
+            foreach (var f in Directory.GetFiles(DossierBarre))
+            {
+                if (Path.GetExtension(f) != ".txt")
+                    lstFichier.Add(f);
+            }
+
+            if (MettreAjourCampagne)
+            {
+                List<String> ListeNomFichier = new List<string>();
+                foreach (var corps in ListeCorps.Values)
+                {
+                    if (corps.Campagne[IndiceCampagne] > 0)
+                    {
+                        ListeNomFichier.Add(RefBarre(corps.RepereComplet, IndiceCampagne));
+                    }
+                }
+
+                List<String> ListeFichierAsauvegarder = new List<string>();
+                foreach (var nomFichier in ListeNomFichier)
+                {
+                    foreach (var f in lstFichier)
+                    {
+                        if (Path.GetFileNameWithoutExtension(f).StartsWith(nomFichier))
+                        {
+                            ListeFichierAsauvegarder.Add(f);
+                            break;
+                        }
+                    }
+                }
+
+                foreach (var f in lstFichier)
+                    if (!ListeFichierAsauvegarder.Contains(f))
+                    {
+                        File.Delete(f);
+                        File.Delete(Path.Combine(DossierBarrePDF, Path.GetFileNameWithoutExtension(f) + ".pdf"));
+                    }
+            }
+            else
+            {
+                File.Delete(Path.Combine(DossierBarre, CONST_PRODUCTION.FICHIER_NOMENC));
+
+                foreach (var f in lstFichier)
+                    File.Delete(f);
+
+                foreach (var f in Directory.GetFiles(DossierBarrePDF))
+                    File.Delete(f);
+            }
         }
 
         protected override void Command()
@@ -62,6 +109,8 @@ namespace ModuleProduction.ModuleProduireBarre
         {
             try
             {
+                NettoyerFichier();
+
                 foreach (var corps in ListeCorps.Values)
                     if (corps.Dvp)
                         CreerBarre(corps);
@@ -69,18 +118,30 @@ namespace ModuleProduction.ModuleProduireBarre
                 var cheminNomenclature = Path.Combine(DossierBarre, CONST_PRODUCTION.FICHIER_NOMENC);
                 using (var sw = new StreamWriter(cheminNomenclature, false, Encoding.GetEncoding(1252)))
                 {
-                    sw.WriteLine(Corps.EnteteCampagne(IndiceCampagne, ListeCorps.CampagneDepartDecompte));
+                    sw.WriteLine(Corps.EnteteCampagne(IndiceCampagne));
 
                     WindowLog.SautDeLigne();
                     WindowLog.Ecrire("Resumé :");
                     foreach (var corps in ListeCorps.Values)
                     {
-                        sw.WriteLine(corps.LigneCampagne());
+                        sw.WriteLine(corps.LigneCampagne(ListeCorps.CampagneDepartDecompte));
 
                         if (corps.Dvp && ((corps.Qte + corps.QteSup) > 0))
                             WindowLog.EcrireF("{2} P{0} ×{1}", corps.Repere, corps.Qte, IndiceCampagne);
                     }
                 }
+
+                if (ListerUsinages)
+                    Nomenclature.TitreColonnes("Barre ref.", "Materiau", "Profil", "Lg", "Nb", "Usinage Ext 1", "Usinage Ext 2", "Détail des Usinage interne");
+                else
+                    Nomenclature.TitreColonnes("Barre ref.", "Materiau", "Profil", "Lg", "Nb");
+
+                WindowLog.SautDeLigne();
+                WindowLog.Ecrire(Nomenclature.ListeLignes());
+
+                StreamWriter s = new StreamWriter(Path.Combine(DossierBarre, "Nomenclature_Laser.txt"));
+                s.Write(Nomenclature.GenererTableau());
+                s.Close();
             }
             catch (Exception e)
             {
@@ -90,16 +151,24 @@ namespace ModuleProduction.ModuleProduireBarre
 
         private void CreerBarre(Corps corps)
         {
-            var QuantiteTotale = Quantite * (corps.Qte + corps.QteSup);
-
-            if (QuantiteTotale == 0)
-                return;
+            var QuantiteDiff = Quantite * (corps.Qte + corps.QteSup);
+            var QuantiteTotale = Quantite * (corps.QuantiteDerniereCamapgne(ListeCorps.CampagneDepartDecompte) + corps.QteSup);
 
             var cheminFichier = corps.CheminFichierRepere;
             if (!File.Exists(cheminFichier)) return;
 
+            String Repere = corps.RepereComplet;
+            String Profil = corps.Dimension;
+            String Longueur = corps.Volume;
+            String Materiau = corps.Materiau;
+            String NomFichierBarre = ConstruireNomFichierBarre(Repere, IndiceCampagne, QuantiteTotale);
+
             var mdlCorps = Sw.eOuvrir(cheminFichier);
             if (mdlCorps.IsNull()) return;
+
+            var Piece = mdlCorps.ePartDoc();
+            corps.SwCorps = Piece.ePremierCorps();
+            Body2 Barre = corps.SwCorps;
 
             WindowLog.EcrireF("{0}  x{1}", corps.RepereComplet, QuantiteTotale);
 
@@ -107,18 +176,7 @@ namespace ModuleProduction.ModuleProduireBarre
 
             try
             {
-                Body2 Barre = corps.SwCorps;
-                String RefDossier = corps.RepereComplet;
-                String Profil = corps.Dimension;
-                String Longueur = corps.Volume;
-                String Materiau = corps.Materiau;
-
-                String NomFichierBarre = ConstruireNomFichierBarre(RefDossier, QuantiteTotale, IndiceCampagne);
-
-                WindowLog.SautDeLigne();
-
-
-                List<String> Liste = new List<String>() { RefDossier, Materiau, Profil, Math.Round(Longueur.eToDouble()).ToString(), "× " + QuantiteTotale.ToString() };
+                List<String> Liste = new List<String>() { Repere, Materiau, Profil, Math.Round(Longueur.eToDouble()).ToString(), "× " + QuantiteTotale.ToString() };
 
                 if (ListerUsinages)
                 {
@@ -148,9 +206,9 @@ namespace ModuleProduction.ModuleProduireBarre
 
                 Nomenclature.AjouterLigne(Liste.ToArray());
 
-                if (ExporterBarres)
+                if ((QuantiteDiff > 0) && ExporterBarres)
                 {
-                    ModelDoc2 mdlBarre = Barre.eEnregistrerSous(mdlCorps.ePartDoc(), DossierBarre, NomFichierBarre, TypeExport);
+                    ModelDoc2 mdlBarre = Barre.eEnregistrerSous(Piece, DossierBarre, NomFichierBarre, TypeExport);
 
                     if (CreerPdf3D)
                     {
@@ -1034,14 +1092,14 @@ namespace ModuleProduction.ModuleProduireBarre
 
         // ========================================================================================
 
-        public String ConstruireRefBarre(ModelDoc2 mdl, String configPliee, String noDossier)
+        public String RefBarre(String refBarre, int campagne)
         {
-            return String.Format("{0} - {1}-{2}-{3}", RefFichier, mdl.eNomSansExt(), configPliee, noDossier);
+            return String.Format("{0}{1}-{2}", String.IsNullOrWhiteSpace(RefFichier) ? "" : RefFichier + "-", campagne, refBarre);
         }
 
-        public String ConstruireNomFichierBarre(String reBarre, int quantite, int campagne)
+        public String ConstruireNomFichierBarre(String refBarre, int campagne, int quantite)
         {
-            return String.Format("{0} (×{1}) - {2}", reBarre, quantite, campagne);
+            return String.Format("{0} (×{1})", RefBarre(refBarre, campagne), quantite);
         }
 
         private class InfosBarres : List<List<String>>

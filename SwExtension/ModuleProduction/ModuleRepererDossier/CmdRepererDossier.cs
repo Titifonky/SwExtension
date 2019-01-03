@@ -80,13 +80,12 @@ namespace ModuleProduction.ModuleRepererDossier
                     }
 
                     // On nettoie les fichiers précedement crées
-                    foreach (var repere in ListeCorpsExistant.Keys)
+                    foreach (var corps in ListeCorpsExistant.Values)
                     {
-                        if (FichierAsauvegarder.ContainsKey(repere)) continue;
+                        if (FichierAsauvegarder.ContainsKey(corps.Repere)) continue;
 
-                        String fichier = Path.Combine(MdlBase.pDossierPiece(), CONSTANTES.PREFIXE_REF_DOSSIER + repere + OutilsProd.ExtPiece);
-                        if (File.Exists(fichier))
-                            File.Delete(fichier);
+                        File.Delete(corps.CheminFichierRepere);
+                        File.Delete(corps.CheminFichierApercu);
                     }
 
                     ListeCorpsExistant = FichierAsauvegarder;
@@ -335,7 +334,7 @@ namespace ModuleProduction.ModuleRepererDossier
                                 mdlFichier.DeleteConfiguration2(nomCfg);
 
                         var Piece = mdlFichier.ePartDoc();
-                        
+
                         Body2 Corps = null;
 
                         foreach (var c in Piece.eListeCorps(true))
@@ -344,6 +343,8 @@ namespace ModuleProduction.ModuleRepererDossier
 
                         Corps.eSelect();
                         mdlFichier.FeatureManager.InsertDeleteBody2(true);
+
+                        mdlFichier.pMasquerEsquisses();
 
                         if ((corps.TypeCorps == eTypeCorps.Tole) && CreerDvp)
                             ModuleGenererConfigDvp.CmdGenererConfigDvp.CreerDvp(corps, MdlBase.pDossierPiece(), false, false);
@@ -373,13 +374,14 @@ namespace ModuleProduction.ModuleRepererDossier
 
                 using (var sw = new StreamWriter(MdlBase.pFichierNomenclature(), false, Encoding.GetEncoding(1252)))
                 {
-                    sw.WriteLine(Corps.EnteteNomenclature(IndiceCampagne));
+                    sw.WriteLine(Corps.EnteteNomenclature(IndiceCampagne, ListeCorpsExistant.CampagneDepartDecompte));
 
                     foreach (var corps in ListeCorpsExistant.Values)
                     {
                         sw.WriteLine(corps.LigneNomenclature());
                         nbtt += corps.Campagne[IndiceCampagne];
-                        WindowLog.EcrireF("{2} P{0} ×{1}", corps.Repere, corps.Campagne[IndiceCampagne], IndiceCampagne);
+                        if(corps.Campagne[IndiceCampagne] > 0)
+                            WindowLog.EcrireF("{2} P{0} ×{1}", corps.Repere, corps.Campagne[IndiceCampagne], IndiceCampagne);
                     }
                 }
 
@@ -387,7 +389,7 @@ namespace ModuleProduction.ModuleRepererDossier
 
                 MdlBase.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
 
-                var aff = new AffichageElementWPF(ListeCorpsExistant,  IndiceCampagne);
+                var aff = new AffichageElementWPF(ListeCorpsExistant, IndiceCampagne);
                 aff.ShowDialog();
             }
             catch (Exception e) { this.LogErreur(new Object[] { e }); }
