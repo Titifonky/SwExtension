@@ -107,7 +107,6 @@ namespace ModuleProduction.ModuleProduireDvp
                 NettoyerFichier();
 
                 foreach (var corps in ListeCorps.Values)
-                    if(corps.Dvp)
                         CreerVue(corps);
 
                 foreach (DrawingDoc dessin in DicDessins.Values)
@@ -118,21 +117,13 @@ namespace ModuleProduction.ModuleProduireDvp
                     dessin.eModelDoc2().eSauver();
                 }
 
-                var cheminNomenclature = Path.Combine(DossierDVP, CONST_PRODUCTION.FICHIER_NOMENC);
-                using (var sw = new StreamWriter(cheminNomenclature, false, Encoding.GetEncoding(1252)))
-                {
-                    sw.WriteLine(Corps.EnteteCampagne(IndiceCampagne));
+                WindowLog.SautDeLigne();
+                WindowLog.Ecrire("Resumé :");
+                foreach (var corps in ListeCorps.Values)
+                    if (corps.Dvp && corps.Maj)
+                        WindowLog.EcrireF("{2} P{0} ×{1}", corps.Repere, corps.Qte, IndiceCampagne);
 
-                    WindowLog.SautDeLigne();
-                    WindowLog.Ecrire("Resumé :");
-                    foreach (var corps in ListeCorps.Values)
-                    {
-                        sw.WriteLine(corps.LigneCampagne(ListeCorps.CampagneDepartDecompte));
-
-                        if(corps.Dvp && ((corps.Qte + corps.QteSup) > 0))
-                            WindowLog.EcrireF("{2} P{0} ×{1}", corps.Repere, corps.Qte, IndiceCampagne);
-                    }
-                }
+                ListeCorps.EcrireProduction(DossierDVP, IndiceCampagne);
             }
             catch (Exception e)
             {
@@ -142,11 +133,9 @@ namespace ModuleProduction.ModuleProduireDvp
 
         private void CreerVue(Corps corps)
         {
-            var QuantiteDiff = Quantite * (corps.Qte + corps.QteSup);
-            var QuantiteTotale = Quantite * (corps.QuantiteDerniereCamapgne(ListeCorps.CampagneDepartDecompte) + corps.QteSup);
+            if (!corps.Dvp || !corps.Maj) return;
 
-            if (QuantiteDiff == 0)
-                return;
+            var QuantiteDiff = Quantite * (corps.Qte + corps.QteSup);
 
             var cheminFichier = corps.CheminFichierRepere;
             if (!File.Exists(cheminFichier)) return;
@@ -154,7 +143,7 @@ namespace ModuleProduction.ModuleProduireDvp
             var mdlCorps = Sw.eOuvrir(cheminFichier);
             if (mdlCorps.IsNull()) return;
 
-            WindowLog.EcrireF("{0}  x{1}", corps.RepereComplet, QuantiteTotale);
+            WindowLog.EcrireF("{0}  x{1}", corps.RepereComplet, QuantiteDiff);
 
             var listeCfgPliee = mdlCorps.eListeNomConfiguration(eTypeConfig.Pliee);
             var NomConfigPliee = listeCfgPliee[0];
@@ -196,7 +185,7 @@ namespace ModuleProduction.ModuleProduireDvp
                     }
                 }
 
-                View v = CreerVueToleDvp(dessin, Feuille, mdlCorps.ePartDoc(), NomConfigDepliee, corps.RepereComplet, corps.Materiau, QuantiteTotale, corps.Dimension.eToDouble());
+                View v = CreerVueToleDvp(dessin, Feuille, mdlCorps.ePartDoc(), NomConfigDepliee, corps.RepereComplet, corps.Materiau, QuantiteDiff, corps.Dimension.eToDouble());
             }
             catch (Exception e)
             {

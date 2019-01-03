@@ -410,25 +410,23 @@ namespace ModuleProduction
                 {
                     var qte = corps.Campagne[indiceCampagne];
 
+                    if (qte > 0)
+                        corps.Maj = true;
+
                     if (ListeExistant.ContainsKey(corps.Repere))
                     {
-                        qte = Math.Max(0, qte - ListeExistant[corps.Repere].Qte);
+                        if ((qte - ListeExistant[corps.Repere].Qte) == 0)
+                            corps.Maj = false;
 
-                        // Si la quantité est supérieur à 0
-                        // on récupère la différence entre la quantité totale actuelle et
-                        // la quantité totale de la précédente campagne
-                        if (mettreAjourCampagne && (qte > 0))
+                        var qteCampagnePrecedente = 0;
+                        var corpsExistant = ListeExistant[corps.Repere];
+                        foreach (var c in corpsExistant.Campagne)
                         {
-                            var qteCampagnePrecedente = 0;
-                            var corpsExistant = ListeExistant[corps.Repere];
-                            foreach (var c in corpsExistant.Campagne)
-                            {
-                                if ((c.Key >= listeCorps.CampagneDepartDecompte) && (c.Key != indiceCampagne))
-                                    qteCampagnePrecedente += c.Value;
-                            }
-
-                            qte = corps.Campagne[indiceCampagne] - qteCampagnePrecedente;
+                            if ((c.Key >= listeCorps.CampagneDepartDecompte) && (c.Key != indiceCampagne))
+                                qteCampagnePrecedente += c.Value;
                         }
+
+                        qte -= qteCampagnePrecedente;
                     }
 
                     corps.Qte = qte;
@@ -445,6 +443,47 @@ namespace ModuleProduction
     {
         private int _CampagneDepartDecompte = 1;
         public int CampagneDepartDecompte { get { return _CampagneDepartDecompte; } set { _CampagneDepartDecompte = value; } }
+
+        public String ExportNomenclature(int indiceCampagne)
+        {
+            String texte = Corps.EnteteNomenclature(indiceCampagne, CampagneDepartDecompte);
+
+            foreach (var corps in Values)
+            {
+                texte += System.Environment.NewLine;
+                texte += corps.LigneNomenclature();
+            }
+
+            return texte;
+        }
+
+        public String ExportProduction(int indiceCampagne)
+        {
+            String texte = Corps.EnteteCampagne(indiceCampagne);
+
+            foreach (var corps in Values)
+            {
+                if (corps.Dvp && corps.Qte > 0)
+                {
+                    texte += System.Environment.NewLine;
+                    texte += corps.LigneCampagne();
+                }
+            }
+
+            return texte;
+        }
+
+        public void EcrireNomenclature(String dossier, int indiceCampagne)
+        {
+            using (var sw = new StreamWriter(Path.Combine(dossier, CONST_PRODUCTION.FICHIER_NOMENC), false, Encoding.GetEncoding(1252)))
+                sw.Write(ExportNomenclature(indiceCampagne));
+        }
+
+        public void EcrireProduction(String dossier, int indiceCampagne)
+        {
+            using (var sw = new StreamWriter(Path.Combine(dossier, CONST_PRODUCTION.FICHIER_NOMENC), false, Encoding.GetEncoding(1252)))
+                sw.Write(ExportProduction(indiceCampagne));
+        }
     }
 
     public class AnalyseGeomBarre
@@ -1126,34 +1165,13 @@ namespace ModuleProduction
             return entete;
         }
 
-        public int QuantiteDerniereCamapgne(int campagneDepartDecompte)
+        public string LigneCampagne()
         {
-            // On calcul la différence entre le total de la campagne précédente
-            // et celui de la campagne actuelle
-            var IndiceCampagne = Campagne.Keys.Max();
-            var qteCampagneActuelle = 0;
+            String Ligne = "";
 
-            if (Dvp)
-            {
-                if (IndiceCampagne > 1)
-                {
-                    if (campagneDepartDecompte == IndiceCampagne)
-                        qteCampagneActuelle = Math.Max(0, Campagne[IndiceCampagne]);
-                    else
-                        qteCampagneActuelle = Math.Max(0, Campagne[IndiceCampagne] - Campagne[IndiceCampagne - 1]);
-                }
-                else
-                    qteCampagneActuelle = Campagne[IndiceCampagne];
-            }
+            if(Dvp)
+                Ligne = String.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}", Repere, TypeCorps, Dimension, Volume, Materiau, Qte);
 
-            return qteCampagneActuelle;
-        }
-
-        public string LigneCampagne(int campagneDepartDecompte)
-        {
-            var qteCampagneActuelle = QuantiteDerniereCamapgne(campagneDepartDecompte);
-
-            String Ligne = String.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}", Repere, TypeCorps, Dimension, Volume, Materiau, qteCampagneActuelle);
             return Ligne;
         }
 
@@ -1300,6 +1318,8 @@ namespace ModuleProduction
             get { return _Qte; }
             set { Set(ref _Qte, value); Maj_Qte = true; Qte_Exp = value.ToString(); Maj_Qte = false; }
         }
+
+        public Boolean Maj = false;
 
         private String _QteSup_Exp = "0";
         public String QteSup_Exp

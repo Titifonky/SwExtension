@@ -3,8 +3,6 @@ using Outils;
 using SolidWorks.Interop.sldworks;
 using SwExtension;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace ModuleProduction.ModuleRepererDossier
@@ -18,7 +16,6 @@ namespace ModuleProduction.ModuleRepererDossier
     {
         private Parametre CombinerCorpsIdentiques;
         private Parametre CombinerAvecCampagne;
-        private Parametre ExporterFichierCorps;
         private Parametre CreerDvp;
 
         private ModelDoc2 MdlBase = null;
@@ -41,7 +38,6 @@ namespace ModuleProduction.ModuleRepererDossier
             {
                 CombinerCorpsIdentiques = _Config.AjouterParam("CombinerCorpsIdentiques", true, "Combiner les corps identiques des différents modèles");
                 CombinerAvecCampagne = _Config.AjouterParam("CombinerAvecPrecedenteCampagne", true, "Combiner les corps avec les précédentes campagnes");
-                ExporterFichierCorps = _Config.AjouterParam("ExporterFichierCorps", true, "Exporter les corps dans des fichiers");
                 CreerDvp = _Config.AjouterParam("CreerDvp", true, "Creer les configs dvp des tôles");
 
                 MdlBase = App.Sw.ActiveDoc;
@@ -54,14 +50,12 @@ namespace ModuleProduction.ModuleRepererDossier
         }
 
         private CtrlTextBox _Texte_IndiceCampagne;
-        private CtrlCheckBox _CheckBox_NettoyerModele;
         private CtrlCheckBox _CheckBox_MajCampagnePrecedente;
         private CtrlCheckBox _CheckBox_CampagneDepartDecompte;
         private Boolean ReinitCampagneActuelle = false;
         private CtrlCheckBox _CheckBox_ReinitCampagneActuelle;
         private CtrlCheckBox _CheckBox_CombinerCorps;
         private CtrlCheckBox _CheckBox_CombinerAvecCampagne;
-        private CtrlCheckBox _CheckBox_ExporterFichierCorps;
         private CtrlCheckBox _CheckBox_CreerDvp;
 
         protected void Calque()
@@ -76,7 +70,6 @@ namespace ModuleProduction.ModuleRepererDossier
                 _Texte_IndiceCampagne.LectureSeule = true;
 
                 _CheckBox_CampagneDepartDecompte = G.AjouterCheckBox("Campagne de depart pour les decomptes");
-                _CheckBox_NettoyerModele = G.AjouterCheckBox("Nettoyer les modèles");
                 _CheckBox_ReinitCampagneActuelle = G.AjouterCheckBox("Reinitialiser la campagne actuelle");
                 _CheckBox_MajCampagnePrecedente = G.AjouterCheckBox("Mettre à jour la campagne précédente (en cas d'oubli)");
 
@@ -111,21 +104,13 @@ namespace ModuleProduction.ModuleRepererDossier
                 };
 
                 G = _Calque.AjouterGroupe("Options");
-                _CheckBox_ExporterFichierCorps = G.AjouterCheckBox(ExporterFichierCorps);
                 _CheckBox_CombinerCorps = G.AjouterCheckBox(CombinerCorpsIdentiques);
                 _CheckBox_CombinerAvecCampagne = G.AjouterCheckBox(CombinerAvecCampagne);
                 _CheckBox_CreerDvp = G.AjouterCheckBox(CreerDvp);
                 _CheckBox_CombinerAvecCampagne.Indent = 1;
 
-                _CheckBox_ExporterFichierCorps.OnUnCheck += _CheckBox_CombinerCorps.UnCheck;
-                _CheckBox_ExporterFichierCorps.OnIsCheck += _CheckBox_CombinerCorps.IsEnable;
-                _CheckBox_ExporterFichierCorps.OnUnCheck += _CheckBox_CombinerAvecCampagne.UnCheck;
-                _CheckBox_ExporterFichierCorps.OnIsCheck += _CheckBox_CombinerAvecCampagne.IsEnable;
-
                 _CheckBox_CombinerCorps.OnUnCheck += _CheckBox_CombinerAvecCampagne.UnCheck;
                 _CheckBox_CombinerCorps.OnIsCheck += _CheckBox_CombinerAvecCampagne.IsEnable;
-
-                _CheckBox_ExporterFichierCorps.ApplyParam();
             }
             catch (Exception e)
             { this.LogMethode(new Object[] { e }); }
@@ -194,14 +179,8 @@ namespace ModuleProduction.ModuleRepererDossier
                     _CheckBox_MajCampagnePrecedente.IsEnabled = false;
                     _CheckBox_MajCampagnePrecedente.Visible = false;
 
-                    _CheckBox_CombinerAvecCampagne.IsChecked = false;
                     _CheckBox_CombinerAvecCampagne.IsEnabled = false;
                     _CheckBox_CombinerAvecCampagne.Visible = false;
-                }
-                else
-                {
-                    _CheckBox_NettoyerModele.IsEnabled = false;
-                    _CheckBox_NettoyerModele.Visible = false;
                 }
             }
             catch (Exception e) { this.LogErreur(new Object[] { e }); }
@@ -216,13 +195,11 @@ namespace ModuleProduction.ModuleRepererDossier
 
             Cmd.MdlBase = App.Sw.ActiveDoc;
             Cmd.IndiceCampagne = IndiceCampagne;
-            Cmd.NettoyerModele = _CheckBox_NettoyerModele.IsChecked;
             Cmd.CombinerCorpsIdentiques = _CheckBox_CombinerCorps.IsChecked;
             Cmd.CombinerAvecCampagne = _CheckBox_CombinerAvecCampagne.IsChecked;
             Cmd.ReinitCampagneActuelle = ReinitCampagneActuelle && _CheckBox_ReinitCampagneActuelle.IsChecked;
             Cmd.CreerDvp = _CheckBox_CreerDvp.IsChecked;
-            Cmd.ExporterFichierCorps = _CheckBox_ExporterFichierCorps.IsChecked;
-            Cmd.ListeCorpsExistant = ListeCorps;
+            Cmd.ListeCorps = ListeCorps;
 
             Cmd.Executer();
         }

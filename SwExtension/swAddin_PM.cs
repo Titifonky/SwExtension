@@ -116,6 +116,7 @@ namespace SwExtension
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde("Gd", typeof(PageGenererConfigDvp));
                 _Mnu.AjouterCmde("Cr", typeof(BoutonControlerReperage));
+                _Mnu.AjouterCmde("Nr", typeof(BoutonNettoyerReperage));
 
                 //==================================================================================================
                 _Mnu = _eListeMenu.Add("Escalier", "Fonctions d'aide à la création d'escalier");

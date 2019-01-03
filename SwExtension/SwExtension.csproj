@@ -94,6 +94,7 @@
     <Compile Include="Macros\BoutonMasquerCorpsVue.cs" />
     <Compile Include="Macros\BoutonSelectionnerCorpsIdentiques.cs" />
     <Compile Include="Macros\BoutonAfficherLogDebug.cs" />
+    <Compile Include="ModuleProduction\BoutonNettoyerReperage.cs" />
     <Compile Include="ModuleProduction\BoutonControlerReperage.cs" />
     <Compile Include="ModuleProduction\ModuleGenererConfigDvp\CmdGenererConfigDvp.cs" />
     <Compile Include="ModuleProduction\ModuleGenererConfigDvp\PageGenererConfigDvp.cs" />

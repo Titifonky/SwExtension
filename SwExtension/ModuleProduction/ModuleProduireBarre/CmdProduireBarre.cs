@@ -112,24 +112,15 @@ namespace ModuleProduction.ModuleProduireBarre
                 NettoyerFichier();
 
                 foreach (var corps in ListeCorps.Values)
-                    if (corps.Dvp)
-                        CreerBarre(corps);
+                    CreerBarre(corps);
 
-                var cheminNomenclature = Path.Combine(DossierBarre, CONST_PRODUCTION.FICHIER_NOMENC);
-                using (var sw = new StreamWriter(cheminNomenclature, false, Encoding.GetEncoding(1252)))
-                {
-                    sw.WriteLine(Corps.EnteteCampagne(IndiceCampagne));
+                WindowLog.SautDeLigne();
+                WindowLog.Ecrire("Resumé :");
+                foreach (var corps in ListeCorps.Values)
+                    if (corps.Dvp && corps.Maj)
+                        WindowLog.EcrireF("{2} P{0} ×{1}", corps.Repere, corps.Qte, IndiceCampagne);
 
-                    WindowLog.SautDeLigne();
-                    WindowLog.Ecrire("Resumé :");
-                    foreach (var corps in ListeCorps.Values)
-                    {
-                        sw.WriteLine(corps.LigneCampagne(ListeCorps.CampagneDepartDecompte));
-
-                        if (corps.Dvp && ((corps.Qte + corps.QteSup) > 0))
-                            WindowLog.EcrireF("{2} P{0} ×{1}", corps.Repere, corps.Qte, IndiceCampagne);
-                    }
-                }
+                ListeCorps.EcrireProduction(DossierBarre, IndiceCampagne);
 
                 if (ListerUsinages)
                     Nomenclature.TitreColonnes("Barre ref.", "Materiau", "Profil", "Lg", "Nb", "Usinage Ext 1", "Usinage Ext 2", "Détail des Usinage interne");
@@ -151,8 +142,9 @@ namespace ModuleProduction.ModuleProduireBarre
 
         private void CreerBarre(Corps corps)
         {
+            if (!corps.Dvp) return;
+
             var QuantiteDiff = Quantite * (corps.Qte + corps.QteSup);
-            var QuantiteTotale = Quantite * (corps.QuantiteDerniereCamapgne(ListeCorps.CampagneDepartDecompte) + corps.QteSup);
 
             var cheminFichier = corps.CheminFichierRepere;
             if (!File.Exists(cheminFichier)) return;
@@ -161,7 +153,7 @@ namespace ModuleProduction.ModuleProduireBarre
             String Profil = corps.Dimension;
             String Longueur = corps.Volume;
             String Materiau = corps.Materiau;
-            String NomFichierBarre = ConstruireNomFichierBarre(Repere, IndiceCampagne, QuantiteTotale);
+            String NomFichierBarre = ConstruireNomFichierBarre(Repere, IndiceCampagne, QuantiteDiff);
 
             var mdlCorps = Sw.eOuvrir(cheminFichier);
             if (mdlCorps.IsNull()) return;
@@ -170,13 +162,14 @@ namespace ModuleProduction.ModuleProduireBarre
             corps.SwCorps = Piece.ePremierCorps();
             Body2 Barre = corps.SwCorps;
 
-            WindowLog.EcrireF("{0}  x{1}", corps.RepereComplet, QuantiteTotale);
+            if(corps.Maj)
+                WindowLog.EcrireF("{0}  x{1}", corps.RepereComplet, QuantiteDiff);
 
             mdlCorps.EditRebuild3();
 
             try
             {
-                List<String> Liste = new List<String>() { Repere, Materiau, Profil, Math.Round(Longueur.eToDouble()).ToString(), "× " + QuantiteTotale.ToString() };
+                List<String> Liste = new List<String>() { Repere, Materiau, Profil, Math.Round(Longueur.eToDouble()).ToString(), "× " + QuantiteDiff.ToString() };
 
                 if (ListerUsinages)
                 {
@@ -206,7 +199,7 @@ namespace ModuleProduction.ModuleProduireBarre
 
                 Nomenclature.AjouterLigne(Liste.ToArray());
 
-                if ((QuantiteDiff > 0) && ExporterBarres)
+                if (corps.Maj && ExporterBarres)
                 {
                     ModelDoc2 mdlBarre = Barre.eEnregistrerSous(Piece, DossierBarre, NomFichierBarre, TypeExport);
 
