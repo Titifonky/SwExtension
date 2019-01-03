@@ -77,7 +77,6 @@ namespace ModuleProduction.ModuleGenererConfigDvp
                         c.eRenommerEtatAffichage();
                 }
 
-                //mdl.UnlockAllExternalReferences();
                 mdl.EditRebuild3();
 
                 String NomConfigDepliee = Sw.eNomConfigDepliee(NomCfgPliee, Repere);
