@@ -295,6 +295,33 @@ namespace ModuleProduction
             return Liste;
         }
 
+        public static int pIndiceMaxNomenclature(this ModelDoc2 mdl)
+        {
+            int index = 0;
+            var chemin = mdl.pFichierNomenclature();
+
+            if (File.Exists(chemin))
+            {
+                using (var sr = new StreamReader(chemin, Encoding.GetEncoding(1252)))
+                {
+                    // On lit la première ligne contenant l'entête des colonnes
+                    String ligne = sr.ReadLine();
+
+                    if (ligne.IsRef())
+                    {
+                        // On récupère la campagne de départ
+                        if (ligne.StartsWith(CONST_PRODUCTION.CAMPAGNE_DEPART_DECOMPTE))
+                            ligne = sr.ReadLine();
+
+                        var tab = ligne.Split(new char[] { '\t' });
+                        index = tab.Last().eToInteger();
+                    }
+                }
+            }
+
+            return Math.Max(1, index);
+        }
+
         public static ListeSortedCorps pChargerProduction(this ModelDoc2 mdl, String dossierProduction, Boolean mettreAjourCampagne, int campagneDepart = 1)
         {
             var Liste = new ListeSortedCorps();
@@ -305,7 +332,7 @@ namespace ModuleProduction
 
             if (Directory.Exists(dossierProduction))
             {
-                var IndiceMax = mdl.pRechercherIndiceDossier(dossierProduction);
+                var IndiceMax = mdl.pIndiceMaxNomenclature();
 
                 foreach (var d in Directory.EnumerateDirectories(dossierProduction, "*", SearchOption.TopDirectoryOnly))
                 {
