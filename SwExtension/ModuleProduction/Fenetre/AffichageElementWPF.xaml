@@ -17,11 +17,12 @@
             <StackPanel Width="105"
                         Height="Auto"
                         >
-                <Image Grid.Row="0" Width="100" Height="100" Source="{Binding CheminFichierApercu}" HorizontalAlignment="Center"/>
+                <Image Width="100" Height="100" Source="{Binding CheminFichierApercu}" HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding Volume}" FontSize="14"/>
                 <WrapPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding RepereComplet}" FontSize="11" Margin="0,0,8,0"/>
-                    <TextBlock Text="x"/>
-                    <TextBlock Text="{Binding Qte_Exp}"/>
+                    <TextBlock Text="{Binding RepereComplet}" Margin="0,0,8,0" FontSize="14" VerticalAlignment="Bottom"/>
+                    <TextBlock Text="x" FontSize="14" VerticalAlignment="Bottom"/>
+                    <TextBlock Text="{Binding Qte_Exp, Mode=TwoWay}" FontSize="14" VerticalAlignment="Bottom"/>
                 </WrapPanel>
             </StackPanel>
         </DataTemplate>
@@ -34,14 +35,15 @@
             <StackPanel Width="105"
                         Height="Auto"
                         >
-                <Image Grid.Row="0" Width="100" Height="100" Source="{Binding CheminFichierApercu}" HorizontalAlignment="Center"/>
+                <Image Width="100" Height="100" Source="{Binding CheminFichierApercu}" HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding Volume}" FontSize="14"/>
                 <WrapPanel Orientation="Horizontal">
                     <CheckBox IsChecked="{Binding Dvp ,Mode=TwoWay}"/>
-                    <TextBlock Text="{Binding RepereComplet}" FontSize="11" Margin="0,0,8,0"/>
-                    <TextBlock Text="x"/>
-                    <TextBlock Text="{Binding Qte_Exp}"/>
+                    <TextBlock Text="{Binding RepereComplet}" Margin="0,0,8,0" FontSize="14" VerticalAlignment="Bottom"/>
+                    <TextBlock Text="x" FontSize="14" VerticalAlignment="Bottom"/>
+                    <TextBlock Text="{Binding Qte_Exp, Mode=TwoWay}" FontSize="14" VerticalAlignment="Bottom"/>
                 </WrapPanel>
-                <TextBox Text="{Binding QteSup_Exp}"/>
+                <TextBox Text="{Binding QteSup_Exp}" FontSize="14"/>
                 <!--<TextBlock Text="{Binding Materiau}"/>-->
             </StackPanel>
         </DataTemplate>
@@ -143,7 +145,7 @@
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate>
-                                        <Expander IsExpanded="True">
+                                        <Expander IsExpanded="True" Padding="10,0,0,0">
                                             <Expander.Header>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="{Binding Name}" FontSize="15" FontWeight="Bold" Margin="10,0,0,0" VerticalAlignment="Bottom"/>
@@ -151,7 +153,7 @@
                                                     <TextBlock Text="{Binding ItemCount}" Margin="4,0,0,0" VerticalAlignment="Bottom"/>
                                                 </StackPanel>
                                             </Expander.Header>
-                                            <ItemsPresenter />
+                                            <ItemsPresenter/>
                                         </Expander>
                                     </ControlTemplate>
                                 </Setter.Value>

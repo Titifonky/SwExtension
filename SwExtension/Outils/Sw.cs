@@ -1133,7 +1133,7 @@ namespace Outils
         internal const String CONFIG_DEPLIEE = "SM-FLAT-PATTERN";
         internal const String CONFIG_PLIEE_PATTERN = @"^\d+$";
         internal const String ARTICLE_LISTE_DES_PIECES_SOUDEES = "Article-liste-des-pièces-soudées";
-        internal const String EPAISSEUR_DE_TOLERIE = "Epaisseur de tôlerie";
+        
         internal const String NO_DOSSIER = "NoDossier";
         internal const String REF_DOSSIER = "RefDossier";
         internal const String PREFIXE_REF_DOSSIER = "P";
@@ -1149,6 +1149,9 @@ namespace Outils
         internal const String PROFIL_LONGUEUR = "LONGUEUR";
         internal const String PROFIL_MASSE = "Masse";
         internal const String PROFIL_MATERIAU = "MATERIAL";
+        internal const String TOLE_EPAISSEUR = "Epaisseur de tôlerie";
+        internal const String TOLE_LONGUEUR = "Longueur du flanc de tôle";
+        internal const String TOLE_LARGEUR = "Largeur du flanc de tôle";
         internal const String LIGNES_DE_PLIAGE = "Lignes de pliage";
         internal const String CUBE_DE_VISUALISATION = "Cube de visualisation";
         internal const String MODELE_DE_DESSIN_LASER = "MacroLaser";
@@ -4689,8 +4692,8 @@ namespace Outils
             Double Ep = -1;
             try
             {
-                if (dossier.ePropExiste(CONSTANTES.EPAISSEUR_DE_TOLERIE))
-                    Ep = dossier.eProp(CONSTANTES.EPAISSEUR_DE_TOLERIE).eToDouble();
+                if (dossier.ePropExiste(CONSTANTES.TOLE_EPAISSEUR))
+                    Ep = dossier.eProp(CONSTANTES.TOLE_EPAISSEUR).eToDouble();
             }
             catch (Exception e)
             { Log.Message(e); }
@@ -4714,6 +4717,34 @@ namespace Outils
         {
             SheetMetalFeatureData pParam = corps.eFonctionTolerie().GetDefinition();
             return Math.Round(pParam.KFactor, 5);
+        }
+
+        public static String eLongueurToleDossier(this BodyFolder dossier)
+        {
+            String Lg = "";
+            try
+            {
+                if (dossier.ePropExiste(CONSTANTES.TOLE_LONGUEUR))
+                    Lg = dossier.eProp(CONSTANTES.TOLE_LONGUEUR);
+            }
+            catch (Exception e)
+            { Log.Message(e); }
+
+            return Lg;
+        }
+
+        public static String eLargeurToleDossier(this BodyFolder dossier)
+        {
+            String Lg = "";
+            try
+            {
+                if (dossier.ePropExiste(CONSTANTES.TOLE_LARGEUR))
+                    Lg = dossier.eProp(CONSTANTES.TOLE_LARGEUR);
+            }
+            catch (Exception e)
+            { Log.Message(e); }
+
+            return Lg;
         }
 
         public static ModelDoc2 eEnregistrerSous(this Body2 corps, PartDoc piece, String dossier, String nomFichier, eTypeFichierExport typeExport)
@@ -4749,7 +4780,7 @@ namespace Outils
             return Profil;
         }
 
-        public static String eLongueurDossier(this BodyFolder dossier)
+        public static String eLongueurProfilDossier(this BodyFolder dossier)
         {
             String Profil = "";
             try

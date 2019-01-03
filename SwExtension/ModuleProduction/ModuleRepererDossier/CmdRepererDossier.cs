@@ -26,7 +26,7 @@ namespace ModuleProduction.ModuleRepererDossier
         public Boolean ExporterFichierCorps = false;
         public Boolean CreerDvp = false;
 
-        public SortedDictionary<int, Corps> ListeCorpsExistant = new SortedDictionary<int, Corps>();
+        public ListeSortedCorps ListeCorpsExistant = new ListeSortedCorps();
         public SortedDictionary<int, String> ListeCorpsCharge = new SortedDictionary<int, String>();
 
         private int _GenRepereDossier = 0;
@@ -63,7 +63,7 @@ namespace ModuleProduction.ModuleRepererDossier
                     // pour ne pas supprimer les fichiers
                     // Si la somme des quantités des campagnes précédente est superieure à 0
                     // on garde le repère
-                    SortedDictionary<int, Corps> FichierAsauvegarder = new SortedDictionary<int, Corps>();
+                    ListeSortedCorps FichierAsauvegarder = new ListeSortedCorps();
                     foreach (var corps in ListeCorpsExistant.Values)
                     {
                         int nb = 0;
@@ -313,10 +313,6 @@ namespace ModuleProduction.ModuleRepererDossier
 
                     foreach (var corps in ListeCorpsExistant.Values)
                     {
-                        // Pour sauvegarder la quantité correcte dans la nomenclature
-                        // on met à jour la propriété
-                        corps.MajQuantite();
-
                         if (corps.Modele.IsNull() || File.Exists(corps.CheminFichierRepere)) continue;
 
                         WindowLog.EcrireF("- {0} exporté", CONSTANTES.PREFIXE_REF_DOSSIER + corps.Repere);
@@ -339,7 +335,6 @@ namespace ModuleProduction.ModuleRepererDossier
                                 mdlFichier.DeleteConfiguration2(nomCfg);
 
                         var Piece = mdlFichier.ePartDoc();
-
                         
                         Body2 Corps = null;
 

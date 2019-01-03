@@ -23,7 +23,7 @@ namespace ModuleProduction.ModuleRepererDossier
 
         private ModelDoc2 MdlBase = null;
         private int _IndiceCampagne = 0;
-        private SortedDictionary<int, Corps> ListeCorps = new SortedDictionary<int, Corps>();
+        private ListeSortedCorps ListeCorps = new ListeSortedCorps();
 
         private int IndiceCampagne
         {
@@ -56,6 +56,7 @@ namespace ModuleProduction.ModuleRepererDossier
         private CtrlTextBox _Texte_IndiceCampagne;
         private CtrlCheckBox _CheckBox_NettoyerModele;
         private CtrlCheckBox _CheckBox_MajCampagnePrecedente;
+        private CtrlCheckBox _CheckBox_CampagneDepartDecompte;
         private Boolean ReinitCampagneActuelle = false;
         private CtrlCheckBox _CheckBox_ReinitCampagneActuelle;
         private CtrlCheckBox _CheckBox_CombinerCorps;
@@ -74,6 +75,7 @@ namespace ModuleProduction.ModuleRepererDossier
                 _Texte_IndiceCampagne = G.AjouterTexteBox("Indice de la campagne de repérage :");
                 _Texte_IndiceCampagne.LectureSeule = true;
 
+                _CheckBox_CampagneDepartDecompte = G.AjouterCheckBox("Campagne de depart pour les decomptes");
                 _CheckBox_NettoyerModele = G.AjouterCheckBox("Nettoyer les modèles");
                 _CheckBox_ReinitCampagneActuelle = G.AjouterCheckBox("Reinitialiser la campagne actuelle");
                 _CheckBox_MajCampagnePrecedente = G.AjouterCheckBox("Mettre à jour la campagne précédente (en cas d'oubli)");
@@ -90,10 +92,7 @@ namespace ModuleProduction.ModuleRepererDossier
                         IndiceCampagne -= 1;
 
                     if (ReinitCampagneActuelle)
-                    {
                         _CheckBox_ReinitCampagneActuelle.IsEnabled = false;
-                        _CheckBox_ReinitCampagneActuelle.Visible = false;
-                    }
                 };
                 _CheckBox_MajCampagnePrecedente.OnUnCheck += delegate
                 {
@@ -204,6 +203,9 @@ namespace ModuleProduction.ModuleRepererDossier
         protected void RunOkCommand()
         {
             CmdRepererDossier Cmd = new CmdRepererDossier();
+
+            if(_CheckBox_CampagneDepartDecompte.IsChecked)
+                ListeCorps.CampagneDepartDecompte = Math.Max(ListeCorps.CampagneDepartDecompte, IndiceCampagne);
 
             Cmd.MdlBase = App.Sw.ActiveDoc;
             Cmd.IndiceCampagne = IndiceCampagne;

@@ -11,10 +11,11 @@ using System.Text;
 
 namespace ModuleProduction.ModuleProduireDvp
 {
-    public class CmdProduireDvp : Cmd
+    public class CmdProduireBarre : Cmd
     {
         public ModelDoc2 MdlBase = null;
-        public SortedDictionary<int, Corps> ListeCorps = new SortedDictionary<int, Corps>();
+        public String RefFichier = "";
+        public ListeSortedCorps ListeCorps = new ListeSortedCorps();
         public List<String> ListeMateriaux = new List<String>();
         public List<String> ListeEp = new List<String>();
         public int Quantite = 1;
@@ -23,10 +24,8 @@ namespace ModuleProduction.ModuleProduireDvp
         public Boolean AfficherLignePliage = false;
         public Boolean AfficherNotePliage = false;
         public Boolean InscrireNomTole = false;
-        public Boolean Quantite_Diff = false;
         public Boolean OrienterDvp = false;
         public eOrientation OrientationDvp = eOrientation.Portrait;
-        public String RefFichier = "";
         public int TailleInscription = 5;
 
         private Dictionary<String, DrawingDoc> DicDessins = new Dictionary<string, DrawingDoc>();
@@ -35,51 +34,12 @@ namespace ModuleProduction.ModuleProduireDvp
 
         private void Init()
         {
-            DossierDVP = Directory.CreateDirectory(Path.Combine(MdlBase.pCreerDossier(CONST_PRODUCTION.DOSSIER_LASERTOLE), IndiceCampagne.ToString())).FullName;
+            DossierDVP = Directory.CreateDirectory(Path.Combine(MdlBase.pDossierLaserTole(), IndiceCampagne.ToString())).FullName;
 
             if(!MettreAjourCampagne)
-                File.Delete(Path.Combine(MdlBase.pDossierLaserTole(), IndiceCampagne.ToString(), CONST_PRODUCTION.FICHIER_NOMENC));
+                File.Delete(Path.Combine(MdlBase.pDossierLaserTole(), CONST_PRODUCTION.FICHIER_NOMENC));
 
-            var ListeExistant = MdlBase.pChargerProduction(MdlBase.pDossierLaserTole());
-
-            SortedDictionary<int, Corps> ListeCorpsFiltre = new SortedDictionary<int, Corps>();
-            foreach (var corps in ListeCorps.Values)
-            {
-                if ((corps.TypeCorps == eTypeCorps.Tole) &&
-                        ListeMateriaux.Contains(corps.Materiau) &&
-                        ListeEp.Contains(corps.Dimension)
-                        )
-                {
-                    var qte = corps.Campagne[IndiceCampagne];
-
-                    if (Quantite_Diff && ListeExistant.ContainsKey(corps.Repere))
-                    {
-                        qte = Math.Max(0, qte - ListeExistant[corps.Repere].Qte);
-
-                        // Si la quantité est supérieur à 0
-                        // on récupère la différence entre la quantité totale actuelle et
-                        // la quantité totale de la précédente campagne
-                        if (MettreAjourCampagne && (qte > 0))
-                        {
-                            var qteCampagnePrecedente = 0;
-                            var corpsExistant = ListeExistant[corps.Repere];
-                            foreach (var c in corpsExistant.Campagne)
-                            {
-                                if (c.Key != IndiceCampagne)
-                                    qteCampagnePrecedente += c.Value;
-                            }
-
-                            qte = corps.Campagne[IndiceCampagne] - qteCampagnePrecedente;
-                        }
-                    }
-
-                    corps.Qte = qte;
-                    ListeCorpsFiltre.Add(corps.Repere, corps);
-                }
-            }
-
-
-            ListeCorps = ListeCorpsFiltre;
+            MdlBase.pCalculerQuantite(ref ListeCorps, eTypeCorps.Tole, ListeMateriaux, ListeEp, IndiceCampagne, MettreAjourCampagne);
         }
 
         protected override void Command()
@@ -113,10 +73,10 @@ namespace ModuleProduction.ModuleProduireDvp
                     dessin.eModelDoc2().eSauver();
                 }
 
-                var cheminNomenclature = Path.Combine(MdlBase.eDossier(), MdlBase.pDossierLaserTole(), IndiceCampagne.ToString(), CONST_PRODUCTION.FICHIER_NOMENC);
+                var cheminNomenclature = Path.Combine(DossierDVP, CONST_PRODUCTION.FICHIER_NOMENC);
                 using (var sw = new StreamWriter(cheminNomenclature, false, Encoding.GetEncoding(1252)))
                 {
-                    sw.WriteLine(Corps.EnteteCampagne(IndiceCampagne));
+                    sw.WriteLine(Corps.EnteteCampagne(IndiceCampagne, ListeCorps.CampagneDepartDecompte));
 
                     WindowLog.SautDeLigne();
                     WindowLog.Ecrire("Resumé :");
@@ -149,9 +109,6 @@ namespace ModuleProduction.ModuleProduireDvp
             if (mdlCorps.IsNull()) return;
 
             WindowLog.EcrireF("{0}  x{1}", corps.RepereComplet, QuantiteTotale);
-
-            //mdlCorps.LockAllExternalReferences();
-            mdlCorps.UnlockAllExternalReferences();
 
             var listeCfgPliee = mdlCorps.eListeNomConfiguration(eTypeConfig.Pliee);
             var NomConfigPliee = listeCfgPliee[0];

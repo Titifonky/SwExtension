@@ -17,9 +17,6 @@ namespace ModuleProduction.ModuleProduireDvp
         ]
     public class PageProduireDvp : BoutonPMPManager
     {
-        private Parametre ConvertirEsquisse;
-        private Parametre QuantiteDiff;
-        private Parametre PropQuantite;
         private Parametre AfficherLignePliage;
         private Parametre AfficherNotePliage;
 
@@ -34,8 +31,6 @@ namespace ModuleProduction.ModuleProduireDvp
         {
             try
             {
-                PropQuantite = _Config.AjouterParam("PropQuantite", CONSTANTES.PROPRIETE_QUANTITE, "Propriete \"Quantite\"", "Recherche cette propriete");
-                QuantiteDiff = _Config.AjouterParam("QuantiteDiff", true, "Calculer la différence");
                 AfficherLignePliage = _Config.AjouterParam("AfficherLignePliage", true, "Afficher les lignes de pliage");
                 AfficherNotePliage = _Config.AjouterParam("AfficherNotePliage", true, "Afficher les notes de pliage");
                 InscrireNomTole = _Config.AjouterParam("InscrireNomTole", true, "Inscrire la réf du dvp sur la tole");
@@ -44,7 +39,6 @@ namespace ModuleProduction.ModuleProduireDvp
                 OrienterDvp = _Config.AjouterParam("OrienterDvp", false, "Orienter les dvps");
                 OrientationDvp = _Config.AjouterParam("OrientationDvp", eOrientation.Portrait);
                 FermerPlan = _Config.AjouterParam("FermerPlan", false, "Fermer les plans", "Fermer les plans après génération des dvps");
-                ConvertirEsquisse = _Config.AjouterParam("ConvertirEsquisse", false, "Convertir les dvp en esquisse", "Le lien entre le dvp et le modèle est cassé, la config dvp est supprimée après la création de la vue");
 
                 OnCalque += Calque;
                 OnRunAfterActivation += Rechercher_Infos;
@@ -58,7 +52,6 @@ namespace ModuleProduction.ModuleProduireDvp
 
         private CtrlTextBox _Texte_RefFichier;
         private CtrlTextBox _TextBox_Campagne;
-        private CtrlCheckBox _CheckBox_Quantite_Diff;
         private CtrlTextBox _Texte_Quantite;
         private CtrlTextListBox _TextListBox_Materiaux;
         private CtrlTextListBox _TextListBox_Ep;
@@ -82,11 +75,11 @@ namespace ModuleProduction.ModuleProduireDvp
 
                 _Texte_RefFichier = G.AjouterTexteBox("Référence du fichier :", "la référence est ajoutée au début du nom de chaque fichier généré");
 
-                _Texte_RefFichier.Text = Ref;
+                _Texte_RefFichier.Text = MdlBase.eRefFichierComplet();
                 _Texte_RefFichier.LectureSeule = false;
 
                 // S'il n'y a pas de reference, on met le texte en rouge
-                if (String.IsNullOrWhiteSpace(Ref))
+                if (String.IsNullOrWhiteSpace(_Texte_RefFichier.Text))
                     _Texte_RefFichier.BackgroundColor(Color.Red, true);
 
                 _TextBox_Campagne = G.AjouterTexteBox("Campagne :", "");
@@ -96,10 +89,8 @@ namespace ModuleProduction.ModuleProduireDvp
 
                 G = _Calque.AjouterGroupe("Quantité :");
 
-                _CheckBox_Quantite_Diff = G.AjouterCheckBox(QuantiteDiff);
-
                 _Texte_Quantite = G.AjouterTexteBox("Multiplier par quantité :", "Multiplier les quantités par");
-                _Texte_Quantite.Text = Quantite();
+                _Texte_Quantite.Text = MdlBase.Quantite();
                 _Texte_Quantite.ValiderTexte += ValiderTextIsInteger;
 
                 G = _Calque.AjouterGroupe("Materiaux :");
@@ -151,35 +142,11 @@ namespace ModuleProduction.ModuleProduireDvp
             catch (Exception e)
             { this.LogMethode(new Object[] { e }); }
         }
-        private String _Ref = "";
-
-        private String Ref
-        {
-            get
-            {
-                if (String.IsNullOrWhiteSpace(_Ref))
-                    _Ref = MdlBase.eRefFichierComplet();
-
-                return _Ref;
-            }
-        }
-
-        private String Quantite()
-        {
-            CustomPropertyManager PM = MdlBase.Extension.get_CustomPropertyManager("");
-
-            if (MdlBase.ePropExiste(PropQuantite.GetValeur<String>()))
-            {
-                return Math.Max(MdlBase.eProp(PropQuantite.GetValeur<String>()).eToInteger(), 1).ToString();
-            }
-
-            return "1";
-        }
 
         private int Campagne;
         private List<String> ListeMateriaux;
         private List<String> ListeEp;
-        private SortedDictionary<int, Corps> ListeCorps;
+        private ListeSortedCorps ListeCorps;
 
         protected void Rechercher_Infos()
         {
@@ -194,8 +161,6 @@ namespace ModuleProduction.ModuleProduireDvp
 
                 foreach (var corps in ListeCorps.Values)
                 {
-                    if (corps.TypeCorps != eTypeCorps.Tole) continue;
-
                     Campagne = Math.Max(Campagne, corps.Campagne.Keys.Max());
 
                     ListeMateriaux.AddIfNotExist(corps.Materiau);
@@ -214,12 +179,6 @@ namespace ModuleProduction.ModuleProduireDvp
                 _TextListBox_Ep.Liste = ListeEp;
                 _TextListBox_Ep.ToutSelectionner(false);
 
-                if (Campagne == 1)
-                {
-                    _CheckBox_Quantite_Diff.IsEnabled = false;
-                    _CheckBox_Quantite_Diff.Visible = false;
-                }
-
                 if (!File.Exists(Path.Combine(MdlBase.pDossierLaserTole(), Campagne.ToString(), CONST_PRODUCTION.FICHIER_NOMENC)))
                 {
                     _CheckBox_MettreAjourCampagne.IsEnabled = false;
@@ -232,12 +191,11 @@ namespace ModuleProduction.ModuleProduireDvp
 
         protected void RunOkCommand()
         {
-            CmdProduireDvp Cmd = new CmdProduireDvp();
+            CmdProduireBarre Cmd = new CmdProduireBarre();
 
             Cmd.MdlBase = App.Sw.ActiveDoc;
             Cmd.ListeCorps = ListeCorps;
             Cmd.RefFichier = _Texte_RefFichier.Text.Trim();
-            Cmd.Quantite_Diff = _CheckBox_Quantite_Diff.IsChecked;
             Cmd.Quantite = _Texte_Quantite.Text.eToInteger();
             Cmd.IndiceCampagne = _TextBox_Campagne.Text.eToInteger();
             Cmd.MettreAjourCampagne = _CheckBox_MettreAjourCampagne.IsChecked;

@@ -1,4 +1,5 @@
-﻿using Outils;
+﻿using LogDebugging;
+using Outils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace ModuleProduction
     /// </summary>
     public partial class AffichageElementWPF : Window
     {
-        SortedDictionary<int, Corps> ListeCorps = null;
+        ListeSortedCorps ListeCorps = null;
 
         private CollectionView Vue = null;
 
@@ -22,7 +23,7 @@ namespace ModuleProduction
 
         private Boolean EstInit = false;
 
-        private void Init(SortedDictionary<int, Corps> listeCorps)
+        private void Init(ListeSortedCorps listeCorps)
         {
             InitializeComponent();
 
@@ -39,7 +40,7 @@ namespace ModuleProduction
             EstInit = true;
         }
 
-        public AffichageElementWPF(SortedDictionary<int, Corps> listeCorps)
+        public AffichageElementWPF(ListeSortedCorps listeCorps)
         {
             Init(listeCorps);
 
@@ -50,7 +51,7 @@ namespace ModuleProduction
             Vue.Filter = FiltreQteNull;
         }
 
-        public AffichageElementWPF(SortedDictionary<int, Corps> listeCorps, int indiceCampagne)
+        public AffichageElementWPF(ListeSortedCorps listeCorps, int indiceCampagne)
         {
             Init(listeCorps);
 
@@ -89,7 +90,7 @@ namespace ModuleProduction
         {
             this.Close();
 
-            if(OnValider.IsRef())
+            if (OnValider.IsRef())
                 OnValider();
         }
 
@@ -106,7 +107,7 @@ namespace ModuleProduction
         {
             Corps c = objet as Corps;
             if (c == null)
-                return true;
+                return false;
 
             if (c.Qte == 0)
                 return false;
@@ -116,20 +117,26 @@ namespace ModuleProduction
 
         private Boolean FiltreCampagne(Object objet)
         {
-            Corps c = objet as Corps;
-            if (c == null)
-                return true;
+            try
+            {
+                Corps c = objet as Corps;
+                if (c == null)
+                    return false;
 
-            if (c.Campagne[Campagne.eToInteger()] == 0)
-                return false;
+                if (!c.Campagne.ContainsKey(Campagne.eToInteger()))
+                    return false;
 
-            c.Qte = c.Campagne[Campagne.eToInteger()];
+                if (c.Campagne[Campagne.eToInteger()] == 0)
+                    return false;
+            }
+            catch (Exception ex) { this.LogErreur(new Object[] { ex }); }
+
             return true;
         }
 
         private void Afficher_Check(object sender, RoutedEventArgs e)
         {
-            if(Vue != null)
+            if (Vue != null)
                 Vue.Filter = null;
         }
 
@@ -141,8 +148,23 @@ namespace ModuleProduction
 
         private void SelectCampagne_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var Campagne = Cb_SelectCampagne.SelectedValue.ToString();
-            Vue.Filter = FiltreCampagne;
+            try
+            {
+                if (!EstInit) return;
+
+                Campagne = Cb_SelectCampagne.SelectedValue.ToString();
+
+                Vue.Filter = FiltreCampagne;
+
+                foreach (Corps corps in ListeCorps.Values)
+                {
+                    if (!corps.Campagne.ContainsKey(Campagne.eToInteger()))
+                        continue;
+
+                    corps.Qte = corps.Campagne[Campagne.eToInteger()];
+                }
+            }
+            catch (Exception ex) { this.LogErreur(new Object[] { ex }); }
         }
 
         private void Select_Check(object sender, RoutedEventArgs e)

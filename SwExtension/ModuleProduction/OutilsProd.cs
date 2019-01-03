@@ -22,6 +22,7 @@ namespace ModuleProduction
         public const String FICHIER_NOMENC = "Nomenclature.txt";
         public const String DOSSIER_LASERTOLE = "Laser tole";
         public const String DOSSIER_LASERTUBE = "Laser tube";
+        public const String CAMPAGNE_DEPART_DECOMPTE = "CampagneDepartDecompte";
         public const String MAX_INDEXDIM = "MAX_INDEXDIM";
         public const String ID_PIECE = "ID_PIECE";
         public const String ID_CONFIG = "ID_CONFIG";
@@ -30,6 +31,15 @@ namespace ModuleProduction
 
     public static class OutilsProd
     {
+        public static String Quantite(this ModelDoc2 mdl)
+        {
+            CustomPropertyManager PM = mdl.Extension.get_CustomPropertyManager("");
+
+            if (mdl.ePropExiste(CONSTANTES.PROPRIETE_QUANTITE))
+                return Math.Max(mdl.eProp(CONSTANTES.PROPRIETE_QUANTITE).eToInteger(), 1).ToString();
+
+            return "1";
+        }
 
         public static Boolean pCreerConfigDepliee(this ModelDoc2 mdl, String NomConfigDepliee, String NomConfigPliee)
         {
@@ -163,126 +173,6 @@ namespace ModuleProduction
             return dic;
         }
 
-        /// <summary>
-        /// Renvoi la liste des modeles avec la liste des configurations, des dossiers
-        /// et les quantites de chaque dossier dans l'assemblage
-        /// Modele : ModelDoc2
-        ///     |-Config1 : Nom de la configuration
-        ///     |     |-Dossier1 : Comparaison avec la propriete RefDossier, référence à l'Id de la fonction pour pouvoir le selectionner plus tard
-        ///     |     |      |- Nb : quantite de corps identique dans le modele complet
-        ///     |     |
-        ///     |     |-Dossier2
-        ///     |            |- Nb
-        ///     |-Config 2
-        ///     | etc...
-        /// </summary>
-        /// <param name="mdlBase"></param>
-        /// <param name="composantsExterne"></param>
-        /// <param name="filtreDossier"></param>
-        /// <returns></returns>
-        public static SortedDictionary<ModelDoc2, SortedDictionary<String, SortedDictionary<int, int>>> pDenombrerDossiers(this ModelDoc2 mdlBase, Boolean composantsExterne, Predicate<Feature> filtreDossier = null, Boolean fermerFichier = false)
-        {
-
-            SortedDictionary<ModelDoc2, SortedDictionary<String, SortedDictionary<int, int>>> dic = new SortedDictionary<ModelDoc2, SortedDictionary<String, SortedDictionary<int, int>>>(new CompareModelDoc2());
-            try
-            {
-                var ListeComposants = mdlBase.pListerComposants(composantsExterne);
-
-                var ListeDossiers = new Dictionary<String, Dossier>();
-
-                Predicate<Feature> Test = delegate (Feature fDossier)
-                {
-                    BodyFolder SwDossier = fDossier.GetSpecificFeature2();
-                    if (SwDossier.IsRef() && SwDossier.eNbCorps() > 0 && !SwDossier.eEstExclu() && (filtreDossier.IsNull() || filtreDossier(fDossier)))
-                        return true;
-
-                    return false;
-                };
-
-                foreach (var mdl in ListeComposants.Keys)
-                {
-                    mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
-
-                    foreach (var t in ListeComposants[mdl])
-                    {
-                        var cfg = t.Key;
-                        var nbCfg = t.Value;
-                        mdl.ShowConfiguration2(cfg);
-                        mdl.EditRebuild3();
-                        var Piece = mdl.ePartDoc();
-
-                        foreach (var fDossier in Piece.eListeDesFonctionsDePiecesSoudees(Test))
-                        {
-                            BodyFolder SwDossier = fDossier.GetSpecificFeature2();
-                            var RefDossier = SwDossier.eProp(CONSTANTES.REF_DOSSIER);
-
-                            if (ListeDossiers.ContainsKey(RefDossier))
-                                ListeDossiers[RefDossier].Nb += SwDossier.eNbCorps() * nbCfg;
-                            else
-                            {
-                                var dossier = new Dossier(RefDossier, mdl, cfg, fDossier.GetID());
-                                dossier.Nb = SwDossier.eNbCorps() * nbCfg;
-
-                                ListeDossiers.Add(RefDossier, dossier);
-                            }
-                        }
-                    }
-
-                    if (fermerFichier && (mdl.GetPathName() != mdlBase.GetPathName()))
-                        App.Sw.CloseDoc(mdl.GetPathName());
-                }
-
-                // Conversion d'une liste de dossier
-                // en liste de modele
-                foreach (var dossier in ListeDossiers.Values)
-                {
-                    if (dic.ContainsKey(dossier.Mdl))
-                    {
-                        var lcfg = dic[dossier.Mdl];
-                        if (lcfg.ContainsKey(dossier.Config))
-                        {
-                            var ldossier = lcfg[dossier.Config];
-                            ldossier.Add(dossier.Id, dossier.Nb);
-                        }
-                        else
-                        {
-                            var ldossier = new SortedDictionary<int, int>();
-                            ldossier.Add(dossier.Id, dossier.Nb);
-                            lcfg.Add(dossier.Config, ldossier);
-                        }
-                    }
-                    else
-                    {
-                        var ldossier = new SortedDictionary<int, int>();
-                        ldossier.Add(dossier.Id, dossier.Nb);
-                        var lcfg = new SortedDictionary<String, SortedDictionary<int, int>>(new WindowsStringComparer());
-                        lcfg.Add(dossier.Config, ldossier);
-                        dic.Add(dossier.Mdl, lcfg);
-                    }
-                }
-            }
-            catch (Exception e) { Log.LogErreur(new Object[] { e }); }
-
-            return dic;
-        }
-
-        private class Dossier
-        {
-            public int Id;
-            public String Repere;
-            public ModelDoc2 Mdl;
-            public String Config;
-            public int Nb = 0;
-
-            public Dossier(String repere, ModelDoc2 mdl, String config, int id)
-            {
-                Repere = repere;
-                Mdl = mdl;
-                Config = config;
-                Id = id;
-            }
-        }
-
         private const String ChaineIndice = "ZYXWVUTSRQPONMLKJIHGFEDCBA";
 
         public static String pChercherIndice(List<String> liste)
@@ -346,11 +236,9 @@ namespace ModuleProduction
             return Path.Combine(mdl.eDossier(), CONST_PRODUCTION.DOSSIER_LASERTUBE);
         }
 
-        //public static String FichierNomenclature
-
-        public static SortedDictionary<int, Corps> pChargerNomenclature(this ModelDoc2 mdl, eTypeCorps type = eTypeCorps.Tous)
+        public static ListeSortedCorps pChargerNomenclature(this ModelDoc2 mdl, eTypeCorps type = eTypeCorps.Tous)
         {
-            SortedDictionary<int, Corps> Liste = new SortedDictionary<int, Corps>();
+            var Liste = new ListeSortedCorps();
 
             var chemin = mdl.pFichierNomenclature();
 
@@ -360,6 +248,15 @@ namespace ModuleProduction
                 {
                     // On lit la première ligne contenant l'entête des colonnes
                     String ligne = sr.ReadLine();
+
+                    // On récupère la campagne de départ
+                    if (ligne.StartsWith(CONST_PRODUCTION.CAMPAGNE_DEPART_DECOMPTE))
+                    {
+                        var tab = ligne.Split(new char[] { '\t' });
+                        Liste.CampagneDepartDecompte = tab[1].eToInteger();
+                        ligne = sr.ReadLine();
+                    }
+
                     if (ligne.IsRef())
                     {
                         while ((ligne = sr.ReadLine()) != null)
@@ -378,9 +275,9 @@ namespace ModuleProduction
             return Liste;
         }
 
-        public static SortedDictionary<int, Corps> pChargerProduction(this ModelDoc2 mdl, String dossierProduction)
+        public static ListeSortedCorps pChargerProduction(this ModelDoc2 mdl, String dossierProduction, int campagneDepart = 1)
         {
-            SortedDictionary<int, Corps> Liste = new SortedDictionary<int, Corps>();
+            var Liste = new ListeSortedCorps();
 
             List<String> ListeChemin = new List<String>();
 
@@ -412,12 +309,16 @@ namespace ModuleProduction
                                         {
                                             var tmp = c.Campagne.First();
                                             Liste[c.Repere].Campagne.Add(tmp.Key, tmp.Value);
-                                            Liste[c.Repere].Qte += tmp.Value;
+                                            if(tmp.Key >= campagneDepart)
+                                                Liste[c.Repere].Qte += tmp.Value;
                                         }
                                         else
                                         {
                                             Liste.Add(c.Repere, c);
-                                            c.Qte = c.Campagne.First().Value;
+
+                                            var tmp = c.Campagne.First();
+                                            if (tmp.Key >= campagneDepart)
+                                                c.Qte = c.Campagne.First().Value;
                                         }
                                     }
                                 }
@@ -430,6 +331,64 @@ namespace ModuleProduction
         }
 
         public static String ExtPiece = eTypeDoc.Piece.GetEnumInfo<ExtFichier>();
+
+        public static void pCalculerQuantite(this ModelDoc2 mdlBase, ref ListeSortedCorps listeCorps, eTypeCorps typeCorps, List<String> listeMateriaux, List<String> listeDimensions, int indiceCampagne, Boolean mettreAjourCampagne)
+        {
+            ListeSortedCorps ListeExistant = new ListeSortedCorps();
+
+            if (typeCorps == eTypeCorps.Tole)
+                ListeExistant = mdlBase.pChargerProduction(mdlBase.pDossierLaserTole(), listeCorps.CampagneDepartDecompte);
+            else if (typeCorps == eTypeCorps.Barre)
+                ListeExistant = mdlBase.pChargerProduction(mdlBase.pDossierLaserTube(), listeCorps.CampagneDepartDecompte);
+            else
+                return;
+
+            ListeSortedCorps ListeCorpsFiltre = new ListeSortedCorps();
+            ListeCorpsFiltre.CampagneDepartDecompte = ListeExistant.CampagneDepartDecompte;
+
+            foreach (var corps in listeCorps.Values)
+            {
+                if ((corps.TypeCorps == typeCorps) &&
+                        listeMateriaux.Contains(corps.Materiau) &&
+                        listeDimensions.Contains(corps.Dimension)
+                        )
+                {
+                    var qte = corps.Campagne[indiceCampagne];
+
+                    if (ListeExistant.ContainsKey(corps.Repere))
+                    {
+                        qte = Math.Max(0, qte - ListeExistant[corps.Repere].Qte);
+
+                        // Si la quantité est supérieur à 0
+                        // on récupère la différence entre la quantité totale actuelle et
+                        // la quantité totale de la précédente campagne
+                        if (mettreAjourCampagne && (qte > 0))
+                        {
+                            var qteCampagnePrecedente = 0;
+                            var corpsExistant = ListeExistant[corps.Repere];
+                            foreach (var c in corpsExistant.Campagne)
+                            {
+                                if ((c.Key >= listeCorps.CampagneDepartDecompte) && (c.Key != indiceCampagne))
+                                    qteCampagnePrecedente += c.Value;
+                            }
+
+                            qte = corps.Campagne[indiceCampagne] - qteCampagnePrecedente;
+                        }
+                    }
+
+                    corps.Qte = qte;
+                    ListeCorpsFiltre.Add(corps.Repere, corps);
+                }
+            }
+
+            listeCorps = ListeCorpsFiltre;
+        }
+    }
+
+    public class ListeSortedCorps : SortedDictionary<int, Corps>
+    {
+        private int _CampagneDepartDecompte = 1;
+        public int CampagneDepartDecompte { get { return _CampagneDepartDecompte; } set { _CampagneDepartDecompte = value; } }
     }
 
     public class AnalyseGeomBarre
@@ -1103,9 +1062,11 @@ namespace ModuleProduction
             return Ligne;
         }
 
-        public static String EnteteCampagne(int indiceCampagne)
+        public static String EnteteCampagne(int indiceCampagne, int campagneDepartDecompte)
         {
-            String entete = String.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}", "Repere", "Type", "Dimension", "Volume", "Materiau", indiceCampagne);
+            String entete = String.Format("{0}\t{1}", CONST_PRODUCTION.CAMPAGNE_DEPART_DECOMPTE, campagneDepartDecompte);
+            entete += System.Environment.NewLine;
+            entete += String.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}", "Repere", "Type", "Dimension", "Volume", "Materiau", indiceCampagne);
             return entete;
         }
 
@@ -1153,9 +1114,9 @@ namespace ModuleProduction
         private void InitVolume(BodyFolder dossier, Body2 corps)
         {
             if (TypeCorps == eTypeCorps.Tole)
-                Volume = Math.Round(((Double[])corps.GetMassProperties(1))[3], 9).ToString();
+                Volume = String.Format("{0}x{1}", dossier.eLongueurToleDossier(), dossier.eLongueurToleDossier());
             else
-                Volume = dossier.eLongueurDossier();
+                Volume = dossier.eLongueurProfilDossier();
         }
 
         public Corps(Body2 swCorps, eTypeCorps typeCorps, String materiau, ModelDoc2 mdlBase)
@@ -1250,7 +1211,7 @@ namespace ModuleProduction
                 value = rgx.Replace(value, "");
 
                 // Pour eviter des mises à jour intempestives
-                if (Set(ref _Qte_Exp, value))
+                if (Set(ref _Qte_Exp, value) && !Maj_Qte)
                 {
                     try
                     {
@@ -1264,11 +1225,12 @@ namespace ModuleProduction
             }
         }
 
+        private Boolean Maj_Qte = false;
         private int _Qte = 0;
         public int Qte
         {
             get { return _Qte; }
-            set { Set(ref _Qte, value); Qte_Exp = value.ToString(); }
+            set { Set(ref _Qte, value); Maj_Qte = true; Qte_Exp = value.ToString(); Maj_Qte = false; }
         }
 
         private String _QteSup_Exp = "0";
@@ -1301,11 +1263,6 @@ namespace ModuleProduction
         {
             get { return _QteSup; }
             set { _QteSup = value; _QteSup_Exp = value.ToString(); }
-        }
-
-        public void MajQuantite()
-        {
-            Qte = Campagne.Max().Value;
         }
 
         #region Notification WPF
