@@ -121,7 +121,11 @@ namespace ModuleProduction.ModuleProduireDvp
                 WindowLog.Ecrire("Resumé :");
                 foreach (var corps in ListeCorps.Values)
                     if (corps.Dvp && corps.Maj)
+                    {
                         WindowLog.EcrireF("{2} P{0} ×{1}", corps.Repere, corps.Qte, IndiceCampagne);
+                        if(corps.DiffPliage > 0)
+                            WindowLog.EcrireF("  - Controle : {0}% [{1}]", corps.DiffPliagePct, corps.DiffPliage);
+                    }
 
                 ListeCorps.EcrireProduction(DossierDVP, IndiceCampagne);
             }
@@ -154,7 +158,8 @@ namespace ModuleProduction.ModuleProduireDvp
 
             WindowLog.EcrireF("{0}  x{1}", corps.RepereComplet, QuantiteDiff);
             piece.ePremierCorps(false).eVisible(true);
-            Double SurfacePliee = (piece.ePremierCorps().eVolume() * 1000000000) / Epaisseur;
+
+            Double Volume1 = piece.ePremierCorps().eVolume();
 
             piece.ePremierCorps(false).eVisible(true);
             var listeCfgDepliee = mdlCorps.eListeNomConfiguration(eTypeConfig.Depliee);
@@ -168,16 +173,7 @@ namespace ModuleProduction.ModuleProduireDvp
                 return;
             }
 
-            Double SurfaceDePliee = (piece.ePremierCorps().eVolume() * 1000000000) / Epaisseur;
-            Double diff = Math.Abs(Math.Round(SurfaceDePliee - SurfacePliee,0));
-            Double diffPct = 0;
-            try
-            {
-                diffPct = Math.Round(diff * 100 / Math.Max(SurfaceDePliee, SurfacePliee), 2);
-            }
-            catch { }
-
-            WindowLog.EcrireF("  - Controle : {0}% [{1}]", diffPct, diff);
+            corps.CalculerDiffPliage(Volume1, piece.ePremierCorps().eVolume());
 
             mdlCorps.ePartDoc().ePremierCorps(false).eVisible(true);
             mdlCorps.EditRebuild3();

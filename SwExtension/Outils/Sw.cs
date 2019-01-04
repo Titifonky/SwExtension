@@ -127,9 +127,15 @@ namespace Outils
     [Flags]
     public enum eTypeCorps
     {
+        [Intitule("Tôle")]
         Tole = 1,
+        [Intitule("Barre")]
         Barre = 2,
+        [Intitule("Autre")]
         Autre = 4,
+        [Intitule("Tôle ou barre")]
+        Piece = Tole | Barre,
+        [Intitule("Tous")]
         Tous = Tole | Barre | Autre
     }
 
@@ -3787,16 +3793,16 @@ namespace Outils
 
         public static String eLongueurProfilDossier(this BodyFolder dossier)
         {
-            String Profil = "";
+            String Longueur = "";
             try
             {
                 if (dossier.ePropExiste(CONSTANTES.PROFIL_LONGUEUR))
-                    Profil = dossier.eProp(CONSTANTES.PROFIL_LONGUEUR);
+                    Longueur = dossier.eProp(CONSTANTES.PROFIL_LONGUEUR);
             }
             catch (Exception e)
             { Log.Message(e); }
 
-            return Profil;
+            return Longueur;
         }
 
         public static int eNbIntersection(this Component2 compBase, Body2 corpsBase, Component2 compTest, Body2 corpsTest)

@@ -28,6 +28,7 @@ namespace ModuleProduction
         public const String ID_PIECE = "ID_PIECE";
         public const String ID_CONFIG = "ID_CONFIG";
         public const String ID_DOSSIERS = "ID_DOSSIERS";
+        public const String FILTRE_CORPS = "FILTRE_CORPS";
     }
 
     public static class OutilsProd
@@ -1445,6 +1446,25 @@ namespace ModuleProduction
             get { return _QteSup; }
             set { _QteSup = value; _QteSup_Exp = value.ToString(); }
         }
+
+        public void CalculerDiffPliage(Double volume1, Double volume2)
+        {
+            var Epaisseur = Dimension.eToDouble();
+            var s1 = (volume1 * 1000000000) / Epaisseur;
+            var s2 = (volume2 * 1000000000) / Epaisseur;
+
+            DiffPliage = Math.Abs(Math.Round(s1 - s2, 0));
+            DiffPliagePct = 0;
+            try
+            {
+                DiffPliagePct = Math.Round(DiffPliage * 100 / Math.Max(s1, s2), 2);
+            }
+            catch { }
+        }
+
+        public Double DiffPliage { get; private set; }
+
+        public Double DiffPliagePct { get; private set; }
 
         #region Notification WPF
 

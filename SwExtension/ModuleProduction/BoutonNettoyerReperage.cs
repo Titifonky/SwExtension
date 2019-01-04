@@ -156,6 +156,10 @@ namespace ModuleProduction
             {
                 if (mdl.TypeDoc() != eTypeDoc.Piece) continue;
 
+
+                foreach (Configuration Cf in mdl.eListeConfigs(eTypeConfig.Depliee))
+                    Cf.eSupprimerConfigAvecEtatAff(mdl);
+
                 mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
                 {
                     mdl.ePropSuppr(CONST_PRODUCTION.ID_PIECE);

@@ -23,6 +23,7 @@ namespace ModuleProduction.ModuleRepererDossier
         public Boolean CombinerCorpsIdentiques = false;
         public Boolean CombinerAvecCampagne = false;
         public Boolean CreerDvp = false;
+        public eTypeCorps FiltrerCorps = eTypeCorps.Piece;
 
         public ListeSortedCorps ListeCorps = new ListeSortedCorps();
         public SortedDictionary<int, String> ListeCorpsCharge = new SortedDictionary<int, String>();
@@ -50,6 +51,19 @@ namespace ModuleProduction.ModuleRepererDossier
                         file.Delete();
                 }
 
+                //if (ListeCorps.Count > 0)
+                //{
+                //    //FiltrerCorps.HasFlag(
+                //    ListeSortedCorps FichierAsauvegarder = new ListeSortedCorps();
+                //    FichierAsauvegarder.CampagneDepartDecompte = ListeCorps.CampagneDepartDecompte;
+
+                //    foreach (var corps in ListeCorps.Values)
+                //        if (FiltrerCorps.HasFlag(corps.TypeCorps))
+                //            FichierAsauvegarder.Add(corps.Repere, corps);
+
+                //    ListeCorps = FichierAsauvegarder;
+                //}
+
                 if (ReinitCampagneActuelle && (ListeCorps.Count > 0))
                 {
                     // On supprime les repères de la campagne actuelle
@@ -59,6 +73,8 @@ namespace ModuleProduction.ModuleRepererDossier
                     // Si la somme des quantités des campagnes précédente est superieure à 0
                     // on garde le repère
                     ListeSortedCorps FichierAsauvegarder = new ListeSortedCorps();
+                    FichierAsauvegarder.CampagneDepartDecompte = ListeCorps.CampagneDepartDecompte;
+
                     foreach (var corps in ListeCorps.Values)
                     {
                         int nb = 0;
@@ -84,6 +100,7 @@ namespace ModuleProduction.ModuleRepererDossier
                     }
 
                     ListeCorps = FichierAsauvegarder;
+
                 }
 
                 // On supprime les campagnes superieures à l'indice actuelle
@@ -194,7 +211,7 @@ namespace ModuleProduction.ModuleRepererDossier
 
                                 // Si le dossier est la racine d'un sous-ensemble soudé, il n'y a rien dedans
                                 if (Dossier.IsRef() && (Dossier.eNbCorps() > 0) &&
-                                (eTypeCorps.Barre | eTypeCorps.Tole).HasFlag(Dossier.eTypeDeDossier()))
+                                FiltrerCorps.HasFlag(Dossier.eTypeDeDossier()))
                                     return true;
 
                                 return false;

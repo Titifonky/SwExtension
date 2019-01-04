@@ -17,6 +17,7 @@ namespace ModuleProduction.ModuleRepererDossier
         private Parametre CombinerCorpsIdentiques;
         private Parametre CombinerAvecCampagne;
         private Parametre CreerDvp;
+        private Parametre TypeCorps;
 
         private ModelDoc2 MdlBase = null;
         private int _IndiceCampagne = 0;
@@ -39,8 +40,16 @@ namespace ModuleProduction.ModuleRepererDossier
                 CombinerCorpsIdentiques = _Config.AjouterParam("CombinerCorpsIdentiques", true, "Combiner les corps identiques des différents modèles");
                 CombinerAvecCampagne = _Config.AjouterParam("CombinerAvecPrecedenteCampagne", true, "Combiner les corps avec les précédentes campagnes");
                 CreerDvp = _Config.AjouterParam("CreerDvp", true, "Creer les configs dvp des tôles");
+                TypeCorps = _Config.AjouterParam("TypeCorps", eTypeCorps.Piece, "Type de corps à repérer :");
+                TypeCorps.SetValeur(eTypeCorps.Piece);
 
                 MdlBase = App.Sw.ActiveDoc;
+                if(MdlBase.ePropExiste(CONST_PRODUCTION.FILTRE_CORPS))
+                {
+                    var r = (eTypeCorps)Enum.Parse(typeof(eTypeCorps), MdlBase.eProp(CONST_PRODUCTION.FILTRE_CORPS));
+                    TypeCorps.SetValeur(r);
+                }
+
                 OnCalque += Calque;
                 OnRunAfterActivation += RechercherIndiceCampagne;
                 OnRunOkCommand += RunOkCommand;
@@ -57,6 +66,7 @@ namespace ModuleProduction.ModuleRepererDossier
         private CtrlCheckBox _CheckBox_CombinerCorps;
         private CtrlCheckBox _CheckBox_CombinerAvecCampagne;
         private CtrlCheckBox _CheckBox_CreerDvp;
+        private CtrlEnumComboBox<eTypeCorps, Intitule> _EnumComboBox_TypeCorps;
 
         protected void Calque()
         {
@@ -111,6 +121,9 @@ namespace ModuleProduction.ModuleRepererDossier
 
                 _CheckBox_CombinerCorps.OnUnCheck += _CheckBox_CombinerAvecCampagne.UnCheck;
                 _CheckBox_CombinerCorps.OnIsCheck += _CheckBox_CombinerAvecCampagne.IsEnable;
+
+                _EnumComboBox_TypeCorps = G.AjouterEnumComboBox<eTypeCorps, Intitule>(TypeCorps);
+                _EnumComboBox_TypeCorps.FiltrerEnum = eTypeCorps.Tole | eTypeCorps.Barre | eTypeCorps.Piece;
             }
             catch (Exception e)
             { this.LogMethode(new Object[] { e }); }
@@ -200,8 +213,11 @@ namespace ModuleProduction.ModuleRepererDossier
             Cmd.ReinitCampagneActuelle = ReinitCampagneActuelle && _CheckBox_ReinitCampagneActuelle.IsChecked;
             Cmd.CreerDvp = _CheckBox_CreerDvp.IsChecked;
             Cmd.ListeCorps = ListeCorps;
+            Cmd.FiltrerCorps = _EnumComboBox_TypeCorps.Val;
 
             Cmd.Executer();
+
+            MdlBase.ePropAdd(CONST_PRODUCTION.FILTRE_CORPS, _EnumComboBox_TypeCorps.Val);
         }
     }
 }
