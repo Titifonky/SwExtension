@@ -136,7 +136,7 @@
     <Parametre name="PropQuantite" intitule="Propriete &quot;Quantite&quot;" tip="Recherche cette propriete" type="System.String">Quantite</Parametre>
     <Parametre name="PrendreEnCompteTole" intitule="Prendre en compte les tôles" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="ComposantExterne" intitule="Prendre en compte les composants externe au dossier du modèle" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="LgBarre" intitule="Lg d'une barre" tip="" type="System.Int32">6010</Parametre>
+    <Parametre name="LgBarre" intitule="Lg d'une barre" tip="" type="System.Int32">6000</Parametre>
     <Parametre name="AfficherListe" intitule="Afficher la liste après execution" tip="" type="System.Boolean">True</Parametre>
   </Module>
   <Module name="ExclureNomenclature" intitule="Inclure/Exclure de la nomenclature">
@@ -180,7 +180,7 @@
   <Module name="Test2" intitule="Test2" />
   <Module name="SelectionnerCorpsIdentiques" intitule="Selectionner les corps identiques" />
   <Module name="NumeroterDossier" intitule="Numeroter les dossiers">
-    <Parametre name="CombinerCorpsIdentiques" intitule="Combiner les corps identiques des différents modèles" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="CombinerCorpsIdentiques" intitule="Combiner les corps identiques des différents modèles" tip="" type="System.Boolean">False</Parametre>
   </Module>
   <Module name="AfficherLogDebug" intitule="Afficher le log de debug" />
   <Module name="ExportStructure" intitule="Exporter les structures" />

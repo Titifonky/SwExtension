@@ -18,6 +18,7 @@ namespace ModuleProduction
         private ModelDoc2 MdlBase = null;
         private Parametre ParamLongueurMax;
         private Double LgMax = 6000;
+        private SortedDictionary<String, SortedDictionary<String, List<Double>>> DicBarres = new SortedDictionary<string, SortedDictionary<string, List<Double>>>();
         private SortedDictionary<String, SortedDictionary<String, Ligne>> DicMateriau = new SortedDictionary<string, SortedDictionary<string, Ligne>>();
 
         public BoutonCommandeProfil()
@@ -76,17 +77,54 @@ namespace ModuleProduction
 
                                 while (LgTmp > LgMax)
                                 {
-                                    AjouterBarre(MateriauCorps, Profil, LgMax);
+                                    RassemblerBarre(MateriauCorps, Profil, LgMax);
                                     LgTmp = LgTmp - LgMax;
                                 }
 
-                                AjouterBarre(MateriauCorps, Profil, LgTmp);
+                                RassemblerBarre(MateriauCorps, Profil, LgTmp);
                             }
                         }
                     }
 
                     if (mdl.GetPathName() != MdlBase.GetPathName())
                         App.Sw.CloseDoc(mdl.GetPathName());
+                }
+
+                // On fait la mise en barre
+                foreach (var Materiau in DicBarres.Keys)
+                {
+                    WindowLog.SautDeLigne();
+                    WindowLog.EcrireF("{0}", Materiau); ;
+                    foreach (var Profil in DicBarres[Materiau].Keys)
+                    {
+                        WindowLog.SautDeLigne();
+                        WindowLog.EcrireF("  {0}", Profil);
+                        var lst = DicBarres[Materiau][Profil];
+                        lst.Sort();
+                        lst.Reverse();
+
+                        foreach (var lg in lst)
+                            WindowLog.EcrireF("  - {0}", lg);
+
+                        int i = 0;
+                        while (true)
+                        {
+                            var lg = lst[i];
+                            if (AjouterBarre(Materiau, Profil, lg))
+                            {
+                                lst.RemoveAt(i);
+                                if (lst.Count == 0) break;
+                            }
+                            else
+                                i++;
+
+                            if (i >= lst.Count)
+                            {
+                                i = 0;
+                                NouvelleBarre(Materiau, Profil);
+                            }
+                        }
+                    }
                 }
 
                 String Resume = "";
@@ -102,7 +140,7 @@ namespace ModuleProduction
                     }
                 }
                 WindowLog.SautDeLigne();
-                WindowLog.Ecrire("Liste");
+                WindowLog.Ecrire("A commander");
                 WindowLog.Ecrire(Resume);
                 WindowLog.SautDeLigne();
                 File.WriteAllText(Path.Combine(MdlBase.eDossier(), "CommandeProfil.txt"), Resume);
@@ -113,18 +151,55 @@ namespace ModuleProduction
             }
         }
 
-        private void AjouterBarre(String materiauCorps, String profil, Double longueur)
+        private void RassemblerBarre(String materiauCorps, String profil, Double longueur)
+        {
+            if (DicBarres.ContainsKey(materiauCorps))
+            {
+                if (DicBarres[materiauCorps].ContainsKey(profil))
+                {
+                    var l = DicBarres[materiauCorps][profil];
+                    l.Add(longueur);
+                }
+                else
+                {
+                    var l = new List<Double>();
+                    l.Add(longueur);
+                    DicBarres[materiauCorps].Add(profil, l);
+                }
+            }
+            else
+            {
+                var l = new List<Double>();
+                l.Add(longueur);
+                var DicProfil = new SortedDictionary<String, List<Double>>();
+                DicProfil.Add(profil, l);
+                DicBarres.Add(materiauCorps, DicProfil);
+            }
+        }
+
+        private void NouvelleBarre(String materiauCorps, String profil)
         {
             if (DicMateriau.ContainsKey(materiauCorps))
             {
                 if (DicMateriau[materiauCorps].ContainsKey(profil))
                 {
                     var l = DicMateriau[materiauCorps][profil];
-                    if (l.Reste < longueur)
-                    {
-                        l.NbBarre += 1;
-                        l.Reste = LgMax - longueur;
-                    }
+                    l.NbBarre++;
+                    l.Reste = LgMax;
+                }
+            }
+        }
+
+        private Boolean AjouterBarre(String materiauCorps, String profil, Double longueur)
+        {
+            Boolean AjouterBarre = true;
+            if (DicMateriau.ContainsKey(materiauCorps))
+            {
+                if (DicMateriau[materiauCorps].ContainsKey(profil))
+                {
+                    var l = DicMateriau[materiauCorps][profil];
+                    if (longueur > l.Reste)
+                        AjouterBarre = false;
                     else
                         l.Reste -= longueur;
                 }
@@ -145,6 +220,8 @@ namespace ModuleProduction
                 DicProfil.Add(profil, l);
                 DicMateriau.Add(materiauCorps, DicProfil);
             }
+
+            return AjouterBarre;
         }
 
         private class Ligne
