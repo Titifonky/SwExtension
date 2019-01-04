@@ -31,6 +31,7 @@ namespace Macros
                 foreach (var vue in ListeVue)
                 {
                     if (vue.IsNull()) continue;
+                    if (!vue.IsFlatPatternView()) continue;
 
                     WindowLog.Ecrire(vue.Name);
                     vue.FlipView = !vue.FlipView;

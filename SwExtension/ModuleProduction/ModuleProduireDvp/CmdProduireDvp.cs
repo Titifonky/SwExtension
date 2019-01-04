@@ -136,6 +136,7 @@ namespace ModuleProduction.ModuleProduireDvp
             if (!corps.Dvp || !corps.Maj) return;
 
             var QuantiteDiff = Quantite * (corps.Qte + corps.QteSup);
+            Double Epaisseur = corps.Dimension.eToDouble();
 
             var cheminFichier = corps.CheminFichierRepere;
             if (!File.Exists(cheminFichier)) return;
@@ -143,16 +144,19 @@ namespace ModuleProduction.ModuleProduireDvp
             var mdlCorps = Sw.eOuvrir(cheminFichier);
             if (mdlCorps.IsNull()) return;
 
-            WindowLog.EcrireF("{0}  x{1}", corps.RepereComplet, QuantiteDiff);
+            var piece = mdlCorps.ePartDoc();
 
             var listeCfgPliee = mdlCorps.eListeNomConfiguration(eTypeConfig.Pliee);
             var NomConfigPliee = listeCfgPliee[0];
-            mdlCorps.ePartDoc().ePremierCorps(false).eVisible(true);
 
             if (mdlCorps.eNomConfigActive() != NomConfigPliee)
                 mdlCorps.ShowConfiguration2(NomConfigPliee);
 
-            mdlCorps.ePartDoc().ePremierCorps(false).eVisible(true);
+            WindowLog.EcrireF("{0}  x{1}", corps.RepereComplet, QuantiteDiff);
+            piece.ePremierCorps(false).eVisible(true);
+            Double SurfacePliee = (piece.ePremierCorps().eVolume() * 1000000000) / Epaisseur;
+
+            piece.ePremierCorps(false).eVisible(true);
             var listeCfgDepliee = mdlCorps.eListeNomConfiguration(eTypeConfig.Depliee);
             if (listeCfgDepliee.Count == 0) return;
 
@@ -164,11 +168,22 @@ namespace ModuleProduction.ModuleProduireDvp
                 return;
             }
 
+            Double SurfaceDePliee = (piece.ePremierCorps().eVolume() * 1000000000) / Epaisseur;
+            Double diff = Math.Abs(Math.Round(SurfaceDePliee - SurfacePliee,0));
+            Double diffPct = 0;
+            try
+            {
+                diffPct = Math.Round(diff * 100 / Math.Max(SurfaceDePliee, SurfacePliee), 2);
+            }
+            catch { }
+
+            WindowLog.EcrireF("  - Controle : {0}% [{1}]", diffPct, diff);
+
             mdlCorps.ePartDoc().ePremierCorps(false).eVisible(true);
             mdlCorps.EditRebuild3();
             mdlCorps.ePartDoc().ePremierCorps(false).eVisible(true);
 
-            DrawingDoc dessin = CreerPlan(corps.Materiau, corps.Dimension.eToDouble(), MettreAjourCampagne);
+            DrawingDoc dessin = CreerPlan(corps.Materiau, Epaisseur, MettreAjourCampagne);
             dessin.eModelDoc2().eActiver();
             Sheet Feuille = dessin.eFeuilleActive();
 
@@ -189,7 +204,7 @@ namespace ModuleProduction.ModuleProduireDvp
                     }
                 }
 
-                View v = CreerVueToleDvp(dessin, Feuille, mdlCorps.ePartDoc(), NomConfigDepliee, corps.RepereComplet, corps.Materiau, QuantiteDiff, corps.Dimension.eToDouble());
+                View v = CreerVueToleDvp(dessin, Feuille, piece, NomConfigDepliee, corps.RepereComplet, corps.Materiau, QuantiteDiff, Epaisseur);
             }
             catch (Exception e)
             {
