@@ -166,6 +166,7 @@ namespace ModuleProduction.ModuleProduireDvp
 
             mdlCorps.ePartDoc().ePremierCorps(false).eVisible(true);
             mdlCorps.EditRebuild3();
+            mdlCorps.ePartDoc().ePremierCorps(false).eVisible(true);
 
             DrawingDoc dessin = CreerPlan(corps.Materiau, corps.Dimension.eToDouble(), MettreAjourCampagne);
             dessin.eModelDoc2().eActiver();
@@ -315,8 +316,6 @@ namespace ModuleProduction.ModuleProduireDvp
 
         public View CreerVueToleDvp(DrawingDoc dessin, Sheet feuille, PartDoc piece, String configDepliee, String Ref, String materiau, int quantite, Double epaisseur)
         {
-            piece.ePremierCorps(false).eVisible(true);
-
             var NomVue = piece.eModelDoc2().eNomSansExt() + " - " + configDepliee;
 
             dessin.eModelDoc2().eEffacerSelection();
@@ -385,7 +384,7 @@ namespace ModuleProduction.ModuleProduireDvp
             var liste = piece.eListeFonctionsDepliee();
             if (liste.Count == 0) return null;
 
-            Feature FonctionDepliee = piece.eListeFonctionsDepliee()[0];
+            Feature FonctionDepliee = liste[0];
 
             GeomVue g = null;
 
