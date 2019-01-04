@@ -426,7 +426,7 @@ namespace ModuleProduction
                                 qteCampagnePrecedente += c.Value;
                         }
 
-                        qte -= qteCampagnePrecedente;
+                        qte = Math.Max(0, qte - qteCampagnePrecedente);
                     }
 
                     corps.Qte = qte;
