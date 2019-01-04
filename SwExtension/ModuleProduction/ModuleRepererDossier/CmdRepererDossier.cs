@@ -297,6 +297,9 @@ namespace ModuleProduction.ModuleRepererDossier
                 foreach (var f in ListeCorpsCharge.Values)
                     App.Sw.CloseDoc(f);
 
+                WindowLog.SautDeLigne();
+                WindowLog.EcrireF("Nb de repères : {0}", ListeCorps.Keys.Max());
+
                 ////////////////////////////////// EXPORTER LES CORPS /////////////////////////////////////////////////
 
                 WindowLog.SautDeLigne();

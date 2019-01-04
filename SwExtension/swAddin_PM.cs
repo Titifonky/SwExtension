@@ -165,7 +165,8 @@ namespace SwExtension
                 _Mnu = _eListeMenu.Add("Dessin", "Dessin Sw");
                 _Mnu.AjouterCmde("Mp", typeof(BoutonMettreEnPage));
                 _Mnu.AjouterCmde("Rt", typeof(BoutonRenommerToutesFeuilles));
-                _Mnu.AjouterCmde("Rt", typeof(BoutonMasquerCorpsVue));
+                _Mnu.AjouterCmde("Mv", typeof(BoutonMasquerCorpsVue));
+                _Mnu.AjouterCmde("Rv", typeof(BoutonRetournerDvp));
 
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde("Ed", typeof(PageDxfDwg));

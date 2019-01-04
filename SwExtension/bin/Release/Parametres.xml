@@ -213,4 +213,5 @@
   </Module>
   <Module name="ControlerReperage" intitule="Contrôler le reperage" />
   <Module name="NettoyerReperage" intitule="Nettoyer le reperage" />
+  <Module name="RetournerDvp" intitule="Retourner les Dvps selectionnés" />
 </Parametres>

@@ -147,10 +147,12 @@ namespace ModuleProduction.ModuleProduireDvp
 
             var listeCfgPliee = mdlCorps.eListeNomConfiguration(eTypeConfig.Pliee);
             var NomConfigPliee = listeCfgPliee[0];
+            mdlCorps.ePartDoc().ePremierCorps(false).eVisible(true);
 
             if (mdlCorps.eNomConfigActive() != NomConfigPliee)
                 mdlCorps.ShowConfiguration2(NomConfigPliee);
 
+            mdlCorps.ePartDoc().ePremierCorps(false).eVisible(true);
             var listeCfgDepliee = mdlCorps.eListeNomConfiguration(eTypeConfig.Depliee);
             if (listeCfgDepliee.Count == 0) return;
 
@@ -162,6 +164,7 @@ namespace ModuleProduction.ModuleProduireDvp
                 return;
             }
 
+            mdlCorps.ePartDoc().ePremierCorps(false).eVisible(true);
             mdlCorps.EditRebuild3();
 
             DrawingDoc dessin = CreerPlan(corps.Materiau, corps.Dimension.eToDouble(), MettreAjourCampagne);
@@ -312,6 +315,8 @@ namespace ModuleProduction.ModuleProduireDvp
 
         public View CreerVueToleDvp(DrawingDoc dessin, Sheet feuille, PartDoc piece, String configDepliee, String Ref, String materiau, int quantite, Double epaisseur)
         {
+            piece.ePremierCorps(false).eVisible(true);
+
             var NomVue = piece.eModelDoc2().eNomSansExt() + " - " + configDepliee;
 
             dessin.eModelDoc2().eEffacerSelection();
