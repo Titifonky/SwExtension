@@ -119,14 +119,16 @@ namespace ModuleExportFichier
         protected Dossier _DernierDossier;
         protected Dossier _SelectionnerDossier;
 
+        protected Boolean AvecIndice = true;
+
         public void AjouterCalqueDossier()
         {
             _CheckBox_ToutesLesFeuilles = G.AjouterCheckBox(ToutesLesFeuilles);
 
             String CheminDernierDossier = App.DrawingDoc.eGetDernierDossier();
 
-            _DernierDossier = new Dossier(_Calque, GroupeDernierDossier, CheminDernierDossier, App.ModelDoc2.eNomSansExt(), FormatExport.GetValeur<eTypeFichierExport>());
-            _SelectionnerDossier = new Dossier(_Calque, GroupeSelectionnerDossier, OutilsCommun.CheminRelatif(App.ModelDoc2.eDossier(), App.ModelDoc2.eDossier()), App.ModelDoc2.eNomSansExt(), FormatExport.GetValeur<eTypeFichierExport>(), true, true);
+            _DernierDossier = new Dossier(_Calque, GroupeDernierDossier, CheminDernierDossier, App.ModelDoc2.eNomSansExt(), FormatExport.GetValeur<eTypeFichierExport>(), false, false, AvecIndice);
+            _SelectionnerDossier = new Dossier(_Calque, GroupeSelectionnerDossier, OutilsCommun.CheminRelatif(App.ModelDoc2.eDossier(), App.ModelDoc2.eDossier()), App.ModelDoc2.eNomSansExt(), FormatExport.GetValeur<eTypeFichierExport>(), true, true, AvecIndice);
 
             _CheckBox_ToutesLesFeuilles.OnIsCheck += delegate (Object sender, Boolean value)
             {
@@ -179,7 +181,7 @@ namespace ModuleExportFichier
 
             _CheckBox_ToutesLesFeuilles.ApplyParam();
         }
-
+        
         protected String NomDossier;
         protected String NomFichier;
         protected String NomFichierComplet;
@@ -236,6 +238,7 @@ namespace ModuleExportFichier
 
             private Boolean _Selectionnable = false;
             private Boolean _AjouterIndiceDossier = false;
+            private Boolean _AjouterIndiceFichier = true;
 
             private eTypeFichierExport _TypeFichier;
 
@@ -259,7 +262,7 @@ namespace ModuleExportFichier
 
             protected const String DossierCourant = ".";
 
-            public Dossier(Calque Calque, Parametre paramGroupe, String dossier, String fichier, eTypeFichierExport typeFichier, Boolean selectionnable = false, Boolean ajouterIndiceDossier = false)
+            public Dossier(Calque Calque, Parametre paramGroupe, String dossier, String fichier, eTypeFichierExport typeFichier, Boolean selectionnable = false, Boolean ajouterIndiceDossier = false, Boolean ajouterIndiceFichier = true)
             {
                 _Calque = Calque;
                 _ParamGroupe = paramGroupe;
@@ -270,6 +273,7 @@ namespace ModuleExportFichier
                 _TypeFichier = typeFichier;
                 _Selectionnable = selectionnable;
                 _AjouterIndiceDossier = ajouterIndiceDossier;
+                _AjouterIndiceFichier = ajouterIndiceFichier;
 
                 AjouterAuCalque();
             }
@@ -466,7 +470,10 @@ namespace ModuleExportFichier
 
                 _NomFichierBase = _NomFichierOriginal;
 
-                _NomFichierComplet = _NomFichierBase + " - " + _Indice + TypeFichier.GetEnumInfo<ExtFichier>();
+                if(_AjouterIndiceFichier)
+                    _NomFichierComplet = _NomFichierBase + " - " + _Indice + TypeFichier.GetEnumInfo<ExtFichier>();
+                else
+                    _NomFichierComplet = _NomFichierBase + TypeFichier.GetEnumInfo<ExtFichier>();
 
                 return _NomFichierComplet;
             }

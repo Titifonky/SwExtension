@@ -68,8 +68,8 @@ namespace ModuleProduction
                 {
                     f.eModifierEtat(swFeatureSuppressionAction_e.swUnSuppressFeature, nomConfigDepliee);
 
-                    if ((f.Name.ToLowerInvariant() == CONSTANTES.LIGNES_DE_PLIAGE.ToLowerInvariant()) ||
-                        (f.Name.ToLowerInvariant() == CONSTANTES.CUBE_DE_VISUALISATION.ToLowerInvariant()))
+                    if ((f.Name.ToLowerInvariant().StartsWith(CONSTANTES.LIGNES_DE_PLIAGE.ToLowerInvariant())) ||
+                        (f.Name.ToLowerInvariant().StartsWith(CONSTANTES.CUBE_DE_VISUALISATION.ToLowerInvariant())))
                     {
                         f.eSelect(true);
                     }
@@ -79,6 +79,8 @@ namespace ModuleProduction
 
             mdl.UnblankSketch();
             mdl.eEffacerSelection();
+
+            piece.ePremierCorps(false).eVisible(true);
         }
 
         public static void pPlierTole(this PartDoc piece, String nomConfigPliee)
@@ -96,8 +98,8 @@ namespace ModuleProduction
             FonctionDepliee.eParcourirSousFonction(
                 f =>
                 {
-                    if ((f.Name.ToLowerInvariant() == CONSTANTES.LIGNES_DE_PLIAGE.ToLowerInvariant()) ||
-                        (f.Name.ToLowerInvariant() == CONSTANTES.CUBE_DE_VISUALISATION.ToLowerInvariant()))
+                    if ((f.Name.ToLowerInvariant().StartsWith(CONSTANTES.LIGNES_DE_PLIAGE.ToLowerInvariant())) ||
+                        (f.Name.ToLowerInvariant().StartsWith(CONSTANTES.CUBE_DE_VISUALISATION.ToLowerInvariant())))
                     {
                         f.eSelect(true);
                     }
@@ -107,6 +109,8 @@ namespace ModuleProduction
 
             mdl.BlankSketch();
             mdl.eEffacerSelection();
+
+            piece.ePremierCorps(false).eVisible(true);
         }
 
         public static void pMasquerEsquisses(this ModelDoc2 mdl)
@@ -126,6 +130,95 @@ namespace ModuleProduction
                                     },
                                     true
                                     );
+        }
+
+        public static void CreerDvp(this Corps corps, String dossierPiece, Boolean _supprimerLesAnciennesConfigs = false)
+        {
+            try
+            {
+                if (corps.TypeCorps != eTypeCorps.Tole) return;
+
+                String Repere = CONSTANTES.PREFIXE_REF_DOSSIER + corps.Repere;
+
+                var nomFichier = Repere + OutilsProd.ExtPiece;
+                var chemin = Path.Combine(dossierPiece, nomFichier);
+                if (!File.Exists(chemin)) return;
+
+                var mdl = Sw.eOuvrir(chemin);
+                if (mdl.IsNull()) return;
+
+                var NomCfgPliee = mdl.eNomConfigActive();
+                var Piece = mdl.ePartDoc();
+                var Tole = Piece.ePremierCorps();
+
+                if (_supprimerLesAnciennesConfigs)
+                    mdl.pSupprimerLesAnciennesConfigs();
+
+                mdl.pMasquerEsquisses();
+
+                if (!mdl.Extension.LinkedDisplayState)
+                {
+                    mdl.Extension.LinkedDisplayState = true;
+
+                    foreach (var c in mdl.eListeConfigs(eTypeConfig.Tous))
+                        c.eRenommerEtatAffichage();
+                }
+
+                mdl.EditRebuild3();
+
+                String NomConfigDepliee = Sw.eNomConfigDepliee(NomCfgPliee, Repere);
+
+                if (!mdl.pCreerConfigDepliee(NomConfigDepliee, NomCfgPliee))
+                {
+                    WindowLog.Ecrire("       - Config non crée");
+                    return;
+                }
+                try
+                {
+                    mdl.ShowConfiguration2(NomConfigDepliee);
+                    mdl.pMasquerEsquisses();
+                    mdl.EditRebuild3();
+                    Piece.pDeplierTole(NomConfigDepliee);
+
+                    mdl.ShowConfiguration2(NomCfgPliee);
+                    mdl.pMasquerEsquisses();
+                    mdl.EditRebuild3();
+                    Piece.pPlierTole(NomCfgPliee);
+                    WindowLog.EcrireF("  - Dvp crée : {0}", NomConfigDepliee);
+                }
+                catch (Exception e)
+                {
+                    WindowLog.Ecrire("  - Erreur de dvp");
+                    Log.Message(new Object[] { e });
+                }
+
+                mdl.ShowConfiguration2(NomCfgPliee);
+                mdl.EditRebuild3();
+                mdl.eSauver();
+            }
+            catch (Exception e)
+            {
+                Log.Message(new Object[] { e });
+            }
+        }
+
+        public static void pSupprimerLesAnciennesConfigs(this ModelDoc2 mdl)
+        {
+            if (mdl.eNomConfigActive().eEstConfigDepliee())
+                mdl.ShowConfiguration2(mdl.eListeNomConfiguration()[0]);
+
+            mdl.EditRebuild3();
+
+            WindowLog.Ecrire("  - Suppression des cfgs depliées :");
+            var liste = mdl.eListeConfigs(eTypeConfig.Depliee);
+            if (liste.Count == 0)
+                WindowLog.EcrireF("   Aucune configuration à supprimer");
+
+            foreach (Configuration Cf in liste)
+            {
+                String IsSup = Cf.eSupprimerConfigAvecEtatAff(mdl) ? "Ok" : "Erreur";
+                WindowLog.EcrireF("  {0} : {1}", Cf.Name, IsSup);
+            }
         }
 
         /// <summary>

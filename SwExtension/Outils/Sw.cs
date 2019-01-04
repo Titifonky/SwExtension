@@ -133,1000 +133,6 @@ namespace Outils
         Tous = Tole | Barre | Autre
     }
 
-    public enum eFeatureType
-    {
-        [Intitule("ExplodeLineProfileFeature")]
-        swTnExplodeLineProfileFeature,
-
-        [Intitule("InContextFeatHolder")]
-        swTnInContextFeatHolder,
-
-        [Intitule("MateCoincident")]
-        swTnMateCoincident,
-
-        [Intitule("MateConcentric")]
-        swTnMateConcentric,
-
-        [Intitule("MateDistanceDim")]
-        swTnMateDistanceDim,
-
-        [Intitule("MateGroup")]
-        swTnMateGroup,
-
-        [Intitule("MateInPlace")]
-        swTnMateInPlace,
-
-        [Intitule("MateParallel")]
-        swTnMateParallel,
-
-        [Intitule("MatePerpendicular")]
-        swTnMatePerpendicular,
-
-        [Intitule("MatePlanarAngleDim")]
-        swTnMatePlanarAngleDim,
-
-        [Intitule("MateSymmetric")]
-        swTnMateSymmetric,
-
-        [Intitule("MateTangent")]
-        swTnMateTangent,
-
-        [Intitule("MateWidth")]
-        swTnMateWidth,
-
-        [Intitule("Reference")]
-        swTnReference,
-
-        [Intitule("SmartComponentFeature")]
-        swTnSmartComponentFeature,
-
-        [Intitule("BaseBody")]
-        swTnBaseBody,
-
-        [Intitule("Blend")]
-        swTnBlend,
-
-        [Intitule("BlendCut")]
-        swTnBlendCut,
-
-        [Intitule("Boss")]
-        swTnBoss,
-
-        [Intitule("BossThin")]
-        swTnBossThin,
-
-        [Intitule("Cavity")]
-        swTnCavity,
-
-        [Intitule("Chamfer")]
-        swTnChamfer,
-
-        [Intitule("CirPattern")]
-        swTnCirPattern,
-
-        [Intitule("CombineBodies")]
-        swTnCombineBodies,
-
-        [Intitule("CosmeticThread")]
-        swTnCosmeticThread,
-
-        [Intitule("CurvePattern")]
-        swTnCurvePattern,
-
-        [Intitule("Cut")]
-        swTnCut,
-
-        [Intitule("CutThin")]
-        swTnCutThin,
-
-        [Intitule("Deform")]
-        swTnDeform,
-
-        [Intitule("DeleteBody")]
-        swTnDeleteBody,
-
-        [Intitule("DelFace")]
-        swTnDelFace,
-
-        [Intitule("DerivedCirPattern")]
-        swTnDerivedCirPattern,
-
-        [Intitule("DerivedLPattern")]
-        swTnDerivedLPattern,
-
-        [Intitule("Dome")]
-        swTnDome,
-
-        [Intitule("Draft")]
-        swTnDraft,
-
-        [Intitule("Emboss")]
-        swTnEmboss,
-
-        [Intitule("Extrusion")]
-        swTnExtrusion,
-
-        [Intitule("Fillet")]
-        swTnFillet,
-
-        [Intitule("Round fillet corner")]
-        swTnFilletCorner,
-
-        [Intitule("Helix")]
-        swTnHelix,
-
-        [Intitule("HoleWzd")]
-        swTnHoleWzd,
-
-        [Intitule("Imported")]
-        swTnImported,
-
-        [Intitule("ICE")]
-        swTnICE,
-
-        [Intitule("LocalCirPattern")]
-        swTnLocalCirPattern,
-
-        [Intitule("LocalLPattern")]
-        swTnLocalLPattern,
-
-        [Intitule("LPattern")]
-        swTnLPattern,
-
-        [Intitule("MirrorPattern")]
-        swTnMirrorPattern,
-
-        [Intitule("MirrorSolid")]
-        swTnMirrorSolid,
-
-        [Intitule("MoveCopyBody")]
-        swTnMoveCopyBody,
-
-        [Intitule("ReplaceFace")]
-        swTnReplaceFace,
-
-        [Intitule("RevCut")]
-        swTnRevCut,
-
-        [Intitule("Revolution")]
-        swTnRevolution,
-
-        [Intitule("RevolutionThin")]
-        swTnRevolutionThin,
-
-        [Intitule("Shape")]
-        swTnShape,
-
-        [Intitule("Shell")]
-        swTnShell,
-
-        [Intitule("Split")]
-        swTnSplit,
-
-        [Intitule("Stock")]
-        swTnStock,
-
-        [Intitule("Sweep")]
-        swTnSweep,
-
-        [Intitule("SweepCut")]
-        swTnSweepCut,
-
-        [Intitule("TablePattern")]
-        swTnTablePattern,
-
-        [Intitule("Thicken")]
-        swTnThicken,
-
-        [Intitule("ThickenCut")]
-        swTnThickenCut,
-
-        [Intitule("VarFillet")]
-        swTnVarFillet,
-
-        [Intitule("VolSweep")]
-        swTnVolSweep,
-
-        [Intitule("VolSweepCut")]
-        swTnVolSweepCut,
-
-        [Intitule("MirrorStock")]
-        swTnMirrorStock,
-
-        [Intitule("AbsoluteView")]
-        swTnAbsoluteView,
-
-        [Intitule("AlignGroup")]
-        swTnAlignGroup,
-
-        [Intitule("AuxiliaryView")]
-        swTnAuxiliaryView,
-
-        [Intitule("BomTemplate")]
-        swTnBomTableAnchor,
-
-        [Intitule("BomFeat")]
-        swTnBomTableFeature,
-
-        [Intitule("BomTemplate")]
-        swTnBomTemplate,
-
-        [Intitule("BreakLine")]
-        swTnBreakLine,
-
-        [Intitule("CenterMark")]
-        swTnCenterMark,
-
-        [Intitule("DetailCircle")]
-        swTnDetailCircle,
-
-        [Intitule("DetailView")]
-        swTnDetailView,
-
-        [Intitule("DrBreakoutSectionLine")]
-        swTnDrBreakoutSectionLine,
-
-        [Intitule("DrSectionLine")]
-        swTnDrSectionLine,
-
-        [Intitule("DrSheet")]
-        swTnDrSheet,
-
-        [Intitule("DrTemplate")]
-        swTnDrTemplate,
-
-        [Intitule("DrViewDetached")]
-        swTnDrViewDetached,
-
-        [Intitule("GeneralTableAnchor")]
-        swTnGeneralTableAnchor,
-
-        [Intitule("HoleTableAnchor")]
-        swTnHoleTableAnchor,
-
-        [Intitule("HoleTableFeat")]
-        swTnHoleTableFeat,
-
-        [Intitule("HoleTableFeat")]
-        swTnHoleTableFeature,
-
-        [Intitule("LiveSection")]
-        swTnLiveSection,
-
-        [Intitule("RelativeView")]
-        swTnRelativeView,
-
-        [Intitule("RevisionTableAnchor")]
-        swTnRevisionTableAnchor,
-
-        [Intitule("RevisionTableFeat")]
-        swTnRevisionTableFeature,
-
-        [Intitule("Section")]
-        swTnSection,
-
-        [Intitule("SectionAssemView")]
-        swTnSectionAssemView,
-
-        [Intitule("SectionPartView")]
-        swTnSectionPartView,
-
-        [Intitule("SectionView")]
-        swTnSectionView,
-
-        [Intitule("UnfoldedView")]
-        swTnUnfoldedView,
-
-        [Intitule("BlockFolder")]
-        swTnBlocksFolder,
-
-        [Intitule("BrokenDerivedPartFolder")]
-        swTnBrokenDerivedPartFolder,
-
-        [Intitule("CommentsFolder")]
-        swTnCommentsFolder,
-
-        [Intitule("CutListFolder")]
-        swTnCutListFolder,
-
-        [Intitule("DocsFolder")]
-        swTnDocsFolder,
-
-        [Intitule("FeatSolidBodyFolder")]
-        swTnFeatSolidBodyFolder,
-
-        [Intitule("FeatSurfaceBodyFolder")]
-        swTnFeatSurfaceBodyFolder,
-
-        [Intitule("FtrFolder")]
-        swTnFeatureFolder,
-
-        [Intitule("FtrFolder")]
-        swTnFtrFolder,
-
-        [Intitule("GridDetailFolder")]
-        swTnGridDetailFolder,
-
-        [Intitule("InsertedFeatureFolder")]
-        swTnInsertedFeatureFolder,
-
-        [Intitule("LiveSectionFolder")]
-        swTnLiveSectionFolder,
-
-        [Intitule("MateReferenceGroupFolder")]
-        swTnMateReferenceGroupFolder,
-
-        [Intitule("MaterialFolder")]
-        swTnMaterialFolder,
-
-        [Intitule("PosGroupFolder")]
-        swTnPosGroupFolder,
-
-        [Intitule("ProfileFtrFolder")]
-        swTnProfileFtrFolder,
-
-        [Intitule("RefAxisFtrFolder")]
-        swTnRefAxisFtrFolder,
-
-        [Intitule("RefPlaneFtrFolder")]
-        swTnRefPlaneFtrFolder,
-
-        [Intitule("SolidBodyFolder")]
-        swTnSolidBodyFolder,
-
-        [Intitule("SmartComponentFolder")]
-        swTnSmartComponentFolder,
-
-        [Intitule("SmartComponentRefFolder")]
-        swTnSmartComponentRefFolder,
-
-        [Intitule("SubAtomFolder")]
-        swTnSubAtomFolder,
-
-        [Intitule("SubWeldFolder")]
-        swTnSubWeldFolder,
-
-        [Intitule("SurfaceBodyFolder")]
-        swTnSurfaceBodyFolder,
-
-        [Intitule("TableFolder")]
-        swTnTableFolder,
-
-        [Intitule("Attribute")]
-        swTnAttribute,
-
-        [Intitule("BlockDef")]
-        swTnBlockDef,
-
-        [Intitule("Comments")]
-        swTnComments,
-
-        [Intitule("ConfigBuilderFeature")]
-        swTnConfigBuilderFeature,
-
-        [Intitule("Configuration")]
-        swTnConfiguration,
-
-        [Intitule("CurveInFile")]
-        swTnCurveInFile,
-
-        [Intitule("DesignTableFeature")]
-        swTnDesignTableFeature,
-
-        [Intitule("DetailCabinet")]
-        swTnDetailCabinet,
-
-        [Intitule("EmbedLinkDoc")]
-        swTnEmbedLinkDoc,
-
-        [Intitule("GridFeature")]
-        swTnGridFeature,
-
-        [Intitule("Journal")]
-        swTnJournal,
-
-        [Intitule("LibraryFeature")]
-        swTnLibraryFeature,
-
-        [Intitule("PartConfiguration")]
-        swTnPartConfiguration,
-
-        [Intitule("ReferenceBrowser")]
-        swTnReferenceBrowser,
-
-        [Intitule("ReferenceEmbedded")]
-        swTnReferenceEmbedded,
-
-        [Intitule("ReferenceInternal")]
-        swTnReferenceInternal,
-
-        [Intitule("Scale")]
-        swTnScale,
-
-        [Intitule("ViewerBodyFeature")]
-        swTnViewerBodyFeature,
-
-        [Intitule("XMLRulesFeature")]
-        swTnXMLRulesFeature,
-
-        [Intitule("MoldCoreCavitySolids")]
-        swTnMoldCoreCavitySolids,
-
-        [Intitule("MoldPartingGeom")]
-        swTnMoldPartingGeom,
-
-        [Intitule("MoldPartingLine")]
-        swTnMoldPartingLine,
-
-        [Intitule("MoldShutOffSrf")]
-        swTnMoldShutOffSrf,
-
-        [Intitule("AEM3DContact")]
-        swTnAEM3DContact,
-
-        [Intitule("AEMGravity")]
-        swTnAEMGravity,
-
-        [Intitule("AEMLinearDamper")]
-        swTnAEMLinearDamper,
-
-        [Intitule("AEMLinearForce")]
-        swTnAEMLinearForce,
-
-        [Intitule("AEMLinearMotor")]
-        swTnAEMLinearMotor,
-
-        [Intitule("AEMLinearSpring")]
-        swTnAEMLinearSpring,
-
-        [Intitule("AEMRotationalMotor")]
-        swTnAEMRotationalMotor,
-
-        [Intitule("AEMSimFeature")]
-        swTnAEMSimFeature,
-
-        [Intitule("AEMTorque")]
-        swTnAEMTorque,
-
-        [Intitule("AEMTorsionalDamper")]
-        swTnAEMTorsionalDamper,
-
-        [Intitule("AEMTorsionalSpring")]
-        swTnAEMTorsionalSpring,
-
-        [Intitule("CoordSys")]
-        swTnCoordinateSystem,
-
-        [Intitule("CoordSys")]
-        swTnCoordSys,
-
-        [Intitule("RefAxis")]
-        swTnRefAxis,
-
-        [Intitule("ReferenceCurve")]
-        swTnReferenceCurve,
-
-        [Intitule("RefPlane")]
-        swTnRefPlane,
-
-        [Intitule("AmbientLight")]
-        swTnAmbientLight,
-
-        [Intitule("CameraFeature")]
-        swTnCameraFeature,
-
-        [Intitule("DirectionLight")]
-        swTnDirectionLight,
-
-        [Intitule("PointLight")]
-        swTnPointLight,
-
-        [Intitule("SpotLight")]
-        swTnSpotLight,
-
-        [Intitule("SMBaseFlange")]
-        swTnBaseFlange,
-
-        [Intitule("Bending")]
-        swTnBending,
-
-        [Intitule("BreakCorner")]
-        swTnBreakCorner,
-
-        [Intitule("CornerTrim")]
-        swTnCornerTrim,
-
-        [Intitule("CrossBreak")]
-        swTnCrossBreak,
-
-        [Intitule("EdgeFlange")]
-        swTnEdgeFlange,
-
-        [Intitule("FlatPattern")]
-        swTnFlatPattern,
-
-        [Intitule("FlattenBends")]
-        swTnFlattenBends,
-
-        [Intitule("Fold")]
-        swTnFold,
-
-        [Intitule("FormToolInstance")]
-        swTnFormToolInstance,
-
-        [Intitule("Hem")]
-        swTnHem,
-
-        [Intitule("LoftedBend")]
-        swTnLoftedBend,
-
-        [Intitule("OneBend")]
-        swTnOneBend,
-
-        [Intitule("ProcessBends")]
-        swTnProcessBends,
-
-        [Intitule("SheetMetal")]
-        swTnSheetMetal,
-
-        [Intitule("SketchBend")]
-        swTnSketchBend,
-
-        [Intitule("SM3dBend")]
-        swTnSM3dBend,
-
-        [Intitule("SMBaseFlange")]
-        swTnSMBaseFlange,
-
-        [Intitule("SMMiteredFlange")]
-        swTnSMMiteredFlange,
-
-        [Intitule("ToroidalBend")]
-        swTnToroidalBend,
-
-        [Intitule("UiBend")]
-        swTnUiBend,
-
-        [Intitule("UnFold")]
-        swTnUnFold,
-
-        [Intitule("3DProfileFeature")]
-        swTn3DProfileFeature,
-
-        [Intitule("3DSplineCurve")]
-        swTn3DSplineCurve,
-
-        [Intitule("CompositeCurve")]
-        swTnCompositeCurve,
-
-        [Intitule("LayoutProfileFeature")]
-        swTnLayoutProfileFeature,
-
-        [Intitule("PLine")]
-        swTnPLine,
-
-        [Intitule("ProfileFeature")]
-        swTnProfileFeature,
-
-        [Intitule("RefCurve")]
-        swTnRefCurve,
-
-        [Intitule("RefPoint")]
-        swTnRefPoint,
-
-        [Intitule("SketchBlockDef")]
-        swTnSketchBlockDefinition,
-
-        [Intitule("SketchHole")]
-        swTnSketchHole,
-
-        [Intitule("SketchPattern")]
-        swTnSketchPattern,
-
-        [Intitule("SketchBitmap")]
-        swTnSketchPicture,
-
-        [Intitule("BlendRefSurface")]
-        swTnBlendRefSurface,
-
-        [Intitule("FillRefSurface")]
-        swTnFillRefSurface,
-
-        [Intitule("MidRefSurface")]
-        swTnMidRefSurface,
-
-        [Intitule("OffsetRefSurface")]
-        swTnOffsetRefSurface,
-
-        [Intitule("RadiateRefSurface")]
-        swTnRadiateRefSurface,
-
-        [Intitule("RefSurface")]
-        swTnRefSurface,
-
-        [Intitule("RevolvRefSurf")]
-        swTnRevolvRefSurf,
-
-        [Intitule("RuledSrfFromEdge")]
-        swTnRuledSrfFromEdge,
-
-        [Intitule("SewRefSurface")]
-        swTnSewRefSurface,
-
-        [Intitule("SurfCut")]
-        swTnSurfCut,
-
-        [Intitule("SweepRefSurface")]
-        swTnSweepRefSurface,
-
-        [Intitule("TrimRefSurface")]
-        swTnTrimRefSurface,
-
-        [Intitule("UnTrimRefSurf")]
-        swTnUnTrimRefSurf,
-
-        [Intitule("VolSweepRefSurface")]
-        swTnVolSweepRefSurface,
-
-        [Intitule("Gusset")]
-        swTnGusset,
-
-        [Intitule("WeldMemberFeat")]
-        swTnWeldMemberFeat,
-
-        [Intitule("WeldmentFeature")]
-        swTnWeldmentFeature,
-
-        [Intitule("WeldmentTableAnchor")]
-        swTnWeldmentTableAnchor,
-
-        [Intitule("WeldmentTableFeat")]
-        swTnWeldmentTableFeature
-    }
-
-    public static class FeatureType
-    {
-        public const String swTnExplodeLineProfileFeature = "ExplodeLineProfileFeature";
-        public const String swTnInContextFeatHolder = "InContextFeatHolder";
-        public const String swTnMateCoincident = "MateCoincident";
-        public const String swTnMateConcentric = "MateConcentric";
-        public const String swTnMateDistanceDim = "MateDistanceDim";
-        public const String swTnMateGroup = "MateGroup";
-        public const String swTnMateInPlace = "MateInPlace";
-        public const String swTnMateParallel = "MateParallel";
-        public const String swTnMatePerpendicular = "MatePerpendicular";
-        public const String swTnMatePlanarAngleDim = "MatePlanarAngleDim";
-        public const String swTnMateSymmetric = "MateSymmetric";
-        public const String swTnMateTangent = "MateTangent";
-        public const String swTnMateWidth = "MateWidth";
-        public const String swTnReference = "Reference";
-        public const String swTnSmartComponentFeature = "SmartComponentFeature";
-        public const String swTnBaseBody = "BaseBody";
-        public const String swTnBlend = "Blend";
-        public const String swTnBlendCut = "BlendCut";
-        public const String swTnBoss = "Boss";
-        public const String swTnBossThin = "BossThin";
-        public const String swTnCavity = "Cavity";
-        public const String swTnChamfer = "Chamfer";
-        public const String swTnCirPattern = "CirPattern";
-        public const String swTnCombineBodies = "CombineBodies";
-        public const String swTnCosmeticThread = "CosmeticThread";
-        public const String swTnCurvePattern = "CurvePattern";
-        public const String swTnCut = "Cut";
-        public const String swTnCutThin = "CutThin";
-        public const String swTnDeform = "Deform";
-        public const String swTnDeleteBody = "DeleteBody";
-        public const String swTnDelFace = "DelFace";
-        public const String swTnDerivedCirPattern = "DerivedCirPattern";
-        public const String swTnDerivedLPattern = "DerivedLPattern";
-        public const String swTnDome = "Dome";
-        public const String swTnDraft = "Draft";
-        public const String swTnEmboss = "Emboss";
-        public const String swTnExtrusion = "Extrusion";
-        public const String swTnFillet = "Fillet";
-        public const String swTnFilletCorner = "Round fillet corner";
-        public const String swTnHelix = "Helix";
-        public const String swTnHoleWzd = "HoleWzd";
-        public const String swTnImported = "Imported";
-        public const String swTnICE = "ICE";
-        public const String swTnLocalCirPattern = "LocalCirPattern";
-        public const String swTnLocalLPattern = "LocalLPattern";
-        public const String swTnLPattern = "LPattern";
-        public const String swTnMirrorPattern = "MirrorPattern";
-        public const String swTnMirrorSolid = "MirrorSolid";
-        public const String swTnMoveCopyBody = "MoveCopyBody";
-        public const String swTnReplaceFace = "ReplaceFace";
-        public const String swTnRevCut = "RevCut";
-        public const String swTnRevolution = "Revolution";
-        public const String swTnRevolutionThin = "RevolutionThin";
-        public const String swTnShape = "Shape";
-        public const String swTnShell = "Shell";
-        public const String swTnSplit = "Split";
-        public const String swTnStock = "Stock";
-        public const String swTnSweep = "Sweep";
-        public const String swTnSweepCut = "SweepCut";
-        public const String swTnTablePattern = "TablePattern";
-        public const String swTnThicken = "Thicken";
-        public const String swTnThickenCut = "ThickenCut";
-        public const String swTnVarFillet = "VarFillet";
-        public const String swTnVolSweep = "VolSweep";
-        public const String swTnVolSweepCut = "VolSweepCut";
-        public const String swTnMirrorStock = "MirrorStock";
-        public const String swTnAbsoluteView = "AbsoluteView";
-        public const String swTnAlignGroup = "AlignGroup";
-        public const String swTnAuxiliaryView = "AuxiliaryView";
-        public const String swTnBomTableAnchor = "BomTemplate";
-        public const String swTnBomTableFeature = "BomFeat";
-        public const String swTnBomTemplate = "BomTemplate";
-        public const String swTnBreakLine = "BreakLine";
-        public const String swTnCenterMark = "CenterMark";
-        public const String swTnDetailCircle = "DetailCircle";
-        public const String swTnDetailView = "DetailView";
-        public const String swTnDrBreakoutSectionLine = "DrBreakoutSectionLine";
-        public const String swTnDrSectionLine = "DrSectionLine";
-        public const String swTnDrSheet = "DrSheet";
-        public const String swTnDrTemplate = "DrTemplate";
-        public const String swTnDrViewDetached = "DrViewDetached";
-        public const String swTnGeneralTableAnchor = "GeneralTableAnchor";
-        public const String swTnHoleTableAnchor = "HoleTableAnchor";
-        public const String swTnHoleTableFeat = "HoleTableFeat";
-        public const String swTnHoleTableFeature = "HoleTableFeat";
-        public const String swTnLiveSection = "LiveSection";
-        public const String swTnRelativeView = "RelativeView";
-        public const String swTnRevisionTableAnchor = "RevisionTableAnchor";
-        public const String swTnRevisionTableFeature = "RevisionTableFeat";
-        public const String swTnSection = "Section";
-        public const String swTnSectionAssemView = "SectionAssemView";
-        public const String swTnSectionPartView = "SectionPartView";
-        public const String swTnSectionView = "SectionView";
-        public const String swTnUnfoldedView = "UnfoldedView";
-        public const String swTnBlocksFolder = "BlockFolder";
-        public const String swTnBrokenDerivedPartFolder = "BrokenDerivedPartFolder";
-        public const String swTnCommentsFolder = "CommentsFolder";
-        public const String swTnCutListFolder = "CutListFolder";
-        public const String swTnDocsFolder = "DocsFolder";
-        public const String swTnFeatSolidBodyFolder = "FeatSolidBodyFolder";
-        public const String swTnFeatSurfaceBodyFolder = "FeatSurfaceBodyFolder";
-        public const String swTnFeatureFolder = "FtrFolder";
-        public const String swTnFtrFolder = "FtrFolder";
-        public const String swTnGridDetailFolder = "GridDetailFolder";
-        public const String swTnInsertedFeatureFolder = "InsertedFeatureFolder";
-        public const String swTnLiveSectionFolder = "LiveSectionFolder";
-        public const String swTnMateReferenceGroupFolder = "MateReferenceGroupFolder";
-        public const String swTnMaterialFolder = "MaterialFolder";
-        public const String swTnPosGroupFolder = "PosGroupFolder";
-        public const String swTnProfileFtrFolder = "ProfileFtrFolder";
-        public const String swTnRefAxisFtrFolder = "RefAxisFtrFolder";
-        public const String swTnRefPlaneFtrFolder = "RefPlaneFtrFolder";
-        public const String swTnSolidBodyFolder = "SolidBodyFolder";
-        public const String swTnSmartComponentFolder = "SmartComponentFolder";
-        public const String swTnSmartComponentRefFolder = "SmartComponentRefFolder";
-        public const String swTnSubAtomFolder = "SubAtomFolder";
-        public const String swTnSubWeldFolder = "SubWeldFolder";
-        public const String swTnSurfaceBodyFolder = "SurfaceBodyFolder";
-        public const String swTnTableFolder = "TableFolder";
-        public const String swTnAttribute = "Attribute";
-        public const String swTnBlockDef = "BlockDef";
-        public const String swTnComments = "Comments";
-        public const String swTnConfigBuilderFeature = "ConfigBuilderFeature";
-        public const String swTnConfiguration = "Configuration";
-        public const String swTnCurveInFile = "CurveInFile";
-        public const String swTnDesignTableFeature = "DesignTableFeature";
-        public const String swTnDetailCabinet = "DetailCabinet";
-        public const String swTnEmbedLinkDoc = "EmbedLinkDoc";
-        public const String swTnGridFeature = "GridFeature";
-        public const String swTnJournal = "Journal";
-        public const String swTnLibraryFeature = "LibraryFeature";
-        public const String swTnPartConfiguration = "PartConfiguration";
-        public const String swTnReferenceBrowser = "ReferenceBrowser";
-        public const String swTnReferenceEmbedded = "ReferenceEmbedded";
-        public const String swTnReferenceInternal = "ReferenceInternal";
-        public const String swTnScale = "Scale";
-        public const String swTnViewerBodyFeature = "ViewerBodyFeature";
-        public const String swTnXMLRulesFeature = "XMLRulesFeature";
-        public const String swTnMoldCoreCavitySolids = "MoldCoreCavitySolids";
-        public const String swTnMoldPartingGeom = "MoldPartingGeom";
-        public const String swTnMoldPartingLine = "MoldPartingLine";
-        public const String swTnMoldShutOffSrf = "MoldShutOffSrf";
-        public const String swTnAEM3DContact = "AEM3DContact";
-        public const String swTnAEMGravity = "AEMGravity";
-        public const String swTnAEMLinearDamper = "AEMLinearDamper";
-        public const String swTnAEMLinearForce = "AEMLinearForce";
-        public const String swTnAEMLinearMotor = "AEMLinearMotor";
-        public const String swTnAEMLinearSpring = "AEMLinearSpring";
-        public const String swTnAEMRotationalMotor = "AEMRotationalMotor";
-        public const String swTnAEMSimFeature = "AEMSimFeature";
-        public const String swTnAEMTorque = "AEMTorque";
-        public const String swTnAEMTorsionalDamper = "AEMTorsionalDamper";
-        public const String swTnAEMTorsionalSpring = "AEMTorsionalSpring";
-        public const String swTnCoordinateSystem = "CoordSys";
-        public const String swTnCoordSys = "CoordSys";
-        public const String swTnRefAxis = "RefAxis";
-        public const String swTnReferenceCurve = "ReferenceCurve";
-        public const String swTnRefPlane = "RefPlane";
-        public const String swTnAmbientLight = "AmbientLight";
-        public const String swTnCameraFeature = "CameraFeature";
-        public const String swTnDirectionLight = "DirectionLight";
-        public const String swTnPointLight = "PointLight";
-        public const String swTnSpotLight = "SpotLight";
-        public const String swTnBaseFlange = "SMBaseFlange";
-        public const String swTnBending = "Bending";
-        public const String swTnBreakCorner = "BreakCorner";
-        public const String swTnCornerTrim = "CornerTrim";
-        public const String swTnCrossBreak = "CrossBreak";
-        public const String swTnEdgeFlange = "EdgeFlange";
-        public const String swTnFlatPattern = "FlatPattern";
-        public const String swTnFlattenBends = "FlattenBends";
-        public const String swTnFold = "Fold";
-        public const String swTnFormToolInstance = "FormToolInstance";
-        public const String swTnHem = "Hem";
-        public const String swTnLoftedBend = "LoftedBend";
-        public const String swTnOneBend = "OneBend";
-        public const String swTnProcessBends = "ProcessBends";
-        public const String swTnSheetMetal = "SheetMetal";
-        public const String swTnSketchBend = "SketchBend";
-        public const String swTnSM3dBend = "SM3dBend";
-        public const String swTnSMBaseFlange = "SMBaseFlange";
-        public const String swTnSMMiteredFlange = "SMMiteredFlange";
-        public const String swTnToroidalBend = "ToroidalBend";
-        public const String swTnUiBend = "UiBend";
-        public const String swTnUnFold = "UnFold";
-        public const String swTn3DProfileFeature = "3DProfileFeature";
-        public const String swTn3DSplineCurve = "3DSplineCurve";
-        public const String swTnCompositeCurve = "CompositeCurve";
-        public const String swTnLayoutProfileFeature = "LayoutProfileFeature";
-        public const String swTnPLine = "PLine";
-        public const String swTnProfileFeature = "ProfileFeature";
-        public const String swTnRefCurve = "RefCurve";
-        public const String swTnRefPoint = "RefPoint";
-        public const String swTnSketchBlockDefinition = "SketchBlockDef";
-        public const String swTnSketchHole = "SketchHole";
-        public const String swTnSketchPattern = "SketchPattern";
-        public const String swTnSketchPicture = "SketchBitmap";
-        public const String swTnBlendRefSurface = "BlendRefSurface";
-        public const String swTnFillRefSurface = "FillRefSurface";
-        public const String swTnMidRefSurface = "MidRefSurface";
-        public const String swTnOffsetRefSurface = "OffsetRefSurface";
-        public const String swTnRadiateRefSurface = "RadiateRefSurface";
-        public const String swTnRefSurface = "RefSurface";
-        public const String swTnRevolvRefSurf = "RevolvRefSurf";
-        public const String swTnRuledSrfFromEdge = "RuledSrfFromEdge";
-        public const String swTnSewRefSurface = "SewRefSurface";
-        public const String swTnSurfCut = "SurfCut";
-        public const String swTnSweepRefSurface = "SweepRefSurface";
-        public const String swTnTrimRefSurface = "TrimRefSurface";
-        public const String swTnUnTrimRefSurf = "UnTrimRefSurf";
-        public const String swTnVolSweepRefSurface = "VolSweepRefSurface";
-        public const String swTnGusset = "Gusset";
-        public const String swTnWeldMemberFeat = "WeldMemberFeat";
-        public const String swTnWeldmentFeature = "WeldmentFeature";
-        public const String swTnWeldmentTableAnchor = "WeldmentTableAnchor";
-        public const String swTnWeldmentTableFeature = "WeldmentTableFeat";
-    }
-
-    public static class swSelectType
-    {
-        public const String swSelLOCATIONS = "LOCATIONS";
-        public const String swSelUNSUPPORTED = "UNSUPPORTED";
-        public const String swSelDISPLAYSTATE = "VISUALSTATE";
-        public const String swSelANNOTATIONTABLES = "ANNOTATIONTABLES";
-        public const String swSelANNOTATIONVIEW = "ANNVIEW";
-        public const String swSelATTRIBUTES = "ATTRIBUTE";
-        public const String swSelDATUMAXES = "AXIS";
-        public const String swSelBODYFOLDER = "BDYFOLDER";
-        public const String swSelBLOCKDEF = "BLOCKDEF";
-        public const String swSelBODYFEATURES = "BODYFEATURE";
-        public const String swSelBOMS = "BOM";
-        public const String swSelBOMFEATURES = "BOMFEATURE";
-        public const String swSelBOMTEMPS = "BOMTEMP";
-        public const String swSelBREAKLINES = "BREAKLINE";
-        public const String swSelBROWSERITEM = "BROWSERITEM";
-        public const String swSelCAMERAS = "CAMERAS";
-        public const String swSelCENTERLINES = "CENTERLINE";
-        public const String swSelCENTERMARKS = "CENTERMARKS";
-        public const String swSelCENTERMARKSYMS = "CENTERMARKSYMS";
-        public const String swSelCOMMENT = "COMMENT";
-        public const String swSelCOMMENTSFOLDER = "COMMENTSFOLDER";
-        public const String swSelCOMPONENTS = "COMPONENT";
-        public const String swSelCOMPPATTERN = "COMPPATTERN";
-        public const String swSelCONFIGURATIONS = "CONFIGURATIONS";
-        public const String swSelCONNECTIONPOINTS = "CONNECTIONPOINT";
-        public const String swSelCOORDSYS = "COORDSYS";
-        public const String swSelCOSMETICWELDS = "COSMETICWELDS";
-        public const String swSelCTHREADS = "CTHREAD";
-        public const String swSelDATUMPOINTS = "DATUMPOINT";
-        public const String swSelDATUMTAGS = "DATUMTAG";
-        public const String swSelDCABINETS = "DCABINET";
-        public const String swSelDETAILCIRCLES = "DETAILCIRCLE";
-        public const String swSelDIMENSIONS = "DIMENSION";
-        public const String swSelDOCSFOLDER = "DOCSFOLDER";
-        public const String swSelDOWELSYMS = "DOWLELSYM";
-        public const String swSelDRAWINGVIEWS = "DRAWINGVIEW";
-        public const String swSelDTMTARGS = "DTMTARG";
-        public const String swSelEDGES = "EDGE";
-        public const String swSelEMBEDLINKDOC = "EMBEDLINKDOC";
-        public const String swSelEQNFOLDER = "EQNFOLDER";
-        public const String swSelEXPLLINES = "EXPLODELINES";
-        public const String swSelEXPLSTEPS = "EXPLODESTEPS";
-        public const String swSelEXPLVIEWS = "EXPLODEVIEWS";
-        public const String swSelEXTSKETCHPOINTS = "EXTSKETCHPOINT";
-        public const String swSelEXTSKETCHSEGS = "EXTSKETCHSEGMENT";
-        public const String swSelEXTSKETCHTEXT = "EXTSKETCHTEXT";
-        public const String swSelFACES = "FACE";
-        public const String swSelFRAMEPOINT = "FRAMEPOINT";
-        public const String swSelFTRFOLDER = "FTRFOLDER";
-        public const String swSelGENERALTABLEFEAT = "GENERALTABLEFEAT";
-        public const String swSelGTOLS = "GTOL";
-        public const String swSelHELIX = "HELIX";
-        public const String swSelHOLETABLEFEATS = "HOLETABLE";
-        public const String swSelHOLETABLEAXES = "HOLETABLEAXIS";
-        public const String swSelVIEWERHYPERLINK = "HYPERLINK";
-        public const String swSelIMPORTFOLDER = "IMPORTFOLDER";
-        public const String swSelINCONTEXTFEAT = "INCONTEXTFEAT";
-        public const String swSelINCONTEXTFEATS = "INCONTEXTFEATS";
-        public const String swSelJOURNAL = "JOURNAL";
-        public const String swSelLEADERS = "LEADER";
-        public const String swSelLIGHTS = "LIGHTS";
-        public const String swSelMAGNETICLINES = "MAGNETICLINES";
-        public const String swSelMANIPULATORS = "MANIPULATOR";
-        public const String swSelMATES = "MATE";
-        public const String swSelMATEGROUP = "MATEGROUP";
-        public const String swSelMATEGROUPS = "MATEGROUPS";
-        public const String swSelMATESUPPLEMENT = "MATESUPPLEMENT";
-        public const String swSelNOTES = "NOTE";
-        public const String swSelOBJGROUP = "OBJGROUP";
-        public const String swSelOLEITEMS = "OLEITEM";
-        public const String swSelPICTUREBODIES = "PICTURE BODY";
-        public const String swSelDATUMPLANES = "PLANE";
-        public const String swSelPOINTREFS = "POINTREF";
-        public const String swSelPOSGROUP = "POSGROUP";
-        public const String swSelPUNCHTABLEFEATS = "PUNCHTABLE";
-        public const String swSelREFCURVES = "REFCURVE";
-        public const String swSelREFERENCECURVES = "REFERENCECURVES";
-        public const String swSelREFEDGES = "REFERENCE-EDGE";
-        public const String swSelDATUMLINES = "REFLINE";
-        public const String swSelREFSURFACES = "REFSURFACE";
-        public const String swSelREVISIONTABLE = "REVISIONTABLE";
-        public const String swSelREVISIONTABLEFEAT = "REVISIONTABLEFEAT";
-        public const String swSelFABRICATEDROUTE = "ROUTEFABRICATED";
-        public const String swSelROUTEPOINTS = "ROUTEPOINT";
-        public const String swSelSECTIONLINES = "SECTIONLINE";
-        public const String swSelSECTIONTEXT = "SECTIONTEXT";
-        public const String swSelSELECTIONSETFOLDER = "SELECTIONSETFOLDER";
-        public const String swSelSFSYMBOLS = "SFSYMBOL";
-        public const String swSelSHEETS = "SHEET";
-        public const String swSelSILHOUETTES = "SILHOUETTE";
-        public const String swSelSIMULATION = "SIMULATION";
-        public const String swSelSIMELEMENT = "SIMULATION_ELEMENT";
-        public const String swSelSKETCHES = "SKETCH";
-        public const String swSelSKETCHBITMAP = "SKETCHBITMAP";
-        public const String swSelSKETCHCONTOUR = "SKETCHCONTOUR";
-        public const String swSelSKETCHHATCH = "SKETCHHATCH";
-        public const String swSelSKETCHPOINTS = "SKETCHPOINT";
-        public const String swSelSKETCHPOINTFEAT = "SKETCHPOINTFEAT";
-        public const String swSelSKETCHREGION = "SKETCHREGION";
-        public const String swSelSKETCHSEGS = "SKETCHSEGMENT";
-        public const String swSelSKETCHTEXT = "SKETCHTEXT";
-        public const String swSelSOLIDBODIES = "SOLIDBODY";
-        public const String swSelSELECTIONSETNODE = "SUBSELECTIONSETNODE";
-        public const String swSelSUBSKETCHDEF = "SUBSKETCHDEF";
-        public const String swSelSUBSKETCHINST = "SUBSKETCHINST";
-        public const String swSelSUBWELDFOLDER = "SUBWELDMENT";
-        public const String swSelSURFACEBODIES = "SURFACEBODY";
-        public const String swSelSWIFTANNOTATIONS = "SWIFTANN";
-        public const String swSelSWIFTFEATURES = "SWIFTFEATURE";
-        public const String swSelSWIFTSCHEMA = "SWIFTSCHEMA";
-        public const String swSelTITLEBLOCK = "TITLEBLOCK";
-        public const String swSelTITLEBLOCKTABLEFEAT = "TITLEBLOCKTABLEFEAT";
-        public const String swSelVERTICES = "VERTEX";
-        public const String swSelARROWS = "VIEWARROW";
-        public const String swSelWELDS = "WELD";
-        public const String swSelWELDBEADS3 = "WELDBEADS";
-        public const String swSelWELDMENT = "WELDMENT";
-        public const String swSelWELDMENTTABLEFEATS = "WELDMENTTABLE";
-        public const String swSelZONES = "ZONES";
-    }
-
     internal static class CONSTANTES
     {
         internal const String CONFIG_DEPLIEE_PATTERN = "^([0-9]+)(SM-FLAT-PATTERN)((.)+)$";
@@ -1377,7 +383,6 @@ namespace Outils
             return sc.Compare(x.eNomAvecExt(), y.eNomAvecExt());
         }
     }
-
 
     public static class App
     {
@@ -4212,7 +3217,7 @@ namespace Outils
             return result;
         }
 
-        public static Boolean eVisible(this Body2 corps)
+        public static Boolean eEstVisible(this Body2 corps)
         {
             return !corps.DisableDisplay;
         }
@@ -5243,5 +4248,999 @@ namespace Outils
         public ePoint CentreZone { get { Maj(); return _Centre; } }
 
         public eRectangle Rectangle { get { Maj(); return _Rectangle; } }
+    }
+
+    public enum eFeatureType
+    {
+        [Intitule("ExplodeLineProfileFeature")]
+        swTnExplodeLineProfileFeature,
+
+        [Intitule("InContextFeatHolder")]
+        swTnInContextFeatHolder,
+
+        [Intitule("MateCoincident")]
+        swTnMateCoincident,
+
+        [Intitule("MateConcentric")]
+        swTnMateConcentric,
+
+        [Intitule("MateDistanceDim")]
+        swTnMateDistanceDim,
+
+        [Intitule("MateGroup")]
+        swTnMateGroup,
+
+        [Intitule("MateInPlace")]
+        swTnMateInPlace,
+
+        [Intitule("MateParallel")]
+        swTnMateParallel,
+
+        [Intitule("MatePerpendicular")]
+        swTnMatePerpendicular,
+
+        [Intitule("MatePlanarAngleDim")]
+        swTnMatePlanarAngleDim,
+
+        [Intitule("MateSymmetric")]
+        swTnMateSymmetric,
+
+        [Intitule("MateTangent")]
+        swTnMateTangent,
+
+        [Intitule("MateWidth")]
+        swTnMateWidth,
+
+        [Intitule("Reference")]
+        swTnReference,
+
+        [Intitule("SmartComponentFeature")]
+        swTnSmartComponentFeature,
+
+        [Intitule("BaseBody")]
+        swTnBaseBody,
+
+        [Intitule("Blend")]
+        swTnBlend,
+
+        [Intitule("BlendCut")]
+        swTnBlendCut,
+
+        [Intitule("Boss")]
+        swTnBoss,
+
+        [Intitule("BossThin")]
+        swTnBossThin,
+
+        [Intitule("Cavity")]
+        swTnCavity,
+
+        [Intitule("Chamfer")]
+        swTnChamfer,
+
+        [Intitule("CirPattern")]
+        swTnCirPattern,
+
+        [Intitule("CombineBodies")]
+        swTnCombineBodies,
+
+        [Intitule("CosmeticThread")]
+        swTnCosmeticThread,
+
+        [Intitule("CurvePattern")]
+        swTnCurvePattern,
+
+        [Intitule("Cut")]
+        swTnCut,
+
+        [Intitule("CutThin")]
+        swTnCutThin,
+
+        [Intitule("Deform")]
+        swTnDeform,
+
+        [Intitule("DeleteBody")]
+        swTnDeleteBody,
+
+        [Intitule("DelFace")]
+        swTnDelFace,
+
+        [Intitule("DerivedCirPattern")]
+        swTnDerivedCirPattern,
+
+        [Intitule("DerivedLPattern")]
+        swTnDerivedLPattern,
+
+        [Intitule("Dome")]
+        swTnDome,
+
+        [Intitule("Draft")]
+        swTnDraft,
+
+        [Intitule("Emboss")]
+        swTnEmboss,
+
+        [Intitule("Extrusion")]
+        swTnExtrusion,
+
+        [Intitule("Fillet")]
+        swTnFillet,
+
+        [Intitule("Round fillet corner")]
+        swTnFilletCorner,
+
+        [Intitule("Helix")]
+        swTnHelix,
+
+        [Intitule("HoleWzd")]
+        swTnHoleWzd,
+
+        [Intitule("Imported")]
+        swTnImported,
+
+        [Intitule("ICE")]
+        swTnICE,
+
+        [Intitule("LocalCirPattern")]
+        swTnLocalCirPattern,
+
+        [Intitule("LocalLPattern")]
+        swTnLocalLPattern,
+
+        [Intitule("LPattern")]
+        swTnLPattern,
+
+        [Intitule("MirrorPattern")]
+        swTnMirrorPattern,
+
+        [Intitule("MirrorSolid")]
+        swTnMirrorSolid,
+
+        [Intitule("MoveCopyBody")]
+        swTnMoveCopyBody,
+
+        [Intitule("ReplaceFace")]
+        swTnReplaceFace,
+
+        [Intitule("RevCut")]
+        swTnRevCut,
+
+        [Intitule("Revolution")]
+        swTnRevolution,
+
+        [Intitule("RevolutionThin")]
+        swTnRevolutionThin,
+
+        [Intitule("Shape")]
+        swTnShape,
+
+        [Intitule("Shell")]
+        swTnShell,
+
+        [Intitule("Split")]
+        swTnSplit,
+
+        [Intitule("Stock")]
+        swTnStock,
+
+        [Intitule("Sweep")]
+        swTnSweep,
+
+        [Intitule("SweepCut")]
+        swTnSweepCut,
+
+        [Intitule("TablePattern")]
+        swTnTablePattern,
+
+        [Intitule("Thicken")]
+        swTnThicken,
+
+        [Intitule("ThickenCut")]
+        swTnThickenCut,
+
+        [Intitule("VarFillet")]
+        swTnVarFillet,
+
+        [Intitule("VolSweep")]
+        swTnVolSweep,
+
+        [Intitule("VolSweepCut")]
+        swTnVolSweepCut,
+
+        [Intitule("MirrorStock")]
+        swTnMirrorStock,
+
+        [Intitule("AbsoluteView")]
+        swTnAbsoluteView,
+
+        [Intitule("AlignGroup")]
+        swTnAlignGroup,
+
+        [Intitule("AuxiliaryView")]
+        swTnAuxiliaryView,
+
+        [Intitule("BomTemplate")]
+        swTnBomTableAnchor,
+
+        [Intitule("BomFeat")]
+        swTnBomTableFeature,
+
+        [Intitule("BomTemplate")]
+        swTnBomTemplate,
+
+        [Intitule("BreakLine")]
+        swTnBreakLine,
+
+        [Intitule("CenterMark")]
+        swTnCenterMark,
+
+        [Intitule("DetailCircle")]
+        swTnDetailCircle,
+
+        [Intitule("DetailView")]
+        swTnDetailView,
+
+        [Intitule("DrBreakoutSectionLine")]
+        swTnDrBreakoutSectionLine,
+
+        [Intitule("DrSectionLine")]
+        swTnDrSectionLine,
+
+        [Intitule("DrSheet")]
+        swTnDrSheet,
+
+        [Intitule("DrTemplate")]
+        swTnDrTemplate,
+
+        [Intitule("DrViewDetached")]
+        swTnDrViewDetached,
+
+        [Intitule("GeneralTableAnchor")]
+        swTnGeneralTableAnchor,
+
+        [Intitule("HoleTableAnchor")]
+        swTnHoleTableAnchor,
+
+        [Intitule("HoleTableFeat")]
+        swTnHoleTableFeat,
+
+        [Intitule("HoleTableFeat")]
+        swTnHoleTableFeature,
+
+        [Intitule("LiveSection")]
+        swTnLiveSection,
+
+        [Intitule("RelativeView")]
+        swTnRelativeView,
+
+        [Intitule("RevisionTableAnchor")]
+        swTnRevisionTableAnchor,
+
+        [Intitule("RevisionTableFeat")]
+        swTnRevisionTableFeature,
+
+        [Intitule("Section")]
+        swTnSection,
+
+        [Intitule("SectionAssemView")]
+        swTnSectionAssemView,
+
+        [Intitule("SectionPartView")]
+        swTnSectionPartView,
+
+        [Intitule("SectionView")]
+        swTnSectionView,
+
+        [Intitule("UnfoldedView")]
+        swTnUnfoldedView,
+
+        [Intitule("BlockFolder")]
+        swTnBlocksFolder,
+
+        [Intitule("BrokenDerivedPartFolder")]
+        swTnBrokenDerivedPartFolder,
+
+        [Intitule("CommentsFolder")]
+        swTnCommentsFolder,
+
+        [Intitule("CutListFolder")]
+        swTnCutListFolder,
+
+        [Intitule("DocsFolder")]
+        swTnDocsFolder,
+
+        [Intitule("FeatSolidBodyFolder")]
+        swTnFeatSolidBodyFolder,
+
+        [Intitule("FeatSurfaceBodyFolder")]
+        swTnFeatSurfaceBodyFolder,
+
+        [Intitule("FtrFolder")]
+        swTnFeatureFolder,
+
+        [Intitule("FtrFolder")]
+        swTnFtrFolder,
+
+        [Intitule("GridDetailFolder")]
+        swTnGridDetailFolder,
+
+        [Intitule("InsertedFeatureFolder")]
+        swTnInsertedFeatureFolder,
+
+        [Intitule("LiveSectionFolder")]
+        swTnLiveSectionFolder,
+
+        [Intitule("MateReferenceGroupFolder")]
+        swTnMateReferenceGroupFolder,
+
+        [Intitule("MaterialFolder")]
+        swTnMaterialFolder,
+
+        [Intitule("PosGroupFolder")]
+        swTnPosGroupFolder,
+
+        [Intitule("ProfileFtrFolder")]
+        swTnProfileFtrFolder,
+
+        [Intitule("RefAxisFtrFolder")]
+        swTnRefAxisFtrFolder,
+
+        [Intitule("RefPlaneFtrFolder")]
+        swTnRefPlaneFtrFolder,
+
+        [Intitule("SolidBodyFolder")]
+        swTnSolidBodyFolder,
+
+        [Intitule("SmartComponentFolder")]
+        swTnSmartComponentFolder,
+
+        [Intitule("SmartComponentRefFolder")]
+        swTnSmartComponentRefFolder,
+
+        [Intitule("SubAtomFolder")]
+        swTnSubAtomFolder,
+
+        [Intitule("SubWeldFolder")]
+        swTnSubWeldFolder,
+
+        [Intitule("SurfaceBodyFolder")]
+        swTnSurfaceBodyFolder,
+
+        [Intitule("TableFolder")]
+        swTnTableFolder,
+
+        [Intitule("Attribute")]
+        swTnAttribute,
+
+        [Intitule("BlockDef")]
+        swTnBlockDef,
+
+        [Intitule("Comments")]
+        swTnComments,
+
+        [Intitule("ConfigBuilderFeature")]
+        swTnConfigBuilderFeature,
+
+        [Intitule("Configuration")]
+        swTnConfiguration,
+
+        [Intitule("CurveInFile")]
+        swTnCurveInFile,
+
+        [Intitule("DesignTableFeature")]
+        swTnDesignTableFeature,
+
+        [Intitule("DetailCabinet")]
+        swTnDetailCabinet,
+
+        [Intitule("EmbedLinkDoc")]
+        swTnEmbedLinkDoc,
+
+        [Intitule("GridFeature")]
+        swTnGridFeature,
+
+        [Intitule("Journal")]
+        swTnJournal,
+
+        [Intitule("LibraryFeature")]
+        swTnLibraryFeature,
+
+        [Intitule("PartConfiguration")]
+        swTnPartConfiguration,
+
+        [Intitule("ReferenceBrowser")]
+        swTnReferenceBrowser,
+
+        [Intitule("ReferenceEmbedded")]
+        swTnReferenceEmbedded,
+
+        [Intitule("ReferenceInternal")]
+        swTnReferenceInternal,
+
+        [Intitule("Scale")]
+        swTnScale,
+
+        [Intitule("ViewerBodyFeature")]
+        swTnViewerBodyFeature,
+
+        [Intitule("XMLRulesFeature")]
+        swTnXMLRulesFeature,
+
+        [Intitule("MoldCoreCavitySolids")]
+        swTnMoldCoreCavitySolids,
+
+        [Intitule("MoldPartingGeom")]
+        swTnMoldPartingGeom,
+
+        [Intitule("MoldPartingLine")]
+        swTnMoldPartingLine,
+
+        [Intitule("MoldShutOffSrf")]
+        swTnMoldShutOffSrf,
+
+        [Intitule("AEM3DContact")]
+        swTnAEM3DContact,
+
+        [Intitule("AEMGravity")]
+        swTnAEMGravity,
+
+        [Intitule("AEMLinearDamper")]
+        swTnAEMLinearDamper,
+
+        [Intitule("AEMLinearForce")]
+        swTnAEMLinearForce,
+
+        [Intitule("AEMLinearMotor")]
+        swTnAEMLinearMotor,
+
+        [Intitule("AEMLinearSpring")]
+        swTnAEMLinearSpring,
+
+        [Intitule("AEMRotationalMotor")]
+        swTnAEMRotationalMotor,
+
+        [Intitule("AEMSimFeature")]
+        swTnAEMSimFeature,
+
+        [Intitule("AEMTorque")]
+        swTnAEMTorque,
+
+        [Intitule("AEMTorsionalDamper")]
+        swTnAEMTorsionalDamper,
+
+        [Intitule("AEMTorsionalSpring")]
+        swTnAEMTorsionalSpring,
+
+        [Intitule("CoordSys")]
+        swTnCoordinateSystem,
+
+        [Intitule("CoordSys")]
+        swTnCoordSys,
+
+        [Intitule("RefAxis")]
+        swTnRefAxis,
+
+        [Intitule("ReferenceCurve")]
+        swTnReferenceCurve,
+
+        [Intitule("RefPlane")]
+        swTnRefPlane,
+
+        [Intitule("AmbientLight")]
+        swTnAmbientLight,
+
+        [Intitule("CameraFeature")]
+        swTnCameraFeature,
+
+        [Intitule("DirectionLight")]
+        swTnDirectionLight,
+
+        [Intitule("PointLight")]
+        swTnPointLight,
+
+        [Intitule("SpotLight")]
+        swTnSpotLight,
+
+        [Intitule("SMBaseFlange")]
+        swTnBaseFlange,
+
+        [Intitule("Bending")]
+        swTnBending,
+
+        [Intitule("BreakCorner")]
+        swTnBreakCorner,
+
+        [Intitule("CornerTrim")]
+        swTnCornerTrim,
+
+        [Intitule("CrossBreak")]
+        swTnCrossBreak,
+
+        [Intitule("EdgeFlange")]
+        swTnEdgeFlange,
+
+        [Intitule("FlatPattern")]
+        swTnFlatPattern,
+
+        [Intitule("FlattenBends")]
+        swTnFlattenBends,
+
+        [Intitule("Fold")]
+        swTnFold,
+
+        [Intitule("FormToolInstance")]
+        swTnFormToolInstance,
+
+        [Intitule("Hem")]
+        swTnHem,
+
+        [Intitule("LoftedBend")]
+        swTnLoftedBend,
+
+        [Intitule("OneBend")]
+        swTnOneBend,
+
+        [Intitule("ProcessBends")]
+        swTnProcessBends,
+
+        [Intitule("SheetMetal")]
+        swTnSheetMetal,
+
+        [Intitule("SketchBend")]
+        swTnSketchBend,
+
+        [Intitule("SM3dBend")]
+        swTnSM3dBend,
+
+        [Intitule("SMBaseFlange")]
+        swTnSMBaseFlange,
+
+        [Intitule("SMMiteredFlange")]
+        swTnSMMiteredFlange,
+
+        [Intitule("ToroidalBend")]
+        swTnToroidalBend,
+
+        [Intitule("UiBend")]
+        swTnUiBend,
+
+        [Intitule("UnFold")]
+        swTnUnFold,
+
+        [Intitule("3DProfileFeature")]
+        swTn3DProfileFeature,
+
+        [Intitule("3DSplineCurve")]
+        swTn3DSplineCurve,
+
+        [Intitule("CompositeCurve")]
+        swTnCompositeCurve,
+
+        [Intitule("LayoutProfileFeature")]
+        swTnLayoutProfileFeature,
+
+        [Intitule("PLine")]
+        swTnPLine,
+
+        [Intitule("ProfileFeature")]
+        swTnProfileFeature,
+
+        [Intitule("RefCurve")]
+        swTnRefCurve,
+
+        [Intitule("RefPoint")]
+        swTnRefPoint,
+
+        [Intitule("SketchBlockDef")]
+        swTnSketchBlockDefinition,
+
+        [Intitule("SketchHole")]
+        swTnSketchHole,
+
+        [Intitule("SketchPattern")]
+        swTnSketchPattern,
+
+        [Intitule("SketchBitmap")]
+        swTnSketchPicture,
+
+        [Intitule("BlendRefSurface")]
+        swTnBlendRefSurface,
+
+        [Intitule("FillRefSurface")]
+        swTnFillRefSurface,
+
+        [Intitule("MidRefSurface")]
+        swTnMidRefSurface,
+
+        [Intitule("OffsetRefSurface")]
+        swTnOffsetRefSurface,
+
+        [Intitule("RadiateRefSurface")]
+        swTnRadiateRefSurface,
+
+        [Intitule("RefSurface")]
+        swTnRefSurface,
+
+        [Intitule("RevolvRefSurf")]
+        swTnRevolvRefSurf,
+
+        [Intitule("RuledSrfFromEdge")]
+        swTnRuledSrfFromEdge,
+
+        [Intitule("SewRefSurface")]
+        swTnSewRefSurface,
+
+        [Intitule("SurfCut")]
+        swTnSurfCut,
+
+        [Intitule("SweepRefSurface")]
+        swTnSweepRefSurface,
+
+        [Intitule("TrimRefSurface")]
+        swTnTrimRefSurface,
+
+        [Intitule("UnTrimRefSurf")]
+        swTnUnTrimRefSurf,
+
+        [Intitule("VolSweepRefSurface")]
+        swTnVolSweepRefSurface,
+
+        [Intitule("Gusset")]
+        swTnGusset,
+
+        [Intitule("WeldMemberFeat")]
+        swTnWeldMemberFeat,
+
+        [Intitule("WeldmentFeature")]
+        swTnWeldmentFeature,
+
+        [Intitule("WeldmentTableAnchor")]
+        swTnWeldmentTableAnchor,
+
+        [Intitule("WeldmentTableFeat")]
+        swTnWeldmentTableFeature
+    }
+
+    public static class FeatureType
+    {
+        public const String swTnExplodeLineProfileFeature = "ExplodeLineProfileFeature";
+        public const String swTnInContextFeatHolder = "InContextFeatHolder";
+        public const String swTnMateCoincident = "MateCoincident";
+        public const String swTnMateConcentric = "MateConcentric";
+        public const String swTnMateDistanceDim = "MateDistanceDim";
+        public const String swTnMateGroup = "MateGroup";
+        public const String swTnMateInPlace = "MateInPlace";
+        public const String swTnMateParallel = "MateParallel";
+        public const String swTnMatePerpendicular = "MatePerpendicular";
+        public const String swTnMatePlanarAngleDim = "MatePlanarAngleDim";
+        public const String swTnMateSymmetric = "MateSymmetric";
+        public const String swTnMateTangent = "MateTangent";
+        public const String swTnMateWidth = "MateWidth";
+        public const String swTnReference = "Reference";
+        public const String swTnSmartComponentFeature = "SmartComponentFeature";
+        public const String swTnBaseBody = "BaseBody";
+        public const String swTnBlend = "Blend";
+        public const String swTnBlendCut = "BlendCut";
+        public const String swTnBoss = "Boss";
+        public const String swTnBossThin = "BossThin";
+        public const String swTnCavity = "Cavity";
+        public const String swTnChamfer = "Chamfer";
+        public const String swTnCirPattern = "CirPattern";
+        public const String swTnCombineBodies = "CombineBodies";
+        public const String swTnCosmeticThread = "CosmeticThread";
+        public const String swTnCurvePattern = "CurvePattern";
+        public const String swTnCut = "Cut";
+        public const String swTnCutThin = "CutThin";
+        public const String swTnDeform = "Deform";
+        public const String swTnDeleteBody = "DeleteBody";
+        public const String swTnDelFace = "DelFace";
+        public const String swTnDerivedCirPattern = "DerivedCirPattern";
+        public const String swTnDerivedLPattern = "DerivedLPattern";
+        public const String swTnDome = "Dome";
+        public const String swTnDraft = "Draft";
+        public const String swTnEmboss = "Emboss";
+        public const String swTnExtrusion = "Extrusion";
+        public const String swTnFillet = "Fillet";
+        public const String swTnFilletCorner = "Round fillet corner";
+        public const String swTnHelix = "Helix";
+        public const String swTnHoleWzd = "HoleWzd";
+        public const String swTnImported = "Imported";
+        public const String swTnICE = "ICE";
+        public const String swTnLocalCirPattern = "LocalCirPattern";
+        public const String swTnLocalLPattern = "LocalLPattern";
+        public const String swTnLPattern = "LPattern";
+        public const String swTnMirrorPattern = "MirrorPattern";
+        public const String swTnMirrorSolid = "MirrorSolid";
+        public const String swTnMoveCopyBody = "MoveCopyBody";
+        public const String swTnReplaceFace = "ReplaceFace";
+        public const String swTnRevCut = "RevCut";
+        public const String swTnRevolution = "Revolution";
+        public const String swTnRevolutionThin = "RevolutionThin";
+        public const String swTnShape = "Shape";
+        public const String swTnShell = "Shell";
+        public const String swTnSplit = "Split";
+        public const String swTnStock = "Stock";
+        public const String swTnSweep = "Sweep";
+        public const String swTnSweepCut = "SweepCut";
+        public const String swTnTablePattern = "TablePattern";
+        public const String swTnThicken = "Thicken";
+        public const String swTnThickenCut = "ThickenCut";
+        public const String swTnVarFillet = "VarFillet";
+        public const String swTnVolSweep = "VolSweep";
+        public const String swTnVolSweepCut = "VolSweepCut";
+        public const String swTnMirrorStock = "MirrorStock";
+        public const String swTnAbsoluteView = "AbsoluteView";
+        public const String swTnAlignGroup = "AlignGroup";
+        public const String swTnAuxiliaryView = "AuxiliaryView";
+        public const String swTnBomTableAnchor = "BomTemplate";
+        public const String swTnBomTableFeature = "BomFeat";
+        public const String swTnBomTemplate = "BomTemplate";
+        public const String swTnBreakLine = "BreakLine";
+        public const String swTnCenterMark = "CenterMark";
+        public const String swTnDetailCircle = "DetailCircle";
+        public const String swTnDetailView = "DetailView";
+        public const String swTnDrBreakoutSectionLine = "DrBreakoutSectionLine";
+        public const String swTnDrSectionLine = "DrSectionLine";
+        public const String swTnDrSheet = "DrSheet";
+        public const String swTnDrTemplate = "DrTemplate";
+        public const String swTnDrViewDetached = "DrViewDetached";
+        public const String swTnGeneralTableAnchor = "GeneralTableAnchor";
+        public const String swTnHoleTableAnchor = "HoleTableAnchor";
+        public const String swTnHoleTableFeat = "HoleTableFeat";
+        public const String swTnHoleTableFeature = "HoleTableFeat";
+        public const String swTnLiveSection = "LiveSection";
+        public const String swTnRelativeView = "RelativeView";
+        public const String swTnRevisionTableAnchor = "RevisionTableAnchor";
+        public const String swTnRevisionTableFeature = "RevisionTableFeat";
+        public const String swTnSection = "Section";
+        public const String swTnSectionAssemView = "SectionAssemView";
+        public const String swTnSectionPartView = "SectionPartView";
+        public const String swTnSectionView = "SectionView";
+        public const String swTnUnfoldedView = "UnfoldedView";
+        public const String swTnBlocksFolder = "BlockFolder";
+        public const String swTnBrokenDerivedPartFolder = "BrokenDerivedPartFolder";
+        public const String swTnCommentsFolder = "CommentsFolder";
+        public const String swTnCutListFolder = "CutListFolder";
+        public const String swTnDocsFolder = "DocsFolder";
+        public const String swTnFeatSolidBodyFolder = "FeatSolidBodyFolder";
+        public const String swTnFeatSurfaceBodyFolder = "FeatSurfaceBodyFolder";
+        public const String swTnFeatureFolder = "FtrFolder";
+        public const String swTnFtrFolder = "FtrFolder";
+        public const String swTnGridDetailFolder = "GridDetailFolder";
+        public const String swTnInsertedFeatureFolder = "InsertedFeatureFolder";
+        public const String swTnLiveSectionFolder = "LiveSectionFolder";
+        public const String swTnMateReferenceGroupFolder = "MateReferenceGroupFolder";
+        public const String swTnMaterialFolder = "MaterialFolder";
+        public const String swTnPosGroupFolder = "PosGroupFolder";
+        public const String swTnProfileFtrFolder = "ProfileFtrFolder";
+        public const String swTnRefAxisFtrFolder = "RefAxisFtrFolder";
+        public const String swTnRefPlaneFtrFolder = "RefPlaneFtrFolder";
+        public const String swTnSolidBodyFolder = "SolidBodyFolder";
+        public const String swTnSmartComponentFolder = "SmartComponentFolder";
+        public const String swTnSmartComponentRefFolder = "SmartComponentRefFolder";
+        public const String swTnSubAtomFolder = "SubAtomFolder";
+        public const String swTnSubWeldFolder = "SubWeldFolder";
+        public const String swTnSurfaceBodyFolder = "SurfaceBodyFolder";
+        public const String swTnTableFolder = "TableFolder";
+        public const String swTnAttribute = "Attribute";
+        public const String swTnBlockDef = "BlockDef";
+        public const String swTnComments = "Comments";
+        public const String swTnConfigBuilderFeature = "ConfigBuilderFeature";
+        public const String swTnConfiguration = "Configuration";
+        public const String swTnCurveInFile = "CurveInFile";
+        public const String swTnDesignTableFeature = "DesignTableFeature";
+        public const String swTnDetailCabinet = "DetailCabinet";
+        public const String swTnEmbedLinkDoc = "EmbedLinkDoc";
+        public const String swTnGridFeature = "GridFeature";
+        public const String swTnJournal = "Journal";
+        public const String swTnLibraryFeature = "LibraryFeature";
+        public const String swTnPartConfiguration = "PartConfiguration";
+        public const String swTnReferenceBrowser = "ReferenceBrowser";
+        public const String swTnReferenceEmbedded = "ReferenceEmbedded";
+        public const String swTnReferenceInternal = "ReferenceInternal";
+        public const String swTnScale = "Scale";
+        public const String swTnViewerBodyFeature = "ViewerBodyFeature";
+        public const String swTnXMLRulesFeature = "XMLRulesFeature";
+        public const String swTnMoldCoreCavitySolids = "MoldCoreCavitySolids";
+        public const String swTnMoldPartingGeom = "MoldPartingGeom";
+        public const String swTnMoldPartingLine = "MoldPartingLine";
+        public const String swTnMoldShutOffSrf = "MoldShutOffSrf";
+        public const String swTnAEM3DContact = "AEM3DContact";
+        public const String swTnAEMGravity = "AEMGravity";
+        public const String swTnAEMLinearDamper = "AEMLinearDamper";
+        public const String swTnAEMLinearForce = "AEMLinearForce";
+        public const String swTnAEMLinearMotor = "AEMLinearMotor";
+        public const String swTnAEMLinearSpring = "AEMLinearSpring";
+        public const String swTnAEMRotationalMotor = "AEMRotationalMotor";
+        public const String swTnAEMSimFeature = "AEMSimFeature";
+        public const String swTnAEMTorque = "AEMTorque";
+        public const String swTnAEMTorsionalDamper = "AEMTorsionalDamper";
+        public const String swTnAEMTorsionalSpring = "AEMTorsionalSpring";
+        public const String swTnCoordinateSystem = "CoordSys";
+        public const String swTnCoordSys = "CoordSys";
+        public const String swTnRefAxis = "RefAxis";
+        public const String swTnReferenceCurve = "ReferenceCurve";
+        public const String swTnRefPlane = "RefPlane";
+        public const String swTnAmbientLight = "AmbientLight";
+        public const String swTnCameraFeature = "CameraFeature";
+        public const String swTnDirectionLight = "DirectionLight";
+        public const String swTnPointLight = "PointLight";
+        public const String swTnSpotLight = "SpotLight";
+        public const String swTnBaseFlange = "SMBaseFlange";
+        public const String swTnBending = "Bending";
+        public const String swTnBreakCorner = "BreakCorner";
+        public const String swTnCornerTrim = "CornerTrim";
+        public const String swTnCrossBreak = "CrossBreak";
+        public const String swTnEdgeFlange = "EdgeFlange";
+        public const String swTnFlatPattern = "FlatPattern";
+        public const String swTnFlattenBends = "FlattenBends";
+        public const String swTnFold = "Fold";
+        public const String swTnFormToolInstance = "FormToolInstance";
+        public const String swTnHem = "Hem";
+        public const String swTnLoftedBend = "LoftedBend";
+        public const String swTnOneBend = "OneBend";
+        public const String swTnProcessBends = "ProcessBends";
+        public const String swTnSheetMetal = "SheetMetal";
+        public const String swTnSketchBend = "SketchBend";
+        public const String swTnSM3dBend = "SM3dBend";
+        public const String swTnSMBaseFlange = "SMBaseFlange";
+        public const String swTnSMMiteredFlange = "SMMiteredFlange";
+        public const String swTnToroidalBend = "ToroidalBend";
+        public const String swTnUiBend = "UiBend";
+        public const String swTnUnFold = "UnFold";
+        public const String swTn3DProfileFeature = "3DProfileFeature";
+        public const String swTn3DSplineCurve = "3DSplineCurve";
+        public const String swTnCompositeCurve = "CompositeCurve";
+        public const String swTnLayoutProfileFeature = "LayoutProfileFeature";
+        public const String swTnPLine = "PLine";
+        public const String swTnProfileFeature = "ProfileFeature";
+        public const String swTnRefCurve = "RefCurve";
+        public const String swTnRefPoint = "RefPoint";
+        public const String swTnSketchBlockDefinition = "SketchBlockDef";
+        public const String swTnSketchHole = "SketchHole";
+        public const String swTnSketchPattern = "SketchPattern";
+        public const String swTnSketchPicture = "SketchBitmap";
+        public const String swTnBlendRefSurface = "BlendRefSurface";
+        public const String swTnFillRefSurface = "FillRefSurface";
+        public const String swTnMidRefSurface = "MidRefSurface";
+        public const String swTnOffsetRefSurface = "OffsetRefSurface";
+        public const String swTnRadiateRefSurface = "RadiateRefSurface";
+        public const String swTnRefSurface = "RefSurface";
+        public const String swTnRevolvRefSurf = "RevolvRefSurf";
+        public const String swTnRuledSrfFromEdge = "RuledSrfFromEdge";
+        public const String swTnSewRefSurface = "SewRefSurface";
+        public const String swTnSurfCut = "SurfCut";
+        public const String swTnSweepRefSurface = "SweepRefSurface";
+        public const String swTnTrimRefSurface = "TrimRefSurface";
+        public const String swTnUnTrimRefSurf = "UnTrimRefSurf";
+        public const String swTnVolSweepRefSurface = "VolSweepRefSurface";
+        public const String swTnGusset = "Gusset";
+        public const String swTnWeldMemberFeat = "WeldMemberFeat";
+        public const String swTnWeldmentFeature = "WeldmentFeature";
+        public const String swTnWeldmentTableAnchor = "WeldmentTableAnchor";
+        public const String swTnWeldmentTableFeature = "WeldmentTableFeat";
+    }
+
+    public static class swSelectType
+    {
+        public const String swSelLOCATIONS = "LOCATIONS";
+        public const String swSelUNSUPPORTED = "UNSUPPORTED";
+        public const String swSelDISPLAYSTATE = "VISUALSTATE";
+        public const String swSelANNOTATIONTABLES = "ANNOTATIONTABLES";
+        public const String swSelANNOTATIONVIEW = "ANNVIEW";
+        public const String swSelATTRIBUTES = "ATTRIBUTE";
+        public const String swSelDATUMAXES = "AXIS";
+        public const String swSelBODYFOLDER = "BDYFOLDER";
+        public const String swSelBLOCKDEF = "BLOCKDEF";
+        public const String swSelBODYFEATURES = "BODYFEATURE";
+        public const String swSelBOMS = "BOM";
+        public const String swSelBOMFEATURES = "BOMFEATURE";
+        public const String swSelBOMTEMPS = "BOMTEMP";
+        public const String swSelBREAKLINES = "BREAKLINE";
+        public const String swSelBROWSERITEM = "BROWSERITEM";
+        public const String swSelCAMERAS = "CAMERAS";
+        public const String swSelCENTERLINES = "CENTERLINE";
+        public const String swSelCENTERMARKS = "CENTERMARKS";
+        public const String swSelCENTERMARKSYMS = "CENTERMARKSYMS";
+        public const String swSelCOMMENT = "COMMENT";
+        public const String swSelCOMMENTSFOLDER = "COMMENTSFOLDER";
+        public const String swSelCOMPONENTS = "COMPONENT";
+        public const String swSelCOMPPATTERN = "COMPPATTERN";
+        public const String swSelCONFIGURATIONS = "CONFIGURATIONS";
+        public const String swSelCONNECTIONPOINTS = "CONNECTIONPOINT";
+        public const String swSelCOORDSYS = "COORDSYS";
+        public const String swSelCOSMETICWELDS = "COSMETICWELDS";
+        public const String swSelCTHREADS = "CTHREAD";
+        public const String swSelDATUMPOINTS = "DATUMPOINT";
+        public const String swSelDATUMTAGS = "DATUMTAG";
+        public const String swSelDCABINETS = "DCABINET";
+        public const String swSelDETAILCIRCLES = "DETAILCIRCLE";
+        public const String swSelDIMENSIONS = "DIMENSION";
+        public const String swSelDOCSFOLDER = "DOCSFOLDER";
+        public const String swSelDOWELSYMS = "DOWLELSYM";
+        public const String swSelDRAWINGVIEWS = "DRAWINGVIEW";
+        public const String swSelDTMTARGS = "DTMTARG";
+        public const String swSelEDGES = "EDGE";
+        public const String swSelEMBEDLINKDOC = "EMBEDLINKDOC";
+        public const String swSelEQNFOLDER = "EQNFOLDER";
+        public const String swSelEXPLLINES = "EXPLODELINES";
+        public const String swSelEXPLSTEPS = "EXPLODESTEPS";
+        public const String swSelEXPLVIEWS = "EXPLODEVIEWS";
+        public const String swSelEXTSKETCHPOINTS = "EXTSKETCHPOINT";
+        public const String swSelEXTSKETCHSEGS = "EXTSKETCHSEGMENT";
+        public const String swSelEXTSKETCHTEXT = "EXTSKETCHTEXT";
+        public const String swSelFACES = "FACE";
+        public const String swSelFRAMEPOINT = "FRAMEPOINT";
+        public const String swSelFTRFOLDER = "FTRFOLDER";
+        public const String swSelGENERALTABLEFEAT = "GENERALTABLEFEAT";
+        public const String swSelGTOLS = "GTOL";
+        public const String swSelHELIX = "HELIX";
+        public const String swSelHOLETABLEFEATS = "HOLETABLE";
+        public const String swSelHOLETABLEAXES = "HOLETABLEAXIS";
+        public const String swSelVIEWERHYPERLINK = "HYPERLINK";
+        public const String swSelIMPORTFOLDER = "IMPORTFOLDER";
+        public const String swSelINCONTEXTFEAT = "INCONTEXTFEAT";
+        public const String swSelINCONTEXTFEATS = "INCONTEXTFEATS";
+        public const String swSelJOURNAL = "JOURNAL";
+        public const String swSelLEADERS = "LEADER";
+        public const String swSelLIGHTS = "LIGHTS";
+        public const String swSelMAGNETICLINES = "MAGNETICLINES";
+        public const String swSelMANIPULATORS = "MANIPULATOR";
+        public const String swSelMATES = "MATE";
+        public const String swSelMATEGROUP = "MATEGROUP";
+        public const String swSelMATEGROUPS = "MATEGROUPS";
+        public const String swSelMATESUPPLEMENT = "MATESUPPLEMENT";
+        public const String swSelNOTES = "NOTE";
+        public const String swSelOBJGROUP = "OBJGROUP";
+        public const String swSelOLEITEMS = "OLEITEM";
+        public const String swSelPICTUREBODIES = "PICTURE BODY";
+        public const String swSelDATUMPLANES = "PLANE";
+        public const String swSelPOINTREFS = "POINTREF";
+        public const String swSelPOSGROUP = "POSGROUP";
+        public const String swSelPUNCHTABLEFEATS = "PUNCHTABLE";
+        public const String swSelREFCURVES = "REFCURVE";
+        public const String swSelREFERENCECURVES = "REFERENCECURVES";
+        public const String swSelREFEDGES = "REFERENCE-EDGE";
+        public const String swSelDATUMLINES = "REFLINE";
+        public const String swSelREFSURFACES = "REFSURFACE";
+        public const String swSelREVISIONTABLE = "REVISIONTABLE";
+        public const String swSelREVISIONTABLEFEAT = "REVISIONTABLEFEAT";
+        public const String swSelFABRICATEDROUTE = "ROUTEFABRICATED";
+        public const String swSelROUTEPOINTS = "ROUTEPOINT";
+        public const String swSelSECTIONLINES = "SECTIONLINE";
+        public const String swSelSECTIONTEXT = "SECTIONTEXT";
+        public const String swSelSELECTIONSETFOLDER = "SELECTIONSETFOLDER";
+        public const String swSelSFSYMBOLS = "SFSYMBOL";
+        public const String swSelSHEETS = "SHEET";
+        public const String swSelSILHOUETTES = "SILHOUETTE";
+        public const String swSelSIMULATION = "SIMULATION";
+        public const String swSelSIMELEMENT = "SIMULATION_ELEMENT";
+        public const String swSelSKETCHES = "SKETCH";
+        public const String swSelSKETCHBITMAP = "SKETCHBITMAP";
+        public const String swSelSKETCHCONTOUR = "SKETCHCONTOUR";
+        public const String swSelSKETCHHATCH = "SKETCHHATCH";
+        public const String swSelSKETCHPOINTS = "SKETCHPOINT";
+        public const String swSelSKETCHPOINTFEAT = "SKETCHPOINTFEAT";
+        public const String swSelSKETCHREGION = "SKETCHREGION";
+        public const String swSelSKETCHSEGS = "SKETCHSEGMENT";
+        public const String swSelSKETCHTEXT = "SKETCHTEXT";
+        public const String swSelSOLIDBODIES = "SOLIDBODY";
+        public const String swSelSELECTIONSETNODE = "SUBSELECTIONSETNODE";
+        public const String swSelSUBSKETCHDEF = "SUBSKETCHDEF";
+        public const String swSelSUBSKETCHINST = "SUBSKETCHINST";
+        public const String swSelSUBWELDFOLDER = "SUBWELDMENT";
+        public const String swSelSURFACEBODIES = "SURFACEBODY";
+        public const String swSelSWIFTANNOTATIONS = "SWIFTANN";
+        public const String swSelSWIFTFEATURES = "SWIFTFEATURE";
+        public const String swSelSWIFTSCHEMA = "SWIFTSCHEMA";
+        public const String swSelTITLEBLOCK = "TITLEBLOCK";
+        public const String swSelTITLEBLOCKTABLEFEAT = "TITLEBLOCKTABLEFEAT";
+        public const String swSelVERTICES = "VERTEX";
+        public const String swSelARROWS = "VIEWARROW";
+        public const String swSelWELDS = "WELD";
+        public const String swSelWELDBEADS3 = "WELDBEADS";
+        public const String swSelWELDMENT = "WELDMENT";
+        public const String swSelWELDMENTTABLEFEATS = "WELDMENTTABLE";
+        public const String swSelZONES = "ZONES";
     }
 }

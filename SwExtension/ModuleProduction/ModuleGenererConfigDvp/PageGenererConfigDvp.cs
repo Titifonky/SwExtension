@@ -19,19 +19,16 @@ namespace ModuleProduction.ModuleGenererConfigDvp
     public class PageGenererConfigDvp : BoutonPMPManager
     {
         private Parametre SupprimerLesAnciennesConfigs;
-        private Parametre MasquerEsquisses;
 
         public PageGenererConfigDvp()
         {
             SupprimerLesAnciennesConfigs = _Config.AjouterParam("SupprimerLesAnciennesConfigs", false, "Supprimer les anciennes configs dvp");
-            MasquerEsquisses = _Config.AjouterParam("MasquerEsquisses", false, "Masquer toutes les esquisses");
 
             OnCalque += Calque;
             OnRunOkCommand += RunOkCommand;
         }
 
         private CtrlCheckBox _CheckBox_SupprimerLesAnciennesConfigs;
-        private CtrlCheckBox _CheckBox_MasquerEsquisses;
 
         protected void Calque()
         {
@@ -41,7 +38,6 @@ namespace ModuleProduction.ModuleGenererConfigDvp
                 G = _Calque.AjouterGroupe("Options");
 
                 _CheckBox_SupprimerLesAnciennesConfigs = G.AjouterCheckBox(SupprimerLesAnciennesConfigs);
-                _CheckBox_MasquerEsquisses = G.AjouterCheckBox(MasquerEsquisses);
 
             }
             catch (Exception e)
@@ -54,7 +50,6 @@ namespace ModuleProduction.ModuleGenererConfigDvp
 
             Cmd.MdlBase = App.ModelDoc2;
             Cmd.SupprimerLesAnciennesConfigs = _CheckBox_SupprimerLesAnciennesConfigs.IsChecked;
-            Cmd.MasquerEsquisses = _CheckBox_MasquerEsquisses.IsChecked;
 
             Cmd.Executer();
         }

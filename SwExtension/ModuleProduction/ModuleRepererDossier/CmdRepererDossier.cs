@@ -274,7 +274,7 @@ namespace ModuleProduction.ModuleRepererDossier
 
                             ListIdDossiers.Add(IdDossier);
 
-                            WindowLog.EcrireF(" -{1} -> {0}", fDossier.Name, corps.RepereComplet);
+                            WindowLog.EcrireF(" - {1} -> {0}", fDossier.Name, corps.RepereComplet);
                         }
                         mdl.ePropAdd(CONST_PRODUCTION.ID_CONFIG, IdCfg, nomCfg);
                         mdl.ePropAdd(CONST_PRODUCTION.ID_DOSSIERS, String.Join(" ", ListIdDossiers), nomCfg);
@@ -327,19 +327,22 @@ namespace ModuleProduction.ModuleRepererDossier
 
                     var Piece = mdlFichier.ePartDoc();
 
-                    Body2 Corps = null;
+                    Body2 swCorps = null;
 
-                    foreach (var c in Piece.eListeCorps(true))
+                    foreach (var c in Piece.eListeCorps(false))
                         if (c.Name == corps.NomCorps)
-                            Corps = c;
+                            swCorps = c;
 
-                    Corps.eSelect();
+                    swCorps.eVisible(true);
+                    swCorps.eSelect();
                     mdlFichier.FeatureManager.InsertDeleteBody2(true);
 
+                    Piece.ePremierCorps(false).eVisible(true);
+                    mdlFichier.EditRebuild3();
                     mdlFichier.pMasquerEsquisses();
 
                     if ((corps.TypeCorps == eTypeCorps.Tole) && CreerDvp)
-                        ModuleGenererConfigDvp.CmdGenererConfigDvp.CreerDvp(corps, MdlBase.pDossierPiece(), false, false);
+                        corps.CreerDvp(MdlBase.pDossierPiece(), false);
 
                     mdlFichier.FeatureManager.EditFreeze2((int)swMoveFreezeBarTo_e.swMoveFreezeBarToEnd, "", true, true);
 
