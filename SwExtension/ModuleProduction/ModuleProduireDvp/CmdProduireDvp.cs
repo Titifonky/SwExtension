@@ -123,7 +123,7 @@ namespace ModuleProduction.ModuleProduireDvp
                     if (corps.Dvp && corps.Maj)
                     {
                         WindowLog.EcrireF("{2} P{0} ×{1}", corps.Repere, corps.Qte, IndiceCampagne);
-                        if(corps.DiffPliage > 0)
+                        if((corps.DiffPliage > 0) && (corps.NbPli > 0))
                             WindowLog.EcrireF("  - Controle : {0}% [{1}]", corps.DiffPliagePct, corps.DiffPliage);
                     }
 
@@ -162,6 +162,8 @@ namespace ModuleProduction.ModuleProduireDvp
             Double Volume1 = piece.ePremierCorps().eVolume();
 
             piece.ePremierCorps(false).eVisible(true);
+
+            corps.NbPli = piece.pNbPli();
             var listeCfgDepliee = mdlCorps.eListeNomConfiguration(eTypeConfig.Depliee);
             if (listeCfgDepliee.Count == 0) return;
 

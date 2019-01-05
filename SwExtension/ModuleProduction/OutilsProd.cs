@@ -52,6 +52,24 @@ namespace ModuleProduction
             return false;
         }
 
+        public static int pNbPli(this PartDoc piece)
+        {
+            int nb = 0;
+
+            var liste = piece.eListeFonctionsDepliee();
+            if (liste.Count == 0) return 0;
+
+            Feature FonctionDepliee = liste[0];
+
+            FonctionDepliee.eParcourirSousFonction(
+                f => { nb++; return false; } );
+
+            // Moins les deux esquisses
+            nb -= 2;
+            nb = Math.Max(0, nb);
+            return nb;
+        }
+
         public static void pDeplierTole(this PartDoc piece, String nomConfigDepliee)
         {
             var mdl = piece.eModelDoc2();
@@ -1584,6 +1602,8 @@ namespace ModuleProduction
         public Double DiffPliage { get; private set; }
 
         public Double DiffPliagePct { get; private set; }
+
+        public int NbPli { get; set; }
 
         #region Notification WPF
 
