@@ -123,8 +123,8 @@ namespace ModuleProduction.ModuleProduireDvp
                     if (corps.Dvp && corps.Maj)
                     {
                         WindowLog.EcrireF("{2} P{0} ×{1}", corps.Repere, corps.Qte, IndiceCampagne);
-                        if((corps.DiffPliage > 0) && (corps.NbPli > 0))
-                            WindowLog.EcrireF("  - Controle : {0}% [{1}]", corps.DiffPliagePct, corps.DiffPliage);
+                        if((corps.DiffPliage > 0) || ((corps.NbPli > 0) && (corps.DiffPliage == 0)))
+                            WindowLog.EcrireF("  - Controle : {0}% [{1}] / Nb pli : {2}", corps.DiffPliagePct, corps.DiffPliage, corps.NbPli);
                     }
 
                 ListeCorps.EcrireProduction(DossierDVP, IndiceCampagne);
