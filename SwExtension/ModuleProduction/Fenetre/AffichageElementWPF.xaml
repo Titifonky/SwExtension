@@ -149,6 +149,7 @@
                                             <Expander IsExpanded="True" Padding="10,0,0,0">
                                                 <Expander.Header>
                                                     <StackPanel Orientation="Horizontal">
+                                                        <CheckBox Margin="5" VerticalAlignment="Center" Checked="SelectGroup_Check" Unchecked="DeselectGroup_Check" IsChecked="True"/>
                                                         <TextBlock Text="{Binding Name}" FontSize="15" FontWeight="Bold" Margin="10,0,0,0" VerticalAlignment="Bottom"/>
                                                         <TextBlock Text="nb de repères :" Margin="25,0,0,0" VerticalAlignment="Bottom"/>
                                                         <TextBlock Text="{Binding ItemCount}" Margin="4,0,0,0" VerticalAlignment="Bottom"/>

@@ -30,30 +30,26 @@ namespace ModuleProduction.ModuleProduireDebit
 
         public int LgBarre = 6000;
 
-        private ListeElement listeElement;
+        private ListeElement _listeElement;
+        private ListeLgProfil _listeLgProfil = null;
 
-        public ListeLgProfil Analyser()
+        private void ChargerCorps()
         {
-            InitTime();
-
-            Init();
-
             try
             {
-                listeElement = new ListeElement(LgBarre);
+                _listeElement = new ListeElement(LgBarre);
 
                 foreach (var corps in ListeCorps.Values)
-                    listeElement.AjouterElement(corps.Qte * Quantite, corps.RepereComplet, corps.Materiau, corps.Dimension, corps.Volume.eToDouble(), 90, 90);
+                    if (corps.Dvp)
+                        _listeElement.AjouterElement(corps.Qte * Quantite, corps.RepereComplet, corps.Materiau, corps.Dimension, corps.Volume.eToDouble(), 90, 90);
 
                 ExecuterEn();
-                return listeElement.ListeLgProfil;
+                _listeLgProfil = _listeElement.ListeLgProfil;
             }
             catch (Exception e)
             {
                 this.LogErreur(new Object[] { e });
             }
-
-            return null;
         }
 
         private void Init()
@@ -61,21 +57,19 @@ namespace ModuleProduction.ModuleProduireDebit
             MdlBase.pCalculerQuantite(ref ListeCorps, eTypeCorps.Barre, ListeMateriaux, ListeProfils, IndiceCampagne, false);
         }
 
-        protected override void Command()
+        public void Analyser(out ListeLgProfil listeLgProfil)
         {
-            try
-            {
-                AffichageElementWPF Fenetre = new AffichageElementWPF(ListeCorps);
-                Fenetre.OnValider += Start;
-                Fenetre.ShowDialog();
-            }
-            catch (Exception e)
-            {
-                this.LogErreur(new Object[] { e });
-            }
+            InitTime();
+
+            Init();
+
+            AffichageElementWPF Fenetre = new AffichageElementWPF(ListeCorps);
+            Fenetre.OnValider += ChargerCorps;
+            Fenetre.ShowDialog();
+            listeLgProfil = _listeLgProfil;
         }
 
-        protected void Start()
+        protected override void Command()
         {
             try
             {
@@ -85,7 +79,7 @@ namespace ModuleProduction.ModuleProduireDebit
                 {
                     case eTypeSortie.ListeDebit:
                         {
-                            var DicBarre = listeElement.ListeBarre();
+                            var DicBarre = _listeElement.ListeBarre();
 
                             String ResumeBarre = DicBarre.ResumeNbBarre();
                             String ResumeListeDebit = DicBarre.ResumeListeDebit();
@@ -101,13 +95,13 @@ namespace ModuleProduction.ModuleProduireDebit
                             s.Close();
 
                             WindowLog.SautDeLigne(2);
-                            WindowLog.EcrireF("Nb d'éléments {0}", listeElement.NbElement);
+                            WindowLog.EcrireF("Nb d'éléments {0}", _listeElement.NbElement);
                             WindowLog.EcrireF("Nb de barres {0}", DicBarre.NbBarre);
                         }
                         break;
                     case eTypeSortie.ListeBarre:
                         {
-                            String ResumeListeBarre = listeElement.ResumeListeBarre();
+                            String ResumeListeBarre = _listeElement.ResumeListeBarre();
                             
                             CheminFichier = Path.Combine(MdlBase.eDossier(), NomFichier + " - Liste des barres.txt");
                             String Complet = RefFichier + "\r\n" + ResumeListeBarre;

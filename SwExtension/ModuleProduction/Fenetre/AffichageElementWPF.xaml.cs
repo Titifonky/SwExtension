@@ -182,5 +182,41 @@ namespace ModuleProduction
             foreach (Corps corps in ListeCorps.Values)
                 corps.Dvp = false;
         }
+
+        private void SelectGroup_Check(object sender, RoutedEventArgs e)
+        {
+            HandleGroupCheck((CheckBox)sender, true);
+        }
+
+        private void DeselectGroup_Check(object sender, RoutedEventArgs e)
+        {
+            HandleGroupCheck((CheckBox)sender, false);
+        }
+
+        private void HandleGroupCheck(CheckBox sender, bool check)
+        {
+            var group = (CollectionViewGroup)sender.DataContext;
+            HandleGroupCheckRecursive(group, check);
+        }
+
+        private void HandleGroupCheckRecursive(CollectionViewGroup group, bool check)
+        {
+            foreach (var itemOrGroup in group.Items)
+            {
+                if (itemOrGroup is CollectionViewGroup)
+                {
+                    var Group = itemOrGroup as CollectionViewGroup;
+
+                    // Found a nested group - recursively run this method again
+                    this.HandleGroupCheckRecursive(Group, check);
+                }
+                else
+                {
+                    var Cp = itemOrGroup as Corps;
+                    if (Cp.IsRef())
+                        Cp.Dvp = check;
+                }
+            }
+        }
     }
 }

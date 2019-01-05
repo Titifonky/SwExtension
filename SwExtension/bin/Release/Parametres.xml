@@ -16,7 +16,7 @@
     <Parametre name="ExporterHauteQualite" intitule="Exporter en haute qualité" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="ExporterFeuilleEspacePapier" intitule="Exporter les feuilles dans l'espace papier" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="ConvertirSplineToPolyligne" intitule="Convertir les splines en polylignes" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">D:\Projet\E144 - Ville d'Arras\ED379 - Pole educatif Val de Scarpe\1\4.6.8 Volets exterieurs\Laser tole\1</Parametre>
+    <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">E:\Projets\E1 - MFB\ED000 Escalier Christophe\0\Laser tole\1</Parametre>
   </Module>
   <Module name="ExportPdf" intitule="Exporter en Pdf">
     <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">True</Parametre>
@@ -196,7 +196,7 @@
   <Module name="ProduireDvp" intitule="Creer les dvp de tôle">
     <Parametre name="AfficherLignePliage" intitule="Afficher les lignes de pliage" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="AfficherNotePliage" intitule="Afficher les notes de pliage" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="InscrireNomTole" intitule="Inscrire la réf du dvp sur la tole" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="InscrireNomTole" intitule="Inscrire la réf du dvp sur la tole" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="TailleInscription" intitule="Ht des inscriptions en mm" tip="Ht des inscriptions en mm" type="System.Int32">5</Parametre>
     <Parametre name="OrienterDvp" intitule="Orienter les dvps" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="OrientationDvp" intitule="" tip="" type="Outils.eOrientation">Portrait</Parametre>

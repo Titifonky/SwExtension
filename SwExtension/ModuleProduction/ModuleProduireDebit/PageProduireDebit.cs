@@ -22,9 +22,6 @@ namespace ModuleProduction.ModuleProduireDebit
     public class PageProduireDebit : BoutonPMPManager
     {
         private Parametre PropQuantite;
-        private Parametre PrendreEnCompteTole;
-
-        private Parametre ComposantsExterne;
 
         private Parametre LgBarre;
 
@@ -306,9 +303,10 @@ namespace ModuleProduction.ModuleProduireDebit
             Cmd.RefFichier = _Texte_RefFichier.Text;
             Cmd.LgBarre = _Texte_LgBarre.Text.eToInteger();
 
-            ListeLgProfil = Cmd.Analyser();
+            Cmd.Analyser(out ListeLgProfil);
 
-            ChargerLg();
+            if (ListeLgProfil.IsRef())
+                ChargerLg();
 
             return true;
         }
@@ -318,6 +316,8 @@ namespace ModuleProduction.ModuleProduireDebit
             if (Cmd.IsRef()) return false;
 
             ChargerCmd();
+
+            if (ListeLgProfil.IsNull()) return false;
 
             foreach (var groupe in ListeGroupe1)
                 groupe.Visible = false;
@@ -352,6 +352,8 @@ namespace ModuleProduction.ModuleProduireDebit
         {
             if (!ChargerCmd())
                 SauverLg();
+
+            if (ListeLgProfil.IsNull()) return;
 
             WindowLog.Ecrire("Lg max des barres :");
 
