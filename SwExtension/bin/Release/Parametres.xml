@@ -216,4 +216,9 @@
   <Module name="NettoyerReperage" intitule="Nettoyer le reperage" />
   <Module name="RetournerDvp" intitule="Retourner les Dvps selectionnés" />
   <Module name="CommandeProfil" intitule="Commander les profils" />
+  <Module name="ProduireDebit" intitule="Liste de débit">
+    <Parametre name="PropQuantite" intitule="Propriete &quot;Quantite&quot;" tip="Recherche cette propriete" type="System.String">Quantite</Parametre>
+    <Parametre name="LgBarre" intitule="Lg d'une barre" tip="" type="System.Int32">6000</Parametre>
+    <Parametre name="AfficherListe" intitule="Afficher la liste après execution" tip="" type="System.Boolean">True</Parametre>
+  </Module>
 </Parametres>

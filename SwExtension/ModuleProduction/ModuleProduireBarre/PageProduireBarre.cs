@@ -177,7 +177,7 @@ namespace ModuleProduction.ModuleProduireBarre
             Cmd.IndiceCampagne = _TextBox_Campagne.Text.eToInteger();
             Cmd.MettreAjourCampagne = _CheckBox_MettreAjourCampagne.IsChecked;
             Cmd.ListeMateriaux = _TextListBox_Materiaux.ListSelectedText.Count > 0 ? _TextListBox_Materiaux.ListSelectedText : _TextListBox_Materiaux.Liste;
-            Cmd.ListeProfil = _TextListBox_Profils.ListSelectedText.Count > 0 ? _TextListBox_Profils.ListSelectedText : _TextListBox_Profils.Liste;
+            Cmd.ListeProfils = _TextListBox_Profils.ListSelectedText.Count > 0 ? _TextListBox_Profils.ListSelectedText : _TextListBox_Profils.Liste;
             Cmd.CreerPdf3D = _CheckBox_CreerPdf3D.IsChecked;
             Cmd.TypeExport = _EnumComboBox_TypeExport.Val;
             Cmd.ExporterBarres = _CheckBox_ExporterBarres.IsChecked;

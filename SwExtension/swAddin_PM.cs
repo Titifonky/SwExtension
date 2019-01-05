@@ -44,6 +44,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using ModuleProduction;
+using ModuleProduction.ModuleProduireDebit;
 
 namespace SwExtension
 {
@@ -113,7 +114,9 @@ namespace SwExtension
                 _Mnu.AjouterCmde("Rd", typeof(PageRepererDossier));
                 _Mnu.AjouterCmde("Pd", typeof(PageProduireDvp));
                 _Mnu.AjouterCmde("Pb", typeof(PageProduireBarre));
+                _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde("Cp", typeof(BoutonCommandeProfil));
+                _Mnu.AjouterCmde("Ld", typeof(PageProduireDebit));
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde("Gd", typeof(PageGenererConfigDvp));
                 _Mnu.AjouterCmde("Cr", typeof(BoutonControlerReperage));

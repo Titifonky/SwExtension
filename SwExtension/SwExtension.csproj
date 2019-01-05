@@ -103,6 +103,8 @@
     <Compile Include="ModuleProduction\Fenetre\AffichageElementWPF.xaml.cs">
       <DependentUpon>AffichageElementWPF.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ModuleProduction\ModuleProduireDebit\CmdProduireDebit.cs" />
+    <Compile Include="ModuleProduction\ModuleProduireDebit\PageProduireDebit.cs" />
     <Compile Include="ModuleProduction\ModuleProduireBarre\CmdProduireBarre.cs" />
     <Compile Include="ModuleProduction\ModuleProduireBarre\PageProduireBarre.cs" />
     <Compile Include="ModuleProduction\ModuleProduireDvp\CmdProduireDvp.cs" />

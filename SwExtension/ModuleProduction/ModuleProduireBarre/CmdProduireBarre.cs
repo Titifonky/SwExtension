@@ -17,7 +17,7 @@ namespace ModuleProduction.ModuleProduireBarre
         public String RefFichier = "";
         public ListeSortedCorps ListeCorps = new ListeSortedCorps();
         public List<String> ListeMateriaux = new List<String>();
-        public List<String> ListeProfil = new List<String>();
+        public List<String> ListeProfils = new List<String>();
         public int Quantite = 1;
         public int IndiceCampagne = 0;
         public Boolean MettreAjourCampagne = false;
@@ -35,7 +35,7 @@ namespace ModuleProduction.ModuleProduireBarre
         {
             DossierBarre = Directory.CreateDirectory(Path.Combine(MdlBase.pDossierLaserTube(), IndiceCampagne.ToString())).FullName;
             DossierBarrePDF = Directory.CreateDirectory(Path.Combine(DossierBarre, "PDF")).FullName;
-            MdlBase.pCalculerQuantite(ref ListeCorps, eTypeCorps.Barre, ListeMateriaux, ListeProfil, IndiceCampagne, MettreAjourCampagne);
+            MdlBase.pCalculerQuantite(ref ListeCorps, eTypeCorps.Barre, ListeMateriaux, ListeProfils, IndiceCampagne, MettreAjourCampagne);
         }
 
         private void NettoyerFichier()
