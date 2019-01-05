@@ -43,7 +43,7 @@ namespace ModuleProduction.ModuleProduireDebit
                 listeElement = new ListeElement(LgBarre);
 
                 foreach (var corps in ListeCorps.Values)
-                    listeElement.AjouterElement(corps.Qte * Quantite , corps.RepereComplet, corps.Materiau, corps.Dimension, corps.Volume.eToDouble(), 90, 90);
+                    listeElement.AjouterElement(corps.Qte * Quantite, corps.RepereComplet, corps.Materiau, corps.Dimension, corps.Volume.eToDouble(), 90, 90);
 
                 ExecuterEn();
                 return listeElement.ListeLgProfil;
@@ -79,6 +79,8 @@ namespace ModuleProduction.ModuleProduireDebit
         {
             try
             {
+                String NomFichier = String.Format("{0}{1}", String.IsNullOrWhiteSpace(RefFichier) ? "" : RefFichier + "-", IndiceCampagne);
+
                 switch (TypeSortie)
                 {
                     case eTypeSortie.ListeDebit:
@@ -92,7 +94,7 @@ namespace ModuleProduction.ModuleProduireDebit
 
                             WindowLog.Ecrire(ResumeBarre);
 
-                            CheminFichier = Path.Combine(MdlBase.eDossier(), RefFichier + " - " + MdlBase.eNomSansExt() + " - Liste de débit.txt");
+                            CheminFichier = Path.Combine(MdlBase.eDossier(), NomFichier + " - Liste de débit.txt");
 
                             StreamWriter s = new StreamWriter(CheminFichier);
                             s.Write(Complet);
@@ -106,8 +108,8 @@ namespace ModuleProduction.ModuleProduireDebit
                     case eTypeSortie.ListeBarre:
                         {
                             String ResumeListeBarre = listeElement.ResumeListeBarre();
-
-                            CheminFichier = Path.Combine(MdlBase.eDossier(), RefFichier + " - " + MdlBase.eNomSansExt() + " - Liste des barres.txt");
+                            
+                            CheminFichier = Path.Combine(MdlBase.eDossier(), NomFichier + " - Liste des barres.txt");
                             String Complet = RefFichier + "\r\n" + ResumeListeBarre;
 
                             WindowLog.Ecrire(ResumeListeBarre);
