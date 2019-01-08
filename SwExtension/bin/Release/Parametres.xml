@@ -221,4 +221,5 @@
     <Parametre name="LgBarre" intitule="Lg d'une barre" tip="" type="System.Int32">6000</Parametre>
     <Parametre name="AfficherListe" intitule="Afficher la liste après execution" tip="" type="System.Boolean">True</Parametre>
   </Module>
+  <Module name="VueInverserStyle" intitule="Inverser le style d'affichage" />
 </Parametres>

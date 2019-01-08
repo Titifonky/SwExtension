@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Macros
 {
-    [ModuleTypeDocContexte(eTypeDoc.Assemblage | eTypeDoc.Piece | eTypeDoc.Dessin),
+    [ModuleTypeDocContexte(eTypeDoc.Assemblage | eTypeDoc.Piece),
         ModuleTitre("Test"),
         ModuleNom("Test")]
 
@@ -19,52 +19,8 @@ namespace Macros
         {
             ModelDoc2 mdl = App.ModelDoc2;
 
-            if (mdl.TypeDoc() != eTypeDoc.Piece)
-                return;
-
-            var piece = mdl.ePartDoc();
-            var fDepliee = piece.eListeFonctionsDepliee()[0];
-            FlatPatternFeatureData fDeplieeInfo = fDepliee.GetDefinition();
-            Face2 face = fDeplieeInfo.FixedFace2;
-            Surface surface = face.GetSurface();
-
-            Boolean Reverse = face.FaceInSurfaceSense();
-
-            Double[] Param = surface.PlaneParams;
-
-            if (Reverse)
-            {
-                Param[0] = Param[0] * -1;
-                Param[1] = Param[1] * -1;
-                Param[2] = Param[2] * -1;
-            }
-
-            gPoint Origine = new gPoint(Param[3], Param[4], Param[5]);
-            gVecteur Normale = new gVecteur(Param[0] * -1, Param[1] * -1, Param[2] * -1);
-            
-
-            MathUtility Mu = App.Sw.GetMathUtility();
-            
-            MathVector NormAxeZ = Normale.MathVector().Normalise();
-            MathVector NormAxeX = Mu.CreateVector(new Double[] { Param[2], 0, -1 * Param[0] }).Normalise();
-            MathVector NormAxeY = NormAxeZ.Cross(NormAxeX).Normalise();
-
-            MathVector NormTrans = Mu.CreateVector(new Double[] { 0, 0, 0 });
-            MathTransform mtNormale = Mu.ComposeTransform(NormAxeX, NormAxeY, NormAxeZ, NormTrans, 1);
-
-            MathVector AxeX = Mu.CreateVector(new Double[] { 1, 0, 0 });
-            MathVector AxeY = Mu.CreateVector(new Double[] { 0, 1, 0 });
-            MathVector AxeZ = Mu.CreateVector(new Double[] { 0, 0, 1 });
-            MathVector Trans = Mu.CreateVector(new Double[] { 0, 0, 0 });
-            MathTransform mtAxeZ = Mu.ComposeTransform(AxeX, AxeY, AxeZ, Trans, 1);
-
-            MathTransform mtRotate = mtAxeZ.Multiply(mtNormale.Inverse());
-            ModelView mv = mdl.ActiveView;
-            mv.Orientation3 = mtRotate;
-            mv.Activate();
-            mdl.ViewZoomtofit2();
-            mdl.GraphicsRedraw2();
-            //mdl.eSauver();
+            var cfg = mdl.eListeNomConfiguration(eTypeConfig.Racine)[0];
+            mdl.ShowConfiguration2(cfg);
         }
 
         //String cheminbloc = "E:\\Mes documents\\SolidWorks\\2018\\Blocs\\Macro\\REPERAGE_DOSSIER.sldblk";
