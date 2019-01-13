@@ -5,6 +5,8 @@ using SolidWorks.Interop.swconst;
 using SwExtension;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace Macros
 {
@@ -19,9 +21,30 @@ namespace Macros
         {
             ModelDoc2 mdl = App.ModelDoc2;
 
-            var cfg = mdl.eListeNomConfiguration(eTypeConfig.Racine)[0];
-            mdl.ShowConfiguration2(cfg);
+            Appliquer(mdl);
         }
+
+        private void Appliquer(ModelDoc2 mdl)
+        {
+            String NomFichier = mdl.eNomAvecExt().Replace(".SLDLFP", ".SLDPRT");
+            String Materiau = "\"SW-Material@@<NomCfg>@<NomFichier>\"".Replace("<NomFichier>", NomFichier);
+            String Masse = "\"SW-Mass@@<NomCfg>@<NomFichier>\"".Replace("<NomFichier>", NomFichier);
+
+            foreach (var NomCfg in mdl.eListeNomConfiguration())
+            {
+                String NomProfil = NomCfg;
+                var tmp = NomCfg.Split(new char[] { 'x' }).ToList();
+                if(tmp.Count > 1)
+                {
+                    tmp.RemoveAt(tmp.Count - 1);
+                    NomProfil = String.Join("x", tmp);
+                }
+                mdl.ePropAdd("ProfilCourt", NomProfil, NomCfg);
+                mdl.ePropAdd("Matériau", Materiau.Replace("<NomCfg>", NomCfg), NomCfg);
+                mdl.ePropAdd("Masse", Masse.Replace("<NomCfg>", NomCfg), NomCfg);
+            }
+        }
+
 
         //String cheminbloc = "E:\\Mes documents\\SolidWorks\\2018\\Blocs\\Macro\\REPERAGE_DOSSIER.sldblk";
         //String NomEsquisse = "REPERAGE_DOSSIER";

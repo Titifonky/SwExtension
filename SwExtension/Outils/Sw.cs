@@ -160,7 +160,6 @@ namespace Outils
         internal const String PROFIL_ANGLE2 = "ANGLE2";
         internal const String PROFIL_LONGUEUR = "LONGUEUR";
         internal const String PROFIL_MASSE = "Masse";
-        internal const String PROFIL_MATERIAU = "MATERIAL";
         internal const String TOLE_EPAISSEUR = "Epaisseur de tôlerie";
         internal const String TOLE_LONGUEUR = "Longueur du flanc de tôle";
         internal const String TOLE_LARGEUR = "Largeur du flanc de tôle";

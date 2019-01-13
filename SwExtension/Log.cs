@@ -242,17 +242,17 @@ namespace LogDebugging
             Ecrire(o.ToString());
         }
 
-        internal static void Ecrire(string Message)
+        internal static void Ecrire(string message)
         {
             Afficher();
-            Text(Message, true);
+            Text(message, true);
             
             String T = String.Format("{0:hh\\:mm\\:ss}", DateTime.Now) + " " +
                                     Remplir(Math.Round((DateTime.Now - pStart).TotalSeconds).ToString()) + " " +
                                     Remplir(Math.Round((DateTime.Now - pDiff).TotalSeconds).ToString());
             pDiff = DateTime.Now;
 
-            String ligne = String.Format("{0}  {1}", T, Message);
+            String ligne = String.Format("{0}  {1}", T, message);
 
             _NotePad.AppendText(ligne + Environment.NewLine);
 
@@ -267,9 +267,19 @@ namespace LogDebugging
                 Ecrire(s);
         }
 
-        internal static void EcrireF(string Message, params Object[] objs)
+        internal static void EcrireMethode([CallerMemberName] String methode = "")
         {
-            Ecrire(String.Format(Message, objs));
+            Ecrire(methode);
+        }
+
+        internal static void EcrireMethode(Object message, [CallerMemberName] String methode = "")
+        {
+            Ecrire(message.ToString() + methode);
+        }
+
+        internal static void EcrireF(string message, params Object[] objs)
+        {
+            Ecrire(String.Format(message, objs));
         }
 
         internal static void SautDeLigne(int nb = 1)
@@ -295,7 +305,7 @@ namespace LogDebugging
             return " ".eRepeter(6 - s.Length) + s;
         }
 
-        internal delegate void TextEvent(String s, Boolean Ajouter);
+        internal delegate void TextEvent(String s, Boolean ajouter);
 
         internal static TextEvent Text;
 

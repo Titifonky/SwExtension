@@ -5,18 +5,15 @@ using ModuleEmpreinte;
 using ModuleExportFichier.ModuleDxfDwg;
 using ModuleExportFichier.ModulePdf;
 using ModuleImporterInfos;
+using ModuleInsererNote;
 using ModuleInsererPercage;
-using ModuleProduction.ModuleRepererDossier;
-using ModuleProduction.ModuleProduireDvp;
-using ModuleProduction.ModuleGenererConfigDvp;
-using ModuleProduction.ModuleProduireBarre;
 using ModuleLaser;
 using ModuleLaser.ModuleCreerConfigDvp;
 using ModuleLaser.ModuleCreerDvp;
 using ModuleLaser.ModuleExportBarre;
 using ModuleLaser.ModuleListeDebit;
-using ModuleLaser.ModuleNumeroterDossier;
 using ModuleLaser.ModuleListerRepere;
+using ModuleLaser.ModuleNumeroterDossier;
 using ModuleLierLesConfigurations;
 using ModuleListerConfigComp;
 using ModuleListerMateriaux;
@@ -28,6 +25,12 @@ using ModuleMarcheConfig.ModulePositionnerPlatine;
 using ModuleMarchePositionner.ModuleBalancerMarches;
 using ModuleMarchePositionner.ModuleInsererMarches;
 using ModuleParametres;
+using ModuleProduction;
+using ModuleProduction.ModuleGenererConfigDvp;
+using ModuleProduction.ModuleProduireBarre;
+using ModuleProduction.ModuleProduireDebit;
+using ModuleProduction.ModuleProduireDvp;
+using ModuleProduction.ModuleRepererDossier;
 using ModuleVoronoi;
 using Outils;
 using SolidWorks.Interop.sldworks;
@@ -43,8 +46,6 @@ using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using ModuleProduction;
-using ModuleProduction.ModuleProduireDebit;
 
 namespace SwExtension
 {
@@ -181,6 +182,9 @@ namespace SwExtension
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde("Rf", typeof(BoutonRedimensionnerFeuille));
                 _Mnu.AjouterCmde("Rn", typeof(BoutonRenommerFeuille));
+
+                _Mnu.NouveauGroupe();
+                _Mnu.AjouterCmde("Rf", typeof(PageInsererNote));
 
                 _eListeMenu.CreerMenus();
 

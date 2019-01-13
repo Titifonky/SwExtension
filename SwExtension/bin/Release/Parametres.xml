@@ -222,4 +222,9 @@
     <Parametre name="AfficherListe" intitule="Afficher la liste après execution" tip="" type="System.Boolean">True</Parametre>
   </Module>
   <Module name="VueInverserStyle" intitule="Inverser le style d'affichage" />
+  <Module name="InsererNote" intitule="Inserer les notes">
+    <Parametre name="AjouterMateriau" intitule="Ajouter le matériau" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="ProfilCourt" intitule="Nom de profil court" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="SautDeLigneMateriau" intitule="Saut de ligne matériau" tip="" type="System.Boolean">False</Parametre>
+  </Module>
 </Parametres>
