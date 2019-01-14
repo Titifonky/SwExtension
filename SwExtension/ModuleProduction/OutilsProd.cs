@@ -309,35 +309,6 @@ namespace ModuleProduction
             return dic;
         }
 
-        private class Dossier
-        {
-            public int Id;
-            public String Repere;
-            public ModelDoc2 Mdl;
-            public String Config;
-            public int Nb = 0;
-
-            public Dossier(String repere, ModelDoc2 mdl, String config, int id)
-            {
-                Repere = repere;
-                Mdl = mdl;
-                Config = config;
-                Id = id;
-            }
-        }
-        private const String ChaineIndice = "ZYXWVUTSRQPONMLKJIHGFEDCBA";
-
-        public static String pChercherIndice(List<String> liste)
-        {
-            for (int i = 0; i < ChaineIndice.Length; i++)
-            {
-                if (liste.Any(d => { return d.EndsWith(" Ind " + ChaineIndice[i]) ? true : false; }))
-                    return "Ind " + ChaineIndice[Math.Max(0, i - 1)];
-            }
-
-            return "Ind " + ChaineIndice.Last();
-        }
-
         public static String pCreerDossier(this ModelDoc2 mdl, String dossier)
         {
             var chemin = Path.Combine(mdl.eDossier(), dossier);
