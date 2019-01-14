@@ -141,9 +141,9 @@ namespace Outils
 
     internal static class CONSTANTES
     {
-        internal const String CONFIG_DEPLIEE_PATTERN = "^([0-9]+)(SM-FLAT-PATTERN)((.)+)$";
+        internal const String CONFIG_DEPLIEE_PATTERN = "^([0-9]+)(?=.*SM-FLAT-PATTERN)((.)*)$";
         internal const String CONFIG_DEPLIEE = "SM-FLAT-PATTERN";
-        internal const String CONFIG_PLIEE_PATTERN = @"^\d+$";
+        internal const String CONFIG_PLIEE_PATTERN = @"^([0-9]+)(?!.*SM-FLAT-PATTERN)((.)*)$";
         internal const String ARTICLE_LISTE_DES_PIECES_SOUDEES = "Article-liste-des-pièces-soudées";
         
         internal const String NO_DOSSIER = "NoDossier";

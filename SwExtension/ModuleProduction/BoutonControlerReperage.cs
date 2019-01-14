@@ -30,6 +30,10 @@ namespace ModuleProduction
                     var aff = new AffichageElementWPF(ListeCorpsExistant, IndiceCampagne);
                     aff.ShowDialog();
                 }
+                else
+                {
+                    WindowLog.Ecrire("Aucun repérage");
+                }
 
             }
             catch (Exception e)

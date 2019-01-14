@@ -21,27 +21,13 @@ namespace Macros
         {
             ModelDoc2 mdl = App.ModelDoc2;
 
-            
-
-            int nb = 0;
-
-            var liste = mdl.ePartDoc().eListeFonctionsDepliee();
-            if (liste.Count == 0) return;
-
-            Feature FonctionDepliee = liste[0];
-
-            FonctionDepliee.eParcourirSousFonction(
-                f =>
-                {
-                    if (f.GetTypeName2() == FeatureType.swTnUiBend)
-                        nb++;
-
-                    return false;
-                }
-                );
-
-            // Moins les deux esquisses
-            WindowLog.Ecrire(nb);
+            foreach (var cfg in mdl.eListeNomConfiguration())
+            {
+                WindowLog.EcrireF("{0}", cfg);
+                WindowLog.EcrireF("  Est Pliee = {0}", cfg.eEstConfigPliee());
+                WindowLog.EcrireF("  Est Depliee = {0}", cfg.eEstConfigDepliee());
+                WindowLog.SautDeLigne();
+            }
 
             //Appliquer(mdl);
         }
