@@ -62,11 +62,15 @@ namespace ModuleProduction
             Feature FonctionDepliee = liste[0];
 
             FonctionDepliee.eParcourirSousFonction(
-                f => { nb++; return false; } );
+                f =>
+                {
+                    if(f.GetTypeName2() == FeatureType.swTnUiBend)
+                        nb++;
 
-            // Moins les deux esquisses
-            nb -= 2;
-            nb = Math.Max(0, nb);
+                    return false;
+                }
+                );
+
             return nb;
         }
 

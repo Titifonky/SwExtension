@@ -21,7 +21,29 @@ namespace Macros
         {
             ModelDoc2 mdl = App.ModelDoc2;
 
-            Appliquer(mdl);
+            
+
+            int nb = 0;
+
+            var liste = mdl.ePartDoc().eListeFonctionsDepliee();
+            if (liste.Count == 0) return;
+
+            Feature FonctionDepliee = liste[0];
+
+            FonctionDepliee.eParcourirSousFonction(
+                f =>
+                {
+                    if (f.GetTypeName2() == FeatureType.swTnUiBend)
+                        nb++;
+
+                    return false;
+                }
+                );
+
+            // Moins les deux esquisses
+            WindowLog.Ecrire(nb);
+
+            //Appliquer(mdl);
         }
 
         private void Appliquer(ModelDoc2 mdl)
