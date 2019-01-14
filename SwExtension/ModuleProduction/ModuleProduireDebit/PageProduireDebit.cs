@@ -94,7 +94,7 @@ namespace ModuleProduction.ModuleProduireDebit
                 G = ListeGroupe1.Last();
 
                 _Texte_Quantite = G.AjouterTexteBox("Quantité :", "Multiplier les quantités par");
-                _Texte_Quantite.Text = MdlBase.Quantite();
+                _Texte_Quantite.Text = MdlBase.pQuantite();
                 _Texte_Quantite.ValiderTexte += ValiderTextIsInteger;
 
                 ListeGroupe1.Add(_Calque.AjouterGroupe("Materiaux :"));

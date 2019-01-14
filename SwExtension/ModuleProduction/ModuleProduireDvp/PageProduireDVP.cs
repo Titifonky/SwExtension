@@ -90,7 +90,7 @@ namespace ModuleProduction.ModuleProduireDvp
                 G = _Calque.AjouterGroupe("Quantité :");
 
                 _Texte_Quantite = G.AjouterTexteBox("Multiplier par quantité :", "Multiplier les quantités par");
-                _Texte_Quantite.Text = MdlBase.Quantite();
+                _Texte_Quantite.Text = MdlBase.pQuantite();
                 _Texte_Quantite.ValiderTexte += ValiderTextIsInteger;
 
                 G = _Calque.AjouterGroupe("Materiaux :");

@@ -33,7 +33,7 @@ namespace ModuleProduction
 
     public static class OutilsProd
     {
-        public static String Quantite(this ModelDoc2 mdl)
+        public static String pQuantite(this ModelDoc2 mdl)
         {
             CustomPropertyManager PM = mdl.Extension.get_CustomPropertyManager("");
 
@@ -155,7 +155,7 @@ namespace ModuleProduction
                                     );
         }
 
-        public static void CreerDvp(this Corps corps, String dossierPiece, Boolean _supprimerLesAnciennesConfigs = false)
+        public static void pCreerDvp(this Corps corps, String dossierPiece, Boolean _supprimerLesAnciennesConfigs = false)
         {
             try
             {
@@ -163,7 +163,7 @@ namespace ModuleProduction
 
                 String Repere = CONSTANTES.PREFIXE_REF_DOSSIER + corps.Repere;
 
-                var nomFichier = Repere + OutilsProd.ExtPiece;
+                var nomFichier = Repere + OutilsProd.pExtPiece;
                 var chemin = Path.Combine(dossierPiece, nomFichier);
                 if (!File.Exists(chemin)) return;
 
@@ -488,7 +488,7 @@ namespace ModuleProduction
             return Liste;
         }
 
-        public static String ExtPiece = eTypeDoc.Piece.GetEnumInfo<ExtFichier>();
+        public static String pExtPiece = eTypeDoc.Piece.GetEnumInfo<ExtFichier>();
 
         public static void pCalculerQuantite(this ModelDoc2 mdlBase, ref ListeSortedCorps listeCorps, eTypeCorps typeCorps, List<String> listeMateriaux, List<String> listeDimensions, int indiceCampagne, Boolean mettreAjourCampagne)
         {
@@ -1336,7 +1336,7 @@ namespace ModuleProduction
 
         public void InitChemins()
         {
-            _CheminFichierRepere = Path.Combine(MdlBase.pDossierPiece(), RepereComplet + OutilsProd.ExtPiece);
+            _CheminFichierRepere = Path.Combine(MdlBase.pDossierPiece(), RepereComplet + OutilsProd.pExtPiece);
             _CheminFichierApercu = Path.Combine(MdlBase.pDossierPiece(), CONST_PRODUCTION.DOSSIER_PIECES_APERCU, RepereComplet + ".bmp");
         }
 

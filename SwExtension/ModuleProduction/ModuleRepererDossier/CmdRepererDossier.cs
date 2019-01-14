@@ -121,7 +121,7 @@ namespace ModuleProduction.ModuleRepererDossier
                     WindowLog.SautDeLigne();
                     WindowLog.EcrireF("Chargement des corps existants ({0}):", ListeCorps.Count);
 
-                    foreach (FileInfo file in new DirectoryInfo(MdlBase.pDossierPiece()).GetFiles("*" + OutilsProd.ExtPiece))
+                    foreach (FileInfo file in new DirectoryInfo(MdlBase.pDossierPiece()).GetFiles("*" + OutilsProd.pExtPiece))
                     {
                         int rep = Path.GetFileNameWithoutExtension(file.Name).Replace(CONSTANTES.PREFIXE_REF_DOSSIER, "").eToInteger();
 
@@ -362,7 +362,7 @@ namespace ModuleProduction.ModuleRepererDossier
                     mdlFichier.pMasquerEsquisses();
 
                     if ((corps.TypeCorps == eTypeCorps.Tole) && CreerDvp)
-                        corps.CreerDvp(MdlBase.pDossierPiece(), false);
+                        corps.pCreerDvp(MdlBase.pDossierPiece(), false);
 
                     mdlFichier.FeatureManager.EditFreeze2((int)swMoveFreezeBarTo_e.swMoveFreezeBarToEnd, "", true, true);
 

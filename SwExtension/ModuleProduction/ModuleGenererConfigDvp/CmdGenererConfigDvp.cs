@@ -31,7 +31,7 @@ namespace ModuleProduction.ModuleGenererConfigDvp
                 foreach (var corps in ListeCorps.Values)
                 {
                     WindowLog.EcrireF("{0} -> dvp", corps.Repere);
-                    corps.CreerDvp(MdlBase.pDossierPiece(), SupprimerLesAnciennesConfigs);
+                    corps.pCreerDvp(MdlBase.pDossierPiece(), SupprimerLesAnciennesConfigs);
                 }
 
                 MdlBase.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
