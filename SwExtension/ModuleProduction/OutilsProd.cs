@@ -256,7 +256,7 @@ namespace ModuleProduction
         /// <param name="composantsExterne"></param>
         /// <param name="filtreTypeCorps"></param>
         /// <returns></returns>
-        public static SortedDictionary<ModelDoc2, SortedDictionary<String, int>> pListerComposants(this ModelDoc2 mdlBase, Boolean composantsExterne)
+        public static SortedDictionary<ModelDoc2, SortedDictionary<String, int>> pListerComposants(this ModelDoc2 mdlBase, Boolean composantsExterne = false)
         {
             SortedDictionary<ModelDoc2, SortedDictionary<String, int>> dic = new SortedDictionary<ModelDoc2, SortedDictionary<String, int>>(new CompareModelDoc2());
 
@@ -302,109 +302,6 @@ namespace ModuleProduction
                             return true;
                         }
                         );
-                }
-            }
-            catch (Exception e) { Log.LogErreur(new Object[] { e }); }
-
-            return dic;
-        }
-
-        /// <summary>
-        /// Renvoi la liste des modeles avec la liste des configurations, des dossiers
-        /// et les quantites de chaque dossier dans l'assemblage
-        /// Modele : ModelDoc2
-        ///     |-Config1 : Nom de la configuration
-        ///     |     |-Dossier1 : Comparaison avec la propriete RefDossier, référence à l'Id de la fonction pour pouvoir le selectionner plus tard
-        ///     |     |      |- Nb : quantite de corps identique dans le modele complet
-        ///     |     |
-        ///     |     |-Dossier2
-        ///     |            |- Nb
-        ///     |-Config 2
-        ///     | etc...
-        /// </summary>
-        /// <param name="mdlBase"></param>
-        /// <param name="composantsExterne"></param>
-        /// <param name="filtreDossier"></param>
-        /// <returns></returns>
-        public static SortedDictionary<ModelDoc2, SortedDictionary<String, SortedDictionary<int, int>>> pDenombrerDossiers(this ModelDoc2 mdlBase, Boolean composantsExterne, Predicate<Feature> filtreDossier = null, Boolean fermerFichier = false)
-        {
-
-            SortedDictionary<ModelDoc2, SortedDictionary<String, SortedDictionary<int, int>>> dic = new SortedDictionary<ModelDoc2, SortedDictionary<String, SortedDictionary<int, int>>>(new CompareModelDoc2());
-            try
-            {
-                var ListeComposants = mdlBase.pListerComposants(composantsExterne);
-
-                var ListeDossiers = new Dictionary<String, Dossier>();
-
-                Predicate<Feature> Test = delegate (Feature fDossier)
-                {
-                    BodyFolder SwDossier = fDossier.GetSpecificFeature2();
-                    if (SwDossier.IsRef() && SwDossier.eNbCorps() > 0 && !SwDossier.eEstExclu() && (filtreDossier.IsNull() || filtreDossier(fDossier)))
-                        return true;
-
-                    return false;
-                };
-
-                foreach (var mdl in ListeComposants.Keys)
-                {
-                    mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
-
-                    foreach (var t in ListeComposants[mdl])
-                    {
-                        var cfg = t.Key;
-                        var nbCfg = t.Value;
-                        mdl.ShowConfiguration2(cfg);
-                        mdl.EditRebuild3();
-                        var Piece = mdl.ePartDoc();
-
-                        foreach (var fDossier in Piece.eListeDesFonctionsDePiecesSoudees(Test))
-                        {
-                            BodyFolder SwDossier = fDossier.GetSpecificFeature2();
-                            var RefDossier = SwDossier.eProp(CONSTANTES.REF_DOSSIER);
-
-                            if (ListeDossiers.ContainsKey(RefDossier))
-                                ListeDossiers[RefDossier].Nb += SwDossier.eNbCorps() * nbCfg;
-                            else
-                            {
-                                var dossier = new Dossier(RefDossier, mdl, cfg, fDossier.GetID());
-                                dossier.Nb = SwDossier.eNbCorps() * nbCfg;
-
-                                ListeDossiers.Add(RefDossier, dossier);
-                            }
-                        }
-                    }
-
-                    if (fermerFichier && (mdl.GetPathName() != mdlBase.GetPathName()))
-                        App.Sw.CloseDoc(mdl.GetPathName());
-                }
-
-                // Conversion d'une liste de dossier
-                // en liste de modele
-                foreach (var dossier in ListeDossiers.Values)
-                {
-                    if (dic.ContainsKey(dossier.Mdl))
-                    {
-                        var lcfg = dic[dossier.Mdl];
-                        if (lcfg.ContainsKey(dossier.Config))
-                        {
-                            var ldossier = lcfg[dossier.Config];
-                            ldossier.Add(dossier.Id, dossier.Nb);
-                        }
-                        else
-                        {
-                            var ldossier = new SortedDictionary<int, int>();
-                            ldossier.Add(dossier.Id, dossier.Nb);
-                            lcfg.Add(dossier.Config, ldossier);
-                        }
-                    }
-                    else
-                    {
-                        var ldossier = new SortedDictionary<int, int>();
-                        ldossier.Add(dossier.Id, dossier.Nb);
-                        var lcfg = new SortedDictionary<String, SortedDictionary<int, int>>(new WindowsStringComparer());
-                        lcfg.Add(dossier.Config, ldossier);
-                        dic.Add(dossier.Mdl, lcfg);
-                    }
                 }
             }
             catch (Exception e) { Log.LogErreur(new Object[] { e }); }

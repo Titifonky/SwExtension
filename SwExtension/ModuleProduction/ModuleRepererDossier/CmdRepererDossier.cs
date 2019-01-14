@@ -145,7 +145,7 @@ namespace ModuleProduction.ModuleRepererDossier
                     _GenRepereDossier = ListeCorps.Keys.Max();
 
                 // On liste les composants
-                var ListeComposants = MdlBase.pListerComposants(false);
+                var ListeComposants = MdlBase.pListerComposants();
 
                 // On boucle sur les modeles
                 foreach (var mdl in ListeComposants.Keys)
@@ -492,11 +492,11 @@ namespace ModuleProduction.ModuleRepererDossier
             Directory.CreateDirectory(Dossier);
             String CheminImg = Path.Combine(Dossier, Path.GetFileNameWithoutExtension(cheminFichier) + ".bmp");
             mdl.SaveBMP(CheminImg, 0, 0);
-            Bitmap bmp = resizeImage(100, 100, CheminImg);
+            Bitmap bmp = RedimensionnerImage(100, 100, CheminImg);
             bmp.Save(CheminImg);
         }
 
-        public Bitmap resizeImage(int newWidth, int newHeight, string stPhotoPath)
+        public Bitmap RedimensionnerImage(int newWidth, int newHeight, string stPhotoPath)
         {
             Bitmap img = new Bitmap(stPhotoPath);
             Bitmap imageSource = img.Clone(new Rectangle(0, 0, img.Width, img.Height), PixelFormat.Format32bppRgb);

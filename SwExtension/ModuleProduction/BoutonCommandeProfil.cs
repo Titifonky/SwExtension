@@ -34,7 +34,7 @@ namespace ModuleProduction
                 LgMax = ParamLongueurMax.GetValeur<Double>();
 
                 // On liste les composants
-                var ListeComposants = MdlBase.pListerComposants(false);
+                var ListeComposants = MdlBase.pListerComposants();
 
                 // On boucle sur les modeles
                 foreach (var mdl in ListeComposants.Keys)

@@ -137,11 +137,7 @@ namespace ModuleProduction
         private void Nettoyer()
         {
             WindowLog.Ecrire("Nettoyer les modeles :");
-            List<ModelDoc2> ListeMdl = new List<ModelDoc2>();
-            if (MdlBase.TypeDoc() == eTypeDoc.Piece)
-                ListeMdl.Add(MdlBase);
-            else
-                ListeMdl = MdlBase.eAssemblyDoc().eListeModeles();
+            List<ModelDoc2> ListeMdl = new List<ModelDoc2>(MdlBase.pListerComposants().Keys);
 
             Predicate<Feature> Test = delegate (Feature f)
             {
