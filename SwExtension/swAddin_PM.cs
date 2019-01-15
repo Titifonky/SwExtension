@@ -1,6 +1,7 @@
 ﻿using LogDebugging;
 using Macros;
 using ModuleContraindreComposant;
+using ModuleCreerSymetrie;
 using ModuleEmpreinte;
 using ModuleExportFichier.ModuleDxfDwg;
 using ModuleExportFichier.ModulePdf;
@@ -85,6 +86,7 @@ namespace SwExtension
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde("Ip", typeof(PageInsererPercage));
                 _Mnu.AjouterCmde("Ep", typeof(PageEmpreinte));
+                _Mnu.AjouterCmde("Sp", typeof(PageCreerSymetrie));
 
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde("Si", typeof(BoutonSelectionnerCorpsIdentiques));

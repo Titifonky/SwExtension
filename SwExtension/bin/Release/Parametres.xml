@@ -227,4 +227,9 @@
     <Parametre name="ProfilCourt" intitule="Nom de profil court" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="SautDeLigneMateriau" intitule="Saut de ligne matériau" tip="" type="System.Boolean">False</Parametre>
   </Module>
+  <Module name="ControlerRepere" intitule="Controler les repères">
+  </Module>
+  <Module name="CreerSymetrie" intitule="Creer la symetrie de la pièce">
+    <Parametre name="PlanSymetrie" intitule="Selectionnez le plan de symetrie :" tip="" type="System.String">Plan de droite</Parametre>
+  </Module>
 </Parametres>

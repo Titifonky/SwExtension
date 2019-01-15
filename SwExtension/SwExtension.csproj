@@ -96,6 +96,8 @@
     <Compile Include="Macros\BoutonMasquerCorpsVue.cs" />
     <Compile Include="Macros\BoutonSelectionnerCorpsIdentiques.cs" />
     <Compile Include="Macros\BoutonAfficherLogDebug.cs" />
+    <Compile Include="ModuleCreerSymetrie\CmdCreerSymetrie.cs" />
+    <Compile Include="ModuleCreerSymetrie\PageCreerSymetrie.cs" />
     <Compile Include="ModuleInsererNote\CmdInsererNote.cs" />
     <Compile Include="ModuleInsererNote\PageInsererNote.cs" />
     <Compile Include="ModuleProduction\BoutonCommandeProfil.cs" />
