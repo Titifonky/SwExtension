@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
+using System.IO.Compression;
 
 namespace ModuleProduction.ModuleProduireBarre
 {
@@ -30,11 +30,12 @@ namespace ModuleProduction.ModuleProduireBarre
 
         private String DossierBarre = "";
         private String DossierBarrePDF = "";
+        private String NomDossierPDF = "PDF";
 
         private void Init()
         {
             DossierBarre = Directory.CreateDirectory(Path.Combine(MdlBase.pDossierLaserTube(), IndiceCampagne.ToString())).FullName;
-            if(CreerPdf3D) DossierBarrePDF = Directory.CreateDirectory(Path.Combine(DossierBarre, "PDF")).FullName;
+            if(CreerPdf3D) DossierBarrePDF = Directory.CreateDirectory(Path.Combine(DossierBarre, NomDossierPDF)).FullName;
 
             MdlBase.pCalculerQuantite(ref ListeCorps, eTypeCorps.Barre, ListeMateriaux, ListeProfils, IndiceCampagne, MettreAjourCampagne);
         }
@@ -86,8 +87,9 @@ namespace ModuleProduction.ModuleProduireBarre
                 foreach (var f in lstFichier)
                     File.Delete(f);
 
-                foreach (var f in Directory.GetFiles(DossierBarrePDF))
-                    File.Delete(f);
+                if(Directory.Exists(DossierBarrePDF))
+                    foreach (var f in Directory.GetFiles(DossierBarrePDF))
+                        File.Delete(f);
             }
         }
 
@@ -111,9 +113,14 @@ namespace ModuleProduction.ModuleProduireBarre
             try
             {
                 NettoyerFichier();
+                List<String> ListeFichiersZip = new List<string>();
 
                 foreach (var corps in ListeCorps.Values)
-                    CreerBarre(corps);
+                {
+                    var chemin = CreerBarre(corps);
+                    if(File.Exists(chemin))
+                        ListeFichiersZip.Add(chemin);
+                }
 
                 WindowLog.SautDeLigne();
                 WindowLog.Ecrire("Resumé :");
@@ -131,9 +138,43 @@ namespace ModuleProduction.ModuleProduireBarre
                 WindowLog.SautDeLigne();
                 WindowLog.Ecrire(Nomenclature.ListeLignes());
 
-                StreamWriter s = new StreamWriter(Path.Combine(DossierBarre, "Nomenclature_Laser.txt"));
+                String FichierNomenclature_Laser = Path.Combine(DossierBarre, "Nomenclature_Laser.txt");
+                StreamWriter s = new StreamWriter(FichierNomenclature_Laser);
                 s.Write(Nomenclature.GenererTableau());
                 s.Close();
+
+                ListeFichiersZip.Add(FichierNomenclature_Laser);
+
+                // Création du dossier ZIP
+                if (ListeFichiersZip.Count > 1)
+                {
+                    String NomFichierZip = "Laser-tube.zip";
+                    String CheminFichierZip = Path.Combine(DossierBarre, RefFichier + "_" + NomFichierZip);
+
+                    WindowLog.SautDeLigne();
+                    WindowLog.Ecrire(NomFichierZip);
+                    WindowLog.Ecrire("  -> " + CheminFichierZip);
+
+                    using (ZipArchive archive = ZipFile.Open(CheminFichierZip, ZipArchiveMode.Create))
+                    {
+                        foreach (var f in ListeFichiersZip)
+                            archive.CreateEntryFromFile(f, Path.GetFileName(f), CompressionLevel.Optimal);
+
+                        if(CreerPdf3D)
+                            archive.CreateEntryFromFile(DossierBarrePDF, NomDossierPDF, CompressionLevel.Optimal);
+                    }
+
+                    foreach (var f in ListeFichiersZip)
+                        File.Delete(f);
+
+                    if (CreerPdf3D && Directory.Exists(DossierBarrePDF))
+                    {
+                        foreach (var f in Directory.GetFiles(DossierBarrePDF))
+                            File.Delete(f);
+
+                        Directory.Delete(DossierBarrePDF);
+                    }
+                }
             }
             catch (Exception e)
             {
@@ -141,14 +182,16 @@ namespace ModuleProduction.ModuleProduireBarre
             }
         }
 
-        private void CreerBarre(Corps corps)
+        private String CreerBarre(Corps corps)
         {
-            if (!corps.Dvp) return;
+            string CheminFichierExportBarre = "";
+
+            if (!corps.Dvp) return CheminFichierExportBarre;
 
             var QuantiteDiff = Quantite * (corps.Qte + corps.QteSup);
 
             var cheminFichier = corps.CheminFichierRepere;
-            if (!File.Exists(cheminFichier)) return;
+            if (!File.Exists(cheminFichier)) return CheminFichierExportBarre;
 
             String Repere = corps.RepereComplet;
             String Profil = corps.Dimension;
@@ -157,7 +200,7 @@ namespace ModuleProduction.ModuleProduireBarre
             String NomFichierBarre = ConstruireNomFichierBarre(Repere, IndiceCampagne, QuantiteDiff);
 
             var mdlCorps = Sw.eOuvrir(cheminFichier);
-            if (mdlCorps.IsNull()) return;
+            if (mdlCorps.IsNull()) return CheminFichierExportBarre;
 
             var Piece = mdlCorps.ePartDoc();
             corps.SwCorps = Piece.ePremierCorps();
@@ -202,7 +245,7 @@ namespace ModuleProduction.ModuleProduireBarre
 
                 if (corps.Maj && ExporterBarres)
                 {
-                    ModelDoc2 mdlBarre = Barre.eEnregistrerSous(Piece, DossierBarre, NomFichierBarre, TypeExport);
+                    ModelDoc2 mdlBarre = Barre.eEnregistrerSous(Piece, DossierBarre, NomFichierBarre, TypeExport, out CheminFichierExportBarre);
 
                     if (CreerPdf3D)
                     {
@@ -224,6 +267,8 @@ namespace ModuleProduction.ModuleProduireBarre
             }
 
             App.Sw.CloseDoc(mdlCorps.GetPathName());
+
+            return CheminFichierExportBarre;
         }
 
         private class AnalyseBarre

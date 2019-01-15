@@ -576,16 +576,23 @@ namespace ModuleProduction
             return texte;
         }
 
-        public void EcrireNomenclature(String dossier, int indiceCampagne)
+        public String EcrireNomenclature(String dossier, int indiceCampagne)
         {
-            using (var sw = new StreamWriter(Path.Combine(dossier, CONST_PRODUCTION.FICHIER_NOMENC), false, Encoding.GetEncoding(1252)))
+            var chemin = Path.Combine(dossier, CONST_PRODUCTION.FICHIER_NOMENC);
+
+            using (var sw = new StreamWriter(chemin, false, Encoding.GetEncoding(1252)))
                 sw.Write(ExportNomenclature(indiceCampagne));
+
+            return chemin;
         }
 
-        public void EcrireProduction(String dossier, int indiceCampagne)
+        public String EcrireProduction(String dossier, int indiceCampagne)
         {
-            using (var sw = new StreamWriter(Path.Combine(dossier, CONST_PRODUCTION.FICHIER_NOMENC), false, Encoding.GetEncoding(1252)))
+            var chemin = Path.Combine(dossier, CONST_PRODUCTION.FICHIER_NOMENC);
+            using (var sw = new StreamWriter(chemin, false, Encoding.GetEncoding(1252)))
                 sw.Write(ExportProduction(indiceCampagne));
+
+            return chemin;
         }
     }
 

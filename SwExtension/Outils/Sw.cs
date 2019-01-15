@@ -3757,22 +3757,27 @@ namespace Outils
             return Lg;
         }
 
-        public static ModelDoc2 eEnregistrerSous(this Body2 corps, PartDoc piece, String dossier, String nomFichier, eTypeFichierExport typeExport)
+        public static ModelDoc2 eEnregistrerSous(this Body2 corps, PartDoc piece, String dossier, String nomFichier, eTypeFichierExport typeExport, out String cheminFichier)
         {
             int pStatut;
             int pWarning;
             corps.Select2(false, null);
 
-            Boolean Resultat = piece.SaveToFile3(Path.Combine(dossier, nomFichier + typeExport.GetEnumInfo<ExtFichier>()),
+            cheminFichier = Path.Combine(dossier, nomFichier + typeExport.GetEnumInfo<ExtFichier>());
+
+            Boolean Resultat = piece.SaveToFile3(cheminFichier,
                                                   (int)swSaveAsOptions_e.swSaveAsOptions_Silent,
                                                   (int)swCutListTransferOptions_e.swCutListTransferOptions_CutListProperties,
                                                   false,
                                                   "",
                                                   out pStatut,
                                                   out pWarning);
+
+            
             if (Resultat)
                 return App.ModelDoc2;
 
+            cheminFichier = "";
             return null;
         }
 

@@ -142,8 +142,8 @@ namespace ModuleLaser.ModuleExportBarre
                             {
                                 //mdl.ViewZoomtofit2();
                                 //mdl.ShowNamedView2("*Isométrique", 7);
-
-                                ModelDoc2 mdlBarre = Barre.eEnregistrerSous(Piece, DossierExport, NomFichierBarre, TypeExport);
+                                String CheminFichier;
+                                ModelDoc2 mdlBarre = Barre.eEnregistrerSous(Piece, DossierExport, NomFichierBarre, TypeExport, out CheminFichier);
 
                                 if (CreerPdf3D)
                                 {
