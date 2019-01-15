@@ -275,7 +275,7 @@ namespace ModuleProduction.ModuleRepererDossier
                             }
 
                             Corps corps = null;
-                            if (NouveauDossier || !ListeCorps.ContainsKey(Repere))
+                            if (!ListeCorps.ContainsKey(Repere)) //NouveauDossier || 
                             {
                                 corps = new Corps(SwCorps, TypeCorps, MateriauCorps, MdlBase);
                                 corps.InitCampagne(IndiceCampagne);
