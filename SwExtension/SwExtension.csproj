@@ -100,12 +100,14 @@
     <Compile Include="ModuleInsererNote\PageInsererNote.cs" />
     <Compile Include="ModuleProduction\BoutonCommandeProfil.cs" />
     <Compile Include="ModuleProduction\BoutonNettoyerReperage.cs" />
-    <Compile Include="ModuleProduction\BoutonControlerReperage.cs" />
+    <Compile Include="ModuleProduction\BoutonAfficherReperage.cs" />
     <Compile Include="ModuleProduction\ModuleGenererConfigDvp\CmdGenererConfigDvp.cs" />
     <Compile Include="ModuleProduction\ModuleGenererConfigDvp\PageGenererConfigDvp.cs" />
     <Compile Include="ModuleProduction\Fenetre\AffichageElementWPF.xaml.cs">
       <DependentUpon>AffichageElementWPF.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ModuleProduction\ModuleControlerRepere\CmdControlerRepere.cs" />
+    <Compile Include="ModuleProduction\ModuleControlerRepere\PageControlerRepere.cs" />
     <Compile Include="ModuleProduction\ModuleProduireDebit\CmdProduireDebit.cs" />
     <Compile Include="ModuleProduction\ModuleProduireDebit\PageProduireDebit.cs" />
     <Compile Include="ModuleProduction\ModuleProduireBarre\CmdProduireBarre.cs" />

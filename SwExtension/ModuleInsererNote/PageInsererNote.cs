@@ -27,7 +27,7 @@ namespace ModuleInsererNote
 
         public PageInsererNote()
         {
-            LogToWindowLog = false;
+            //LogToWindowLog = false;
 
             try
             {

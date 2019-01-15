@@ -12,9 +12,9 @@ namespace ModuleProduction
 {
     [ModuleTypeDocContexte(eTypeDoc.Assemblage | eTypeDoc.Piece),
         ModuleTitre("Contrôler le reperage"),
-        ModuleNom("ControlerReperage")]
+        ModuleNom("AfficherReperage")]
 
-    public class BoutonControlerReperage : BoutonBase
+    public class BoutonAfficherReperage : BoutonBase
     {
         protected override void Command()
         {

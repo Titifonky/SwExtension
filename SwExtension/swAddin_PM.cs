@@ -26,6 +26,7 @@ using ModuleMarchePositionner.ModuleBalancerMarches;
 using ModuleMarchePositionner.ModuleInsererMarches;
 using ModuleParametres;
 using ModuleProduction;
+using ModuleProduction.ModuleControlerRepere;
 using ModuleProduction.ModuleGenererConfigDvp;
 using ModuleProduction.ModuleProduireBarre;
 using ModuleProduction.ModuleProduireDebit;
@@ -92,23 +93,6 @@ namespace SwExtension
                 _Mnu.AjouterCmde("Lp", typeof(PageListerPercage));
 
                 //==================================================================================================
-                _Mnu = _eListeMenu.Add("Laser", "Fonctions pour le débit laser");
-
-                _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde("Cd", typeof(PageCreerConfigDvp));
-                _Mnu.AjouterCmde("Dv", typeof(PageCreerDvp));
-
-                _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde("Eb", typeof(PageExportBarre));
-                _Mnu.AjouterCmde("Es", typeof(BoutonExportStructure));
-                _Mnu.AjouterCmde("Ld", typeof(PageListeDebit));
-
-                _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde("Nd", typeof(PageNumeroterDossier));
-                _Mnu.AjouterCmde("Vn", typeof(BoutonVerifierNumerotation));
-                _Mnu.AjouterCmde("Lr", typeof(PageListerRepere));
-
-                //==================================================================================================
                 _Mnu = _eListeMenu.Add("Production", "Fonctions pour la production laser");
 
                 _Mnu.NouveauGroupe();
@@ -120,7 +104,9 @@ namespace SwExtension
                 _Mnu.AjouterCmde("Ld", typeof(PageProduireDebit));
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde("Gd", typeof(PageGenererConfigDvp));
-                _Mnu.AjouterCmde("Cr", typeof(BoutonControlerReperage));
+
+                _Mnu.AjouterCmde("Ar", typeof(BoutonAfficherReperage));
+                _Mnu.AjouterCmde("Cr", typeof(PageControlerRepere));
                 _Mnu.AjouterCmde("Nr", typeof(BoutonNettoyerReperage));
 
                 //==================================================================================================
@@ -185,6 +171,23 @@ namespace SwExtension
 
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde("Rf", typeof(PageInsererNote));
+
+                //==================================================================================================
+                _Mnu = _eListeMenu.Add("Laser", "Fonctions pour le débit laser");
+
+                _Mnu.NouveauGroupe();
+                _Mnu.AjouterCmde("Cd", typeof(PageCreerConfigDvp));
+                _Mnu.AjouterCmde("Dv", typeof(PageCreerDvp));
+
+                _Mnu.NouveauGroupe();
+                _Mnu.AjouterCmde("Eb", typeof(PageExportBarre));
+                _Mnu.AjouterCmde("Es", typeof(BoutonExportStructure));
+                _Mnu.AjouterCmde("Ld", typeof(PageListeDebit));
+
+                _Mnu.NouveauGroupe();
+                _Mnu.AjouterCmde("Nd", typeof(PageNumeroterDossier));
+                _Mnu.AjouterCmde("Vn", typeof(BoutonVerifierNumerotation));
+                _Mnu.AjouterCmde("Lr", typeof(PageListerRepere));
 
                 _eListeMenu.CreerMenus();
 
