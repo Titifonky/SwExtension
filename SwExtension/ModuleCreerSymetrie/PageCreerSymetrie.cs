@@ -54,8 +54,7 @@ namespace ModuleCreerSymetrie
                 _Select_P_Symetrie.SelectionMultipleMemeEntite = false;
                 _Select_P_Symetrie.SelectionDansMultipleBox = false;
                 _Select_P_Symetrie.UneSeuleEntite = true;
-                _Select_P_Symetrie.FiltreSelection(swSelectType_e.swSelFACES, swSelectType_e.swSelDATUMPLANES);
-                _Select_P_Symetrie.Marque = 2;
+                _Select_P_Symetrie.FiltreSelection(swSelectType_e.swSelDATUMPLANES);
 
                 G = _Calque.AjouterGroupe("Corps à symétriser");
                 _Select_Corps = G.AjouterSelectionBox("Selectionnez les corps");
@@ -64,7 +63,6 @@ namespace ModuleCreerSymetrie
                 _Select_Corps.UneSeuleEntite = false;
                 _Select_Corps.Hauteur = 13;
                 _Select_Corps.FiltreSelection(swSelectType_e.swSelSOLIDBODIES);
-                _Select_Corps.Marque = 256;
             }
             catch (Exception e)
             { this.LogMethode(new Object[] { e }); }
@@ -96,6 +94,8 @@ namespace ModuleCreerSymetrie
             Cmd.MdlBase = MdlBase;
             Cmd.Plan = MdlBase.eSelect_RecupererObjet<Feature>(1, _Select_P_Symetrie.Marque);
             Cmd.ListeCorps = MdlBase.eSelect_RecupererListeObjets<Body2>(_Select_Corps.Marque);
+
+            MdlBase.eEffacerSelection();
 
             Cmd.Executer();
         }
