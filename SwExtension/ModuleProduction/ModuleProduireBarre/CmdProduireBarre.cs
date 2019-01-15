@@ -34,7 +34,8 @@ namespace ModuleProduction.ModuleProduireBarre
         private void Init()
         {
             DossierBarre = Directory.CreateDirectory(Path.Combine(MdlBase.pDossierLaserTube(), IndiceCampagne.ToString())).FullName;
-            DossierBarrePDF = Directory.CreateDirectory(Path.Combine(DossierBarre, "PDF")).FullName;
+            if(CreerPdf3D) DossierBarrePDF = Directory.CreateDirectory(Path.Combine(DossierBarre, "PDF")).FullName;
+
             MdlBase.pCalculerQuantite(ref ListeCorps, eTypeCorps.Barre, ListeMateriaux, ListeProfils, IndiceCampagne, MettreAjourCampagne);
         }
 
