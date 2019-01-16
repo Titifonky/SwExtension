@@ -174,22 +174,22 @@ namespace SwExtension
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde("Rf", typeof(PageInsererNote));
 
-                //==================================================================================================
-                _Mnu = _eListeMenu.Add("Laser", "Fonctions pour le débit laser");
+                ////==================================================================================================
+                //_Mnu = _eListeMenu.Add("Laser", "Fonctions pour le débit laser");
 
-                _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde("Cd", typeof(PageCreerConfigDvp));
-                _Mnu.AjouterCmde("Dv", typeof(PageCreerDvp));
+                //_Mnu.NouveauGroupe();
+                //_Mnu.AjouterCmde("Cd", typeof(PageCreerConfigDvp));
+                //_Mnu.AjouterCmde("Dv", typeof(PageCreerDvp));
 
-                _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde("Eb", typeof(PageExportBarre));
-                _Mnu.AjouterCmde("Es", typeof(BoutonExportStructure));
-                _Mnu.AjouterCmde("Ld", typeof(PageListeDebit));
+                //_Mnu.NouveauGroupe();
+                //_Mnu.AjouterCmde("Eb", typeof(PageExportBarre));
+                //_Mnu.AjouterCmde("Es", typeof(BoutonExportStructure));
+                //_Mnu.AjouterCmde("Ld", typeof(PageListeDebit));
 
-                _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde("Nd", typeof(PageNumeroterDossier));
-                _Mnu.AjouterCmde("Vn", typeof(BoutonVerifierNumerotation));
-                _Mnu.AjouterCmde("Lr", typeof(PageListerRepere));
+                //_Mnu.NouveauGroupe();
+                //_Mnu.AjouterCmde("Nd", typeof(PageNumeroterDossier));
+                //_Mnu.AjouterCmde("Vn", typeof(BoutonVerifierNumerotation));
+                //_Mnu.AjouterCmde("Lr", typeof(PageListerRepere));
 
                 _eListeMenu.CreerMenus();
 

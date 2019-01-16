@@ -188,8 +188,8 @@
   <Module name="ListerRepere" intitule="Lister les repères">
   </Module>
   <Module name="RepererDossier" intitule="Repérer les dossiers">
-    <Parametre name="CombinerCorpsIdentiques" intitule="Combiner les corps identiques des différents modèles" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="CombinerAvecPrecedenteCampagne" intitule="Combiner les corps avec les précédentes campagnes" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="CombinerCorpsIdentiques" intitule="Combiner les corps identiques des différents modèles" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="CombinerAvecCampagnePrecedente" intitule="Combiner les corps avec les précédentes campagnes" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="CreerDvp" intitule="Creer les configs dvp des tôles" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="TypeCorps" intitule="Type de corps à repérer :" tip="" type="Outils.eTypeCorps">Piece</Parametre>
   </Module>
@@ -232,4 +232,5 @@
   <Module name="CreerSymetrie" intitule="Creer la symetrie de la pièce">
     <Parametre name="PlanSymetrie" intitule="Selectionnez le plan de symetrie :" tip="" type="System.String">Plan de droite</Parametre>
   </Module>
+  <Module name="AfficherReperage" intitule="Contrôler le reperage" />
 </Parametres>

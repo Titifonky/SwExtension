@@ -305,7 +305,14 @@ namespace ModuleProduction.ModuleRepererDossier
                     App.Sw.CloseDoc(corps.CheminFichierRepere);
 
                 WindowLog.SautDeLigne();
-                WindowLog.EcrireF("Nb de repères : {0}", ListeCorps.Keys.Max());
+                if(ListeCorps.Count > 0)
+                    WindowLog.EcrireF("Nb de repères : {0}", ListeCorps.Keys.Max());
+                else
+                    WindowLog.Ecrire("Aucun corps repéré");
+
+                // S'il n'y a aucun corps, on se barre
+                if (ListeCorps.Count == 0)
+                    return;
 
                 ////////////////////////////////// EXPORTER LES CORPS /////////////////////////////////////////////////
 
