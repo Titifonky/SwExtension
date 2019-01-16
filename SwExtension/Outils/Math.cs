@@ -52,6 +52,11 @@ namespace Outils
             return Convert.ToInt32(string.Format("{0}{1}", a, b));
         }
 
+        public static Boolean EstNegatif(this int a)
+        {
+            return a < 0;
+        }
+
         public static Double eToDouble(this String s)
         {
             Double Val = 0;

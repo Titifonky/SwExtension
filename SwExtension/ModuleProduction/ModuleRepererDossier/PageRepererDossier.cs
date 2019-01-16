@@ -15,7 +15,7 @@ namespace ModuleProduction.ModuleRepererDossier
     public class PageRepererDossier : BoutonPMPManager
     {
         private Parametre CombinerCorpsIdentiques;
-        private Parametre CombinerAvecCampagne;
+        private Parametre CombinerAvecCampagnePrecedente;
         private Parametre CreerDvp;
         private Parametre TypeCorps;
 
@@ -38,7 +38,7 @@ namespace ModuleProduction.ModuleRepererDossier
             try
             {
                 CombinerCorpsIdentiques = _Config.AjouterParam("CombinerCorpsIdentiques", true, "Combiner les corps identiques des différents modèles");
-                CombinerAvecCampagne = _Config.AjouterParam("CombinerAvecPrecedenteCampagne", true, "Combiner les corps avec les précédentes campagnes");
+                CombinerAvecCampagnePrecedente = _Config.AjouterParam("CombinerAvecCampagnePrecedente", true, "Combiner les corps avec les précédentes campagnes");
                 CreerDvp = _Config.AjouterParam("CreerDvp", true, "Creer les configs dvp des tôles");
                 TypeCorps = _Config.AjouterParam("TypeCorps", eTypeCorps.Piece, "Type de corps à repérer :");
                 TypeCorps.SetValeur(eTypeCorps.Piece);
@@ -63,8 +63,8 @@ namespace ModuleProduction.ModuleRepererDossier
         private CtrlCheckBox _CheckBox_CampagneDepartDecompte;
         private Boolean ReinitCampagneActuelle = false;
         private CtrlCheckBox _CheckBox_ReinitCampagneActuelle;
-        private CtrlCheckBox _CheckBox_CombinerCorps;
-        private CtrlCheckBox _CheckBox_CombinerAvecCampagne;
+        private CtrlCheckBox _CheckBox_CombinerCorpsIdentiques;
+        private CtrlCheckBox _CheckBox_CombinerAvecCampagnePrecedente;
         private CtrlCheckBox _CheckBox_CreerDvp;
         private CtrlEnumComboBox<eTypeCorps, Intitule> _EnumComboBox_TypeCorps;
 
@@ -114,13 +114,13 @@ namespace ModuleProduction.ModuleRepererDossier
                 };
 
                 G = _Calque.AjouterGroupe("Options");
-                _CheckBox_CombinerCorps = G.AjouterCheckBox(CombinerCorpsIdentiques);
-                _CheckBox_CombinerAvecCampagne = G.AjouterCheckBox(CombinerAvecCampagne);
+                _CheckBox_CombinerCorpsIdentiques = G.AjouterCheckBox(CombinerCorpsIdentiques);
+                _CheckBox_CombinerAvecCampagnePrecedente = G.AjouterCheckBox(CombinerAvecCampagnePrecedente);
                 _CheckBox_CreerDvp = G.AjouterCheckBox(CreerDvp);
-                _CheckBox_CombinerAvecCampagne.Indent = 1;
+                _CheckBox_CombinerAvecCampagnePrecedente.Indent = 1;
 
-                _CheckBox_CombinerCorps.OnUnCheck += _CheckBox_CombinerAvecCampagne.UnCheck;
-                _CheckBox_CombinerCorps.OnIsCheck += _CheckBox_CombinerAvecCampagne.IsEnable;
+                _CheckBox_CombinerCorpsIdentiques.OnUnCheck += _CheckBox_CombinerAvecCampagnePrecedente.UnCheck;
+                _CheckBox_CombinerCorpsIdentiques.OnIsCheck += _CheckBox_CombinerAvecCampagnePrecedente.IsEnable;
 
                 _EnumComboBox_TypeCorps = G.AjouterEnumComboBox<eTypeCorps, Intitule>(TypeCorps);
                 _EnumComboBox_TypeCorps.FiltrerEnum = eTypeCorps.Tole | eTypeCorps.Barre | eTypeCorps.Piece;
@@ -192,8 +192,8 @@ namespace ModuleProduction.ModuleRepererDossier
                     _CheckBox_MajCampagnePrecedente.IsEnabled = false;
                     _CheckBox_MajCampagnePrecedente.Visible = false;
 
-                    _CheckBox_CombinerAvecCampagne.IsEnabled = false;
-                    _CheckBox_CombinerAvecCampagne.Visible = false;
+                    _CheckBox_CombinerAvecCampagnePrecedente.IsEnabled = false;
+                    _CheckBox_CombinerAvecCampagnePrecedente.Visible = false;
                 }
             }
             catch (Exception e) { this.LogErreur(new Object[] { e }); }
@@ -208,8 +208,8 @@ namespace ModuleProduction.ModuleRepererDossier
 
             Cmd.MdlBase = App.Sw.ActiveDoc;
             Cmd.IndiceCampagne = IndiceCampagne;
-            Cmd.CombinerCorpsIdentiques = _CheckBox_CombinerCorps.IsChecked;
-            Cmd.CombinerAvecCampagne = _CheckBox_CombinerAvecCampagne.IsChecked;
+            Cmd.CombinerCorpsIdentiques = _CheckBox_CombinerCorpsIdentiques.IsChecked;
+            Cmd.CombinerAvecCampagnePrecedente = _CheckBox_CombinerAvecCampagnePrecedente.IsChecked;
             Cmd.ReinitCampagneActuelle = ReinitCampagneActuelle && _CheckBox_ReinitCampagneActuelle.IsChecked;
             Cmd.CreerDvp = _CheckBox_CreerDvp.IsChecked;
             Cmd.ListeCorps = ListeCorps;

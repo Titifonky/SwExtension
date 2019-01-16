@@ -21,7 +21,7 @@ namespace ModuleProduction.ModuleRepererDossier
 
         public Boolean ReinitCampagneActuelle = false;
         public Boolean CombinerCorpsIdentiques = false;
-        public Boolean CombinerAvecCampagne = false;
+        public Boolean CombinerAvecCampagnePrecedente = false;
         public Boolean CreerDvp = false;
         public eTypeCorps FiltrerCorps = eTypeCorps.Piece;
 
@@ -116,7 +116,7 @@ namespace ModuleProduction.ModuleRepererDossier
                 }
 
                 // On charge les corps existant à partir des fichiers
-                if (CombinerCorpsIdentiques && CombinerAvecCampagne && (ListeCorps.Count > 0))
+                if (CombinerCorpsIdentiques && CombinerAvecCampagnePrecedente && (ListeCorps.Count > 0))
                 {
                     WindowLog.SautDeLigne();
                     WindowLog.EcrireF("Chargement des corps existants ({0}):", ListeCorps.Count);
@@ -225,6 +225,8 @@ namespace ModuleProduction.ModuleRepererDossier
                             BodyFolder Dossier = fDossier.GetSpecificFeature2();
                             int IdDossier = fDossier.GetID();
 
+                            // Si le dossier ne contient pas la propriété repère
+                            // NouveauDossier est passé à true
                             Boolean NouveauDossier = false;
                             Dimension param = GetParam(mdl, fDossier, nomCfg, ref IndexDimension, out NouveauDossier);
 
@@ -234,7 +236,6 @@ namespace ModuleProduction.ModuleRepererDossier
                             eTypeCorps TypeCorps = Dossier.eTypeDeDossier();
                             var nbCorps = Dossier.eNbCorps() * NbConfig;
 
-                            Boolean Combiner = false;
                             int Repere = -1;
 
                             if (CombinerCorpsIdentiques)
@@ -244,7 +245,7 @@ namespace ModuleProduction.ModuleRepererDossier
 
                                 foreach (var CorpsTest in ListeCorps.Values)
                                 {
-                                    if ((CombinerAvecCampagne || CorpsTest.Campagne.ContainsKey(IndiceCampagne)) &&
+                                    if ((CombinerAvecCampagnePrecedente || CorpsTest.Campagne.ContainsKey(IndiceCampagne)) &&
                                         CorpsTest.SwCorps.IsRef() &&
                                         (MateriauCorps == CorpsTest.Materiau) &&
                                         (TypeCorps == CorpsTest.TypeCorps) &&
@@ -252,19 +253,24 @@ namespace ModuleProduction.ModuleRepererDossier
                                     {
                                         Repere = CorpsTest.Repere;
                                         SetRepere(param, CorpsTest.Repere, nomCfg);
-                                        Combiner = true;
                                         break;
                                     }
                                 }
                             }
 
-
-                            if (!Combiner)
+                            // Initialisation du repère
+                            if (Repere.EstNegatif())
                             {
-                                Repere = GetRepere(param, nomCfg);
+                                // Si on est pas en mode "Combiner les corps"
+                                // on recupère le repère du dossier
+                                // Sinon c'est forcément un nouveau repère
+                                if(!CombinerCorpsIdentiques)
+                                    Repere = GetRepere(param, nomCfg);
 
-                                // Création d'un nouveau repère si
-                                if (InitConfig ||
+                                // Création d'un nouveau repère suivant conditions
+                                // Dans tous les cas, si la clé est négative, on crée un nouveau repère
+                                if (Repere.EstNegatif() ||
+                                    InitConfig ||
                                     NouveauDossier ||
                                     !ListIdDossiers.Contains(IdDossier) ||
                                     !ListeCorps.ContainsKey(Repere))
@@ -274,8 +280,9 @@ namespace ModuleProduction.ModuleRepererDossier
                                 }
                             }
 
+                            // Initialisation du corps
                             Corps corps = null;
-                            if (!ListeCorps.ContainsKey(Repere)) //NouveauDossier || 
+                            if (!ListeCorps.ContainsKey(Repere))
                             {
                                 corps = new Corps(SwCorps, TypeCorps, MateriauCorps, MdlBase);
                                 corps.InitCampagne(IndiceCampagne);
@@ -324,7 +331,16 @@ namespace ModuleProduction.ModuleRepererDossier
 
                 foreach (var corps in ListeCorps.Values)
                 {
-                    if (corps.Modele.IsNull() || File.Exists(corps.CheminFichierRepere)) continue;
+                    if (corps.Modele.IsNull()) continue;
+
+                    // Si on est pas en mode "Combiner corps identique" et que le fichier existe
+                    // on le supprime pour le mettre à jour
+                    if(!CombinerCorpsIdentiques && File.Exists(corps.CheminFichierRepere))
+                        File.Delete(corps.CheminFichierRepere);
+
+                    // Si le fichier existe, on passe au suivant
+                    if (File.Exists(corps.CheminFichierRepere))
+                        continue;
 
                     WindowLog.EcrireF("- {0} exporté", CONSTANTES.PREFIXE_REF_DOSSIER + corps.Repere);
 
