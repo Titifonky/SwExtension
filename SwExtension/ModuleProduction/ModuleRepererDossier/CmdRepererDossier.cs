@@ -26,7 +26,6 @@ namespace ModuleProduction.ModuleRepererDossier
         public eTypeCorps FiltrerCorps = eTypeCorps.Piece;
 
         public ListeSortedCorps ListeCorps = new ListeSortedCorps();
-        public SortedDictionary<int, String> ListeCorpsCharge = new SortedDictionary<int, String>();
 
         private int _GenRepereDossier = 0;
         private int GenRepereDossier { get { return ++_GenRepereDossier; } }
@@ -50,19 +49,6 @@ namespace ModuleProduction.ModuleRepererDossier
                     foreach (FileInfo file in new DirectoryInfo(MdlBase.pDossierPiece()).GetFiles())
                         file.Delete();
                 }
-
-                //if (ListeCorps.Count > 0)
-                //{
-                //    //FiltrerCorps.HasFlag(
-                //    ListeSortedCorps FichierAsauvegarder = new ListeSortedCorps();
-                //    FichierAsauvegarder.CampagneDepartDecompte = ListeCorps.CampagneDepartDecompte;
-
-                //    foreach (var corps in ListeCorps.Values)
-                //        if (FiltrerCorps.HasFlag(corps.TypeCorps))
-                //            FichierAsauvegarder.Add(corps.Repere, corps);
-
-                //    ListeCorps = FichierAsauvegarder;
-                //}
 
                 if (ReinitCampagneActuelle && (ListeCorps.Count > 0))
                 {
@@ -121,19 +107,16 @@ namespace ModuleProduction.ModuleRepererDossier
                     WindowLog.SautDeLigne();
                     WindowLog.EcrireF("Chargement des corps existants ({0}):", ListeCorps.Count);
 
-                    foreach (FileInfo file in new DirectoryInfo(MdlBase.pDossierPiece()).GetFiles("*" + OutilsProd.pExtPiece))
+                    foreach (var corps in ListeCorps.Values)
                     {
-                        int rep = Path.GetFileNameWithoutExtension(file.Name).Replace(CONSTANTES.PREFIXE_REF_DOSSIER, "").eToInteger();
-
-                        if (ListeCorps.ContainsKey(rep))
+                        if(File.Exists(corps.CheminFichierRepere))
                         {
-                            WindowLog.EcrireF("- {0}", Path.GetFileNameWithoutExtension(file.Name));
-                            ListeCorpsCharge.Add(rep, file.FullName);
-                            ModelDoc2 mdl = Sw.eOuvrir(file.FullName);
+                            WindowLog.EcrireF("- {0}", corps.RepereComplet);
+                            ModelDoc2 mdl = Sw.eOuvrir(corps.CheminFichierRepere);
                             mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
 
                             var Piece = mdl.ePartDoc();
-                            ListeCorps[rep].SwCorps = Piece.ePremierCorps();
+                            ListeCorps[corps.Repere].SwCorps = Piece.ePremierCorps();
                         }
                     }
                 }
@@ -318,8 +301,8 @@ namespace ModuleProduction.ModuleRepererDossier
                 ////////////////////////////////// FIN DU REPERAGE ////////////////////////////////////////////////////
 
                 // On fermer les fichiers chargé
-                foreach (var f in ListeCorpsCharge.Values)
-                    App.Sw.CloseDoc(f);
+                foreach (var corps in ListeCorps.Values)
+                    App.Sw.CloseDoc(corps.CheminFichierRepere);
 
                 WindowLog.SautDeLigne();
                 WindowLog.EcrireF("Nb de repères : {0}", ListeCorps.Keys.Max());

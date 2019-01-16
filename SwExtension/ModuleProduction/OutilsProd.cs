@@ -1341,7 +1341,7 @@ namespace ModuleProduction
                 Campagne.Add(cp++, tab[i].eToInteger());
         }
 
-        public void InitChemins()
+        private void InitChemins()
         {
             _CheminFichierRepere = Path.Combine(MdlBase.pDossierPiece(), RepereComplet + OutilsProd.pExtPiece);
             _CheminFichierApercu = Path.Combine(MdlBase.pDossierPiece(), CONST_PRODUCTION.DOSSIER_PIECES_APERCU, RepereComplet + ".bmp");
