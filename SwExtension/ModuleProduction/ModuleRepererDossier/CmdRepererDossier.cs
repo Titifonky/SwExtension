@@ -334,7 +334,8 @@ namespace ModuleProduction.ModuleRepererDossier
                     if (corps.Modele.IsNull()) continue;
 
                     // Si on est pas en mode "Combiner corps identique" et que le fichier existe
-                    // on le supprime pour le mettre à jour
+                    // on le supprime pour le mettre à jour, sinon on peut se retrouver
+                    // avec des fichiers ne correpondants pas au corps
                     if(!CombinerCorpsIdentiques && File.Exists(corps.CheminFichierRepere))
                         File.Delete(corps.CheminFichierRepere);
 
