@@ -139,15 +139,6 @@ namespace ModuleProduction
             WindowLog.Ecrire("Nettoyer les modeles :");
             List<ModelDoc2> ListeMdl = new List<ModelDoc2>(MdlBase.pListerComposants().Keys);
 
-            Predicate<Feature> Test = delegate (Feature f)
-            {
-                BodyFolder dossier = f.GetSpecificFeature2();
-                if (dossier.IsRef() && dossier.eNbCorps() > 0)
-                    return true;
-
-                return false;
-            };
-
             foreach (var mdl in ListeMdl)
             {
                 if (mdl.TypeDoc() != eTypeDoc.Piece) continue;
@@ -159,6 +150,7 @@ namespace ModuleProduction
                 mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
                 {
                     mdl.ePropSuppr(CONST_PRODUCTION.ID_PIECE);
+                    mdl.ePropSuppr(CONST_PRODUCTION.PIECE_ID_DOSSIERS);
                     mdl.ePropSuppr(CONST_PRODUCTION.MAX_INDEXDIM);
 
                     // On supprime la definition du bloc
@@ -172,9 +164,9 @@ namespace ModuleProduction
                     var Piece = mdl.ePartDoc();
 
                     mdl.ePropSuppr(CONST_PRODUCTION.ID_CONFIG, cfg);
-                    mdl.ePropSuppr(CONST_PRODUCTION.ID_DOSSIERS, cfg);
+                    mdl.ePropSuppr(CONST_PRODUCTION.CONFIG_ID_DOSSIERS, cfg);
 
-                    foreach (var f in Piece.eListeDesFonctionsDePiecesSoudees(Test))
+                    foreach (var f in Piece.eListeDesFonctionsDePiecesSoudees())
                     {
                         CustomPropertyManager PM = f.CustomPropertyManager;
                         PM.Delete2(CONSTANTES.REF_DOSSIER);

@@ -26,8 +26,9 @@ namespace ModuleProduction
         public const String CAMPAGNE_DEPART_DECOMPTE = "CampagneDepartDecompte";
         public const String MAX_INDEXDIM = "MAX_INDEXDIM";
         public const String ID_PIECE = "ID_PIECE";
+        public const String PIECE_ID_DOSSIERS = "PIECE_ID_DOSSIERS";
         public const String ID_CONFIG = "ID_CONFIG";
-        public const String ID_DOSSIERS = "ID_DOSSIERS";
+        public const String CONFIG_ID_DOSSIERS = "CONFIG_ID_DOSSIERS";
         public const String FILTRE_CORPS = "FILTRE_CORPS";
     }
 

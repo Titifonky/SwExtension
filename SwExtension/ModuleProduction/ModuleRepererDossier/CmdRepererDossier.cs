@@ -157,6 +157,15 @@ namespace ModuleProduction.ModuleRepererDossier
                             IndexDimension = mdl.eGetProp(CONST_PRODUCTION.MAX_INDEXDIM).eToInteger();
                     }
 
+                    HashSet<int> HashPieceIdDossiers = new HashSet<int>();
+
+                    if (mdl.ePropExiste(CONST_PRODUCTION.PIECE_ID_DOSSIERS))
+                    {
+                        var tab = mdl.eGetProp(CONST_PRODUCTION.PIECE_ID_DOSSIERS).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        foreach (var id in tab)
+                            HashPieceIdDossiers.Add(id.eToInteger());
+                    }
+
                     foreach (var nomCfg in ListeComposants[mdl].Keys)
                     {
                         mdl.ShowConfiguration2(nomCfg);
@@ -164,7 +173,7 @@ namespace ModuleProduction.ModuleRepererDossier
                         WindowLog.SautDeLigne();
                         WindowLog.EcrireF("{0} \"{1}\"", mdl.eNomSansExt(), nomCfg);
 
-                        HashSet<int> HashIdDossiers = new HashSet<int>();
+                        HashSet<int> HashConfigIdDossiers = new HashSet<int>();
 
                         Boolean InitConfig = true;
 
@@ -178,11 +187,11 @@ namespace ModuleProduction.ModuleRepererDossier
                         if (!InitModele && mdl.ePropExiste(CONST_PRODUCTION.ID_CONFIG, nomCfg) && (mdl.eGetProp(CONST_PRODUCTION.ID_CONFIG, nomCfg) == IdCfg.ToString()))
                         {
                             InitConfig = false;
-                            if (mdl.ePropExiste(CONST_PRODUCTION.ID_DOSSIERS, nomCfg))
+                            if (mdl.ePropExiste(CONST_PRODUCTION.CONFIG_ID_DOSSIERS, nomCfg))
                             {
-                                var tab = mdl.eGetProp(CONST_PRODUCTION.ID_DOSSIERS, nomCfg).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                                var tab = mdl.eGetProp(CONST_PRODUCTION.CONFIG_ID_DOSSIERS, nomCfg).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                                 foreach (var id in tab)
-                                    HashIdDossiers.Add(id.eToInteger());
+                                    HashConfigIdDossiers.Add(id.eToInteger());
                             }
                         }
 
@@ -208,13 +217,12 @@ namespace ModuleProduction.ModuleRepererDossier
                             BodyFolder Dossier = fDossier.GetSpecificFeature2();
                             int IdDossier = fDossier.GetID();
 
-                            // Si le dossier ne contient pas la propriété repère
-                            // NouveauDossier est passé à true
-                            Boolean NouveauDossier = false;
+                            Dimension param = null;
 
-                            WindowLog.EcrireF("1 - IndexDimension {0}", IndexDimension);
-                            Dimension param = GetParam(mdl, fDossier, nomCfg, ref IndexDimension, out NouveauDossier);
-                            WindowLog.EcrireF("2 - IndexDimension {0}", IndexDimension);
+                            if (!HashPieceIdDossiers.Contains(IdDossier))
+                                param = CreerParam(mdl, fDossier, nomCfg, ++IndexDimension);
+                            else
+                                param = GetParam(mdl, fDossier, nomCfg);
 
                             var SwCorps = Dossier.ePremierCorps();
                             var NomCorps = SwCorps.Name;
@@ -257,8 +265,7 @@ namespace ModuleProduction.ModuleRepererDossier
                                 // Dans tous les cas, si la clé est négative, on crée un nouveau repère
                                 if (Repere.EstNegatif() ||
                                     InitConfig ||
-                                    NouveauDossier ||
-                                    !HashIdDossiers.Contains(IdDossier) ||
+                                    !HashConfigIdDossiers.Contains(IdDossier) ||
                                     !ListeCorps.ContainsKey(Repere))
                                 {
                                     Repere = GenRepereDossier;
@@ -282,17 +289,17 @@ namespace ModuleProduction.ModuleRepererDossier
                             corps.InitCaracteristiques(Dossier, SwCorps);
                             corps.AjouterModele(mdl, nomCfg, IdDossier, NomCorps);
 
-                            HashIdDossiers.Add(IdDossier);
+                            HashPieceIdDossiers.Add(IdDossier);
+                            HashConfigIdDossiers.Add(IdDossier);
 
                             WindowLog.EcrireF(" - {1} -> {0}", fDossier.Name, corps.RepereComplet);
                         }
                         mdl.ePropAdd(CONST_PRODUCTION.ID_CONFIG, IdCfg, nomCfg);
-                        mdl.ePropAdd(CONST_PRODUCTION.ID_DOSSIERS, String.Join(" ", HashIdDossiers), nomCfg);
+                        mdl.ePropAdd(CONST_PRODUCTION.CONFIG_ID_DOSSIERS, String.Join(" ", HashConfigIdDossiers), nomCfg);
                     }
-                    WindowLog.EcrireF("3 - IndexDimension {0}", IndexDimension);
                     mdl.ePropAdd(CONST_PRODUCTION.ID_PIECE, mdl.eNomSansExt());
+                    mdl.ePropAdd(CONST_PRODUCTION.PIECE_ID_DOSSIERS, String.Join(" ", HashPieceIdDossiers));
                     mdl.ePropAdd(CONST_PRODUCTION.MAX_INDEXDIM, IndexDimension);
-                    WindowLog.EcrireF("4 - IndexDimension {0}", mdl.eGetProp(CONST_PRODUCTION.MAX_INDEXDIM));
                     mdl.eSauver();
 
                     if (mdl.GetPathName() != MdlBase.GetPathName())
@@ -571,15 +578,12 @@ namespace ModuleProduction.ModuleRepererDossier
             return bmPhoto;
         }
 
-        private Dimension GetParam(ModelDoc2 mdl, Feature fDossier, String nomCfg, ref int indexDimension, out Boolean nouveauDossier)
+        private Dimension GetParam(ModelDoc2 mdl, Feature fDossier, String nomCfg)
         {
             Dimension param = null;
-            nouveauDossier = false;
 
             try
             {
-                String nomParam = "";
-
                 Func<String, String> ExtractNomParam = delegate (String s)
                 {
                     s = s.Replace(CONSTANTES.PREFIXE_REF_DOSSIER + "\"", "").Replace("\"", "");
@@ -598,28 +602,47 @@ namespace ModuleProduction.ModuleRepererDossier
 
                 CustomPropertyManager PM = fDossier.CustomPropertyManager;
                 String val;
-                if (!PM.ePropExiste(CONSTANTES.REF_DOSSIER))
-                {
-                    nouveauDossier = true;
-                    nomParam = String.Format("D{0}@{1}", ++indexDimension, CONSTANTES.NOM_ESQUISSE_NUMEROTER);
-                    val = String.Format("{0}\"{1}@{2}\"", CONSTANTES.PREFIXE_REF_DOSSIER, nomParam, mdl.eNomAvecExt());
-                    var r = PM.ePropAdd(CONSTANTES.REF_DOSSIER, val);
-                }
-                else
-                {
-                    String result = ""; Boolean wasResolved, link;
-                    var r = PM.Get6(CONSTANTES.REF_DOSSIER, false, out val, out result, out wasResolved, out link);
-                    nomParam = ExtractNomParam(val);
-                }
+
+                String result = ""; Boolean wasResolved, link;
+                var r = PM.Get6(CONSTANTES.REF_DOSSIER, false, out val, out result, out wasResolved, out link);
+                String nomParam = ExtractNomParam(val);
 
                 PM.ePropAdd(CONSTANTES.DESC_DOSSIER, val);
                 val = String.Format("\"SW-CutListItemName@@@{0}@{1}\"", fDossier.Name, mdl.eNomAvecExt());
                 PM.ePropAdd(CONSTANTES.NOM_DOSSIER, val);
 
                 param = mdl.Parameter(nomParam);
+                param.SetSystemValue3(0.5 * 0.001, (int)swSetValueInConfiguration_e.swSetValue_InSpecificConfigurations, nomCfg);
+            }
+            catch (Exception e) { this.LogErreur(new Object[] { e }); }
 
-                if (nouveauDossier)
-                    param.SetSystemValue3(0.5 * 0.001, (int)swSetValueInConfiguration_e.swSetValue_InSpecificConfigurations, nomCfg);
+            return param;
+        }
+
+        private Dimension CreerParam(ModelDoc2 mdl, Feature fDossier, String nomCfg, int indexDimension)
+        {
+            Dimension param = null;
+
+            try
+            {
+                // On recherche si le dossier contient déjà la propriété RefDossier
+                //      Si non, on ajoute la propriété au dossier selon le modèle suivant :
+                //              P"D1@REPERAGE_DOSSIER@Nom_de_la_piece.SLDPRT"
+                //      Si oui, on récupère le nom du paramètre à configurer
+
+                CustomPropertyManager PM = fDossier.CustomPropertyManager;
+                String val;
+
+                String nomParam = String.Format("D{0}@{1}", indexDimension, CONSTANTES.NOM_ESQUISSE_NUMEROTER);
+                val = String.Format("{0}\"{1}@{2}\"", CONSTANTES.PREFIXE_REF_DOSSIER, nomParam, mdl.eNomAvecExt());
+                var r = PM.ePropAdd(CONSTANTES.REF_DOSSIER, val);
+
+                PM.ePropAdd(CONSTANTES.DESC_DOSSIER, val);
+                val = String.Format("\"SW-CutListItemName@@@{0}@{1}\"", fDossier.Name, mdl.eNomAvecExt());
+                PM.ePropAdd(CONSTANTES.NOM_DOSSIER, val);
+
+                param = mdl.Parameter(nomParam);
+                param.SetSystemValue3(0.5 * 0.001, (int)swSetValueInConfiguration_e.swSetValue_InSpecificConfigurations, nomCfg);
             }
             catch (Exception e) { this.LogErreur(new Object[] { e }); }
 
