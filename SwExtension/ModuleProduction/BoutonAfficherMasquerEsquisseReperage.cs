@@ -24,7 +24,7 @@ namespace ModuleProduction
         {
             try
             {
-                Feature Esquisse = MdlBase.pEsquisseRepere();
+                Feature Esquisse = MdlBase.pEsquisseRepere(false);
 
                 Esquisse.eSelect();
                 MdlBase.UnblankSketch();

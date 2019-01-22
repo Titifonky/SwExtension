@@ -174,7 +174,7 @@ namespace ModuleLaser.ModuleCreerDvp
 
             if (App.ModelDoc2.ePropExiste(PropQuantite.GetValeur<String>()))
             {
-                return Math.Max(App.ModelDoc2.eProp(PropQuantite.GetValeur<String>()).eToInteger(), 1).ToString();
+                return Math.Max(App.ModelDoc2.eGetProp(PropQuantite.GetValeur<String>()).eToInteger(), 1).ToString();
             }
 
             return "1";

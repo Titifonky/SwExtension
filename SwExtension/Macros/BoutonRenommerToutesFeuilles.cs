@@ -55,7 +55,7 @@ namespace Macros
                     String Designation = "";
 
                     if (mdlVue.ePropExiste(PropDesignation))
-                        Designation = mdlVue.eProp(PropDesignation);
+                        Designation = mdlVue.eGetProp(PropDesignation);
 
                     String NomFeuille = (mdlVue.eNomSansExt() + "-" + v.ReferencedConfiguration + " " + Designation).Trim();
 

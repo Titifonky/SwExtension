@@ -1921,7 +1921,7 @@ namespace Outils
             return pm.ePropExiste(nomPropriete, CaseSensitive);
         }
 
-        public static String eProp(this ModelDoc2 mdl, String nomPropriete, String nomConfig = "")
+        public static String eGetProp(this ModelDoc2 mdl, String nomPropriete, String nomConfig = "")
         {
             String val, result = ""; Boolean wasResolved, link;
 
@@ -1952,7 +1952,7 @@ namespace Outils
         public static String eProp(this Component2 cp, String nomPropriete)
         {
             ModelDoc2 mdl = cp.GetModelDoc2();
-            return mdl.eProp(nomPropriete, cp.eNomConfiguration());
+            return mdl.eGetProp(nomPropriete, cp.eNomConfiguration());
         }
 
         public static String eProp(this BodyFolder dossier, String nomPropriete)
@@ -2024,8 +2024,8 @@ namespace Outils
 
             try
             {
-                String noClient = mdl.eProp(CONSTANTES.PROPRIETE_NOCLIENT);
-                String noCommande = mdl.eProp(CONSTANTES.PROPRIETE_NOCOMMANDE);
+                String noClient = mdl.eGetProp(CONSTANTES.PROPRIETE_NOCLIENT);
+                String noCommande = mdl.eGetProp(CONSTANTES.PROPRIETE_NOCOMMANDE);
 
                 Ref = String.Format("{0}-{1}", noClient, noCommande).Trim();
             }
@@ -2041,7 +2041,7 @@ namespace Outils
 
             try
             {
-                String noClient = mdl.eProp(CONSTANTES.PROPRIETE_NOCLIENT);
+                String noClient = mdl.eGetProp(CONSTANTES.PROPRIETE_NOCLIENT);
                 Boolean Ajouter = false;
                 String[] pt = mdl.eDossier().Split(Path.DirectorySeparatorChar);
 

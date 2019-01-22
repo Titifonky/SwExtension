@@ -150,11 +150,11 @@ namespace ModuleProduction.ModuleRepererDossier
                     // Le nom du modèle est stocké dans une propriété, si le modèle est copié
                     // la propriété n'est plus valable, on force le repérage
                     // On récupère également le dernier indice de la dimension utilisée
-                    if (mdl.ePropExiste(CONST_PRODUCTION.ID_PIECE) && (mdl.eProp(CONST_PRODUCTION.ID_PIECE) == mdl.eNomSansExt()))
+                    if (mdl.ePropExiste(CONST_PRODUCTION.ID_PIECE) && (mdl.eGetProp(CONST_PRODUCTION.ID_PIECE) == mdl.eNomSansExt()))
                     {
                         InitModele = false;
                         if (mdl.ePropExiste(CONST_PRODUCTION.MAX_INDEXDIM))
-                            IndexDimension = mdl.eProp(CONST_PRODUCTION.MAX_INDEXDIM).eToInteger();
+                            IndexDimension = mdl.eGetProp(CONST_PRODUCTION.MAX_INDEXDIM).eToInteger();
                     }
 
                     foreach (var nomCfg in ListeComposants[mdl].Keys)
@@ -164,7 +164,7 @@ namespace ModuleProduction.ModuleRepererDossier
                         WindowLog.SautDeLigne();
                         WindowLog.EcrireF("{0} \"{1}\"", mdl.eNomSansExt(), nomCfg);
 
-                        HashSet<int> ListIdDossiers = new HashSet<int>();
+                        HashSet<int> HashIdDossiers = new HashSet<int>();
 
                         Boolean InitConfig = true;
 
@@ -175,14 +175,14 @@ namespace ModuleProduction.ModuleRepererDossier
                         // on repère alors les dossiers
                         // On en profite pour récupérer la liste des ids de dossiers déjà traité dans les précédentes
                         // campagne de repérage
-                        if (!InitModele && mdl.ePropExiste(CONST_PRODUCTION.ID_CONFIG, nomCfg) && (mdl.eProp(CONST_PRODUCTION.ID_CONFIG, nomCfg) == IdCfg.ToString()))
+                        if (!InitModele && mdl.ePropExiste(CONST_PRODUCTION.ID_CONFIG, nomCfg) && (mdl.eGetProp(CONST_PRODUCTION.ID_CONFIG, nomCfg) == IdCfg.ToString()))
                         {
                             InitConfig = false;
                             if (mdl.ePropExiste(CONST_PRODUCTION.ID_DOSSIERS, nomCfg))
                             {
-                                var tab = mdl.eProp(CONST_PRODUCTION.ID_DOSSIERS, nomCfg).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                                var tab = mdl.eGetProp(CONST_PRODUCTION.ID_DOSSIERS, nomCfg).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                                 foreach (var id in tab)
-                                    ListIdDossiers.Add(id.eToInteger());
+                                    HashIdDossiers.Add(id.eToInteger());
                             }
                         }
 
@@ -211,7 +211,10 @@ namespace ModuleProduction.ModuleRepererDossier
                             // Si le dossier ne contient pas la propriété repère
                             // NouveauDossier est passé à true
                             Boolean NouveauDossier = false;
+
+                            WindowLog.EcrireF("1 - IndexDimension {0}", IndexDimension);
                             Dimension param = GetParam(mdl, fDossier, nomCfg, ref IndexDimension, out NouveauDossier);
+                            WindowLog.EcrireF("2 - IndexDimension {0}", IndexDimension);
 
                             var SwCorps = Dossier.ePremierCorps();
                             var NomCorps = SwCorps.Name;
@@ -255,7 +258,7 @@ namespace ModuleProduction.ModuleRepererDossier
                                 if (Repere.EstNegatif() ||
                                     InitConfig ||
                                     NouveauDossier ||
-                                    !ListIdDossiers.Contains(IdDossier) ||
+                                    !HashIdDossiers.Contains(IdDossier) ||
                                     !ListeCorps.ContainsKey(Repere))
                                 {
                                     Repere = GenRepereDossier;
@@ -279,15 +282,17 @@ namespace ModuleProduction.ModuleRepererDossier
                             corps.InitCaracteristiques(Dossier, SwCorps);
                             corps.AjouterModele(mdl, nomCfg, IdDossier, NomCorps);
 
-                            ListIdDossiers.Add(IdDossier);
+                            HashIdDossiers.Add(IdDossier);
 
                             WindowLog.EcrireF(" - {1} -> {0}", fDossier.Name, corps.RepereComplet);
                         }
                         mdl.ePropAdd(CONST_PRODUCTION.ID_CONFIG, IdCfg, nomCfg);
-                        mdl.ePropAdd(CONST_PRODUCTION.ID_DOSSIERS, String.Join(" ", ListIdDossiers), nomCfg);
+                        mdl.ePropAdd(CONST_PRODUCTION.ID_DOSSIERS, String.Join(" ", HashIdDossiers), nomCfg);
                     }
+                    WindowLog.EcrireF("3 - IndexDimension {0}", IndexDimension);
                     mdl.ePropAdd(CONST_PRODUCTION.ID_PIECE, mdl.eNomSansExt());
                     mdl.ePropAdd(CONST_PRODUCTION.MAX_INDEXDIM, IndexDimension);
+                    WindowLog.EcrireF("4 - IndexDimension {0}", mdl.eGetProp(CONST_PRODUCTION.MAX_INDEXDIM));
                     mdl.eSauver();
 
                     if (mdl.GetPathName() != MdlBase.GetPathName())

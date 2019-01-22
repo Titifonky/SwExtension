@@ -11,7 +11,7 @@ using System.Linq;
 namespace ModuleProduction
 {
     [ModuleTypeDocContexte(eTypeDoc.Assemblage | eTypeDoc.Piece),
-        ModuleTitre("Contrôler le reperage"),
+        ModuleTitre("Afficher le reperage"),
         ModuleNom("AfficherReperage")]
 
     public class BoutonAfficherReperage : BoutonBase

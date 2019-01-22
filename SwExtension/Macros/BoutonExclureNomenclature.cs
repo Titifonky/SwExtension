@@ -38,7 +38,7 @@ namespace Macros
             {
                 if (cp.eModelDoc2().ePropExiste(_pPropExclureNomenclature.GetValeur<String>()))
                 {
-                    int MdlIntVal = cp.eModelDoc2().eProp(_pPropExclureNomenclature.GetValeur<String>()).eToInteger();
+                    int MdlIntVal = cp.eModelDoc2().eGetProp(_pPropExclureNomenclature.GetValeur<String>()).eToInteger();
 
                     switch (MdlIntVal)
                     {

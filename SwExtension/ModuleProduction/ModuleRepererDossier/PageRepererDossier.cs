@@ -46,7 +46,7 @@ namespace ModuleProduction.ModuleRepererDossier
                 MdlBase = App.Sw.ActiveDoc;
                 if(MdlBase.ePropExiste(CONST_PRODUCTION.FILTRE_CORPS))
                 {
-                    var r = (eTypeCorps)Enum.Parse(typeof(eTypeCorps), MdlBase.eProp(CONST_PRODUCTION.FILTRE_CORPS));
+                    var r = (eTypeCorps)Enum.Parse(typeof(eTypeCorps), MdlBase.eGetProp(CONST_PRODUCTION.FILTRE_CORPS));
                     TypeCorps.SetValeur(r);
                 }
 

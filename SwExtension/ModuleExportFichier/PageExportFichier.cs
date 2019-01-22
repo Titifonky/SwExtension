@@ -541,7 +541,7 @@ namespace ModuleExportFichier
             {
                 if(App.ModelDoc2.ePropExiste("Indice"))
                 {
-                    var val = App.ModelDoc2.eProp("Indice").Trim();
+                    var val = App.ModelDoc2.eGetProp("Indice").Trim();
                     if (!String.IsNullOrWhiteSpace(val))
                         return "Ind " + val;
                 }

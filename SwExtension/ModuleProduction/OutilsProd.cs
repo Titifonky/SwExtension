@@ -38,7 +38,7 @@ namespace ModuleProduction
             CustomPropertyManager PM = mdl.Extension.get_CustomPropertyManager("");
 
             if (mdl.ePropExiste(CONSTANTES.PROPRIETE_QUANTITE))
-                return Math.Max(mdl.eProp(CONSTANTES.PROPRIETE_QUANTITE).eToInteger(), 1).ToString();
+                return Math.Max(mdl.eGetProp(CONSTANTES.PROPRIETE_QUANTITE).eToInteger(), 1).ToString();
 
             return "1";
         }
