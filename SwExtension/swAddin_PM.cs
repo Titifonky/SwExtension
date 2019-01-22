@@ -103,6 +103,7 @@ namespace SwExtension
                 _Mnu.AjouterCmde("Ar", typeof(BoutonAfficherReperage));
                 _Mnu.AjouterCmde("Cr", typeof(PageControlerRepere));
                 _Mnu.AjouterCmde("Nr", typeof(BoutonNettoyerReperage));
+                _Mnu.AjouterCmde("Ae", typeof(BoutonAfficherMasquerEsquisseReperage));
 
                 //==================================================================================================
                 _Mnu = _eListeMenu.Add("Escalier", "Fonctions d'aide à la création d'escalier");

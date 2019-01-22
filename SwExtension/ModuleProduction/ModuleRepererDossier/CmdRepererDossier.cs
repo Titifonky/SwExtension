@@ -109,7 +109,7 @@ namespace ModuleProduction.ModuleRepererDossier
 
                     foreach (var corps in ListeCorps.Values)
                     {
-                        if(File.Exists(corps.CheminFichierRepere))
+                        if (File.Exists(corps.CheminFichierRepere))
                         {
                             WindowLog.EcrireF("- {0}", corps.RepereComplet);
                             ModelDoc2 mdl = Sw.eOuvrir(corps.CheminFichierRepere);
@@ -139,7 +139,7 @@ namespace ModuleProduction.ModuleRepererDossier
                     AppliqueOptionListeDePiecesSoudees(mdl);
 
                     // On crée l'esquisse pour le reperage des dossiers
-                    EsquisseRepere(mdl);
+                    mdl.pEsquisseRepere();
 
                     // Si le modele est a repérer complètement
                     Boolean InitModele = true;
@@ -247,7 +247,7 @@ namespace ModuleProduction.ModuleRepererDossier
                                 // Si on est pas en mode "Combiner les corps"
                                 // on recupère le repère du dossier
                                 // Sinon c'est forcément un nouveau repère
-                                if(!CombinerCorpsIdentiques)
+                                if (!CombinerCorpsIdentiques)
                                     Repere = GetRepere(param, nomCfg);
 
                                 // Création d'un nouveau repère suivant conditions
@@ -305,7 +305,7 @@ namespace ModuleProduction.ModuleRepererDossier
                     App.Sw.CloseDoc(corps.CheminFichierRepere);
 
                 WindowLog.SautDeLigne();
-                if(ListeCorps.Count > 0)
+                if (ListeCorps.Count > 0)
                     WindowLog.EcrireF("Nb de repères : {0}", ListeCorps.Keys.Max());
                 else
                     WindowLog.Ecrire("Aucun corps repéré");
@@ -326,7 +326,7 @@ namespace ModuleProduction.ModuleRepererDossier
                     // Si on est pas en mode "Combiner corps identique" et que le fichier existe
                     // on le supprime pour le mettre à jour, sinon on peut se retrouver
                     // avec des fichiers ne correpondants pas au corps
-                    if(!CombinerCorpsIdentiques && File.Exists(corps.CheminFichierRepere))
+                    if (!CombinerCorpsIdentiques && File.Exists(corps.CheminFichierRepere))
                         File.Delete(corps.CheminFichierRepere);
 
                     // Si le fichier existe, on passe au suivant
@@ -367,6 +367,7 @@ namespace ModuleProduction.ModuleRepererDossier
                     Piece.ePremierCorps(false).eVisible(true);
                     mdlFichier.EditRebuild3();
                     mdlFichier.pMasquerEsquisses();
+                    mdlFichier.FixerProp(corps.RepereComplet);
 
                     if ((corps.TypeCorps == eTypeCorps.Tole) && CreerDvp)
                         corps.pCreerDvp(MdlBase.pDossierPiece(), false);
@@ -637,106 +638,6 @@ namespace ModuleProduction.ModuleRepererDossier
         private void SetRepere(Dimension param, int val, String nomCfg)
         {
             param.SetSystemValue3(val * 0.001, (int)swSetValueInConfiguration_e.swSetValue_InSpecificConfigurations, nomCfg);
-        }
-
-        private void SupprimerDefBloc(ModelDoc2 mdl, String cheminbloc)
-        {
-            var TabDef = (Object[])mdl.SketchManager.GetSketchBlockDefinitions();
-            if (TabDef.IsRef())
-            {
-                foreach (SketchBlockDefinition blocdef in TabDef)
-                {
-                    if (blocdef.FileName == cheminbloc)
-                    {
-                        Feature d = blocdef.GetFeature();
-                        d.eSelect();
-                        mdl.Extension.DeleteSelection2((int)swDeleteSelectionOptions_e.swDelete_Absorbed);
-                        mdl.eEffacerSelection();
-                        break;
-                    }
-                }
-            }
-        }
-
-        private String CheminBlocEsquisseNumeroter()
-        {
-            return Sw.CheminBloc(CONSTANTES.NOM_BLOCK_ESQUISSE_NUMEROTER);
-        }
-
-        private Feature EsquisseRepere(ModelDoc2 mdl, Boolean creer = true)
-        {
-            // On recherche l'esquisse contenant les parametres
-            Feature Esquisse = mdl.eChercherFonction(fc => { return fc.Name == CONSTANTES.NOM_ESQUISSE_NUMEROTER; });
-
-            if (Esquisse.IsNull() && creer)
-            {
-                var SM = mdl.SketchManager;
-
-                // On recherche le chemin du bloc
-                String cheminbloc = CheminBlocEsquisseNumeroter();
-
-                if (String.IsNullOrWhiteSpace(cheminbloc))
-                    return null;
-
-                // On supprime la definition du bloc
-                SupprimerDefBloc(mdl, cheminbloc);
-
-                // On recherche le plan de dessus, le deuxième dans la liste des plans de référence
-                Feature Plan = mdl.eListeFonctions(fc => { return fc.GetTypeName2() == FeatureType.swTnRefPlane; })[1];
-
-                // Selection du plan et création de l'esquisse
-                Plan.eSelect();
-                SM.InsertSketch(true);
-                SM.AddToDB = false;
-                SM.DisplayWhenAdded = true;
-
-                mdl.eEffacerSelection();
-
-                // On récupère la fonction de l'esquisse
-                Esquisse = mdl.Extension.GetLastFeatureAdded();
-
-                // On insère le bloc
-                MathUtility Mu = App.Sw.GetMathUtility();
-                MathPoint Origine = Mu.CreatePoint(new double[] { 0, 0, 0 });
-                var def = SM.MakeSketchBlockFromFile(Origine, cheminbloc, false, 1, 0);
-
-                // On récupère la première instance
-                // et on l'explose
-                var Tab = (Object[])def.GetInstances();
-                var ins = (SketchBlockInstance)Tab[0];
-                SM.ExplodeSketchBlockInstance(ins);
-
-                // Fermeture de l'esquisse
-                SM.AddToDB = false;
-                SM.DisplayWhenAdded = true;
-                SM.InsertSketch(true);
-
-                //// On supprime la definition du bloc
-                //SupprimerDefBloc(mdl, cheminbloc);
-
-                // On renomme l'esquisse
-                Esquisse.Name = CONSTANTES.NOM_ESQUISSE_NUMEROTER;
-
-                mdl.eEffacerSelection();
-
-                // On l'active dans toutes les configurations
-                Esquisse.SetSuppression2((int)swFeatureSuppressionAction_e.swUnSuppressFeature, (int)swInConfigurationOpts_e.swAllConfiguration, null);
-            }
-
-            if (Esquisse.IsRef())
-            {
-                // On selectionne l'esquisse, on la cache
-                // et on la masque dans le FeatureMgr
-                // elle ne sera pas du tout acessible par l'utilisateur
-                Esquisse.eSelect();
-                mdl.BlankSketch();
-                Esquisse.SetUIState((int)swUIStates_e.swIsHiddenInFeatureMgr, true);
-                mdl.eEffacerSelection();
-
-                mdl.EditRebuild3();
-            }
-
-            return Esquisse;
         }
     }
 }

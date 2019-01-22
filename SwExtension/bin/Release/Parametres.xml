@@ -236,7 +236,7 @@
   <Module name="AfficherReperage" intitule="Contrôler le reperage" />
   <Module name="InsererNoteQuantite" intitule="Inserer les quantités">
     <Parametre name="LigneAttache" intitule="Ligne d'attache" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="ModifierHtTexte" intitule="Modifier la ht du texte" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="ModifierHtTexte" intitule="Modifier la ht du texte" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="HtTexte" intitule="Ht du texte en mm" tip="Ht du texte en mm" type="System.Int32">10</Parametre>
     <Parametre name="Reperage" intitule="Reperage" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="AfficherQuantite" intitule="Ajouter la quantité" tip="" type="System.Boolean">True</Parametre>
@@ -246,4 +246,5 @@
     <Parametre name="ProfilCourt" intitule="Nom de profil court" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="SautDeLigneMateriau" intitule="Saut de ligne matériau" tip="" type="System.Boolean">False</Parametre>
   </Module>
+  <Module name="AfficherMasquerEsquisseReperage" intitule="Afficher/Masquer Esquisse reperage" />
 </Parametres>
