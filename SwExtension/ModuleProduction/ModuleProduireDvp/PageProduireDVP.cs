@@ -131,7 +131,6 @@ namespace ModuleProduction.ModuleProduireDvp
                 _CheckBox_InscrireNomTole.OnIsCheck += _Texte_TailleInscription.IsEnable;
                 _Texte_TailleInscription.IsEnabled = _CheckBox_InscrireNomTole.IsChecked;
 
-
                 _CheckBox_OrienterDvp = G.AjouterCheckBox(OrienterDvp);
                 _EnumComboBox_OrientationDvp = G.AjouterEnumComboBox<eOrientation, Intitule>(OrientationDvp);
                 _EnumComboBox_OrientationDvp.StdIndent();

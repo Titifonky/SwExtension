@@ -16,7 +16,7 @@
     <Parametre name="ExporterHauteQualite" intitule="Exporter en haute qualité" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="ExporterFeuilleEspacePapier" intitule="Exporter les feuilles dans l'espace papier" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="ConvertirSplineToPolyligne" intitule="Convertir les splines en polylignes" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">D:\Projet\E144 - Ville d'Arras\ED496 - TS Pole educatif Val de Scarpe\1\5.1 Enseigne Maternelle\Laser tole\1\DWG</Parametre>
+    <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">C:\Users\MFB\Desktop</Parametre>
   </Module>
   <Module name="ExportPdf" intitule="Exporter en Pdf">
     <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">True</Parametre>
@@ -208,7 +208,7 @@
   </Module>
   <Module name="ProduireBarre" intitule="Exporter les barres">
     <Parametre name="TypeExport" intitule="Format :" tip="" type="Outils.eTypeFichierExport">ParasolidBinary</Parametre>
-    <Parametre name="ListerUsinages" intitule="Lister les usinages" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="ListerUsinages" intitule="Lister les usinages" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="ExporterBarres" intitule="Exporter les barres" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="CreerPdf3D" intitule="Créer les pdf 3D des barres" tip="" type="System.Boolean">False</Parametre>
   </Module>
@@ -223,9 +223,10 @@
   </Module>
   <Module name="VueInverserStyle" intitule="Inverser le style d'affichage" />
   <Module name="InsererNote" intitule="Inserer les notes">
-    <Parametre name="AjouterMateriau" intitule="Ajouter le matériau" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="ProfilCourt" intitule="Nom de profil court" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="SautDeLigneMateriau" intitule="Saut de ligne matériau" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="PrefixeTole" intitule="Prefixe tole" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="AjouterMateriau" intitule="Ajouter le matériau" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="ProfilCourt" intitule="Nom de profil court" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="SautDeLigneMateriau" intitule="Saut de ligne matériau" tip="" type="System.Boolean">True</Parametre>
   </Module>
   <Module name="ControlerRepere" intitule="Controler les repères">
   </Module>
@@ -233,4 +234,16 @@
     <Parametre name="PlanSymetrie" intitule="Selectionnez le plan de symetrie :" tip="" type="System.String">Plan de droite</Parametre>
   </Module>
   <Module name="AfficherReperage" intitule="Contrôler le reperage" />
+  <Module name="InsererNoteQuantite" intitule="Inserer les quantités">
+    <Parametre name="LigneAttache" intitule="Ligne d'attache" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="ModifierHtTexte" intitule="Modifier la ht du texte" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="HtTexte" intitule="Ht du texte en mm" tip="Ht du texte en mm" type="System.Int32">10</Parametre>
+    <Parametre name="Reperage" intitule="Reperage" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="AfficherQuantite" intitule="Ajouter la quantité" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="Description" intitule="Description" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="PrefixeTole" intitule="Prefixe tole" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="AjouterMateriau" intitule="Ajouter le matériau" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="ProfilCourt" intitule="Nom de profil court" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="SautDeLigneMateriau" intitule="Saut de ligne matériau" tip="" type="System.Boolean">True</Parametre>
+  </Module>
 </Parametres>

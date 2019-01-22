@@ -100,8 +100,6 @@
     <Compile Include="Macros\BoutonAfficherLogDebug.cs" />
     <Compile Include="ModuleCreerSymetrie\CmdCreerSymetrie.cs" />
     <Compile Include="ModuleCreerSymetrie\PageCreerSymetrie.cs" />
-    <Compile Include="ModuleInsererNote\CmdInsererNote.cs" />
-    <Compile Include="ModuleInsererNote\PageInsererNote.cs" />
     <Compile Include="ModuleProduction\BoutonCommandeProfil.cs" />
     <Compile Include="ModuleProduction\BoutonNettoyerReperage.cs" />
     <Compile Include="ModuleProduction\BoutonAfficherReperage.cs" />
@@ -112,6 +110,8 @@
     </Compile>
     <Compile Include="ModuleProduction\ModuleControlerRepere\CmdControlerRepere.cs" />
     <Compile Include="ModuleProduction\ModuleControlerRepere\PageControlerRepere.cs" />
+    <Compile Include="ModuleProduction\ModuleInsererNote\CmdInsererNoteQuantite.cs" />
+    <Compile Include="ModuleProduction\ModuleInsererNote\PageInsererNoteQuantite.cs" />
     <Compile Include="ModuleProduction\ModuleProduireDebit\CmdProduireDebit.cs" />
     <Compile Include="ModuleProduction\ModuleProduireDebit\PageProduireDebit.cs" />
     <Compile Include="ModuleProduction\ModuleProduireBarre\CmdProduireBarre.cs" />

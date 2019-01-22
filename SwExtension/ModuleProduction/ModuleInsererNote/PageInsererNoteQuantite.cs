@@ -4,15 +4,14 @@ using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using SwExtension;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
-namespace ModuleInsererNote
+namespace ModuleProduction.ModuleInsererNote
 {
     [ModuleTypeDocContexte(eTypeDoc.Dessin),
-        ModuleTitre("Inserer les notes"),
-        ModuleNom("InsererNote"),
-        ModuleDescription("Inserer la description des tôles et des profils.")
+        ModuleTitre("Inserer les quantités"),
+        ModuleNom("InsererNoteQuantite"),
+        ModuleDescription("Inserer la quantité du repère.")
         ]
     public class PageInsererNote : BoutonPMPManager
     {
@@ -21,16 +20,34 @@ namespace ModuleInsererNote
         private Mouse Souris = null;
         private MathUtility Mt = null;
 
+        private Parametre LigneAttache;
+        private Parametre ModifierHtTexte;
+        private Parametre HtTexte;
+
+        private Parametre Reperage;
+        private Parametre AfficherQuantite;
+
+        private Parametre Description;
+        private Parametre PrefixeTole;
         private Parametre AjouterMateriau;
         private Parametre ProfilCourt;
         private Parametre SautDeLigneMateriau;
 
+        private ListeSortedCorps ListeCorps = new ListeSortedCorps();
+
         public PageInsererNote()
         {
-            //LogToWindowLog = false;
-
             try
             {
+                LigneAttache = _Config.AjouterParam("LigneAttache", true, "Ligne d'attache");
+                ModifierHtTexte = _Config.AjouterParam("ModifierHtTexte", true, "Modifier la ht du texte");
+                HtTexte = _Config.AjouterParam("HtTexte", 7, "Ht du texte en mm", "Ht du texte en mm");
+
+                Reperage = _Config.AjouterParam("Reperage", true, "Reperage");
+                AfficherQuantite = _Config.AjouterParam("AfficherQuantite", true, "Ajouter la quantité");
+
+                Description = _Config.AjouterParam("Description", true, "Description");
+                PrefixeTole = _Config.AjouterParam("PrefixeTole", true, "Prefixe tole");
                 AjouterMateriau = _Config.AjouterParam("AjouterMateriau", true, "Ajouter le matériau");
                 ProfilCourt = _Config.AjouterParam("ProfilCourt", true, "Nom de profil court");
                 SautDeLigneMateriau = _Config.AjouterParam("SautDeLigneMateriau", false, "Saut de ligne matériau");
@@ -38,6 +55,8 @@ namespace ModuleInsererNote
                 MdlBase = App.ModelDoc2;
                 Dessin = MdlBase.eDrawingDoc();
                 Mt = (MathUtility)App.Sw.GetMathUtility();
+
+                ListeCorps = MdlBase.pChargerNomenclature();
                 InitSouris();
 
                 OnCalque += Calque;
@@ -47,6 +66,16 @@ namespace ModuleInsererNote
             { this.LogMethode(new Object[] { e }); }
         }
 
+        private GroupeAvecCheckBox _GroupeReperage;
+        private GroupeAvecCheckBox _GroupeDescription;
+
+        private CtrlCheckBox _CheckBox_LigneAttache;
+        private CtrlCheckBox _CheckBox_ModifierHtTexte;
+        private CtrlTextBox _Texte_HtTexte;
+
+        private CtrlCheckBox _CheckBox_AfficherQuantite;
+
+        private CtrlCheckBox _CheckBox_PrefixeTole;
         private CtrlCheckBox _CheckBox_AjouterMateriau;
         private CtrlCheckBox _CheckBox_ProfilCourt;
         private CtrlCheckBox _CheckBox_SautDeLigneMateriau;
@@ -57,11 +86,27 @@ namespace ModuleInsererNote
             {
                 Groupe G;
 
-                G = _Calque.AjouterGroupe("Options :");
-                
-                _CheckBox_ProfilCourt = G.AjouterCheckBox(ProfilCourt);
-                _CheckBox_AjouterMateriau = G.AjouterCheckBox(AjouterMateriau);
-                _CheckBox_SautDeLigneMateriau = G.AjouterCheckBox(SautDeLigneMateriau);
+                G = _Calque.AjouterGroupe("Options");
+                _CheckBox_LigneAttache = G.AjouterCheckBox(LigneAttache);
+
+                _CheckBox_ModifierHtTexte = G.AjouterCheckBox(ModifierHtTexte);
+                _Texte_HtTexte = G.AjouterTexteBox(HtTexte, false);
+                _Texte_HtTexte.ValiderTexte += ValiderTextIsInteger;
+                _Texte_HtTexte.StdIndent();
+
+                _CheckBox_ModifierHtTexte.OnIsCheck += _Texte_HtTexte.IsEnable;
+                _Texte_HtTexte.IsEnabled = _CheckBox_ModifierHtTexte.IsChecked;
+
+                _GroupeReperage = _Calque.AjouterGroupeAvecCheckBox(Reperage);
+
+                _CheckBox_AfficherQuantite = _GroupeReperage.AjouterCheckBox(AfficherQuantite);
+
+                _GroupeDescription = _Calque.AjouterGroupeAvecCheckBox(Description);
+
+                _CheckBox_PrefixeTole = _GroupeDescription.AjouterCheckBox(PrefixeTole);
+                _CheckBox_ProfilCourt = _GroupeDescription.AjouterCheckBox(ProfilCourt);
+                _CheckBox_AjouterMateriau = _GroupeDescription.AjouterCheckBox(AjouterMateriau);
+                _CheckBox_SautDeLigneMateriau = _GroupeDescription.AjouterCheckBox(SautDeLigneMateriau);
                 _CheckBox_SautDeLigneMateriau.StdIndent();
 
                 _CheckBox_AjouterMateriau.OnUnCheck += _CheckBox_SautDeLigneMateriau.UnCheck;
@@ -72,6 +117,37 @@ namespace ModuleInsererNote
             { this.LogMethode(new Object[] { e }); }
         }
 
+        private void InitSouris()
+        {
+            var vue = MdlBase.GetFirstModelView() as ModelView;
+
+            if (vue.IsNull()) return;
+
+            vue.EnableGraphicsUpdate = true;
+            Souris = vue.GetMouse();
+            AjouterEvenementsSouris();
+        }
+
+        private void AjouterEvenementsSouris()
+        {
+            if (Souris.IsNull()) return;
+
+            Souris.MouseMoveNotify += Souris_MouseMoveNotify;
+            Souris.MouseLBtnDownNotify += Souris_MouseLBtnDownNotify;
+        }
+
+        private void SupprimerEvenementsSouris()
+        {
+            if (Souris.IsNull()) return;
+
+            Souris.MouseMoveNotify -= Souris_MouseMoveNotify;
+            Souris.MouseLBtnDownNotify -= Souris_MouseLBtnDownNotify;
+        }
+
+        private Boolean BoutonDown = false;
+        private Note Note = null;
+        private Annotation Annotation = null;
+
         private String TextePropriete(eTypeCorps typeCorps)
         {
             String t = "";
@@ -79,7 +155,8 @@ namespace ModuleInsererNote
             {
                 if (typeCorps == eTypeCorps.Tole)
                 {
-                    t += "Tôle ";
+                    if (_CheckBox_PrefixeTole.IsChecked)
+                        t += "Tôle ";
 
                     if (_CheckBox_AjouterMateriau.IsChecked)
                     {
@@ -117,37 +194,6 @@ namespace ModuleInsererNote
             return t;
         }
 
-        private void InitSouris()
-        {
-            var vue = MdlBase.GetFirstModelView() as ModelView;
-
-            if (vue.IsNull()) return;
-
-            vue.EnableGraphicsUpdate = true;
-            Souris = vue.GetMouse();
-            AjouterEvenementsSouris();
-        }
-
-        private void AjouterEvenementsSouris()
-        {
-            if (Souris.IsNull()) return;
-
-            Souris.MouseMoveNotify += Souris_MouseMoveNotify;
-            Souris.MouseLBtnDownNotify += Souris_MouseLBtnDownNotify;
-        }
-
-        private void SupprimerEvenementsSouris()
-        {
-            if (Souris.IsNull()) return;
-
-            Souris.MouseMoveNotify -= Souris_MouseMoveNotify;
-            Souris.MouseLBtnDownNotify -= Souris_MouseLBtnDownNotify;
-        }
-
-        private Boolean BoutonDown = false;
-        private Note Note = null;
-        private Annotation Annotation = null;
-
         private int Souris_MouseLBtnDownNotify(int X, int Y, int WParam)
         {
             try
@@ -156,7 +202,6 @@ namespace ModuleInsererNote
                 {
                     Note = null;
                     Annotation = null;
-
                     BoutonDown = false;
                 }
                 else
@@ -185,9 +230,54 @@ namespace ModuleInsererNote
 
                     if ((typeCorps == eTypeCorps.Barre) || (typeCorps == eTypeCorps.Tole))
                     {
-                        Note = MdlBase.InsertNote(TextePropriete(typeCorps));
+                        int Repere = 0;
+
+                        String texteNote = "";
+                        if(_GroupeReperage.IsChecked)
+                            texteNote = String.Format("$PRPWLD:\"{0}\"", CONSTANTES.REF_DOSSIER);
+
+                        Note = MdlBase.InsertNote(texteNote);
                         Annotation = Note.GetAnnotation();
-                        Annotation.SetLeader3((int)swLeaderStyle_e.swBENT, (int)swLeaderSide_e.swLS_SMART, true, false, false, false);
+
+                        if (_CheckBox_ModifierHtTexte.IsChecked)
+                        {
+                            TextFormat swTextFormat = Annotation.GetTextFormat(0);
+                            swTextFormat.CharHeight = Math.Max(1, _Texte_HtTexte.Text.eToInteger()) * 0.001;
+                            Annotation.SetTextFormat(0, false, swTextFormat);
+                        }
+
+                        if (!_CheckBox_LigneAttache.IsChecked)
+                        {
+                            Note.SetTextJustification((int)swTextJustification_e.swTextJustificationCenter);
+                            Annotation.SetLeader3((int)swLeaderStyle_e.swNO_LEADER, (int)swLeaderSide_e.swLS_SMART, true, true, false, false);
+                        }
+
+                        if (_GroupeReperage.IsChecked)
+                        {
+                            if (_CheckBox_AfficherQuantite.IsChecked)
+                            {
+                                Repere = Note.GetText().Replace(CONSTANTES.PREFIXE_REF_DOSSIER, "").eToInteger();
+
+                                if (ListeCorps.ContainsKey(Repere))
+                                {
+                                    var corps = ListeCorps[Repere];
+                                    Note.PropertyLinkedText = String.Format("$PRPWLD:\"{0}\" x{1}", CONSTANTES.REF_DOSSIER, corps.Campagne.Last().Value);
+                                }
+                            }
+                        }
+
+                        if (_GroupeDescription.IsChecked)
+                        {
+                            String texte = Note.PropertyLinkedText;
+
+                            if (!String.IsNullOrWhiteSpace(texte))
+                                texte += System.Environment.NewLine;
+
+                            texte += TextePropriete(typeCorps);
+
+                            Note.PropertyLinkedText = texte;
+                        }
+
                         BoutonDown = true;
                     }
                 }

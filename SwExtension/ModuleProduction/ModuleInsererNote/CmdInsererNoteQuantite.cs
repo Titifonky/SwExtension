@@ -3,7 +3,7 @@ using SolidWorks.Interop.sldworks;
 using SwExtension;
 using System;
 
-namespace ModuleInsererNote
+namespace ModuleProduction.ModuleInsererNote
 {
     public class CmdInsererNote : Cmd
     {

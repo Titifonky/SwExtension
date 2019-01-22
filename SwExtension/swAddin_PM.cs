@@ -6,15 +6,7 @@ using ModuleEmpreinte;
 using ModuleExportFichier.ModuleDxfDwg;
 using ModuleExportFichier.ModulePdf;
 using ModuleImporterInfos;
-using ModuleInsererNote;
 using ModuleInsererPercage;
-using ModuleLaser;
-using ModuleLaser.ModuleCreerConfigDvp;
-using ModuleLaser.ModuleCreerDvp;
-using ModuleLaser.ModuleExportBarre;
-using ModuleLaser.ModuleListeDebit;
-using ModuleLaser.ModuleListerRepere;
-using ModuleLaser.ModuleNumeroterDossier;
 using ModuleLierLesConfigurations;
 using ModuleListerConfigComp;
 using ModuleListerMateriaux;
@@ -29,6 +21,7 @@ using ModuleParametres;
 using ModuleProduction;
 using ModuleProduction.ModuleControlerRepere;
 using ModuleProduction.ModuleGenererConfigDvp;
+using ModuleProduction.ModuleInsererNote;
 using ModuleProduction.ModuleProduireBarre;
 using ModuleProduction.ModuleProduireDebit;
 using ModuleProduction.ModuleProduireDvp;
@@ -172,7 +165,7 @@ namespace SwExtension
                 _Mnu.AjouterCmde("Rn", typeof(BoutonRenommerFeuille));
 
                 _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde("Rf", typeof(PageInsererNote));
+                _Mnu.AjouterCmde("Nt", typeof(PageInsererNote));
 
                 ////==================================================================================================
                 //_Mnu = _eListeMenu.Add("Laser", "Fonctions pour le débit laser");

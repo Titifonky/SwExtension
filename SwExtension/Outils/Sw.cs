@@ -3098,6 +3098,24 @@ namespace Outils
             return SelMgr.GetSelectedObjectsComponent4(index, marque);
         }
 
+        public static DrawingComponent eSelect_RecupererComposantDessin(this ModelDoc2 mdl, int index = 1, int marque = -1)
+        {
+            SelectionMgr SelMgr = mdl.SelectionManager;
+            if (SelMgr.GetSelectedObjectCount2(marque) == 0)
+                return null;
+
+            return SelMgr.GetSelectedObjectsComponent4(index, marque);
+        }
+
+        public static View eSelect_RecupererVue(this ModelDoc2 mdl, int index = 1, int marque = -1)
+        {
+            SelectionMgr SelMgr = mdl.SelectionManager;
+            if (SelMgr.GetSelectedObjectCount2(marque) == 0)
+                return null;
+
+            return SelMgr.GetSelectedObjectsDrawingView2(index, marque);
+        }
+
         //========================================================================================
 
         public static string eGetNomEntite(this Face2 ent, ModelDoc2 modele)
