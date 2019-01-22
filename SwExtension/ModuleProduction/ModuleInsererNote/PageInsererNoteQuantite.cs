@@ -261,7 +261,7 @@ namespace ModuleProduction.ModuleInsererNote
                                 if (ListeCorps.ContainsKey(Repere))
                                 {
                                     var corps = ListeCorps[Repere];
-                                    Note.PropertyLinkedText = String.Format("$PRPWLD:\"{0}\" x{1}", CONSTANTES.REF_DOSSIER, corps.Campagne.Last().Value);
+                                    Note.PropertyLinkedText = String.Format("$PRPWLD:\"{0}\" (x{1})", CONSTANTES.REF_DOSSIER, corps.Campagne.Last().Value);
                                 }
                             }
                         }

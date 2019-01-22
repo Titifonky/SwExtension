@@ -242,8 +242,8 @@
     <Parametre name="AfficherQuantite" intitule="Ajouter la quantité" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="Description" intitule="Description" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="PrefixeTole" intitule="Prefixe tole" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="AjouterMateriau" intitule="Ajouter le matériau" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="AjouterMateriau" intitule="Ajouter le matériau" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="ProfilCourt" intitule="Nom de profil court" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="SautDeLigneMateriau" intitule="Saut de ligne matériau" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="SautDeLigneMateriau" intitule="Saut de ligne matériau" tip="" type="System.Boolean">False</Parametre>
   </Module>
 </Parametres>
