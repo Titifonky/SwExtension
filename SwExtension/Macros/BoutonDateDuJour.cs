@@ -15,7 +15,7 @@ namespace Macros
     {
         public BoutonDateDuJour()
         {
-            LogToWindowLog = true;
+            LogToWindowLog = false;
         }
 
         protected override void Command()
