@@ -121,6 +121,8 @@ namespace ModuleProduction.ModuleRepererDossier
                     }
                 }
 
+                ////////////////////////////////// DEBUT DU REPERAGE ////////////////////////////////////////////////////
+
                 MdlBase.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
 
                 // On recherche l'indice de repere max
@@ -145,25 +147,26 @@ namespace ModuleProduction.ModuleRepererDossier
                     Boolean InitModele = true;
                     // On recherche l'index de la dimension maximum
                     int IndexDimension = 0;
+                    // On liste les dossiers déja traité pour l'attribution des nouveaux index de dimension
+                    HashSet<int> HashPieceIdDossiers = new HashSet<int>();
 
                     // Les données sont stockées dans des propriétés du modèle
                     // Le nom du modèle est stocké dans une propriété, si le modèle est copié
                     // la propriété n'est plus valable, on force le repérage
                     // On récupère également le dernier indice de la dimension utilisée
+
                     if (mdl.ePropExiste(CONST_PRODUCTION.ID_PIECE) && (mdl.eGetProp(CONST_PRODUCTION.ID_PIECE) == mdl.eNomSansExt()))
                     {
                         InitModele = false;
                         if (mdl.ePropExiste(CONST_PRODUCTION.MAX_INDEXDIM))
                             IndexDimension = mdl.eGetProp(CONST_PRODUCTION.MAX_INDEXDIM).eToInteger();
-                    }
 
-                    HashSet<int> HashPieceIdDossiers = new HashSet<int>();
-
-                    if (mdl.ePropExiste(CONST_PRODUCTION.PIECE_ID_DOSSIERS))
-                    {
-                        var tab = mdl.eGetProp(CONST_PRODUCTION.PIECE_ID_DOSSIERS).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                        foreach (var id in tab)
-                            HashPieceIdDossiers.Add(id.eToInteger());
+                        if (mdl.ePropExiste(CONST_PRODUCTION.PIECE_ID_DOSSIERS))
+                        {
+                            var tab = mdl.eGetProp(CONST_PRODUCTION.PIECE_ID_DOSSIERS).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                            foreach (var id in tab)
+                                HashPieceIdDossiers.Add(id.eToInteger());
+                        }
                     }
 
                     foreach (var nomCfg in ListeComposants[mdl].Keys)
