@@ -30,6 +30,8 @@ namespace Macros
                     PM.Add3(NomProp, (int)swCustomInfoType_e.swCustomInfoDate, DateTime.Today.ToString("d"), (int)swCustomPropertyAddOption_e.swCustomPropertyReplaceValue);
                 else
                     PM.Add3(NomProp, (int)swCustomInfoType_e.swCustomInfoDate, DateTime.Today.ToString("d"), (int)swCustomPropertyAddOption_e.swCustomPropertyDeleteAndAdd);
+
+                MdlBase.EditRebuild3();
             }
             catch (Exception e)
             {
