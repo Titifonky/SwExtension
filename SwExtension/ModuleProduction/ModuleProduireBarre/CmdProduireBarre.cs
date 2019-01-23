@@ -31,9 +31,12 @@ namespace ModuleProduction.ModuleProduireBarre
         private String DossierBarre = "";
         private String DossierBarrePDF = "";
         private String NomDossierPDF = "PDF";
+        private String NomFichierZip = "Laser-tube.zip";
+        private String CheminFichierZip = "";
 
         private void Init()
         {
+            CheminFichierZip = Path.Combine(DossierBarre, RefFichier + "_" + NomFichierZip);
             DossierBarre = Directory.CreateDirectory(Path.Combine(MdlBase.pDossierLaserTube(), IndiceCampagne.ToString())).FullName;
             if(CreerPdf3D) DossierBarrePDF = Directory.CreateDirectory(Path.Combine(DossierBarre, NomDossierPDF)).FullName;
 
@@ -91,6 +94,8 @@ namespace ModuleProduction.ModuleProduireBarre
                     foreach (var f in Directory.GetFiles(DossierBarrePDF))
                         File.Delete(f);
             }
+
+            File.Delete(CheminFichierZip);
         }
 
         protected override void Command()
@@ -148,9 +153,6 @@ namespace ModuleProduction.ModuleProduireBarre
                 // Création du dossier ZIP
                 if (ListeFichiersZip.Count > 1)
                 {
-                    String NomFichierZip = "Laser-tube.zip";
-                    String CheminFichierZip = Path.Combine(DossierBarre, RefFichier + "_" + NomFichierZip);
-
                     WindowLog.SautDeLigne();
                     WindowLog.Ecrire(NomFichierZip);
                     WindowLog.Ecrire("  -> " + CheminFichierZip);
