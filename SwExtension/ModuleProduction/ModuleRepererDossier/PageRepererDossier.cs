@@ -82,7 +82,6 @@ namespace ModuleProduction.ModuleRepererDossier
                 _CheckBox_CampagneDepartDecompte = G.AjouterCheckBox("Campagne de depart pour les decomptes");
                 _CheckBox_ReinitCampagneActuelle = G.AjouterCheckBox("Reinitialiser la campagne actuelle");
                 _CheckBox_MajCampagnePrecedente = G.AjouterCheckBox("Mettre à jour la campagne précédente (en cas d'oubli)");
-                _CheckBox_MajCampagnePrecedente.StdIndent();
 
                 _CheckBox_ReinitCampagneActuelle.OnCheck += delegate { _CheckBox_MajCampagnePrecedente.IsEnabled = false; _CheckBox_MajCampagnePrecedente.IsChecked = false; };
                 _CheckBox_ReinitCampagneActuelle.OnUnCheck += delegate { if (IndiceCampagne > 1) _CheckBox_MajCampagnePrecedente.IsEnabled = true; };
