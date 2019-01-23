@@ -167,6 +167,7 @@ namespace SwExtension
 
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde("Nt", typeof(PageInsererNote));
+                _Mnu.AjouterCmde("Dj", typeof(BoutonDateDuJour));
 
                 ////==================================================================================================
                 //_Mnu = _eListeMenu.Add("Laser", "Fonctions pour le débit laser");
