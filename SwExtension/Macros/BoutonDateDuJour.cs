@@ -22,7 +22,14 @@ namespace Macros
         {
             try
             {
-                MdlBase.ePropAdd("Date", DateTime.Today.ToString("d"));
+                String NomProp = "Date";
+
+                CustomPropertyManager PM = MdlBase.eGestProp("");
+
+                if(MdlBase.ePropExiste(NomProp))
+                    PM.Add3(NomProp, (int)swCustomInfoType_e.swCustomInfoDate, DateTime.Today.ToString("d"), (int)swCustomPropertyAddOption_e.swCustomPropertyReplaceValue);
+                else
+                    PM.Add3(NomProp, (int)swCustomInfoType_e.swCustomInfoDate, DateTime.Today.ToString("d"), (int)swCustomPropertyAddOption_e.swCustomPropertyDeleteAndAdd);
             }
             catch (Exception e)
             {

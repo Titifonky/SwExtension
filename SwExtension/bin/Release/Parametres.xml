@@ -247,4 +247,5 @@
     <Parametre name="SautDeLigneMateriau" intitule="Saut de ligne matériau" tip="" type="System.Boolean">False</Parametre>
   </Module>
   <Module name="AfficherMasquerEsquisseReperage" intitule="Afficher/Masquer Esquisse reperage" />
+  <Module name="DateDuJour" intitule="Date du jour" />
 </Parametres>
