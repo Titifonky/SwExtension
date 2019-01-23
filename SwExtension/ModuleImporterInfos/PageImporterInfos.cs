@@ -69,7 +69,7 @@ namespace ModuleImporterInfos
                     System.Windows.Forms.OpenFileDialog pDialogue = new System.Windows.Forms.OpenFileDialog();
                     pDialogue.Filter = "Fichier texte (*.txt)|*.txt|Tout les fichiers (*.*)|*.*";
                     pDialogue.Multiselect = false;
-                    pDialogue.InitialDirectory = Path.GetDirectoryName(App.ModelDoc2.GetPathName());
+                    pDialogue.InitialDirectory = Path.GetDirectoryName(MdlBase.GetPathName());
                     pDialogue.RestoreDirectory = true;
                     
                     String pChemin = "";
@@ -125,7 +125,7 @@ namespace ModuleImporterInfos
                     return;
 
                 // On regarde dans le repertoire du modèle courant
-                String pChemin = ScanFichier(App.ModelDoc2.eDossier());
+                String pChemin = ScanFichier(MdlBase.eDossier());
 
                 PublierInfos(pChemin);
             }
@@ -160,7 +160,7 @@ namespace ModuleImporterInfos
         {
             CmdImporterInfos Cmd = new CmdImporterInfos();
 
-            Cmd.MdlBase = App.ModelDoc2;
+            Cmd.MdlBase = MdlBase;
             Cmd.ListeValeurs = _TextListBox_AfficherInfos.ListSelectedText.Count > 0 ? _TextListBox_AfficherInfos.ListSelectedText : _TextListBox_AfficherInfos.Liste;
             Cmd.ComposantsExterne = _CheckBox_ComposantsExterne.IsChecked;
             Cmd.ToutReconstruire = _CheckBox_ToutReconstruire.IsChecked;

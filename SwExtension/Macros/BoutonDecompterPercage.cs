@@ -25,8 +25,6 @@ namespace Macros
         {
             try
             {
-                ModelDoc2 MdlBase = App.ModelDoc2;
-
                 if (MdlBase.TypeDoc() == eTypeDoc.Piece)
                     Decompter(MdlBase.eComposantRacine());
                 else

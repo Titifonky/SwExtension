@@ -116,9 +116,9 @@ namespace ModuleMarcheConfig
             {
                 try
                 {
-                    App.ModelDoc2.ClearSelection2(true);
+                    MdlBase.ClearSelection2(true);
 
-                    Component2 Marche = App.ModelDoc2.eRecChercherComposant(c =>
+                    Component2 Marche = MdlBase.eRecChercherComposant(c =>
                     {
                         return Regex.IsMatch(c.Name2, pMarche.GetValeur<String>())
                      && !c.IsSuppressed();
@@ -130,7 +130,7 @@ namespace ModuleMarcheConfig
                         SelectFace(_Select_F_Devant, Marche, pFaceDevant);
                     }
 
-                    Component2 ContreMarche = App.ModelDoc2.eRecChercherComposant(c =>
+                    Component2 ContreMarche = MdlBase.eRecChercherComposant(c =>
                     {
                         return Regex.IsMatch(c.Name2, pEsquisse.GetValeur<String>())
                        && !c.IsSuppressed();
@@ -146,17 +146,17 @@ namespace ModuleMarcheConfig
             protected void RunOkCommand()
             {
                 CmdConfigurerContreMarche Cmd = new CmdConfigurerContreMarche();
-                Cmd.MdlBase = App.Sw.ActiveDoc;
-                Cmd.F_Dessus = App.ModelDoc2.eSelect_RecupererObjet<Face2>(1, _Select_F_Dessus.Marque);
-                Cmd.F_Devant = App.ModelDoc2.eSelect_RecupererObjet<Face2>(1, _Select_F_Devant.Marque);
+                Cmd.MdlBase = MdlBase;
+                Cmd.F_Dessus = MdlBase.eSelect_RecupererObjet<Face2>(1, _Select_F_Dessus.Marque);
+                Cmd.F_Devant = MdlBase.eSelect_RecupererObjet<Face2>(1, _Select_F_Devant.Marque);
 
-                Cmd.ContreMarche_Esquisse_Comp = App.ModelDoc2.eSelect_RecupererComposant(1, _Select_ContreMarche_Esquisse.Marque);
-                Cmd.ContreMarche_Esquisse_Fonction = App.ModelDoc2.eSelect_RecupererObjet<Feature>(1, _Select_ContreMarche_Esquisse.Marque);
+                Cmd.ContreMarche_Esquisse_Comp = MdlBase.eSelect_RecupererComposant(1, _Select_ContreMarche_Esquisse.Marque);
+                Cmd.ContreMarche_Esquisse_Fonction = MdlBase.eSelect_RecupererObjet<Feature>(1, _Select_ContreMarche_Esquisse.Marque);
 
                 //Cmd.NomEsquisse = _Text_NomEsquisse.Text;
                 Cmd.SurTouteLesConfigs = _CheckBox_ToutesLesConfig.IsChecked;
 
-                App.ModelDoc2.ClearSelection2(true);
+                MdlBase.ClearSelection2(true);
 
                 Cmd.Executer();
             }

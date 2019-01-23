@@ -13,12 +13,7 @@ namespace ModuleProduction
 
     public class BoutonAfficherMasquerEsquisseReperage : BoutonBase
     {
-        private ModelDoc2 MdlBase = null;
-
-        public BoutonAfficherMasquerEsquisseReperage()
-        {
-            MdlBase = App.ModelDoc2;
-        }
+        public BoutonAfficherMasquerEsquisseReperage() { }
 
         protected override void Command()
         {

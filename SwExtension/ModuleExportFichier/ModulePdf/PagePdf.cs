@@ -79,11 +79,11 @@ namespace ModuleExportFichier
                 AppliquerOptions();
 
                 CmdPdf Cmd = new CmdPdf();
-                Cmd.Dessin = App.DrawingDoc;
+                Cmd.Dessin = MdlBase.eDrawingDoc();
                 Cmd.typeExport = eTypeFichierExport.PDF;
                 Cmd.CheminDossier = NomDossier;
                 Cmd.ToutesLesFeuilles = _CheckBox_ToutesLesFeuilles.IsChecked;
-                Cmd.Feuille = App.DrawingDoc.eFeuilleActive();
+                Cmd.Feuille = MdlBase.eDrawingDoc().eFeuilleActive();
                 Cmd.NomFichier = NomFichierComplet;
 
                 Cmd.Executer();

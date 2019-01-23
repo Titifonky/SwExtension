@@ -13,23 +13,19 @@ namespace Macros
         ModuleNom("SupprimerConfigDepliee")]
     public class BoutonSupprimerConfigDepliee : BoutonBase
     {
-        private ModelDoc2 MdlBase = null;
-
         protected override void Command()
         {
-            MdlBase = App.ModelDoc2;
-
             try
             {
-                if (App.ModelDoc2.TypeDoc() == eTypeDoc.Piece)
+                if (MdlBase.TypeDoc() == eTypeDoc.Piece)
                 {
                     SupprimerConfigs(App.ModelDoc2.eComposantRacine());
                     return;
                 }
 
 
-                if (App.ModelDoc2.TypeDoc() == eTypeDoc.Assemblage)
-                    App.ModelDoc2.eRecParcourirComposants(SupprimerConfigs);
+                if (MdlBase.TypeDoc() == eTypeDoc.Assemblage)
+                    MdlBase.eRecParcourirComposants(SupprimerConfigs);
             }
             catch (Exception e)
             {

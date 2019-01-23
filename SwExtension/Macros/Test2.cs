@@ -21,9 +21,6 @@ namespace Macros
         {
             try
             {
-                ModelDoc2 mdl = App.ModelDoc2;
-
-                
             }
             catch (Exception e) { this.LogMethode(new Object[] { e }); }
 
@@ -33,18 +30,16 @@ namespace Macros
         //{
         //    try
         //    {
-        //        ModelDoc2 mdl = App.ModelDoc2;
-
-        //        var Face = mdl.eSelect_RecupererObjet<Face2>(1);
+        //        var Face = MdlBase.eSelect_RecupererObjet<Face2>(1);
         //        Body2 Corps = Face.GetBody();
 
-        //        mdl.eEffacerSelection();
+        //        MdlBase.eEffacerSelection();
 
         //        List<Face2> ListeFaceExt = new List<Face2>();
 
         //        foreach (var f in Corps.eListeDesFaces())
         //        {
-        //            Byte[] Tab = mdl.Extension.GetPersistReference3(f);
+        //            Byte[] Tab = MdlBase.Extension.GetPersistReference3(f);
         //            String S = System.Text.Encoding.Default.GetString(Tab);
 
         //            int Pos_moSideFace = S.IndexOf("moSideFace3IntSurfIdRep_c");
@@ -75,12 +70,11 @@ namespace Macros
         //{
         //    try
         //    {
-        //        ModelDoc2 mdl = App.ModelDoc2;
-        //        //var DossierExport = mdl.eDossier();
-        //        //var NomFichier = mdl.eNomSansExt();
+        //        //var DossierExport = MdlBase.eDossier();
+        //        //var NomFichier = MdlBase.eNomSansExt();
 
-        //        //var F = mdl.eSelect_RecupererObjet<Feature>(1);
-        //        //mdl.eEffacerSelection();
+        //        //var F = MdlBase.eSelect_RecupererObjet<Feature>(1);
+        //        //MdlBase.eEffacerSelection();
 
         //        //var def = (StructuralMemberFeatureData)F.GetDefinition();
         //        //WindowLog.Ecrire(def.WeldmentProfilePath);
@@ -90,22 +84,22 @@ namespace Macros
         //        //    WindowLog.Ecrire(sf.GetTypeName2());
         //        //}
 
-        //        //var Face = mdl.eSelect_RecupererObjet<Face2>(1);
+        //        //var Face = MdlBase.eSelect_RecupererObjet<Face2>(1);
 
-        //        //Byte[] Tab = mdl.Extension.GetPersistReference3(Face);
+        //        //Byte[] Tab = MdlBase.Extension.GetPersistReference3(Face);
         //        //String S = System.Text.Encoding.Default.GetString(Tab);
         //        //Log.Message(S);
 
-        //        var Face = mdl.eSelect_RecupererObjet<Face2>(1);
+        //        var Face = MdlBase.eSelect_RecupererObjet<Face2>(1);
         //        Body2 Corps = Face.GetBody();
 
-        //        mdl.eEffacerSelection();
+        //        MdlBase.eEffacerSelection();
 
         //        List<Face2> ListeFaceExt = new List<Face2>();
 
         //        foreach (var f in Corps.eListeDesFaces())
         //        {
-        //            Byte[] Tab = mdl.Extension.GetPersistReference3(f);
+        //            Byte[] Tab = MdlBase.Extension.GetPersistReference3(f);
         //            String S = System.Text.Encoding.Default.GetString(Tab);
 
         //            int Pos_moSideFace = S.IndexOf("moSideFace3IntSurfIdRep_c");

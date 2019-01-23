@@ -52,7 +52,7 @@ namespace ModuleLaser
             {
                 CmdNumeroterDossier Cmd = new CmdNumeroterDossier();
 
-                Cmd.MdlBase = App.Sw.ActiveDoc;
+                Cmd.MdlBase = MdlBase;
                 Cmd.CombinerCorpsIdentiques = _CheckBox_CombinerCorps.IsChecked;
                 Cmd.MajDossiers = _CheckBox_MajDossiers.IsChecked;
 

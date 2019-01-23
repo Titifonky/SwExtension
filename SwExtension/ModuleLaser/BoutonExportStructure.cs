@@ -31,7 +31,6 @@ namespace ModuleLaser
         {
             try
             {
-                ModelDoc2 MdlBase = App.ModelDoc2;
                 CreerDossierExport(MdlBase);
 
                 var dic = MdlBase.ListerComposants(false);
@@ -123,7 +122,7 @@ namespace ModuleLaser
                                                   out pStatut,
                                                   out pWarning);
             if (Resultat)
-                return App.ModelDoc2;
+                return MdlBase;
 
             return null;
         }

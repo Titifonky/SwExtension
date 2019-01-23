@@ -20,8 +20,6 @@ namespace ModuleProduction
         {
             try
             {
-                ModelDoc2 MdlBase = App.ModelDoc2;
-
                 var ListeCorpsExistant = MdlBase.pChargerNomenclature();
 
                 if (ListeCorpsExistant.Count > 0)

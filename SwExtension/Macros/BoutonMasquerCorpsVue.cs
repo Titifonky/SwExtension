@@ -18,7 +18,7 @@ namespace Macros
         {
             try
             {
-                View Vue = App.ModelDoc2.eSelect_RecupererObjet<View>(1, -1);
+                View Vue = MdlBase.eSelect_RecupererObjet<View>(1, -1);
 
                 Body2[] TabCorps = (Body2[])Vue.Bodies;
 

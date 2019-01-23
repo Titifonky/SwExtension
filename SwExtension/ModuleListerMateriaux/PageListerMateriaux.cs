@@ -19,14 +19,10 @@ namespace ModuleListerMateriaux
     {
         private const String NomVolume = "Volume";
 
-        private ModelDoc2 MdlBase;
-
         public PageListerMateriaux()
         {
             try
             {
-                InitModeleBase();
-
                 OnCalque += Calque;
                 OnRunAfterActivation += AfficherMateriaux;
                 OnRunOkCommand += RunOkCommand;
@@ -88,11 +84,6 @@ namespace ModuleListerMateriaux
         private HashSet<String> ListeHiddenComposants = new HashSet<string>();
 
         private Boolean Isoler = false;
-
-        private void InitModeleBase()
-        {
-            MdlBase = App.ModelDoc2;
-        }
 
         private void ExitIsoler()
         {

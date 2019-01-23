@@ -4,7 +4,6 @@ using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using SwExtension;
 using System;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace ModuleMarcheConfig
@@ -59,13 +58,13 @@ namespace ModuleMarcheConfig
             {
                 try
                 {
-                    App.ModelDoc2.ClearSelection2(true);
+                    MdlBase.ClearSelection2(true);
 
                     String cPlanEsquisse = _pPlanDessus.GetValeur<String>();
 
-                    Feature P = App.ModelDoc2.eChercherFonction(f => { return Regex.IsMatch(f.Name, cPlanEsquisse); }, false);
+                    Feature P = MdlBase.eChercherFonction(f => { return Regex.IsMatch(f.Name, cPlanEsquisse); }, false);
                     if (P.IsRef())
-                        App.ModelDoc2.eSelectMulti(P, _Select_F_Dessus.Marque, true);
+                        MdlBase.eSelectMulti(P, _Select_F_Dessus.Marque, true);
 
                 }
                 catch (Exception e)
@@ -75,11 +74,11 @@ namespace ModuleMarcheConfig
             protected void RunOkCommand()
             {
                 CmdInsererEsquisseConfig Cmd = new CmdInsererEsquisseConfig();
-                Cmd.MdlBase = App.ModelDoc2;
-                Cmd.Plan = App.ModelDoc2.eSelect_RecupererObjet<Feature>(1, _Select_F_Dessus.Marque);
+                Cmd.MdlBase = MdlBase;
+                Cmd.Plan = MdlBase.eSelect_RecupererObjet<Feature>(1, _Select_F_Dessus.Marque);
                 Cmd.NomEsquisse = _Text_NomEsquisse.Text.Trim();
 
-                App.ModelDoc2.ClearSelection2(true);
+                MdlBase.ClearSelection2(true);
 
                 Cmd.Executer();
             }

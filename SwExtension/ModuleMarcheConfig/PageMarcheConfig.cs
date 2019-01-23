@@ -31,7 +31,7 @@ namespace ModuleMarcheConfig
             String cFace = param.GetValeur<String>();
             Face2 Face = Cp.eChercherFace(cFace);
             if (Face.IsRef())
-                App.ModelDoc2.eSelectMulti(Face, SelBox.Marque, true);
+                MdlBase.eSelectMulti(Face, SelBox.Marque, true);
 
             return true;
         }
@@ -59,7 +59,7 @@ namespace ModuleMarcheConfig
             String cEsquisseConfig = param.GetValeur<String>();
             Feature Esquisse = Cp.eChercherFonction(f => { return Regex.IsMatch(f.Name, cEsquisseConfig); }, true);
             if (Esquisse.IsRef())
-                App.ModelDoc2.eSelectMulti(Esquisse, SelBox.Marque, true);
+                MdlBase.eSelectMulti(Esquisse, SelBox.Marque, true);
 
             return true;
         }
@@ -88,21 +88,21 @@ namespace ModuleMarcheConfig
             Feature Plan = Cp.eChercherFonction(f => { return Regex.IsMatch(f.Name, cPlanContrainte); }, false);
 
             if (Plan.IsRef())
-                App.ModelDoc2.eSelectMulti(Plan, SelBox.Marque, true);
+                MdlBase.eSelectMulti(Plan, SelBox.Marque, true);
 
             return false;
         }
 
         protected void SvgNomComposant(Object SelBox, Parametre Param)
         {
-            Component2 Cp = App.ModelDoc2.eSelect_RecupererComposant(1, ((CtrlSelectionBox)SelBox).Marque);
+            Component2 Cp = MdlBase.eSelect_RecupererComposant(1, ((CtrlSelectionBox)SelBox).Marque);
             if (Cp.IsRef() && _CheckBox_EnregistrerSelection.IsChecked)
                 Param.SetValeur(Cp.eNomSansExt());
         }
 
         protected void SvgNomFonction(Object SelBox, Parametre Param)
         {
-            Feature F = App.ModelDoc2.eSelect_RecupererObjet<Feature>(1, ((CtrlSelectionBox)SelBox).Marque);
+            Feature F = MdlBase.eSelect_RecupererObjet<Feature>(1, ((CtrlSelectionBox)SelBox).Marque);
             if (F.IsRef() && _CheckBox_EnregistrerSelection.IsChecked)
                 Param.SetValeur(F.Name);
         }

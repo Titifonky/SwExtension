@@ -29,13 +29,11 @@ namespace Macros
         {
             try
             {
-                ModelDoc2 mdl = App.ModelDoc2;
-
                 String nom = "";
                 var hashVuesStandard = new HashSet<String>(PropVuesStandard.GetValeur<String>().Split(','));
                 var listeVues = new List<String>();
 
-                foreach (String n in mdl.GetModelViewNames())
+                foreach (String n in MdlBase.GetModelViewNames())
                 {
                     if (!hashVuesStandard.Contains(n))
                         listeVues.Add(n);
@@ -50,8 +48,8 @@ namespace Macros
                 {
                     if (!String.IsNullOrWhiteSpace(nom) || !nom.StartsWith("*"))
                     {
-                        mdl.DeleteNamedView(nom);
-                        mdl.NameView(nom);
+                        MdlBase.DeleteNamedView(nom);
+                        MdlBase.NameView(nom);
                     }
                 }
             }

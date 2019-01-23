@@ -69,12 +69,12 @@ namespace ModuleContraindreComposant
         protected void RunOkCommand()
         {
             CmdContraindreComposant Cmd = new CmdContraindreComposant();
-            Cmd.MdlBase = App.ModelDoc2;
-            Cmd.CompBase = App.ModelDoc2.eSelect_RecupererComposant(1, _Select_CompBase.Marque);
-            Cmd.ListeComposants = App.ModelDoc2.eSelect_RecupererListeComposants(_Select_Composants.Marque);
+            Cmd.MdlBase = MdlBase;
+            Cmd.CompBase = MdlBase.eSelect_RecupererComposant(1, _Select_CompBase.Marque);
+            Cmd.ListeComposants = MdlBase.eSelect_RecupererListeComposants(_Select_Composants.Marque);
             Cmd.FixerComposant = _CheckBox_FixerComposant.IsChecked;
 
-            App.ModelDoc2.ClearSelection2(true);
+            MdlBase.ClearSelection2(true);
 
             Cmd.Executer();
         }

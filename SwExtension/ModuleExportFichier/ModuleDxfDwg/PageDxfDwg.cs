@@ -44,10 +44,10 @@ namespace ModuleExportFichier
                     ConvertirSplineToPolyligne = _Config.AjouterParam("ConvertirSplineToPolyligne", false, "Convertir les splines en polylignes");
 
                     CheminDernierDossier = _Config.AjouterParam("CheminDernierDossier", "", "Dernier dossier utilisé");
-                    if (CheminDernierDossier.GetValeur<String>().Contains(App.ModelDoc2.eDossier()))
-                        App.DrawingDoc.eSetDernierDossier(OutilsCommun.CheminRelatif(App.ModelDoc2.eDossier(), CheminDernierDossier.GetValeur<String>()));
+                    if (CheminDernierDossier.GetValeur<String>().Contains(MdlBase.eDossier()))
+                        MdlBase.eDrawingDoc().eSetDernierDossier(OutilsCommun.CheminRelatif(MdlBase.eDossier(), CheminDernierDossier.GetValeur<String>()));
                     else
-                        App.DrawingDoc.eSetDernierDossier("");
+                        MdlBase.eDrawingDoc().eSetDernierDossier("");
 
                     OnCalque += Calque;
                     OnRunOkCommand += RunOkCommand;
@@ -131,10 +131,10 @@ namespace ModuleExportFichier
                 AppliquerOptions();
 
                 CmdDxfDwg Cmd = new CmdDxfDwg();
-                Cmd.Dessin = App.DrawingDoc;
+                Cmd.Dessin = MdlBase.eDrawingDoc();
                 Cmd.typeExport = _EnumComboBox_FormatExport.Val;
                 Cmd.CheminDossier = NomDossier;
-                Cmd.Feuille = App.DrawingDoc.eFeuilleActive();
+                Cmd.Feuille = MdlBase.eDrawingDoc().eFeuilleActive();
                 Cmd.ToutesLesFeuilles = _CheckBox_ToutesLesFeuilles.IsChecked;
                 Cmd.NomFichier = NomFichierComplet;
 

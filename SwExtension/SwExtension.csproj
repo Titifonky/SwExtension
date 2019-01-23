@@ -84,6 +84,7 @@
     <Compile Include="Info.cs" />
     <Compile Include="Macros\BoutonActiverRelationAuto.cs" />
     <Compile Include="Macros\BoutonActiverAimantation.cs" />
+    <Compile Include="Macros\BoutonDateDuJour.cs" />
     <Compile Include="Macros\BoutonVueInverserStyle.cs" />
     <Compile Include="Macros\BoutonRetournerDvp.cs" />
     <Compile Include="Macros\BoutonOuvrirDossier.cs" />
@@ -127,7 +128,6 @@
     <Compile Include="ModuleLaser\BoutonExportStructure.cs" />
     <Compile Include="Macros\Test2.cs" />
     <Compile Include="Macros\Test.cs" />
-    <Compile Include="ModuleEmpreinte\PageEmpreinte - Copier.cs" />
     <Compile Include="ModuleLaser\ModuleNumeroterDossier\CmdNumeroterDossier.cs" />
     <Compile Include="ModuleLaser\ModuleNumeroterDossier\PageNumeroterDossier.cs" />
     <Compile Include="ModuleLaser\ModuleListeDebit\CmdListeDebit.cs" />

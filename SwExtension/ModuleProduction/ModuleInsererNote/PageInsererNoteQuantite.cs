@@ -15,7 +15,6 @@ namespace ModuleProduction.ModuleInsererNote
         ]
     public class PageInsererNote : BoutonPMPManager
     {
-        private ModelDoc2 MdlBase = null;
         private DrawingDoc Dessin = null;
         private Mouse Souris = null;
         private MathUtility Mt = null;
@@ -52,7 +51,6 @@ namespace ModuleProduction.ModuleInsererNote
                 ProfilCourt = _Config.AjouterParam("ProfilCourt", true, "Nom de profil court");
                 SautDeLigneMateriau = _Config.AjouterParam("SautDeLigneMateriau", false, "Saut de ligne matériau");
 
-                MdlBase = App.ModelDoc2;
                 Dessin = MdlBase.eDrawingDoc();
                 Mt = (MathUtility)App.Sw.GetMathUtility();
 

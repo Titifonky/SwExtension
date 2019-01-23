@@ -6,11 +6,8 @@ using SwExtension;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ModuleExportFichier
 {
@@ -125,16 +122,16 @@ namespace ModuleExportFichier
         {
             _CheckBox_ToutesLesFeuilles = G.AjouterCheckBox(ToutesLesFeuilles);
 
-            String CheminDernierDossier = App.DrawingDoc.eGetDernierDossier();
+            String CheminDernierDossier = MdlBase.eDrawingDoc().eGetDernierDossier();
 
-            _DernierDossier = new Dossier(_Calque, GroupeDernierDossier, CheminDernierDossier, App.ModelDoc2.eNomSansExt(), FormatExport.GetValeur<eTypeFichierExport>(), false, false, AvecIndice);
-            _SelectionnerDossier = new Dossier(_Calque, GroupeSelectionnerDossier, OutilsCommun.CheminRelatif(App.ModelDoc2.eDossier(), App.ModelDoc2.eDossier()), App.ModelDoc2.eNomSansExt(), FormatExport.GetValeur<eTypeFichierExport>(), true, true, AvecIndice);
+            _DernierDossier = new Dossier(MdlBase, _Calque, GroupeDernierDossier, CheminDernierDossier, MdlBase.eNomSansExt(), FormatExport.GetValeur<eTypeFichierExport>(), false, false, AvecIndice);
+            _SelectionnerDossier = new Dossier(MdlBase, _Calque, GroupeSelectionnerDossier, OutilsCommun.CheminRelatif(MdlBase.eDossier(), MdlBase.eDossier()), MdlBase.eNomSansExt(), FormatExport.GetValeur<eTypeFichierExport>(), true, true, AvecIndice);
 
             _CheckBox_ToutesLesFeuilles.OnIsCheck += delegate (Object sender, Boolean value)
             {
-                    String n = App.DrawingDoc.eFeuilleActive().GetName();
+                    String n = MdlBase.eDrawingDoc().eFeuilleActive().GetName();
                     if (value)
-                        n = App.ModelDoc2.eNomSansExt();
+                        n = MdlBase.eNomSansExt();
 
                     _DernierDossier.NomFichierOriginal = n;
                     _SelectionnerDossier.NomFichierOriginal = n;
@@ -159,7 +156,7 @@ namespace ModuleExportFichier
             OnRunAfterActivation += _DernierDossier.Maj;
             OnRunAfterActivation += _SelectionnerDossier.Maj;
 
-            if (String.IsNullOrWhiteSpace(CheminDernierDossier) || !Directory.Exists(Path.Combine(App.ModelDoc2.eDossier(), CheminDernierDossier)))
+            if (String.IsNullOrWhiteSpace(CheminDernierDossier) || !Directory.Exists(Path.Combine(MdlBase.eDossier(), CheminDernierDossier)))
             {
                 _DernierDossier.Groupe.IsChecked = false;
                 _DernierDossier.Groupe.Visible = false;
@@ -196,7 +193,7 @@ namespace ModuleExportFichier
                 NomFichierComplet = _SelectionnerDossier.NomFichierComplet;
                 Indice = _SelectionnerDossier.Indice;
 
-                App.DrawingDoc.eSetDernierDossier(_SelectionnerDossier.NomDossierRelatifSvg);
+                MdlBase.eDrawingDoc().eSetDernierDossier(_SelectionnerDossier.NomDossierRelatifSvg);
             }
             else if (_DernierDossier.Groupe.IsChecked)
             {
@@ -262,8 +259,11 @@ namespace ModuleExportFichier
 
             protected const String DossierCourant = ".";
 
-            public Dossier(Calque Calque, Parametre paramGroupe, String dossier, String fichier, eTypeFichierExport typeFichier, Boolean selectionnable = false, Boolean ajouterIndiceDossier = false, Boolean ajouterIndiceFichier = true)
+            private ModelDoc2 _Mdl;
+
+            public Dossier(ModelDoc2 mdl, Calque Calque, Parametre paramGroupe, String dossier, String fichier, eTypeFichierExport typeFichier, Boolean selectionnable = false, Boolean ajouterIndiceDossier = false, Boolean ajouterIndiceFichier = true)
             {
+                _Mdl = mdl;
                 _Calque = Calque;
                 _ParamGroupe = paramGroupe;
                 _NomDossierRelatif = dossier;
@@ -293,11 +293,11 @@ namespace ModuleExportFichier
                     _Button_Parcourir.OnButtonPress += delegate (Object Bouton)
                     {
                         System.Windows.Forms.FolderBrowserDialog pDialogue = new System.Windows.Forms.FolderBrowserDialog();
-                        pDialogue.SelectedPath = App.ModelDoc2.eDossier();
+                        pDialogue.SelectedPath = _Mdl.eDossier();
 
                         if (pDialogue.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                         {
-                            _NomDossierRelatif = OutilsCommun.CheminRelatif(App.ModelDoc2.eDossier(), pDialogue.SelectedPath);
+                            _NomDossierRelatif = OutilsCommun.CheminRelatif(_Mdl.eDossier(), pDialogue.SelectedPath);
                             AfficherCheminDossier();
                         }
 
@@ -363,7 +363,7 @@ namespace ModuleExportFichier
 
             private String CheminDossierRelatif()
             {
-                String DossierParent = App.ModelDoc2.eDossier();
+                String DossierParent = _Mdl.eDossier();
 
                 String n = Path.GetFullPath(Path.Combine(DossierParent, _NomDossierRelatif));
 
@@ -539,9 +539,9 @@ namespace ModuleExportFichier
 
             private String ChercherPropIndice()
             {
-                if(App.ModelDoc2.ePropExiste("Indice"))
+                if(_Mdl.ePropExiste("Indice"))
                 {
-                    var val = App.ModelDoc2.eGetProp("Indice").Trim();
+                    var val = _Mdl.eGetProp("Indice").Trim();
                     if (!String.IsNullOrWhiteSpace(val))
                         return "Ind " + val;
                 }

@@ -15,13 +15,13 @@ namespace Macros
         {
             try
             {
-                var dessin = App.ModelDoc2.eDrawingDoc();
+                var dessin = MdlBase.eDrawingDoc();
                 var feuille = dessin.eFeuilleActive(); ;
 
                 dessin.ActivateSheet(feuille.GetName());
                 WindowLog.Ecrire("  - " + feuille.GetName());
                 feuille.eAjusterAutourDesVues();
-                App.ModelDoc2.eZoomEtendu();
+                MdlBase.eZoomEtendu();
 
                 //dessin.eParcourirLesFeuilles(
                 //    f =>
@@ -29,7 +29,7 @@ namespace Macros
                 //        dessin.ActivateSheet(f.GetName());
                 //        WindowLog.Ecrire("  - " + f.GetName());
                 //        f.eAjusterAutourDesVues();
-                //        App.ModelDoc2.eZoomEtendu();
+                //        MdlBase.eZoomEtendu();
                 //        return false;
                 //    }
                 //    );

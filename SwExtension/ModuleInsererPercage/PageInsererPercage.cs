@@ -114,14 +114,14 @@ namespace ModuleInsererPercage
 
         public void SvgNomComposant(Object SelBox, Parametre Param)
         {
-            Component2 Cp = App.ModelDoc2.eSelect_RecupererComposant(1, ((CtrlSelectionBox)SelBox).Marque);
+            Component2 Cp = MdlBase.eSelect_RecupererComposant(1, ((CtrlSelectionBox)SelBox).Marque);
             if (Cp.IsRef() && _CheckBox_EnregistrerSelection.IsChecked)
                 Param.SetValeur(Cp.eNomSansExt());
         }
 
         public void SvgNomFonction(Object SelBox, Parametre Param)
         {
-            Feature F = App.ModelDoc2.eSelect_RecupererObjet<Feature>(1, ((CtrlSelectionBox)SelBox).Marque);
+            Feature F = MdlBase.eSelect_RecupererObjet<Feature>(1, ((CtrlSelectionBox)SelBox).Marque);
             if (F.IsRef() && _CheckBox_EnregistrerSelection.IsChecked)
                 Param.SetValeur(F.Name);
         }
@@ -130,19 +130,19 @@ namespace ModuleInsererPercage
         {
             try
             {
-                App.ModelDoc2.ClearSelection2(true);
+                MdlBase.ClearSelection2(true);
 
-                SelectionMgr SelMgr = App.ModelDoc2.SelectionManager;
-                Component2 Piece = App.ModelDoc2.eRecChercherComposant(c => { return Regex.IsMatch(c.Name2, _pPieceBase.GetValeur<String>())
+                SelectionMgr SelMgr = MdlBase.SelectionManager;
+                Component2 Piece = MdlBase.eRecChercherComposant(c => { return Regex.IsMatch(c.Name2, _pPieceBase.GetValeur<String>())
                                                                             && !c.IsSuppressed(); });
-                Component2 Percage = App.ModelDoc2.eRecChercherComposant(c => { return Regex.IsMatch(c.Name2, _pPercage.GetValeur<String>())
+                Component2 Percage = MdlBase.eRecChercherComposant(c => { return Regex.IsMatch(c.Name2, _pPercage.GetValeur<String>())
                                                                             && !c.IsSuppressed(); });
 
                 if (Piece.IsRef())
-                    App.ModelDoc2.eSelectMulti(Piece, _Select_Percage.Marque, false);
+                    MdlBase.eSelectMulti(Piece, _Select_Percage.Marque, false);
 
                 if (Percage.IsRef())
-                    App.ModelDoc2.eSelectMulti(Percage, _Select_Percage.Marque, false);
+                    MdlBase.eSelectMulti(Percage, _Select_Percage.Marque, false);
 
                 _Select_Base.Focus = true;
 
@@ -154,16 +154,16 @@ namespace ModuleInsererPercage
         protected void RunOkCommand()
         {
             CmdInsererPercage Cmd = new CmdInsererPercage();
-            Cmd.MdlBase = App.ModelDoc2;
-            Cmd.Base = App.ModelDoc2.eSelect_RecupererComposant(1, _Select_Base.Marque);
-            Cmd.Percage = App.ModelDoc2.eSelect_RecupererComposant(1, _Select_Percage.Marque);
-            Cmd.Face = App.ModelDoc2.eSelect_RecupererObjet<Face2>(1, _Select_Entite_Contrainte.Marque);
-            Cmd.Plan = App.ModelDoc2.eSelect_RecupererObjet<Feature>(1, _Select_Entite_Contrainte.Marque);
+            Cmd.MdlBase = MdlBase;
+            Cmd.Base = MdlBase.eSelect_RecupererComposant(1, _Select_Base.Marque);
+            Cmd.Percage = MdlBase.eSelect_RecupererComposant(1, _Select_Percage.Marque);
+            Cmd.Face = MdlBase.eSelect_RecupererObjet<Face2>(1, _Select_Entite_Contrainte.Marque);
+            Cmd.Plan = MdlBase.eSelect_RecupererObjet<Feature>(1, _Select_Entite_Contrainte.Marque);
             Cmd.ListeDiametre = new List<double>(_Text_Diametre.Text.Split(',').Select(x => { return x.Trim().eToDouble(); }));
             Cmd.PercageOuvert = _Check_PercageOuvert.IsChecked;
             Cmd.SurTouteLesConfigs = _CheckBox_ToutesLesConfig.IsChecked;
 
-            App.ModelDoc2.ClearSelection2(true);
+            MdlBase.ClearSelection2(true);
 
             Cmd.Executer();
         }

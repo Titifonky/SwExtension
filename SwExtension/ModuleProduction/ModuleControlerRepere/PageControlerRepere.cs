@@ -17,14 +17,10 @@ namespace ModuleProduction.ModuleControlerRepere
     {
         private const String Erreur = "Aucun";
 
-        private ModelDoc2 MdlBase;
-
         public PageControlerRepere()
         {
             try
             {
-                InitModeleBase();
-
                 OnCalque += Calque;
                 OnRunAfterActivation += AfficherReperes;
                 OnRunOkCommand += RunOkCommand;
@@ -86,11 +82,6 @@ namespace ModuleProduction.ModuleControlerRepere
         private HashSet<String> ListeHiddenComposants = new HashSet<string>();
 
         private Boolean Isoler = false;
-
-        private void InitModeleBase()
-        {
-            MdlBase = App.ModelDoc2;
-        }
 
         private void ExitIsoler()
         {

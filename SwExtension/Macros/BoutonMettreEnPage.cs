@@ -16,7 +16,7 @@ namespace Macros
         {
             try
             {
-                DrawingDoc dessin = App.ModelDoc2.eDrawingDoc();
+                DrawingDoc dessin = MdlBase.eDrawingDoc();
 
                 String FeuilleCourante = dessin.eFeuilleActive().GetName();
 

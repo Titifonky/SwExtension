@@ -22,9 +22,9 @@ namespace Macros
         {
             try
             {
-                App.ModelDoc2.eRecParcourirComposants(InclureExclure, null);
+                MdlBase.eRecParcourirComposants(InclureExclure, null);
 
-                App.ModelDoc2.FeatureManager.UpdateFeatureTree();
+                MdlBase.FeatureManager.UpdateFeatureTree();
             }
             catch (Exception e)
             {

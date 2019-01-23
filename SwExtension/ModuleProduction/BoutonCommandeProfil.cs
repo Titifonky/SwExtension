@@ -15,7 +15,6 @@ namespace ModuleProduction
 
     public class BoutonCommandeProfil : BoutonBase
     {
-        private ModelDoc2 MdlBase = null;
         private Parametre ParamLongueurMax;
         private Double LgMax = 6000;
         private SortedDictionary<String, SortedDictionary<String, List<Double>>> DicBarres = new SortedDictionary<string, SortedDictionary<string, List<Double>>>();
@@ -30,7 +29,6 @@ namespace ModuleProduction
         {
             try
             {
-                MdlBase = App.ModelDoc2;
                 LgMax = ParamLongueurMax.GetValeur<Double>();
 
                 // On liste les composants

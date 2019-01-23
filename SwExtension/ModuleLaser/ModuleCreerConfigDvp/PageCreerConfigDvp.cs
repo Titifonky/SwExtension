@@ -1,12 +1,7 @@
 ﻿using LogDebugging;
 using Outils;
-using SolidWorks.Interop.sldworks;
-using SolidWorks.Interop.swconst;
 using SwExtension;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace ModuleLaser.ModuleCreerConfigDvp
 {
@@ -83,7 +78,7 @@ namespace ModuleLaser.ModuleCreerConfigDvp
         protected void RunOkCommand()
         {
             CmdCreerConfigDvp Cmd = new CmdCreerConfigDvp();
-            Cmd.MdlBase = App.ModelDoc2;
+            Cmd.MdlBase = MdlBase;
 
             Cmd.SupprimerLesAnciennesConfigs = _CheckBox_SupprimerLesAnciennesConfigs.IsChecked;
             Cmd.ReconstuireLesConfigs = _CheckBox_ReconstuireLesConfigs.IsChecked;

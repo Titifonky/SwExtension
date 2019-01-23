@@ -43,7 +43,7 @@ namespace ModuleMarchePositionner
             {
                 try
                 {
-                    App.ModelDoc2.eEffacerSelection();
+                    MdlBase.eEffacerSelection();
 
                     GroupeMarche = _Calque.AjouterGroupe("Marches");
 
@@ -90,12 +90,12 @@ namespace ModuleMarchePositionner
                 _TextListBox_Marche.Vider();
                 ListeNomComp.Clear();
                 ListeDim.Clear();
-                App.ModelDoc2.eSelectMulti(ListeMarches, _Select_Marche.Marque);
+                MdlBase.eSelectMulti(ListeMarches, _Select_Marche.Marque);
             }
 
             private void MajAngle(Object sender)
             {
-                ListeMarches = App.ModelDoc2.eSelect_RecupererListeComposants(_Select_Marche.Marque);
+                ListeMarches = MdlBase.eSelect_RecupererListeComposants(_Select_Marche.Marque);
 
                 if (ListeMarches.Count == 0) return;
 
@@ -134,7 +134,7 @@ namespace ModuleMarchePositionner
             {
                 ModifierMarche(LastSel, _TextBox_Angle.Text);
                 LastSel = nb;
-                ListeMarches[nb].eSelectById(App.ModelDoc2, Marque);
+                ListeMarches[nb].eSelectById(MdlBase, Marque);
                 _TextBox_Angle.Text = GetValDegree(ListeDim[nb]); ;
                 _TextBox_Angle.Focus = true;
             }
@@ -149,7 +149,7 @@ namespace ModuleMarchePositionner
 
                 SetValDegree(dimension, text);
 
-                App.ModelDoc2.EditRebuild3();
+                MdlBase.EditRebuild3();
             }
 
             private String GetValDegree(Dimension d)

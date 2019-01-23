@@ -19,9 +19,7 @@ namespace Macros
 
         protected override void Command()
         {
-            ModelDoc2 mdl = App.ModelDoc2;
-
-            foreach (var cfg in mdl.eListeNomConfiguration())
+            foreach (var cfg in MdlBase.eListeNomConfiguration())
             {
                 WindowLog.EcrireF("{0}", cfg);
                 WindowLog.EcrireF("  Est Pliee = {0}", cfg.eEstConfigPliee());
@@ -29,7 +27,7 @@ namespace Macros
                 WindowLog.SautDeLigne();
             }
 
-            //Appliquer(mdl);
+            //Appliquer(MdlBase);
         }
 
         private void Appliquer(ModelDoc2 mdl)
@@ -59,9 +57,7 @@ namespace Macros
 
         //protected override void Command()
         //{
-        //    ModelDoc2 mdl = App.ModelDoc2;
-
-        //    var F = EsquisseRepere(mdl);
+        //    var F = EsquisseRepere(MdlBase);
 
         //    DisplayDimension dd = F.GetFirstDisplayDimension();
         //    while (dd.IsRef())
@@ -129,24 +125,23 @@ namespace Macros
         //{
         //    try
         //    {
-        //        ModelDoc2 mdl = App.ModelDoc2;
-        //        //var DossierExport = mdl.eDossier();
-        //        //var NomFichier = mdl.eNomSansExt();
+        //        //var DossierExport = MdlBase.eDossier();
+        //        //var NomFichier = MdlBase.eNomSansExt();
 
         //        Body2 Barre = null;
 
-        //        var Face = mdl.eSelect_RecupererObjet<Face2>(1);
+        //        var Face = MdlBase.eSelect_RecupererObjet<Face2>(1);
 
         //        if (Face.IsNull())
-        //            Barre = mdl.eSelect_RecupererObjet<Body2>(1);
+        //            Barre = MdlBase.eSelect_RecupererObjet<Body2>(1);
         //        else
         //            Barre = Face.GetBody();
 
-        //        mdl.eEffacerSelection();
+        //        MdlBase.eEffacerSelection();
 
         //        WindowLog.Ecrire("Nom du corps : " + Barre.Name);
 
-        //        var b = new AnalyseBarre(Barre, mdl);
+        //        var b = new AnalyseBarre(Barre, MdlBase);
 
         //        foreach (var u in b.ListeFaceUsinageExtremite)
         //        {
@@ -173,21 +168,20 @@ namespace Macros
     //    {
     //        try
     //        {
-    //            ModelDoc2 mdl = App.ModelDoc2;
-    //            var DossierExport = mdl.eDossier();
-    //            var NomFichier = mdl.eNomSansExt();
+    //            var DossierExport = MdlBase.eDossier();
+    //            var NomFichier = MdlBase.eNomSansExt();
 
-    //            var ListeNomConfigs = mdl.eListeNomConfiguration(eTypeConfig.Pliee);
+    //            var ListeNomConfigs = MdlBase.eListeNomConfiguration(eTypeConfig.Pliee);
     //            ListeNomConfigs.Sort(new WindowsStringComparer());
 
     //            for (int noCfg = 0; noCfg < ListeNomConfigs.Count; noCfg++)
     //            {
-    //                mdl.ClearSelection2(true);
+    //                MdlBase.ClearSelection2(true);
 
     //                var NomConfigPliee = ListeNomConfigs[noCfg];
-    //                mdl.ShowConfiguration2(NomConfigPliee);
-    //                mdl.EditRebuild3();
-    //                PartDoc Piece = mdl.ePartDoc();
+    //                MdlBase.ShowConfiguration2(NomConfigPliee);
+    //                MdlBase.EditRebuild3();
+    //                PartDoc Piece = MdlBase.ePartDoc();
 
     //                ListPID<Feature> ListeDossier = Piece.eListePIDdesFonctionsDePiecesSoudees(null);
 
@@ -251,8 +245,6 @@ namespace Macros
     //    {
     //        try
     //        {
-    //            ModelDoc2 MdlBase = App.ModelDoc2;
-
     //            Feature Fonction = MdlBase.eSelect_RecupererObjet<Feature>(1, -1);
 
     //            MdlBase.eEffacerSelection();
@@ -323,26 +315,26 @@ namespace Macros
     //            foreach (var cheminFichier in Directory.GetFiles(cheminDossier))
     //            {
 
-    //                ModelDoc2 MdlBase = App.Sw.OpenDoc6(cheminFichier, (int)swDocumentTypes_e.swDocDRAWING, 0, "", ref lErrors, ref lWarnings);
+    //                ModelDoc2 Mdl = App.Sw.OpenDoc6(cheminFichier, (int)swDocumentTypes_e.swDocDRAWING, 0, "", ref lErrors, ref lWarnings);
 
-    //                MdlBase.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swWeldmentEnableAutomaticCutList, 0, true);
-    //                MdlBase.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swWeldmentEnableAutomaticUpdate, 0, false);
-    //                MdlBase.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swDisableDerivedConfigurations, 0, false);
-    //                MdlBase.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swWeldmentRenameCutlistDescriptionPropertyValue, 0, true);
-    //                MdlBase.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swWeldmentCollectIdenticalBodies, 0, true);
-    //                MdlBase.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swSheetMetalBodiesDescriptionUseDefault, 0, false);
-    //                MdlBase.Extension.SetUserPreferenceString((int)swUserPreferenceStringValue_e.swSheetMetalDescription, 0, "Tôle");
-    //                MdlBase.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swFlatPatternOpt_SimplifyBends, 0, false);
-    //                MdlBase.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swFlatPatternOpt_CornerTreatment, 0, false);
+    //                Mdl.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swWeldmentEnableAutomaticCutList, 0, true);
+    //                Mdl.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swWeldmentEnableAutomaticUpdate, 0, false);
+    //                Mdl.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swDisableDerivedConfigurations, 0, false);
+    //                Mdl.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swWeldmentRenameCutlistDescriptionPropertyValue, 0, true);
+    //                Mdl.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swWeldmentCollectIdenticalBodies, 0, true);
+    //                Mdl.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swSheetMetalBodiesDescriptionUseDefault, 0, false);
+    //                Mdl.Extension.SetUserPreferenceString((int)swUserPreferenceStringValue_e.swSheetMetalDescription, 0, "Tôle");
+    //                Mdl.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swFlatPatternOpt_SimplifyBends, 0, false);
+    //                Mdl.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swFlatPatternOpt_CornerTreatment, 0, false);
 
-    //                if (MdlBase.TypeDoc() == eTypeDoc.Dessin)
+    //                if (Mdl.TypeDoc() == eTypeDoc.Dessin)
     //                {
 
-    //                    LayerMgr LM = MdlBase.GetLayerManager();
+    //                    LayerMgr LM = Mdl.GetLayerManager();
 
     //                    String[] ListeCalques = LM.GetLayerList();
 
-    //                    WindowLog.Ecrire(MdlBase.GetPathName());
+    //                    WindowLog.Ecrire(Mdl.GetPathName());
 
     //                    foreach (var Calque in ListeCalques)
     //                    {
@@ -352,59 +344,59 @@ namespace Macros
     //                        }
     //                    }
 
-    //                    String cheminFondPlan = MdlBase.eDrawingDoc().eFeuilleActive().eGetGabaritDeFeuille();
+    //                    String cheminFondPlan = Mdl.eDrawingDoc().eFeuilleActive().eGetGabaritDeFeuille();
 
     //                    String nomFondPlan = cheminFondPlan.Replace(cheminDossier + "\\", "");
 
     //                    WindowLog.Ecrire(nomFondPlan);
 
-    //                    //MdlBase.Extension.DeleteDraftingStandard();
+    //                    //Mdl.Extension.DeleteDraftingStandard();
 
-    //                    //MdlBase.ForceRebuild3(false);
+    //                    //Mdl.ForceRebuild3(false);
 
     //                    if (nomFondPlan.ToLower().StartsWith("archi"))
     //                    {
-    //                        Boolean r = MdlBase.Extension.LoadDraftingStandard("E:\\Mes documents\\SolidWorks\\2018\\Norme dessin\\Norme Archi.sldstd");
+    //                        Boolean r = Mdl.Extension.LoadDraftingStandard("E:\\Mes documents\\SolidWorks\\2018\\Norme dessin\\Norme Archi.sldstd");
     //                        WindowLog.Ecrire("Norme Archi.sldstd" + " : " + r);
     //                    }
     //                    else
     //                    {
-    //                        Boolean r = MdlBase.Extension.LoadDraftingStandard("E:\\Mes documents\\SolidWorks\\2018\\Norme dessin\\Norme Fab.sldstd");
+    //                        Boolean r = Mdl.Extension.LoadDraftingStandard("E:\\Mes documents\\SolidWorks\\2018\\Norme dessin\\Norme Fab.sldstd");
     //                        WindowLog.Ecrire("Norme Fab.sldstd" + " : " + r);
     //                    }
 
-    //                    MdlBase.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swUnitSystem, 0, (int)swUnitSystem_e.swUnitSystem_Custom);
-    //                    MdlBase.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swUnitsLinearFeetAndInchesFormat, 0, false);
-    //                    MdlBase.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swUnitsDualLinearFractionDenominator, 0, 0);
-    //                    MdlBase.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swUnitsDualLinearFeetAndInchesFormat, 0, false);
-    //                    MdlBase.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swSheetMetalColorFlatPatternSketch, 0, 8421504);
-    //                    TextFormat myTextFormat = MdlBase.Extension.GetUserPreferenceTextFormat((int)swUserPreferenceTextFormat_e.swSheetMetalBendNotesTextFormat, 0);
+    //                    Mdl.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swUnitSystem, 0, (int)swUnitSystem_e.swUnitSystem_Custom);
+    //                    Mdl.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swUnitsLinearFeetAndInchesFormat, 0, false);
+    //                    Mdl.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swUnitsDualLinearFractionDenominator, 0, 0);
+    //                    Mdl.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swUnitsDualLinearFeetAndInchesFormat, 0, false);
+    //                    Mdl.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swSheetMetalColorFlatPatternSketch, 0, 8421504);
+    //                    TextFormat myTextFormat = Mdl.Extension.GetUserPreferenceTextFormat((int)swUserPreferenceTextFormat_e.swSheetMetalBendNotesTextFormat, 0);
     //                    myTextFormat.CharHeight = 0.004;
-    //                    MdlBase.Extension.SetUserPreferenceTextFormat((int)swUserPreferenceTextFormat_e.swSheetMetalBendNotesTextFormat, 0, myTextFormat);
-    //                    MdlBase.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swSheetMetalBendNotesLeaderJustificationSnapping, 0, true);
-    //                    MdlBase.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDetailingAltLinearDimPrecision, (int)swUserPreferenceOption_e.swDetailingLinearDimension, 2);
-    //                    MdlBase.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDetailingAltLinearDimPrecision, (int)swUserPreferenceOption_e.swDetailingDiameterDimension, 2);
-    //                    MdlBase.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDimensionsExtensionLineStyle, (int)swUserPreferenceOption_e.swDetailingRadiusDimension, (int)swLineStyles_e.swLineCONTINUOUS);
-    //                    MdlBase.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDimensionsExtensionLineStyleThickness, (int)swUserPreferenceOption_e.swDetailingRadiusDimension, (int)swLineWeights_e.swLW_THIN);
-    //                    MdlBase.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDetailingAltLinearDimPrecision, (int)swUserPreferenceOption_e.swDetailingRadiusDimension, 2);
-    //                    MdlBase.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDimensionsExtensionLineStyle, (int)swUserPreferenceOption_e.swDetailingHoleDimension, (int)swLineStyles_e.swLineCONTINUOUS);
-    //                    MdlBase.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDimensionsExtensionLineStyleThickness, (int)swUserPreferenceOption_e.swDetailingHoleDimension, (int)swLineWeights_e.swLW_THIN);
-    //                    MdlBase.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDetailingLinearDimPrecision, (int)swUserPreferenceOption_e.swDetailingHoleDimension, 4);
-    //                    MdlBase.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDetailingAltLinearDimPrecision, (int)swUserPreferenceOption_e.swDetailingHoleDimension, 2);
-    //                    MdlBase.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDetailingAngleTrailingZero, (int)swUserPreferenceOption_e.swDetailingAngleDimension, (int)swDetailingDimTrailingZero_e.swDimRemoveTrailingZeroes);
-    //                    MdlBase.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDetailingAngleTrailingZeroTolerance, (int)swUserPreferenceOption_e.swDetailingAngleDimension, (int)swDetailingDimTrailingZero_e.swDimSameAsDocumentTolerance);
-    //                    MdlBase.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDimensionsExtensionLineStyle, (int)swUserPreferenceOption_e.swDetailingChamferDimension, (int)swLineStyles_e.swLineCONTINUOUS);
+    //                    Mdl.Extension.SetUserPreferenceTextFormat((int)swUserPreferenceTextFormat_e.swSheetMetalBendNotesTextFormat, 0, myTextFormat);
+    //                    Mdl.Extension.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swSheetMetalBendNotesLeaderJustificationSnapping, 0, true);
+    //                    Mdl.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDetailingAltLinearDimPrecision, (int)swUserPreferenceOption_e.swDetailingLinearDimension, 2);
+    //                    Mdl.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDetailingAltLinearDimPrecision, (int)swUserPreferenceOption_e.swDetailingDiameterDimension, 2);
+    //                    Mdl.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDimensionsExtensionLineStyle, (int)swUserPreferenceOption_e.swDetailingRadiusDimension, (int)swLineStyles_e.swLineCONTINUOUS);
+    //                    Mdl.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDimensionsExtensionLineStyleThickness, (int)swUserPreferenceOption_e.swDetailingRadiusDimension, (int)swLineWeights_e.swLW_THIN);
+    //                    Mdl.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDetailingAltLinearDimPrecision, (int)swUserPreferenceOption_e.swDetailingRadiusDimension, 2);
+    //                    Mdl.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDimensionsExtensionLineStyle, (int)swUserPreferenceOption_e.swDetailingHoleDimension, (int)swLineStyles_e.swLineCONTINUOUS);
+    //                    Mdl.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDimensionsExtensionLineStyleThickness, (int)swUserPreferenceOption_e.swDetailingHoleDimension, (int)swLineWeights_e.swLW_THIN);
+    //                    Mdl.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDetailingLinearDimPrecision, (int)swUserPreferenceOption_e.swDetailingHoleDimension, 4);
+    //                    Mdl.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDetailingAltLinearDimPrecision, (int)swUserPreferenceOption_e.swDetailingHoleDimension, 2);
+    //                    Mdl.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDetailingAngleTrailingZero, (int)swUserPreferenceOption_e.swDetailingAngleDimension, (int)swDetailingDimTrailingZero_e.swDimRemoveTrailingZeroes);
+    //                    Mdl.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDetailingAngleTrailingZeroTolerance, (int)swUserPreferenceOption_e.swDetailingAngleDimension, (int)swDetailingDimTrailingZero_e.swDimSameAsDocumentTolerance);
+    //                    Mdl.Extension.SetUserPreferenceInteger((int)swUserPreferenceIntegerValue_e.swDimensionsExtensionLineStyle, (int)swUserPreferenceOption_e.swDetailingChamferDimension, (int)swLineStyles_e.swLineCONTINUOUS);
 
-    //                    //MdlBase.ForceRebuild3(false);
+    //                    //Mdl.ForceRebuild3(false);
 
-    //                    MdlBase.eDrawingDoc().eFeuilleActive().SaveFormat(cheminFondPlan);
+    //                    Mdl.eDrawingDoc().eFeuilleActive().SaveFormat(cheminFondPlan);
     //                }
     //                else
     //                {
-    //                    MdlBase.Save3((int)swSaveAsOptions_e.swSaveAsOptions_Silent, ref lErrors, ref lWarnings);
+    //                    Mdl.Save3((int)swSaveAsOptions_e.swSaveAsOptions_Silent, ref lErrors, ref lWarnings);
     //                }
 
-    //                App.Sw.CloseDoc(MdlBase.GetPathName());
+    //                App.Sw.CloseDoc(Mdl.GetPathName());
     //            }
 
 

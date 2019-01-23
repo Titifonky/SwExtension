@@ -71,7 +71,7 @@ namespace ModuleLaser
 
                     _Texte_RefFichier = G.AjouterTexteBox("Référence du fichier :", "la référence est ajoutée au début du nom de chaque fichier généré");
 
-                    String Ref = App.ModelDoc2.eRefFichier();
+                    String Ref = MdlBase.eRefFichier();
                     _Texte_RefFichier.Text = Ref;
                     _Texte_RefFichier.LectureSeule = false;
 
@@ -126,11 +126,11 @@ namespace ModuleLaser
 
             private String Quantite()
             {
-                CustomPropertyManager PM = App.ModelDoc2.Extension.get_CustomPropertyManager("");
+                CustomPropertyManager PM = MdlBase.Extension.get_CustomPropertyManager("");
 
-                if (App.ModelDoc2.ePropExiste(PropQuantite.GetValeur<String>()))
+                if (MdlBase.ePropExiste(PropQuantite.GetValeur<String>()))
                 {
-                    return Math.Max(App.ModelDoc2.eGetProp(PropQuantite.GetValeur<String>()).eToInteger(), 1).ToString();
+                    return Math.Max(MdlBase.eGetProp(PropQuantite.GetValeur<String>()).eToInteger(), 1).ToString();
                 }
 
                 return "1";
@@ -142,7 +142,7 @@ namespace ModuleLaser
             {
                 WindowLog.Ecrire("Recherche des materiaux : ");
 
-                ListeMateriaux = App.ModelDoc2.ListeMateriaux(_CheckBox_PrendreEnCompteTole.IsChecked ? eTypeCorps.Tole | eTypeCorps.Barre : eTypeCorps.Barre);
+                ListeMateriaux = MdlBase.ListeMateriaux(_CheckBox_PrendreEnCompteTole.IsChecked ? eTypeCorps.Tole | eTypeCorps.Barre : eTypeCorps.Barre);
 
                 foreach (var m in ListeMateriaux)
                     WindowLog.Ecrire(" - " + m);
@@ -159,7 +159,7 @@ namespace ModuleLaser
             {
                 CmdExportBarre Cmd = new CmdExportBarre();
 
-                Cmd.MdlBase = App.Sw.ActiveDoc;
+                Cmd.MdlBase = MdlBase;
 
                 Cmd.ListeMateriaux = _TextListBox_Materiaux.ListSelectedText.Count > 0 ? _TextListBox_Materiaux.ListSelectedText : _TextListBox_Materiaux.Liste;
                 Cmd.ForcerMateriau = _CheckBox_ForcerMateriau.IsChecked ? _TextComboBox_ForcerMateriau.Text : null;

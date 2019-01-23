@@ -11,14 +11,10 @@ namespace Macros
         ModuleNom("RetournerDvp")]
     public class BoutonRetournerDvp : BoutonBase
     {
-        private ModelDoc2 MdlBase = null;
-
         protected override void Command()
         {
             try
             {
-                MdlBase = App.ModelDoc2;
-
                 var ListeVue = MdlBase.eSelect_RecupererListeObjets<View>();
 
                 if (ListeVue.IsNull() || (ListeVue.Count == 0))

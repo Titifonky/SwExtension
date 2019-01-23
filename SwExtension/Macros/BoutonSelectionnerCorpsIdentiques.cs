@@ -22,32 +22,30 @@ namespace Macros
         {
             try
             {
-                ModelDoc2 mdl = App.ModelDoc2;
-
-                Face2 Face = mdl.eSelect_RecupererObjet<Face2>();
+                Face2 Face = MdlBase.eSelect_RecupererObjet<Face2>();
                 if (Face.IsNull()) return;
 
                 Body2 CorpsBase = Face.GetBody();
                 if (CorpsBase.IsNull()) return;
 
-                Component2 cpCorpsBase = mdl.eSelect_RecupererComposant();
+                Component2 cpCorpsBase = MdlBase.eSelect_RecupererComposant();
                 String MateriauxCorpsBase = "";
 
-                if (mdl.TypeDoc() == eTypeDoc.Piece)
+                if (MdlBase.TypeDoc() == eTypeDoc.Piece)
                 {
-                    cpCorpsBase = mdl.eComposantRacine();
-                    MateriauxCorpsBase = CorpsBase.eGetMateriauCorpsOuPiece(mdl.ePartDoc(), mdl.eNomConfigActive());
+                    cpCorpsBase = MdlBase.eComposantRacine();
+                    MateriauxCorpsBase = CorpsBase.eGetMateriauCorpsOuPiece(MdlBase.ePartDoc(), MdlBase.eNomConfigActive());
                 }
                 else
                 {
                     MateriauxCorpsBase = CorpsBase.eGetMateriauCorpsOuComp(cpCorpsBase);
                 }
 
-                mdl.eEffacerSelection();
+                MdlBase.eEffacerSelection();
 
                 var ListeCorpsIdentiques = new List<Body2>();
 
-                foreach (var comp in mdl.eComposantRacine().eRecListeComposant(c => { return c.TypeDoc() == eTypeDoc.Piece; }))
+                foreach (var comp in MdlBase.eComposantRacine().eRecListeComposant(c => { return c.TypeDoc() == eTypeDoc.Piece; }))
                 {
                     foreach (var Corps in comp.eListeCorps())
                     {

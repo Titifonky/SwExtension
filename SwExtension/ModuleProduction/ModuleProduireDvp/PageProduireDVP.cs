@@ -48,8 +48,6 @@ namespace ModuleProduction.ModuleProduireDvp
             { this.LogMethode(new Object[] { e }); }
         }
 
-        private ModelDoc2 MdlBase;
-
         private CtrlTextBox _Texte_RefFichier;
         private CtrlTextBox _TextBox_Campagne;
         private CtrlTextBox _Texte_Quantite;
@@ -67,8 +65,6 @@ namespace ModuleProduction.ModuleProduireDvp
         {
             try
             {
-                MdlBase = App.ModelDoc2;
-
                 Groupe G;
 
                 G = _Calque.AjouterGroupe("Fichier");
@@ -192,7 +188,7 @@ namespace ModuleProduction.ModuleProduireDvp
         {
             CmdProduireDvp Cmd = new CmdProduireDvp();
 
-            Cmd.MdlBase = App.Sw.ActiveDoc;
+            Cmd.MdlBase = MdlBase;
             Cmd.ListeCorps = ListeCorps;
             Cmd.RefFichier = _Texte_RefFichier.Text.Trim();
             Cmd.Quantite = _Texte_Quantite.Text.eToInteger();

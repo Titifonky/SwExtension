@@ -1,12 +1,10 @@
 ﻿using LogDebugging;
 using Outils;
 using SolidWorks.Interop.sldworks;
-using SolidWorks.Interop.swcommands;
 using SolidWorks.Interop.swconst;
 using SwExtension;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 
 namespace ModuleListerConfigComp
@@ -91,49 +89,45 @@ namespace ModuleListerConfigComp
 
         private void ExitIsoler()
         {
-            App.AssemblyDoc.ExitIsolate();
+            MdlBase.eAssemblyDoc().ExitIsolate();
         }
 
         private void IsolerComposants()
         {
-            var mdl = App.ModelDoc2;
+            List<Component2> ListeCompBase = MdlBase.eSelect_RecupererListeObjets<Component2>(_Select_Configs.Marque);
 
-            List<Component2> ListeCompBase = App.ModelDoc2.eSelect_RecupererListeObjets<Component2>(_Select_Configs.Marque);
+            MdlBase.eAssemblyDoc().Isolate();
 
-            mdl.eAssemblyDoc().Isolate();
-
-            mdl.eSelectMulti(ListeCompBase, _Select_Configs.Marque, false);
+            MdlBase.eSelectMulti(ListeCompBase, _Select_Configs.Marque, false);
         }
 
         private void SelectionChanged(Object sender, int Item)
         {
-            var mdl = App.ModelDoc2;
-
             var TextListBox = sender as CtrlTextListBox;
 
             List<Component2> listeComps = Bdd.ListeComposants(TextListBox.SelectedText);
 
             ExitIsoler();
 
-            mdl.eSelectMulti(listeComps, _Select_Configs.Marque, false);
+            MdlBase.eSelectMulti(listeComps, _Select_Configs.Marque, false);
 
             if (_CheckBox_IsolerComposants.IsChecked)
             {
                 IsolerComposants();
-                mdl.eSelectMulti(listeComps, _Select_Configs.Marque, false);
+                MdlBase.eSelectMulti(listeComps, _Select_Configs.Marque, false);
             }
         }
 
         private void AfficherConfigs()
         {
-            var Comp = App.ModelDoc2.eSelect_RecupererComposant(1, _Select_CompBase.Marque);
+            var Comp = MdlBase.eSelect_RecupererComposant(1, _Select_CompBase.Marque);
 
             if (Comp.IsRef())
             {
                 if (CompBase.IsRef() && (CompBase.GetPathName() == Comp.GetPathName()))
                     return;
 
-                Comp.eDeSelectById(App.ModelDoc2);
+                Comp.eDeSelectById(MdlBase);
                 CompBase = Comp;
                 _TextListBox_Configs.Vider();
             }
@@ -152,9 +146,7 @@ namespace ModuleListerConfigComp
         {
             Bdd = new BDD();
 
-            var mdl = App.ModelDoc2;
-
-            App.ModelDoc2.eRecParcourirComposants(
+            MdlBase.eRecParcourirComposants(
                     c =>
                     {
                         if (!c.IsSuppressed() && (c.GetPathName() == compBase.GetPathName()))

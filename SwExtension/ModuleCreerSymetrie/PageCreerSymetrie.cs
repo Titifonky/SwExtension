@@ -17,15 +17,11 @@ namespace ModuleCreerSymetrie
     public class PageCreerSymetrie : BoutonPMPManager
     {
         private Parametre PlanSymetrie;
-
-        private ModelDoc2 MdlBase = null;
         private PartDoc Piece = null;
 
         public PageCreerSymetrie()
         {
             PlanSymetrie = _Config.AjouterParam("PlanSymetrie", "Plan de droite", "Selectionnez le plan de symetrie :");
-
-            MdlBase = App.ModelDoc2;
             Piece = MdlBase.ePartDoc();
 
             OnCalque += Calque;

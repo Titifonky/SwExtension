@@ -5,7 +5,6 @@ using SolidWorks.Interop.swconst;
 using SwExtension;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace ModuleMarchePositionner
@@ -167,7 +166,7 @@ namespace ModuleMarchePositionner
 
                     if (_Select_Contraintes_PointCorps.Nb > 0)
                     {
-                        List<Entity> le = App.ModelDoc2.eSelect_RecupererListeObjets<Entity>(_Select_Contraintes_PointCorps.Marque);
+                        List<Entity> le = MdlBase.eSelect_RecupererListeObjets<Entity>(_Select_Contraintes_PointCorps.Marque);
 
                         foreach (Entity e in le)
                             e.DeSelect();
@@ -175,7 +174,7 @@ namespace ModuleMarchePositionner
 
                     if (_Select_Contraintes_PointMarche.Nb > 0)
                     {
-                        List<SketchPoint> le = App.ModelDoc2.eSelect_RecupererListeObjets<SketchPoint>(_Select_Contraintes_PointMarche.Marque);
+                        List<SketchPoint> le = MdlBase.eSelect_RecupererListeObjets<SketchPoint>(_Select_Contraintes_PointMarche.Marque);
 
                         foreach (SketchPoint f in le)
                             f.DeSelect();
@@ -183,28 +182,28 @@ namespace ModuleMarchePositionner
 
                     if (_Select_Contraintes_ArreteCorps.Nb > 0)
                     {
-                        List<Entity> lm = App.ModelDoc2.eSelect_RecupererListeObjets<Entity>(_Select_Contraintes_ArreteCorps.Marque);
+                        List<Entity> lm = MdlBase.eSelect_RecupererListeObjets<Entity>(_Select_Contraintes_ArreteCorps.Marque);
                         foreach (Entity e in lm)
                             e.DeSelect();
                     }
 
                     if (_Select_Contraintes_AxeMarche.Nb > 0)
                     {
-                        List<Feature> lm = App.ModelDoc2.eSelect_RecupererListeObjets<Feature>(_Select_Contraintes_AxeMarche.Marque);
+                        List<Feature> lm = MdlBase.eSelect_RecupererListeObjets<Feature>(_Select_Contraintes_AxeMarche.Marque);
                         foreach (Feature f in lm)
                             f.DeSelect();
                     }
 
                     if (_Select_Contraintes_PlanComp.Nb > 0)
                     {
-                        List<Feature> lm = App.ModelDoc2.eSelect_RecupererListeObjets<Feature>(_Select_Contraintes_PlanComp.Marque);
+                        List<Feature> lm = MdlBase.eSelect_RecupererListeObjets<Feature>(_Select_Contraintes_PlanComp.Marque);
                         foreach (Feature f in lm)
                             f.DeSelect();
                     }
 
                     if (_Select_Contraintes_PlanMarche.Nb > 0)
                     {
-                        List<Feature> lm = App.ModelDoc2.eSelect_RecupererListeObjets<Feature>(_Select_Contraintes_PlanMarche.Marque);
+                        List<Feature> lm = MdlBase.eSelect_RecupererListeObjets<Feature>(_Select_Contraintes_PlanMarche.Marque);
                         foreach (Feature f in lm)
                             f.DeSelect();
                     }
@@ -220,9 +219,9 @@ namespace ModuleMarchePositionner
                 {
                     EffacerContraintes();
 
-                    Component2 cpMarche = App.ModelDoc2.eSelect_RecupererComposant(1, _Select_Marche.Marque);
-                    Feature fRepet = App.ModelDoc2.eSelect_RecupererObjet<Feature>(1, _Select_FonctionRepet.Marque);
-                    Component2 cpRepet = App.ModelDoc2.eSelect_RecupererComposant(1, _Select_FonctionRepet.Marque);
+                    Component2 cpMarche = MdlBase.eSelect_RecupererComposant(1, _Select_Marche.Marque);
+                    Feature fRepet = MdlBase.eSelect_RecupererObjet<Feature>(1, _Select_FonctionRepet.Marque);
+                    Component2 cpRepet = MdlBase.eSelect_RecupererComposant(1, _Select_FonctionRepet.Marque);
                     Object[] Contraintes = cpMarche.GetMates();
 
                     if (cpMarche.IsNull() || fRepet.IsNull() || cpRepet.IsNull() || Contraintes.IsNull()) return;
@@ -274,12 +273,12 @@ namespace ModuleMarchePositionner
                         }
                     }
 
-                    App.ModelDoc2.eSelectMulti(PointCorps, _Select_Contraintes_PointCorps.Marque, true);
-                    App.ModelDoc2.eSelectMulti(PointMarche, _Select_Contraintes_PointMarche.Marque, true);
-                    App.ModelDoc2.eSelectMulti(ArreteCorps, _Select_Contraintes_ArreteCorps.Marque, true);
-                    App.ModelDoc2.eSelectMulti(AxeMarche, _Select_Contraintes_AxeMarche.Marque, true);
-                    App.ModelDoc2.eSelectMulti(PlanComp, _Select_Contraintes_PlanComp.Marque, true);
-                    App.ModelDoc2.eSelectMulti(PlanMarche, _Select_Contraintes_PlanMarche.Marque, true);
+                    MdlBase.eSelectMulti(PointCorps, _Select_Contraintes_PointCorps.Marque, true);
+                    MdlBase.eSelectMulti(PointMarche, _Select_Contraintes_PointMarche.Marque, true);
+                    MdlBase.eSelectMulti(ArreteCorps, _Select_Contraintes_ArreteCorps.Marque, true);
+                    MdlBase.eSelectMulti(AxeMarche, _Select_Contraintes_AxeMarche.Marque, true);
+                    MdlBase.eSelectMulti(PlanComp, _Select_Contraintes_PlanComp.Marque, true);
+                    MdlBase.eSelectMulti(PlanMarche, _Select_Contraintes_PlanMarche.Marque, true);
 
                     ContraintesVide = false;
                 }
@@ -377,7 +376,7 @@ namespace ModuleMarchePositionner
             {
                 if (F.IsRef())
                 {
-                    List<Feature> lcp = App.ModelDoc2.eSelect_RecupererListeObjets<Feature>(SelBox.Marque);
+                    List<Feature> lcp = MdlBase.eSelect_RecupererListeObjets<Feature>(SelBox.Marque);
                     if (lcp.Count > 0)
                     {
                         foreach (Feature f in lcp)
@@ -385,7 +384,7 @@ namespace ModuleMarchePositionner
                     }
                     else
                     {
-                        App.ModelDoc2.eSelectMulti(F, SelBox.Marque, true);
+                        MdlBase.eSelectMulti(F, SelBox.Marque, true);
                         SelectContraintes();
                     }
                 }
@@ -397,9 +396,9 @@ namespace ModuleMarchePositionner
             {
                 try
                 {
-                    App.ModelDoc2.ClearSelection2(true);
+                    MdlBase.ClearSelection2(true);
 
-                    Component2 Marche = App.ModelDoc2.eRecChercherComposant(c =>
+                    Component2 Marche = MdlBase.eRecChercherComposant(c =>
                     {
                         return Regex.IsMatch(c.Name2, _pMarche.GetValeur<String>())
                      && !c.IsSuppressed();
@@ -408,9 +407,9 @@ namespace ModuleMarchePositionner
                     );
 
                     if (Marche.IsRef())
-                        App.ModelDoc2.eSelectMulti(Marche, _Select_Marche.Marque);
+                        MdlBase.eSelectMulti(Marche, _Select_Marche.Marque);
 
-                    Component2 PieceRepet = App.ModelDoc2.eRecChercherComposant(c =>
+                    Component2 PieceRepet = MdlBase.eRecChercherComposant(c =>
                     {
                         return Regex.IsMatch(c.Name2, _pPieceRepet.GetValeur<String>())
                        && !c.IsSuppressed();
@@ -430,10 +429,10 @@ namespace ModuleMarchePositionner
             protected void RunOkCommand()
             {
                 CmdInsererMarches Cmd = new CmdInsererMarches();
-                Cmd.MdlBase = App.ModelDoc2;
-                Cmd.Marche = App.ModelDoc2.eSelect_RecupererComposant(1, _Select_Marche.Marque);
-                Cmd.ComposantRepetition = App.ModelDoc2.eSelect_RecupererComposant(1, _Select_FonctionRepet.Marque);
-                Cmd.FonctionRepetition = App.ModelDoc2.eSelect_RecupererObjet<Feature>(1, _Select_FonctionRepet.Marque);
+                Cmd.MdlBase = MdlBase;
+                Cmd.Marche = MdlBase.eSelect_RecupererComposant(1, _Select_Marche.Marque);
+                Cmd.ComposantRepetition = MdlBase.eSelect_RecupererComposant(1, _Select_FonctionRepet.Marque);
+                Cmd.FonctionRepetition = MdlBase.eSelect_RecupererObjet<Feature>(1, _Select_FonctionRepet.Marque);
                 Cmd.Point = PointCorps;
                 Cmd.Arrete = ArreteCorps;
                 Cmd.Plan = PlanComp;
@@ -441,7 +440,7 @@ namespace ModuleMarchePositionner
                 Cmd.AxeMarche = AxeMarche;
                 Cmd.PlanMarche = PlanMarche;
 
-                App.ModelDoc2.ClearSelection2(true);
+                MdlBase.ClearSelection2(true);
 
                 Cmd.Executer();
             }

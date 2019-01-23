@@ -58,7 +58,7 @@ namespace ModuleEmpreinte
                 G = _Calque.AjouterGroupe("Options");
 
                 _Button_IsolerComposants = G.AjouterBouton("Isoler les composants");
-                _Button_IsolerComposants.OnButtonPress += delegate (Object sender) { Isoler.Run(); };
+                _Button_IsolerComposants.OnButtonPress += delegate (Object sender) { Isoler.Run(MdlBase); };
 
                 Isoler.Bouton = _Button_IsolerComposants;
 
@@ -75,7 +75,7 @@ namespace ModuleEmpreinte
 
                 Isoler.ListSelectionBox.Add(_Select_CompBase);
 
-                _FiltreCompBase = new FiltreComp(_Calque, "Filtre : composant de base", _Select_CompBase, PrefixeBase);
+                _FiltreCompBase = new FiltreComp(MdlBase, _Calque, "Filtre : composant de base", _Select_CompBase, PrefixeBase);
 
                 G = _Calque.AjouterGroupe("Selectionner les composants empreinte");
 
@@ -89,7 +89,7 @@ namespace ModuleEmpreinte
 
                 Isoler.ListSelectionBox.Add(_Select_CompEmpreinte);
 
-                _FiltreCompEmpreinte = new FiltreComp(_Calque, "Filtre : empreinte", _Select_CompEmpreinte, PrefixeEmpreinte);
+                _FiltreCompEmpreinte = new FiltreComp(MdlBase, _Calque, "Filtre : empreinte", _Select_CompEmpreinte, PrefixeEmpreinte);
 
                 G = _Calque.AjouterGroupe("Options");
                 _CheckBox_MasquerLesEmpreintes = G.AjouterCheckBox("Masquer toutes les empreintes");
@@ -109,15 +109,18 @@ namespace ModuleEmpreinte
 
             private Groupe Grp;
 
-            public FiltreComp(Calque C, String TitreGroupe, CtrlSelectionBox SelectionBox, Parametre Prefixe)
+            private ModelDoc2 _Mdl;
+
+            public FiltreComp(ModelDoc2 mdl, Calque C, String TitreGroupe, CtrlSelectionBox SelectionBox, Parametre Prefixe)
             {
+                _Mdl = mdl;
                 Grp = C.AjouterGroupe(TitreGroupe);
 
                 o1 = Grp.AjouterOption("Filtrer propriete");
                 o2 = Grp.AjouterOption("Filtrer config");
 
-                FiltreProp = new FiltreCompPropriete(Grp, SelectionBox, Prefixe);
-                FiltreConfig = new FiltreCompConfig(Grp, SelectionBox);
+                FiltreProp = new FiltreCompPropriete(_Mdl, Grp, SelectionBox, Prefixe);
+                FiltreConfig = new FiltreCompConfig(mdl, Grp, SelectionBox);
 
                 o1.OnCheck += delegate (Object sender) { FiltreProp.Afficher(true); FiltreConfig.Afficher(false); };
                 o2.OnCheck += delegate (Object sender) { FiltreProp.Afficher(false); FiltreConfig.Afficher(true); };
@@ -136,8 +139,11 @@ namespace ModuleEmpreinte
 
             private CtrlButton _Button;
 
-            public FiltreCompPropriete(Groupe G, CtrlSelectionBox SelectionBox, Parametre Prefixe)
+            private ModelDoc2 _Mdl;
+
+            public FiltreCompPropriete(ModelDoc2 mdl, Groupe G, CtrlSelectionBox SelectionBox, Parametre Prefixe)
             {
+                _Mdl = mdl;
                 _SelectionBox = SelectionBox;
 
                 _TextBox = G.AjouterTexteBox(Prefixe, true);
@@ -154,19 +160,17 @@ namespace ModuleEmpreinte
 
                     String[] listePattern = pattern.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-                    ModelDoc2 mdl = App.ModelDoc2;
-
                     {
-                        var lcp = mdl.eSelect_RecupererListeObjets<Component2>(box.Marque);
+                        var lcp = _Mdl.eSelect_RecupererListeObjets<Component2>(box.Marque);
                         foreach (Component2 c in lcp)
-                            c.eDeSelectById(mdl);
+                            c.eDeSelectById(_Mdl);
                     }
 
                     box.Focus = true;
 
                     {
                         var lcp = new List<Component2>();
-                        mdl.eRecParcourirComposants(
+                        _Mdl.eRecParcourirComposants(
                             c =>
                             {
 
@@ -183,9 +187,9 @@ namespace ModuleEmpreinte
                             null
                             );
 
-                        Isoler.Exit();
+                        Isoler.Exit(_Mdl);
 
-                        mdl.eSelectMulti(lcp, box.Marque, true);
+                        _Mdl.eSelectMulti(lcp, box.Marque, true);
                     }
                 }
                 catch (Exception e)
@@ -220,8 +224,12 @@ namespace ModuleEmpreinte
 
             private CtrlButton _Button;
 
-            public FiltreCompConfig(Groupe G, CtrlSelectionBox SelectionBox)
+            private ModelDoc2 _Mdl;
+
+            public FiltreCompConfig(ModelDoc2 mdl, Groupe G, CtrlSelectionBox SelectionBox)
             {
+                _Mdl = mdl;
+
                 _SelectionBox = SelectionBox;
 
                 _Select_CompBase = G.AjouterSelectionBox("", "Selectionnez le composant");
@@ -251,27 +259,24 @@ namespace ModuleEmpreinte
 
             private void SelectionnerComposants()
             {
-                var mdl = App.ModelDoc2;
-
                 List<Component2> listeComps = Bdd.ListeComposants(_TextListBox_Configs.ListSelectedIndex);
 
-                foreach (var Comp in mdl.eSelect_RecupererListeComposants(_SelectionBox.Marque))
-                    Comp.eDeSelectById(mdl);
+                foreach (var Comp in _Mdl.eSelect_RecupererListeComposants(_SelectionBox.Marque))
+                    Comp.eDeSelectById(_Mdl);
 
-                mdl.eSelectMulti(listeComps, _SelectionBox.Marque, true);
+                _Mdl.eSelectMulti(listeComps, _SelectionBox.Marque, true);
             }
 
             private void AfficherConfigs()
             {
-                var mdl = App.ModelDoc2;
-                var Comp = mdl.eSelect_RecupererComposant(1, _Select_CompBase.Marque);
+                var Comp = _Mdl.eSelect_RecupererComposant(1, _Select_CompBase.Marque);
 
                 if (Comp.IsRef())
                 {
                     if (CompBase.IsRef() && (CompBase.GetPathName() == Comp.GetPathName()))
                         return;
 
-                    Comp.eDeSelectById(App.ModelDoc2);
+                    Comp.eDeSelectById(_Mdl);
                     CompBase = Comp;
                     _TextListBox_Configs.Vider();
                 }
@@ -283,7 +288,7 @@ namespace ModuleEmpreinte
                 Rechercher_Composants(CompBase);
                 _TextListBox_Configs.Liste = Bdd.ListeNomsConfigs();
                 _TextListBox_Configs.SelectedIndex = 0;
-                Comp.eDeSelectById(mdl);
+                Comp.eDeSelectById(_Mdl);
             }
 
             public void Afficher(Boolean etat)
@@ -300,9 +305,7 @@ namespace ModuleEmpreinte
             {
                 Bdd = new BDD();
 
-                var mdl = App.ModelDoc2;
-
-                App.ModelDoc2.eRecParcourirComposants(
+                _Mdl.eRecParcourirComposants(
                         c =>
                         {
                             if (!c.IsSuppressed() && (c.GetPathName() == compBase.GetPathName()))
@@ -348,11 +351,11 @@ namespace ModuleEmpreinte
         protected void RunOkCommand()
         {
 
-            List<Component2> ListeCompBase = App.ModelDoc2.eSelect_RecupererListeComposants(_Select_CompBase.Marque);
-            List<Component2> ListeCompEmpreinte = App.ModelDoc2.eSelect_RecupererListeComposants(_Select_CompEmpreinte.Marque);
+            List<Component2> ListeCompBase = MdlBase.eSelect_RecupererListeComposants(_Select_CompBase.Marque);
+            List<Component2> ListeCompEmpreinte = MdlBase.eSelect_RecupererListeComposants(_Select_CompEmpreinte.Marque);
 
             CmdEmpreinte Cmd = new CmdEmpreinte();
-            Cmd.MdlBase = App.ModelDoc2;
+            Cmd.MdlBase = MdlBase;
             Cmd.ListeCompBase = ListeCompBase;
             Cmd.ListeCompEmpreinte = ListeCompEmpreinte;
 
@@ -361,9 +364,9 @@ namespace ModuleEmpreinte
 
         protected void RunAfterClose()
         {
-            List<Component2> ListeCompEmpreinte = App.ModelDoc2.eSelect_RecupererListeObjets<Component2>(_Select_CompEmpreinte.Marque);
+            List<Component2> ListeCompEmpreinte = MdlBase.eSelect_RecupererListeObjets<Component2>(_Select_CompEmpreinte.Marque);
 
-            Isoler.Exit();
+            Isoler.Exit(MdlBase);
 
             if (_CheckBox_MasquerLesEmpreintes.IsChecked == true)
             {
@@ -382,25 +385,23 @@ namespace ModuleEmpreinte
 
         public static List<CtrlSelectionBox> ListSelectionBox = new List<CtrlSelectionBox>();
 
-        public static void Exit()
+        public static void Exit(ModelDoc2 mdl)
         {
-            App.AssemblyDoc.ExitIsolate();
+            mdl.eAssemblyDoc().ExitIsolate();
             Bouton.Caption = "Isoler les composants";
             _Isoler = false;
         }
 
-        public static void Run()
+        public static void Run(ModelDoc2 mdl)
         {
             if (!_Isoler)
             {
-                var mdl = App.ModelDoc2;
-
                 var dic = new Dictionary<int, List<Component2>>();
 
                 foreach (var box in ListSelectionBox)
                 {
                     int marque = box.Marque;
-                    dic.Add(marque, App.ModelDoc2.eSelect_RecupererListeObjets<Component2>(marque));
+                    dic.Add(marque, mdl.eSelect_RecupererListeObjets<Component2>(marque));
                 }
 
                 mdl.eAssemblyDoc().Isolate();
@@ -418,7 +419,7 @@ namespace ModuleEmpreinte
                 Bouton.Caption = "Afficher tout les composants";
             }
             else
-                Exit();
+                Exit(mdl);
         }
     }
 

@@ -26,9 +26,6 @@ namespace ModuleVoronoi
 
         protected override void Command()
         {
-
-            ModelDoc2 MdlBase = App.ModelDoc2;
-
             Feature Fonction = MdlBase.eSelect_RecupererObjet<Feature>(1, -1);
 
             MdlBase.eEffacerSelection();
@@ -188,8 +185,6 @@ namespace ModuleVoronoi
 
         protected void CommandV()
         {
-
-            ModelDoc2 MdlBase = App.ModelDoc2;
 
             Feature Fonction = MdlBase.eSelect_RecupererObjet<Feature>(1, -1);
 

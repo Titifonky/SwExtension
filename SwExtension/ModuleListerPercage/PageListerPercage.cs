@@ -16,15 +16,12 @@ namespace ModuleListerPercage
         ]
     public class PageListerPercage : BoutonPMPManager
     {
-        private ModelDoc2 MdlBase;
-
         public PageListerPercage()
         {
             LogToWindowLog = false;
 
             try
             {
-                InitModeleBase();
                 OnCalque += Calque;
                 OnRunAfterActivation += AfficherPercage;
                 OnRunOkCommand += RunOkCommand;
@@ -142,11 +139,6 @@ namespace ModuleListerPercage
             ExitIsoler();
 
             MdlBase.eSelectMulti(listeFace, _Select_Selection.Marque, false);
-        }
-
-        private void InitModeleBase()
-        {
-            MdlBase = App.ModelDoc2;
         }
 
         private void AfficherPercage()

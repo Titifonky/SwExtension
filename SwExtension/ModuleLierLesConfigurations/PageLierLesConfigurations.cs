@@ -46,7 +46,7 @@ namespace ModuleLierLesConfigurations
 
                 _Texte_ListeConfigs = G.AjouterTexteBox(_pListeConfigs);
 
-                if (App.ModelDoc2.TypeDoc() != eTypeDoc.Piece)
+                if (MdlBase.TypeDoc() != eTypeDoc.Piece)
                 {
                     G = _Calque.AjouterGroupe("Selectionner les composants à lier");
 
@@ -62,7 +62,7 @@ namespace ModuleLierLesConfigurations
 
                 G = _Calque.AjouterGroupe("Options");
 
-                if (App.ModelDoc2.TypeDoc() != eTypeDoc.Piece)
+                if (MdlBase.TypeDoc() != eTypeDoc.Piece)
                     _CheckBox_CreerLesConfigsManquantes = G.AjouterCheckBox(_pCreerConfig);
 
                 _CheckBox_SupprimerNvlFonction = G.AjouterCheckBox(_pSupprimerNvlFonction);
@@ -75,15 +75,15 @@ namespace ModuleLierLesConfigurations
         protected void RunOkCommand()
         {
             CmdLierLesConfigurations Cmd = new CmdLierLesConfigurations();
-            Cmd.MdlBase = App.ModelDoc2;
+            Cmd.MdlBase = MdlBase;
             
-            if (App.ModelDoc2.TypeDoc() != eTypeDoc.Piece)
-                Cmd.ListeComposants = App.ModelDoc2.eSelect_RecupererListeComposants(_Select_Composants.Marque);
+            if (MdlBase.TypeDoc() != eTypeDoc.Piece)
+                Cmd.ListeComposants = MdlBase.eSelect_RecupererListeComposants(_Select_Composants.Marque);
 
 
             Cmd.CreerConfigsManquantes = true;
 
-            if (App.ModelDoc2.TypeDoc() != eTypeDoc.Piece)
+            if (MdlBase.TypeDoc() != eTypeDoc.Piece)
                 Cmd.CreerConfigsManquantes = _CheckBox_CreerLesConfigsManquantes.IsChecked;
 
             Cmd.SupprimerNvlFonction = _CheckBox_SupprimerNvlFonction.IsChecked;
@@ -91,7 +91,7 @@ namespace ModuleLierLesConfigurations
 
             Cmd.ListeConfig = new List<string>(_Texte_ListeConfigs.Text.Trim().Split(' '));
 
-            App.ModelDoc2.ClearSelection2(true);
+            MdlBase.ClearSelection2(true);
 
             Cmd.Executer();
         }

@@ -16,16 +16,11 @@ namespace ModuleProduction
 
     public class BoutonNettoyerReperage : BoutonBase
     {
-        ModelDoc2 MdlBase = null;
-
         protected override void Command()
         {
             try
             {
-                MdlBase = App.ModelDoc2;
-
                 Nettoyer();
-
             }
             catch (Exception e)
             {

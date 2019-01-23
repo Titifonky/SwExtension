@@ -137,9 +137,9 @@ namespace ModuleMarcheConfig
             {
                 try
                 {
-                    App.ModelDoc2.ClearSelection2(true);
+                    MdlBase.ClearSelection2(true);
 
-                    Component2 Marche = App.ModelDoc2.eRecChercherComposant(c =>
+                    Component2 Marche = MdlBase.eRecChercherComposant(c =>
                     {
                         return Regex.IsMatch(c.Name2, pMarche.GetValeur<String>())
                                  && !c.IsSuppressed();
@@ -151,7 +151,7 @@ namespace ModuleMarcheConfig
                         SelectFace(_Select_F_Devant, Marche, pFaceDevant);
                     }
 
-                    Component2 PlatineG = App.ModelDoc2.eRecChercherComposant(c =>
+                    Component2 PlatineG = MdlBase.eRecChercherComposant(c =>
                     {
                         return Regex.IsMatch(c.Name2, pPlatineG.GetValeur<String>())
                        && !c.IsSuppressed();
@@ -161,7 +161,7 @@ namespace ModuleMarcheConfig
                         SelectPlan(_Select_PlatineG, PlatineG, pPlanContrainte);
 
 
-                    Component2 PlatineD = App.ModelDoc2.eRecChercherComposant(c =>
+                    Component2 PlatineD = MdlBase.eRecChercherComposant(c =>
                     {
                         return Regex.IsMatch(c.Name2, pPlatineD.GetValeur<String>())
                        && !c.IsSuppressed();
@@ -177,16 +177,16 @@ namespace ModuleMarcheConfig
             protected void RunOkCommand()
             {
                 CmdPositionnerPlatine Cmd = new CmdPositionnerPlatine();
-                Cmd.MdlBase = App.ModelDoc2;
-                Cmd.F_Dessus = App.ModelDoc2.eSelect_RecupererObjet<Face2>(1, _Select_F_Dessus.Marque);
-                Cmd.F_Devant = App.ModelDoc2.eSelect_RecupererObjet<Face2>(1, _Select_F_Devant.Marque);
-                Cmd.PltG = App.ModelDoc2.eSelect_RecupererComposant(1, _Select_PlatineG.Marque);
-                Cmd.PltD = App.ModelDoc2.eSelect_RecupererComposant(1, _Select_PlatineD.Marque);
-                Cmd.PltG_Plan = App.ModelDoc2.eSelect_RecupererObjet<Feature>(1, _Select_PlatineG.Marque);
-                Cmd.PltD_Plan = App.ModelDoc2.eSelect_RecupererObjet<Feature>(1, _Select_PlatineD.Marque);
+                Cmd.MdlBase = MdlBase;
+                Cmd.F_Dessus = MdlBase.eSelect_RecupererObjet<Face2>(1, _Select_F_Dessus.Marque);
+                Cmd.F_Devant = MdlBase.eSelect_RecupererObjet<Face2>(1, _Select_F_Devant.Marque);
+                Cmd.PltG = MdlBase.eSelect_RecupererComposant(1, _Select_PlatineG.Marque);
+                Cmd.PltD = MdlBase.eSelect_RecupererComposant(1, _Select_PlatineD.Marque);
+                Cmd.PltG_Plan = MdlBase.eSelect_RecupererObjet<Feature>(1, _Select_PlatineG.Marque);
+                Cmd.PltD_Plan = MdlBase.eSelect_RecupererObjet<Feature>(1, _Select_PlatineD.Marque);
                 Cmd.SurTouteLesConfigs = _CheckBox_ToutesLesConfig.IsChecked;
 
-                App.ModelDoc2.ClearSelection2(true);
+                MdlBase.ClearSelection2(true);
 
                 Cmd.Executer();
             }

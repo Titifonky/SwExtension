@@ -19,8 +19,6 @@ namespace ModuleLaser
         {
             try
             {
-                ModelDoc2 MdlBase = App.ModelDoc2;
-
                 var ListeComposants = MdlBase.ListerComposants(false);
 
                 eTypeCorps Filtre = eTypeCorps.Barre | eTypeCorps.Tole;

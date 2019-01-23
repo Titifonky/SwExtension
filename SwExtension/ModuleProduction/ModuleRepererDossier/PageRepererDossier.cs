@@ -19,7 +19,6 @@ namespace ModuleProduction.ModuleRepererDossier
         private Parametre CreerDvp;
         private Parametre TypeCorps;
 
-        private ModelDoc2 MdlBase = null;
         private int _IndiceCampagne = 0;
         private ListeSortedCorps ListeCorps = new ListeSortedCorps();
 
@@ -43,7 +42,6 @@ namespace ModuleProduction.ModuleRepererDossier
                 TypeCorps = _Config.AjouterParam("TypeCorps", eTypeCorps.Piece, "Type de corps à repérer :");
                 TypeCorps.SetValeur(eTypeCorps.Piece);
 
-                MdlBase = App.Sw.ActiveDoc;
                 if(MdlBase.ePropExiste(CONST_PRODUCTION.FILTRE_CORPS))
                 {
                     var r = (eTypeCorps)Enum.Parse(typeof(eTypeCorps), MdlBase.eGetProp(CONST_PRODUCTION.FILTRE_CORPS));
@@ -207,7 +205,7 @@ namespace ModuleProduction.ModuleRepererDossier
             if(_CheckBox_CampagneDepartDecompte.IsChecked)
                 ListeCorps.CampagneDepartDecompte = Math.Max(ListeCorps.CampagneDepartDecompte, IndiceCampagne);
 
-            Cmd.MdlBase = App.Sw.ActiveDoc;
+            Cmd.MdlBase = MdlBase;
             Cmd.IndiceCampagne = IndiceCampagne;
             Cmd.CombinerCorpsIdentiques = _CheckBox_CombinerCorpsIdentiques.IsChecked;
             Cmd.CombinerAvecCampagnePrecedente = _CheckBox_CombinerAvecCampagnePrecedente.IsChecked;

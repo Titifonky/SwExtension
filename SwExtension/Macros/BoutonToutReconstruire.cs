@@ -16,7 +16,7 @@ namespace Macros
 
         protected override void Command()
         {
-            App.ModelDoc2.ForceRebuild3(false);
+            MdlBase.ForceRebuild3(false);
         }
     }
 }

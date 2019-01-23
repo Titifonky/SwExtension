@@ -17,7 +17,7 @@ namespace Macros
         {
             try
             {
-                DrawingDoc Dessin = App.DrawingDoc;
+                DrawingDoc Dessin = MdlBase.eDrawingDoc();
 
 
                 String PropDesignation = App.Sw.GetUserPreferenceStringValue((int)swUserPreferenceStringValue_e.swCustomPropertyUsedAsComponentDescription);

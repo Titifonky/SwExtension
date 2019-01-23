@@ -48,7 +48,7 @@ namespace ModuleProduction.ModuleGenererConfigDvp
         {
             CmdGenererConfigDvp Cmd = new CmdGenererConfigDvp();
 
-            Cmd.MdlBase = App.ModelDoc2;
+            Cmd.MdlBase = MdlBase;
             Cmd.SupprimerLesAnciennesConfigs = _CheckBox_SupprimerLesAnciennesConfigs.IsChecked;
 
             Cmd.Executer();

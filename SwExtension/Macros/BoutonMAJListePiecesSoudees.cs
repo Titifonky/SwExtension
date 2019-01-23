@@ -13,25 +13,22 @@ namespace Macros
         ModuleNom("MAJListePiecesSoudees")]
     public class BoutonMAJListePiecesSoudees : BoutonBase
     {
-        private ModelDoc2 MdlBase = null;
 
         protected override void Command()
         {
-            MdlBase = App.ModelDoc2;
-
             try
             {
-                if (App.ModelDoc2.TypeDoc() == eTypeDoc.Piece)
+                if (MdlBase.TypeDoc() == eTypeDoc.Piece)
                 {
-                    PartDoc piece = App.PartDoc;
+                    PartDoc piece = MdlBase.ePartDoc();
                     piece.eInsererListeDesPiecesSoudees();
-                    App.PartDoc.eMajListeDesPiecesSoudees();
+                    piece.eMajListeDesPiecesSoudees();
                     return;
                 }
 
 
-                if (App.ModelDoc2.TypeDoc() == eTypeDoc.Assemblage)
-                    App.ModelDoc2.eRecParcourirComposants(Maj);
+                if (MdlBase.TypeDoc() == eTypeDoc.Assemblage)
+                    MdlBase.eRecParcourirComposants(Maj);
             }
             catch (Exception e)
             {

@@ -4,24 +4,25 @@ using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using SwExtension;
 using System;
+using System.Collections.Generic;
 
 namespace Macros
 {
-    [ModuleTypeDocContexte(eTypeDoc.Assemblage | eTypeDoc.Piece | eTypeDoc.Dessin),
-        ModuleTitre("Ouvrir le dossier du composant"),
-        ModuleNom("OuvrirDossier")]
-    public class BoutonOuvrirDossier : BoutonBase
+    [ModuleTypeDocContexte(eTypeDoc.Dessin),
+        ModuleTitre("Date du jour"),
+        ModuleNom("DateDuJour")]
+    public class BoutonDateDuJour : BoutonBase
     {
-        public BoutonOuvrirDossier()
+        public BoutonDateDuJour()
         {
-            LogToWindowLog = false;
+            LogToWindowLog = true;
         }
 
         protected override void Command()
         {
             try
             {
-                System.Diagnostics.Process.Start(MdlBase.eDossier());
+                MdlBase.ePropAdd("Date", DateTime.Today.ToString("d"));
             }
             catch (Exception e)
             {

@@ -45,8 +45,6 @@ namespace ModuleProduction.ModuleProduireDebit
             { this.LogMethode(new Object[] { e }); }
         }
 
-        private ModelDoc2 MdlBase;
-
         private List<Groupe> ListeGroupe1 = new List<Groupe>();
         private List<Groupe> ListeGroupe2 = new List<Groupe>();
         private List<CtrlCheckBox> ListeCheckBoxLg = new List<CtrlCheckBox>();
@@ -71,8 +69,6 @@ namespace ModuleProduction.ModuleProduireDebit
         {
             try
             {
-                MdlBase = App.ModelDoc2;
-
                 Groupe G;
 
                 ListeGroupe1.Add(_Calque.AjouterGroupe("Fichier"));
@@ -232,7 +228,7 @@ namespace ModuleProduction.ModuleProduireDebit
 
                 Log.Write(xmlDoc.OuterXml);
 
-                App.ModelDoc2.eSetListeLgProfils(xmlDoc.OuterXml);
+                MdlBase.eSetListeLgProfils(xmlDoc.OuterXml);
             }
             catch
             { }
@@ -242,7 +238,7 @@ namespace ModuleProduction.ModuleProduireDebit
         {
             try
             {
-                String s = App.ModelDoc2.eGetListeLgProfils();
+                String s = MdlBase.eGetListeLgProfils();
                 var DicMateriaux = ListeLgProfil.DicLg;
 
                 if (String.IsNullOrWhiteSpace(s) || DicMateriaux.IsNull()) return;
@@ -293,7 +289,7 @@ namespace ModuleProduction.ModuleProduireDebit
 
             Cmd = new CmdProduireDebit();
 
-            Cmd.MdlBase = App.Sw.ActiveDoc;
+            Cmd.MdlBase = MdlBase;
             Cmd.ListeCorps = ListeCorps;
             Cmd.TypeSortie = TypeSortie;
             Cmd.ListeMateriaux = _TextListBox_Materiaux.ListSelectedText.Count > 0 ? _TextListBox_Materiaux.ListSelectedText : _TextListBox_Materiaux.Liste;

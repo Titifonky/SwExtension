@@ -50,8 +50,11 @@ namespace SwExtension
 
         protected ConfigModule _Config;
 
+        protected ModelDoc2 MdlBase = null;
+
         public BoutonBase()
         {
+            MdlBase = App.ModelDoc2;
             TitreModule = this.GetModuleTitre();
             NomModule = this.GetModuleNom();
             DescriptionModule = this.GetModuleDescription();

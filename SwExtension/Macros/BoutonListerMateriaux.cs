@@ -187,15 +187,15 @@ namespace Macros
                 int NbTotalComposant = 0;
 
                 // Si c'est une piece, on ajoute le composant racine
-                if (App.ModelDoc2.TypeDoc() == eTypeDoc.Piece)
+                if (MdlBase.TypeDoc() == eTypeDoc.Piece)
                 {
-                    _DicPiece.Add(App.ModelDoc2.eComposantRacine().eKeyAvecConfig(), new Piece(App.ModelDoc2.eComposantRacine()));
+                    _DicPiece.Add(MdlBase.eComposantRacine().eKeyAvecConfig(), new Piece(MdlBase.eComposantRacine()));
                     NbTotalComposant = 1;
                 }
 
                 // Si c'est un assemblage, on liste les composants
-                if (App.ModelDoc2.TypeDoc() == eTypeDoc.Assemblage)
-                    App.ModelDoc2.eRecListeComposant(
+                if (MdlBase.TypeDoc() == eTypeDoc.Assemblage)
+                    MdlBase.eRecListeComposant(
                         c =>
                         {
                             if (!c.IsHidden(false) && (c.TypeDoc() == eTypeDoc.Piece))
@@ -334,15 +334,15 @@ namespace Macros
                 int NbTotalComposant = 0;
 
                 // Si c'est une piece, on ajoute le composant racine
-                if (App.ModelDoc2.TypeDoc() == eTypeDoc.Piece)
+                if (MdlBase.TypeDoc() == eTypeDoc.Piece)
                 {
-                    _DicPiece.Add(App.ModelDoc2.eComposantRacine().eKeyAvecConfig(), new Piece(App.ModelDoc2.eComposantRacine()));
+                    _DicPiece.Add(MdlBase.eComposantRacine().eKeyAvecConfig(), new Piece(MdlBase.eComposantRacine()));
                     NbTotalComposant = 1;
                 }
 
                 // Si c'est un assemblage, on liste les composants
-                if (App.ModelDoc2.TypeDoc() == eTypeDoc.Assemblage)
-                    App.ModelDoc2.eRecListeComposant(
+                if (MdlBase.TypeDoc() == eTypeDoc.Assemblage)
+                    MdlBase.eRecListeComposant(
                         c =>
                         {
                             if (!c.IsHidden(false) && (c.TypeDoc() == eTypeDoc.Piece))
