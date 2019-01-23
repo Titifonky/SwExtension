@@ -3030,10 +3030,23 @@ namespace Outils
         /// <param name="index"></param>
         /// <param name="marque"></param>
         /// <returns></returns>
-        public static swSelectType_e eSelect_RecupererTypeObjet(this ModelDoc2 mdl, int index = 1, int marque = -1)
+        public static swSelectType_e eSelect_RecupererSwTypeObjet(this ModelDoc2 mdl, int index = 1, int marque = -1)
         {
             SelectionMgr SelMgr = mdl.SelectionManager;
             return (swSelectType_e)SelMgr.GetSelectedObjectType3(index, marque);
+        }
+
+        public static e_swSelectType eSelect_RecupererTypeObjet(this ModelDoc2 mdl, int index = 1, int marque = -1)
+        {
+            SelectionMgr SelMgr = mdl.SelectionManager;
+            return (e_swSelectType)SelMgr.GetSelectedObjectType3(index, marque);
+        }
+
+        public static int eSelect_Nb(this ModelDoc2 mdl, int marque = -1)
+        {
+            SelectionMgr SelMgr = mdl.SelectionManager;
+
+            return SelMgr.GetSelectedObjectCount2(marque);
         }
 
         /// <summary>
@@ -5270,5 +5283,268 @@ namespace Outils
         public const String swSelWELDMENT = "WELDMENT";
         public const String swSelWELDMENTTABLEFEATS = "WELDMENTTABLE";
         public const String swSelZONES = "ZONES";
+    }
+
+    public enum e_swSelectType
+    {
+        swSelEVERYTHING = -3,
+        [Intitule("LOCATIONS")]
+        swSelLOCATIONS = -2,
+        [Intitule("UNSUPPORTED")]
+        swSelUNSUPPORTED = -1,
+        swSelNOTHING = 0,
+        [Intitule("EDGE")]
+        swSelEDGES = 1,
+        [Intitule("FACE")]
+        swSelFACES = 2,
+        [Intitule("VERTEX")]
+        swSelVERTICES = 3,
+        [Intitule("PLANE")]
+        swSelDATUMPLANES = 4,
+        [Intitule("AXIS")]
+        swSelDATUMAXES = 5,
+        [Intitule("DATUMPOINT")]
+        swSelDATUMPOINTS = 6,
+        [Intitule("OLEITEM")]
+        swSelOLEITEMS = 7,
+        [Intitule("ATTRIBUTE")]
+        swSelATTRIBUTES = 8,
+        [Intitule("SKETCH")]
+        swSelSKETCHES = 9,
+        [Intitule("SKETCHSEGMENT")]
+        swSelSKETCHSEGS = 10,
+        [Intitule("SKETCHPOINT")]
+        swSelSKETCHPOINTS = 11,
+        [Intitule("DRAWINGVIEW")]
+        swSelDRAWINGVIEWS = 12,
+        [Intitule("GTOL")]
+        swSelGTOLS = 13,
+        [Intitule("DIMENSION")]
+        swSelDIMENSIONS = 14,
+        [Intitule("NOTE")]
+        swSelNOTES = 15,
+        [Intitule("SECTIONLINE")]
+        swSelSECTIONLINES = 16,
+        [Intitule("DETAILCIRCLE")]
+        swSelDETAILCIRCLES = 17,
+        [Intitule("SECTIONTEXT")]
+        swSelSECTIONTEXT = 18,
+        [Intitule("SHEET")]
+        swSelSHEETS = 19,
+        [Intitule("COMPONENT")]
+        swSelCOMPONENTS = 20,
+        [Intitule("MATE")]
+        swSelMATES = 21,
+        [Intitule("BODYFEATURE")]
+        swSelBODYFEATURES = 22,
+        [Intitule("REFCURVE")]
+        swSelREFCURVES = 23,
+        [Intitule("EXTSKETCHSEGMENT")]
+        swSelEXTSKETCHSEGS = 24,
+        [Intitule("EXTSKETCHPOINT")]
+        swSelEXTSKETCHPOINTS = 25,
+        [Intitule("HELIX")]
+        swSelHELIX = 26,
+        [Intitule("REFERENCECURVES")]
+        swSelREFERENCECURVES = 26,
+        [Intitule("REFSURFACE")]
+        swSelREFSURFACES = 27,
+        [Intitule("CENTERMARKS")]
+        swSelCENTERMARKS = 28,
+        [Intitule("INCONTEXTFEAT")]
+        swSelINCONTEXTFEAT = 29,
+        [Intitule("MATEGROUP")]
+        swSelMATEGROUP = 30,
+        [Intitule("BREAKLINE")]
+        swSelBREAKLINES = 31,
+        [Intitule("INCONTEXTFEATS")]
+        swSelINCONTEXTFEATS = 32,
+        [Intitule("MATEGROUPS")]
+        swSelMATEGROUPS = 33,
+        [Intitule("SKETCHTEXT")]
+        swSelSKETCHTEXT = 34,
+        [Intitule("SFSYMBOL")]
+        swSelSFSYMBOLS = 35,
+        [Intitule("DATUMTAG")]
+        swSelDATUMTAGS = 36,
+        [Intitule("COMPPATTERN")]
+        swSelCOMPPATTERN = 37,
+        [Intitule("WELD")]
+        swSelWELDS = 38,
+        [Intitule("CTHREAD")]
+        swSelCTHREADS = 39,
+        [Intitule("DTMTARG")]
+        swSelDTMTARGS = 40,
+        [Intitule("POINTREF")]
+        swSelPOINTREFS = 41,
+        [Intitule("DCABINET")]
+        swSelDCABINETS = 42,
+        [Intitule("EXPLODEVIEWS")]
+        swSelEXPLVIEWS = 43,
+        [Intitule("EXPLODESTEPS")]
+        swSelEXPLSTEPS = 44,
+        [Intitule("EXPLODELINES")]
+        swSelEXPLLINES = 45,
+        [Intitule("SILHOUETTE")]
+        swSelSILHOUETTES = 46,
+        [Intitule("CONFIGURATIONS")]
+        swSelCONFIGURATIONS = 47,
+        swSelOBJHANDLES = 48,
+        [Intitule("VIEWARROW")]
+        swSelARROWS = 49,
+        [Intitule("ZONES")]
+        swSelZONES = 50,
+        [Intitule("REFERENCE-EDGE")]
+        swSelREFEDGES = 51,
+        swSelREFFACES = 52,
+        swSelREFSILHOUETTE = 53,
+        [Intitule("BOM")]
+        swSelBOMS = 54,
+        [Intitule("EQNFOLDER")]
+        swSelEQNFOLDER = 55,
+        [Intitule("SKETCHHATCH")]
+        swSelSKETCHHATCH = 56,
+        [Intitule("IMPORTFOLDER")]
+        swSelIMPORTFOLDER = 57,
+        [Intitule("HYPERLINK")]
+        swSelVIEWERHYPERLINK = 58,
+        swSelMIDPOINTS = 59,
+        swSelCUSTOMSYMBOLS = 60,
+        [Intitule("COORDSYS")]
+        swSelCOORDSYS = 61,
+        [Intitule("REFLINE")]
+        swSelDATUMLINES = 62,
+        swSelROUTECURVES = 63,
+        [Intitule("BOMTEMP")]
+        swSelBOMTEMPS = 64,
+        [Intitule("ROUTEPOINT")]
+        swSelROUTEPOINTS = 65,
+        [Intitule("CONNECTIONPOINT")]
+        swSelCONNECTIONPOINTS = 66,
+        swSelROUTESWEEPS = 67,
+        [Intitule("POSGROUP")]
+        swSelPOSGROUP = 68,
+        [Intitule("BROWSERITEM")]
+        swSelBROWSERITEM = 69,
+        [Intitule("ROUTEFABRICATED")]
+        swSelFABRICATEDROUTE = 70,
+        [Intitule("SKETCHPOINTFEAT")]
+        swSelSKETCHPOINTFEAT = 71,
+        swSelCOMPSDONTOVERRIDE = 72,
+        swSelEMPTYSPACE = 72,
+        [Intitule("LIGHTS")]
+        swSelLIGHTS = 73,
+        swSelWIREBODIES = 74,
+        [Intitule("SURFACEBODY")]
+        swSelSURFACEBODIES = 75,
+        [Intitule("SOLIDBODY")]
+        swSelSOLIDBODIES = 76,
+        [Intitule("FRAMEPOINT")]
+        swSelFRAMEPOINT = 77,
+        swSelSURFBODIESFIRST = 78,
+        [Intitule("MANIPULATOR")]
+        swSelMANIPULATORS = 79,
+        [Intitule("PICTURE BODY")]
+        swSelPICTUREBODIES = 80,
+        swSelSOLIDBODIESFIRST = 81,
+        swSelHOLESERIES = 83,
+        [Intitule("LEADER")]
+        swSelLEADERS = 84,
+        [Intitule("SKETCHBITMAP")]
+        swSelSKETCHBITMAP = 85,
+        [Intitule("DOWLELSYM")]
+        swSelDOWELSYMS = 86,
+        [Intitule("EXTSKETCHTEXT")]
+        swSelEXTSKETCHTEXT = 88,
+        swSelBLOCKINST = 93,
+        [Intitule("FTRFOLDER")]
+        swSelFTRFOLDER = 94,
+        [Intitule("SKETCHREGION")]
+        swSelSKETCHREGION = 95,
+        [Intitule("SKETCHCONTOUR")]
+        swSelSKETCHCONTOUR = 96,
+        [Intitule("BOMFEATURE")]
+        swSelBOMFEATURES = 97,
+        [Intitule("ANNOTATIONTABLES")]
+        swSelANNOTATIONTABLES = 98,
+        [Intitule("BLOCKDEF")]
+        swSelBLOCKDEF = 99,
+        [Intitule("CENTERMARKSYMS")]
+        swSelCENTERMARKSYMS = 100,
+        [Intitule("SIMULATION")]
+        swSelSIMULATION = 101,
+        [Intitule("SIMULATION_ELEMENT")]
+        swSelSIMELEMENT = 102,
+        [Intitule("CENTERLINE")]
+        swSelCENTERLINES = 103,
+        [Intitule("HOLETABLE")]
+        swSelHOLETABLEFEATS = 104,
+        [Intitule("HOLETABLEAXIS")]
+        swSelHOLETABLEAXES = 105,
+        [Intitule("WELDMENT")]
+        swSelWELDMENT = 106,
+        [Intitule("SUBWELDMENT")]
+        swSelSUBWELDFOLDER = 107,
+        swSelEXCLUDEMANIPULATORS = 111,
+        [Intitule("REVISIONTABLE")]
+        swSelREVISIONTABLE = 113,
+        [Intitule("SUBSKETCHINST")]
+        swSelSUBSKETCHINST = 114,
+        [Intitule("WELDMENTTABLE")]
+        swSelWELDMENTTABLEFEATS = 116,
+        [Intitule("BDYFOLDER")]
+        swSelBODYFOLDER = 118,
+        [Intitule("REVISIONTABLEFEAT")]
+        swSelREVISIONTABLEFEAT = 119,
+        swSelSUBATOMFOLDER = 121,
+        swSelWELDBEADS = 122,
+        [Intitule("EMBEDLINKDOC")]
+        swSelEMBEDLINKDOC = 123,
+        [Intitule("JOURNAL")]
+        swSelJOURNAL = 124,
+        [Intitule("DOCSFOLDER")]
+        swSelDOCSFOLDER = 125,
+        [Intitule("COMMENTSFOLDER")]
+        swSelCOMMENTSFOLDER = 126,
+        [Intitule("COMMENT")]
+        swSelCOMMENT = 127,
+        [Intitule("SWIFTANN")]
+        swSelSWIFTANNOTATIONS = 130,
+        [Intitule("SWIFTFEATURE")]
+        swSelSWIFTFEATURES = 132,
+        [Intitule("CAMERAS")]
+        swSelCAMERAS = 136,
+        [Intitule("MATESUPPLEMENT")]
+        swSelMATESUPPLEMENT = 138,
+        [Intitule("ANNVIEW")]
+        swSelANNOTATIONVIEW = 139,
+        [Intitule("GENERALTABLEFEAT")]
+        swSelGENERALTABLEFEAT = 142,
+        [Intitule("VISUALSTATE")]
+        swSelDISPLAYSTATE = 148,
+        [Intitule("SUBSKETCHDEF")]
+        swSelSUBSKETCHDEF = 154,
+        [Intitule("OBJGROUP")]
+        swSelOBJGROUP = 155,
+        [Intitule("SWIFTSCHEMA")]
+        swSelSWIFTSCHEMA = 159,
+        [Intitule("TITLEBLOCK")]
+        swSelTITLEBLOCK = 192,
+        [Intitule("TITLEBLOCKTABLEFEAT")]
+        swSelTITLEBLOCKTABLEFEAT = 206,
+        swSelPLANESECTIONS = 219,
+        [Intitule("COSMETICWELDS")]
+        swSelCOSMETICWELDS = 220,
+        [Intitule("MAGNETICLINES")]
+        SwSelMAGNETICLINES = 225,
+        [Intitule("PUNCHTABLE")]
+        swSelPUNCHTABLEFEATS = 234,
+        swSelREVISIONCLOUDS = 240,
+        swSelBorder = 254,
+        [Intitule("SELECTIONSETFOLDER")]
+        swSelSELECTIONSETFOLDER = 258,
+        [Intitule("SUBSELECTIONSETNODE")]
+        swSelSELECTIONSETNODE = 259,
+
     }
 }

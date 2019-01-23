@@ -101,6 +101,13 @@
     <Compile Include="Macros\BoutonAfficherLogDebug.cs" />
     <Compile Include="ModuleCreerSymetrie\CmdCreerSymetrie.cs" />
     <Compile Include="ModuleCreerSymetrie\PageCreerSymetrie.cs" />
+    <Compile Include="ModuleEchelleVue\BoutonEchelleVue.cs" />
+    <Compile Include="ModuleEchelleVue\FormEchelleVue.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModuleEchelleVue\FormEchelleVue.Designer.cs">
+      <DependentUpon>FormEchelleVue.cs</DependentUpon>
+    </Compile>
     <Compile Include="ModuleProduction\BoutonAfficherMasquerEsquisseReperage.cs" />
     <Compile Include="ModuleProduction\BoutonCommandeProfil.cs" />
     <Compile Include="ModuleProduction\BoutonNettoyerReperage.cs" />
@@ -235,6 +242,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ModuleEchelleVue\FormEchelleVue.resx">
+      <DependentUpon>FormEchelleVue.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="NotePad.resx">
       <DependentUpon>NotePad.cs</DependentUpon>
     </EmbeddedResource>

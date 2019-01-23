@@ -204,7 +204,7 @@ namespace ModuleProduction.ModuleInsererNote
                 }
                 else
                 {
-                    var typeSel = MdlBase.eSelect_RecupererTypeObjet();
+                    var typeSel = MdlBase.eSelect_RecupererSwTypeObjet();
                     var typeCorps = eTypeCorps.Autre;
 
                     if (typeSel == swSelectType_e.swSelFACES)
