@@ -12,6 +12,11 @@ namespace Macros
         ModuleNom("VueInverserStyle")]
     public class BoutonVueInverserStyle : BoutonBase
     {
+        public BoutonVueInverserStyle()
+        {
+            LogToWindowLog = false;
+        }
+
         protected override void Command()
         {
             try

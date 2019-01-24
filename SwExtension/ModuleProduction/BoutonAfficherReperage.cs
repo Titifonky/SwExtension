@@ -16,6 +16,11 @@ namespace ModuleProduction
 
     public class BoutonAfficherReperage : BoutonBase
     {
+        public BoutonAfficherReperage()
+        {
+            LogToWindowLog = false;
+        }
+
         protected override void Command()
         {
             try

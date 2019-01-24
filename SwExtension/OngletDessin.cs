@@ -168,6 +168,7 @@ namespace SwExtension
             BtParent.Checked = false;
             BtParent.Enabled = true;
             BtPersonnalise.Checked = false;
+            CurrentClickVue = false;
         }
 
         private void OnClickFeuille(object sender, EventArgs e)
@@ -195,8 +196,12 @@ namespace SwExtension
             }
         }
 
+        private Boolean CurrentClickVue = false;
+
         private void OnClickVue(object sender, EventArgs e)
         {
+            if (CurrentClickVue) return;
+
             try
             {
                 if (DessinActif.IsNull() || (MdlActif.eSelect_Nb() == 0)) return;
@@ -205,6 +210,8 @@ namespace SwExtension
 
                 if (typeSel == swSelectType_e.swSelDRAWINGVIEWS)
                 {
+                    CurrentClickVue = true;
+
                     var vue = MdlActif.eSelect_RecupererObjet<SolidWorks.Interop.sldworks.View>();
 
                     if (BtParent.Checked)
@@ -228,6 +235,10 @@ namespace SwExtension
                             }
                         }
                     }
+
+                    vue.eSelectionner(DessinActif);
+
+                    CurrentClickVue = false;
                 }
             }
             catch

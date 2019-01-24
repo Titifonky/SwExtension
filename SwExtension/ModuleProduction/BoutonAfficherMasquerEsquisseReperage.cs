@@ -13,7 +13,10 @@ namespace ModuleProduction
 
     public class BoutonAfficherMasquerEsquisseReperage : BoutonBase
     {
-        public BoutonAfficherMasquerEsquisseReperage() { }
+        public BoutonAfficherMasquerEsquisseReperage()
+        {
+            LogToWindowLog = false;
+        }
 
         protected override void Command()
         {
