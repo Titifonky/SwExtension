@@ -62,13 +62,18 @@ namespace SwExtension
             }
             else if (MdlActif.IsRef() && (MdlActif.TypeDoc() != eTypeDoc.Dessin))
             {
-                ReinitialiserFeuille();
-                EnleverEvenement();
-                MdlActif = null;
-                DessinActif = null;
+                Deconnecter();
             }
 
             return 1;
+        }
+
+        public void Deconnecter()
+        {
+            ReinitialiserFeuille();
+            EnleverEvenement();
+            MdlActif = null;
+            DessinActif = null;
         }
 
         public int CloseDoc(String nomFichier, int raison)
@@ -167,53 +172,67 @@ namespace SwExtension
 
         private void OnClickFeuille(object sender, EventArgs e)
         {
-            if (DessinActif.IsNull()) return;
-
-            var Feuille = DessinActif.eFeuilleActive();
-            var echelle = TextBoxFeuille.Text.Split(':');
-            if (echelle.Length == 2)
+            try
             {
-                var e1 = echelle[0].eToDouble();
-                var e2 = echelle[1].eToDouble();
-                if (e1 > 0 && e2 > 0)
+                if (DessinActif.IsNull()) return;
+
+                var Feuille = DessinActif.eFeuilleActive();
+                var echelle = TextBoxFeuille.Text.Split(':');
+                if (echelle.Length == 2)
                 {
-                    Feuille.SetScale(e1, e2, false, false);
-                    MdlActif.EditRebuild3();
+                    var e1 = echelle[0].eToDouble();
+                    var e2 = echelle[1].eToDouble();
+                    if (e1 > 0 && e2 > 0)
+                    {
+                        Feuille.SetScale(e1, e2, false, false);
+                        MdlActif.EditRebuild3();
+                    }
                 }
+            }
+            catch
+            {
+                Deconnecter();
             }
         }
 
         private void OnClickVue(object sender, EventArgs e)
         {
-            if (DessinActif.IsNull() || (MdlActif.eSelect_Nb() == 0)) return;
-
-            var typeSel = MdlActif.eSelect_RecupererSwTypeObjet();
-
-            if (typeSel == swSelectType_e.swSelDRAWINGVIEWS)
+            try
             {
-                var vue = MdlActif.eSelect_RecupererObjet<SolidWorks.Interop.sldworks.View>();
+                if (DessinActif.IsNull() || (MdlActif.eSelect_Nb() == 0)) return;
 
-                if (BtParent.Checked)
-                    vue.UseParentScale = true;
-                else if (BtFeuille.Checked)
-                    vue.UseSheetScale = 1;
-                else if (BtPersonnalise.Checked)
+                var typeSel = MdlActif.eSelect_RecupererSwTypeObjet();
+
+                if (typeSel == swSelectType_e.swSelDRAWINGVIEWS)
                 {
-                    var echelle = TextBoxVue.Text.Split(':');
-                    if (echelle.Length == 2)
+                    var vue = MdlActif.eSelect_RecupererObjet<SolidWorks.Interop.sldworks.View>();
+
+                    if (BtParent.Checked)
+                        vue.UseParentScale = true;
+                    else if (BtFeuille.Checked)
+                        vue.UseSheetScale = 1;
+                    else if (BtPersonnalise.Checked)
                     {
-                        var e1 = echelle[0].eToDouble();
-                        var e2 = echelle[1].eToDouble();
-                        if (e1 > 0 && e2 > 0)
+                        var echelle = TextBoxVue.Text.Split(':');
+                        if (echelle.Length == 2)
                         {
-                            vue.ScaleRatio = new Double[] { e1, e2 };
-                            //vue.ScaleDecimal = e1 / e2;
-                            MdlActif.ForceRebuild3(true);
-                            MdlActif.EditRebuild3();
-                            MdlActif.GraphicsRedraw2();
+                            var e1 = echelle[0].eToDouble();
+                            var e2 = echelle[1].eToDouble();
+                            if (e1 > 0 && e2 > 0)
+                            {
+                                vue.ScaleRatio = new Double[] { e1, e2 };
+                                //vue.ScaleDecimal = e1 / e2;
+                                MdlActif.ForceRebuild3(true);
+                                MdlActif.EditRebuild3();
+                                MdlActif.GraphicsRedraw2();
+                            }
                         }
                     }
                 }
+            }
+            catch
+            {
+                ReinitialiserVue();
             }
         }
 
