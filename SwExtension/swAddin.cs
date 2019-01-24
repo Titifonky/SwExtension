@@ -26,6 +26,9 @@ namespace SwExtension
         private TaskpaneView _TaskpaneOngletParametres;
         private OngletParametres _OngletParametres;
 
+        private TaskpaneView _TaskpaneOngletDessin;
+        private OngletDessin _OngletDessin;
+
         public static SldWorks SwApp { get { return _SwApp; } }
 
         bool ISwAddin.ConnectToSW(object ThisSW, int Cookie)
@@ -116,26 +119,38 @@ namespace SwExtension
 
             String CheminImageOngletLog = Path.Combine(CheminDossier, "Icon_OngletLog." + ImageFormat.Bmp.ToString().ToLower());
             String CheminImageOngletParametre = Path.Combine(CheminDossier, "Icon_OngletParametre." + ImageFormat.Bmp.ToString().ToLower());
+            String CheminImageOngletDessin = Path.Combine(CheminDossier, "Icon_OngletDessin." + ImageFormat.Bmp.ToString().ToLower());
 
             Image ImgOngletLog = "L".eConvertirEnBmp(18, 16);
             Image ImgOngletParametre = "P".eConvertirEnBmp(18, 16);
+            Image ImgOngletDessin = "D".eConvertirEnBmp(18, 16);
 
             ImgOngletLog.Save(CheminImageOngletLog, ImageFormat.Bmp);
             ImgOngletParametre.Save(CheminImageOngletParametre, ImageFormat.Bmp);
+            ImgOngletDessin.Save(CheminImageOngletDessin, ImageFormat.Bmp);
 
-            _TaskpaneOngletParametres = _SwApp.CreateTaskpaneView2(CheminImageOngletParametre, "Parametres");
             _TaskpaneOngletLog = _SwApp.CreateTaskpaneView2(CheminImageOngletLog, "Log");
+            _TaskpaneOngletParametres = _SwApp.CreateTaskpaneView2(CheminImageOngletParametre, "Parametres");
+            _TaskpaneOngletDessin = _SwApp.CreateTaskpaneView2(CheminImageOngletDessin, "Dessin");
 
             _OngletLog = new OngletLog();
             _OngletParametres = new OngletParametres(SwApp);
+            _OngletDessin = new OngletDessin(SwApp);
 
             _TaskpaneOngletLog.DisplayWindowFromHandlex64(_OngletLog.Handle.ToInt64());
             _TaskpaneOngletParametres.DisplayWindowFromHandlex64(_OngletParametres.Handle.ToInt64());
+            _TaskpaneOngletDessin.DisplayWindowFromHandlex64(_OngletDessin.Handle.ToInt64());
 
             _SwApp.ActiveDocChangeNotify += _OngletParametres.ActiveDocChange;
+            _SwApp.ActiveModelDocChangeNotify += _OngletParametres.ActiveDocChange;
             _SwApp.FileCloseNotify += delegate (String nomFichier, int raison) { return _OngletParametres.ActiveDocChange(); };
 
+            _SwApp.ActiveDocChangeNotify += _OngletDessin.ActiveDocChange;
+            _SwApp.ActiveModelDocChangeNotify += _OngletDessin.ActiveDocChange;
+            _SwApp.FileCloseNotify += delegate (String nomFichier, int raison) { return _OngletDessin.ActiveDocChange(); };
+
             _SwApp.ActiveDocChangeNotify += _OngletParametres.Rechercher_Propriete_Modele;
+            _SwApp.ActiveModelDocChangeNotify += _OngletParametres.Rechercher_Propriete_Modele;
             _SwApp.FileCloseNotify += delegate (String nomFichier, int raison) { return _OngletParametres.Rechercher_Propriete_Modele(); };
 
             WindowLog.Text += delegate (String t, Boolean Ajouter)
@@ -161,12 +176,17 @@ namespace SwExtension
         public void SupprimerTaskpane()
         {
             _OngletLog = null;
+            _OngletParametres = null;
+            _OngletDessin = null;
             _TaskpaneOngletLog.DeleteView();
             _TaskpaneOngletParametres.DeleteView();
+            _TaskpaneOngletDessin.DeleteView();
             Marshal.ReleaseComObject(_TaskpaneOngletLog);
             Marshal.ReleaseComObject(_TaskpaneOngletParametres);
+            Marshal.ReleaseComObject(_TaskpaneOngletDessin);
             _TaskpaneOngletLog = null;
             _TaskpaneOngletParametres = null;
+            _TaskpaneOngletDessin = null;
         }
     }
 }

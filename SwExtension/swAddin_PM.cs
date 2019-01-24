@@ -2,7 +2,6 @@
 using Macros;
 using ModuleContraindreComposant;
 using ModuleCreerSymetrie;
-using ModuleEchelleVue;
 using ModuleEmpreinte;
 using ModuleExportFichier.ModuleDxfDwg;
 using ModuleExportFichier.ModulePdf;
@@ -169,7 +168,6 @@ namespace SwExtension
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde("Nt", typeof(PageInsererNote));
                 _Mnu.AjouterCmde("Dj", typeof(BoutonDateDuJour));
-                _Mnu.AjouterCmde("Ev", typeof(BoutonEchelleVue));
 
                 ////==================================================================================================
                 //_Mnu = _eListeMenu.Add("Laser", "Fonctions pour le débit laser");

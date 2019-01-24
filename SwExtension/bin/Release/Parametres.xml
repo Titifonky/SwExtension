@@ -19,8 +19,8 @@
     <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">C:\Users\MFB\Desktop</Parametre>
   </Module>
   <Module name="ExportPdf" intitule="Exporter en Pdf">
-    <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="SelectionnerDossier" intitule="Selectionner un dossier" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="SelectionnerDossier" intitule="Selectionner un dossier" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="ToutesLesFeuilles" intitule="Toutes les feuilles" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="FormatExport" intitule="Format" tip="" type="Outils.eTypeFichierExport">PDF</Parametre>
     <Parametre name="ExporterEnCouleur" intitule="Exporter en couleur" tip="" type="System.Boolean">True</Parametre>
@@ -236,12 +236,12 @@
   <Module name="AfficherReperage" intitule="Contrôler le reperage" />
   <Module name="InsererNoteQuantite" intitule="Inserer les quantités">
     <Parametre name="LigneAttache" intitule="Ligne d'attache" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="ModifierHtTexte" intitule="Modifier la ht du texte" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="ModifierHtTexte" intitule="Modifier la ht du texte" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="HtTexte" intitule="Ht du texte en mm" tip="Ht du texte en mm" type="System.Int32">10</Parametre>
     <Parametre name="Reperage" intitule="Reperage" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="AfficherQuantite" intitule="Ajouter la quantité" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="Description" intitule="Description" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="PrefixeTole" intitule="Prefixe tole" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="Description" intitule="Description" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="PrefixeTole" intitule="Prefixe tole" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="AjouterMateriau" intitule="Ajouter le matériau" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="ProfilCourt" intitule="Nom de profil court" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="SautDeLigneMateriau" intitule="Saut de ligne matériau" tip="" type="System.Boolean">False</Parametre>
