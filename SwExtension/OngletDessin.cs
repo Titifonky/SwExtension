@@ -62,6 +62,7 @@ namespace SwExtension
             }
             else if(MdlActif.IsRef() && (MdlActif.TypeDoc() != eTypeDoc.Dessin))
             {
+                ReinitialiserFeuille();
                 EnleverEvenement();
                 MdlActif = null;
                 DessinActif = null;
@@ -84,14 +85,11 @@ namespace SwExtension
 
         private int DessinActif_ActivateSheetPostNotify(string SheetName)
         {
+            LabelFeuille.Text = String.Format("Feuille : {0}", SheetName);
             var Feuille = DessinActif.Sheet[SheetName];
             var prop = (Double[])Feuille.GetProperties2();
             TextBoxFeuille.Text = String.Format("{0}:{1}", prop[2], prop[3]);
-            TextBoxVue.Text = "";
-            BtFeuille.Checked = false;
-            BtParent.Checked = false;
-            BtParent.Enabled = true;
-            BtPersonnalise.Checked = false;
+            ReinitialiserVue();
             return 0;
         }
 
@@ -102,6 +100,9 @@ namespace SwExtension
             if (typeSel == swSelectType_e.swSelDRAWINGVIEWS)
             {
                 var vue = MdlActif.eSelect_RecupererObjet<SolidWorks.Interop.sldworks.View>();
+
+                LabelVue.Text = String.Format("Vue : {0}", vue.GetName2());
+
                 var echelle = (Double[])vue.ScaleRatio;
                 var vueParent = (SolidWorks.Interop.sldworks.View)vue.GetBaseView();
 
@@ -122,8 +123,30 @@ namespace SwExtension
 
                 TextBoxVue.Text = String.Format("{0}:{1}", echelle[0], echelle[1]);
             }
+            else
+            {
+                if (LabelVue.Text != "Vue")
+                    ReinitialiserVue();
+            }
 
             return 0;
+        }
+
+        private void ReinitialiserFeuille()
+        {
+            LabelFeuille.Text = "Feuille";
+            TextBoxFeuille.Text = "";
+            ReinitialiserVue();
+        }
+
+        private void ReinitialiserVue()
+        {
+            LabelVue.Text = "Vue";
+            TextBoxVue.Text = "";
+            BtFeuille.Checked = false;
+            BtParent.Checked = false;
+            BtParent.Enabled = true;
+            BtPersonnalise.Checked = false;
         }
 
         private void OnClickFeuille(object sender, EventArgs e)
