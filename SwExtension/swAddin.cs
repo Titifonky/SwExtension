@@ -128,18 +128,18 @@ namespace SwExtension
             ImgOngletLog.Save(CheminImageOngletLog, ImageFormat.Bmp);
             ImgOngletParametre.Save(CheminImageOngletParametre, ImageFormat.Bmp);
             ImgOngletDessin.Save(CheminImageOngletDessin, ImageFormat.Bmp);
-
-            _TaskpaneOngletLog = _SwApp.CreateTaskpaneView2(CheminImageOngletLog, "Log");
+            
             _TaskpaneOngletParametres = _SwApp.CreateTaskpaneView2(CheminImageOngletParametre, "Parametres");
             _TaskpaneOngletDessin = _SwApp.CreateTaskpaneView2(CheminImageOngletDessin, "Dessin");
+            _TaskpaneOngletLog = _SwApp.CreateTaskpaneView2(CheminImageOngletLog, "Log");
 
             _OngletLog = new OngletLog();
             _OngletParametres = new OngletParametres(SwApp);
             _OngletDessin = new OngletDessin(SwApp);
-
-            _TaskpaneOngletLog.DisplayWindowFromHandlex64(_OngletLog.Handle.ToInt64());
+            
             _TaskpaneOngletParametres.DisplayWindowFromHandlex64(_OngletParametres.Handle.ToInt64());
             _TaskpaneOngletDessin.DisplayWindowFromHandlex64(_OngletDessin.Handle.ToInt64());
+            _TaskpaneOngletLog.DisplayWindowFromHandlex64(_OngletLog.Handle.ToInt64());
 
             _SwApp.ActiveDocChangeNotify += _OngletParametres.ActiveDocChange;
             _SwApp.ActiveModelDocChangeNotify += _OngletParametres.ActiveDocChange;
