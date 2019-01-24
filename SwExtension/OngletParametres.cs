@@ -136,6 +136,15 @@ namespace SwExtension
             return 1;
         }
 
+        public int CloseDoc(String nomFichier, int raison)
+        {
+            ViderParam();
+
+            MdlActif = null;
+
+            return 1;
+        }
+
         #region Parametres
 
         private void ViderParam()
@@ -350,8 +359,8 @@ namespace SwExtension
             if (MdlActif.TypeDoc() == eTypeDoc.Assemblage)
                 CpEdited = MdlActif.eAssemblyDoc().GetEditTargetComponent();
 
-            if(CpEdited.IsRef() && (CpCourant.GetPathName() != CpEdited.GetPathName()))
-                DicCp.Add(Cle(CpEdited) , CpEdited);
+            if (CpEdited.IsRef() && (CpCourant.GetPathName() != CpEdited.GetPathName()))
+                DicCp.Add(Cle(CpEdited), CpEdited);
             else
                 DicCp.Add("Courant", CpCourant);
 

@@ -54,19 +54,29 @@ namespace SwExtension
         {
             MdlActif = _Sw.ActiveDoc;
 
-            if (DessinActif.IsNull() &&  MdlActif.IsRef() && (MdlActif.TypeDoc() == eTypeDoc.Dessin))
+            if (DessinActif.IsNull() && MdlActif.IsRef() && (MdlActif.TypeDoc() == eTypeDoc.Dessin))
             {
                 DessinActif = MdlActif.eDrawingDoc();
                 AjouterEvenement();
                 DessinActif_ActivateSheetPostNotify(DessinActif.eFeuilleActive().GetName());
             }
-            else if(MdlActif.IsRef() && (MdlActif.TypeDoc() != eTypeDoc.Dessin))
+            else if (MdlActif.IsRef() && (MdlActif.TypeDoc() != eTypeDoc.Dessin))
             {
                 ReinitialiserFeuille();
                 EnleverEvenement();
                 MdlActif = null;
                 DessinActif = null;
             }
+
+            return 1;
+        }
+
+        public int CloseDoc(String nomFichier, int raison)
+        {
+            ReinitialiserFeuille();
+            EnleverEvenement();
+            MdlActif = null;
+            DessinActif = null;
 
             return 1;
         }
@@ -93,12 +103,16 @@ namespace SwExtension
             return 0;
         }
 
+        private Boolean InitTextBoxVue = false;
+
         private int Dessin_UserSelectionPostNotify()
         {
             var typeSel = MdlActif.eSelect_RecupererSwTypeObjet();
 
             if (typeSel == swSelectType_e.swSelDRAWINGVIEWS)
             {
+                InitTextBoxVue = true;
+
                 var vue = MdlActif.eSelect_RecupererObjet<SolidWorks.Interop.sldworks.View>();
 
                 LabelVue.Text = String.Format("Vue : {0}", vue.GetName2());
@@ -114,14 +128,16 @@ namespace SwExtension
                 else
                     BtParent.Enabled = true;
 
-                if(vueParent.IsRef() && vue.UseParentScale)
+                if (vueParent.IsRef() && vue.UseParentScale)
                     BtParent.Checked = true;
-                else if(vue.UseSheetScale.ToBoolean())
+                else if (vue.UseSheetScale.ToBoolean())
                     BtFeuille.Checked = true;
                 else
                     BtPersonnalise.Checked = true;
 
                 TextBoxVue.Text = String.Format("{0}:{1}", echelle[0], echelle[1]);
+
+                InitTextBoxVue = false;
             }
             else
             {
@@ -190,7 +206,7 @@ namespace SwExtension
                         var e2 = echelle[1].eToDouble();
                         if (e1 > 0 && e2 > 0)
                         {
-                            vue.ScaleRatio = new Double[] { e1 , e2 };
+                            vue.ScaleRatio = new Double[] { e1, e2 };
                             //vue.ScaleDecimal = e1 / e2;
                             MdlActif.ForceRebuild3(true);
                             MdlActif.EditRebuild3();
@@ -203,7 +219,8 @@ namespace SwExtension
 
         private void TextBoxVue_TextChanged(object sender, EventArgs e)
         {
-            BtPersonnalise.Checked = true;
+            if (!InitTextBoxVue)
+                BtPersonnalise.Checked = true;
         }
     }
 }

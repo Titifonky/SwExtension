@@ -143,11 +143,11 @@ namespace SwExtension
 
             _SwApp.ActiveDocChangeNotify += _OngletParametres.ActiveDocChange;
             _SwApp.ActiveModelDocChangeNotify += _OngletParametres.ActiveDocChange;
-            _SwApp.FileCloseNotify += delegate (String nomFichier, int raison) { return _OngletParametres.ActiveDocChange(); };
+            _SwApp.FileCloseNotify += _OngletParametres.CloseDoc;
 
             _SwApp.ActiveDocChangeNotify += _OngletDessin.ActiveDocChange;
             _SwApp.ActiveModelDocChangeNotify += _OngletDessin.ActiveDocChange;
-            _SwApp.FileCloseNotify += delegate (String nomFichier, int raison) { return _OngletDessin.ActiveDocChange(); };
+            _SwApp.FileCloseNotify += _OngletDessin.CloseDoc;
 
             _SwApp.ActiveDocChangeNotify += _OngletParametres.Rechercher_Propriete_Modele;
             _SwApp.ActiveModelDocChangeNotify += _OngletParametres.Rechercher_Propriete_Modele;
