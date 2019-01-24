@@ -85,6 +85,7 @@
     <Compile Include="Macros\BoutonActiverRelationAuto.cs" />
     <Compile Include="Macros\BoutonActiverAimantation.cs" />
     <Compile Include="Macros\BoutonDateDuJour.cs" />
+    <Compile Include="Macros\BoutonModifierLumiere.cs" />
     <Compile Include="Macros\BoutonVueInverserStyle.cs" />
     <Compile Include="Macros\BoutonRetournerDvp.cs" />
     <Compile Include="Macros\BoutonOuvrirDossier.cs" />
