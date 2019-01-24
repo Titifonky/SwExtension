@@ -251,4 +251,5 @@
   <Module name="EchelleVue" intitule="Echelle de la vue">
     <Parametre name="PositionVue" intitule="Position de la vue :" tip="" type="System.String">130:130</Parametre>
   </Module>
+  <Module name="ModifierLumiere" intitule="Modifier les lumières" />
 </Parametres>
