@@ -1,11 +1,7 @@
 ﻿using LogDebugging;
 using Outils;
-using SolidWorks.Interop.sldworks;
-using SolidWorks.Interop.swconst;
 using SwExtension;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace ModuleProduction

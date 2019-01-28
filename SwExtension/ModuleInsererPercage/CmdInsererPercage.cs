@@ -290,7 +290,7 @@ namespace ModuleInsererPercage
             foreach (Mate2 M in Liste)
             {
                 Feature F = M as Feature;
-                F.eSelectionnerPMP(MdlBase);
+                F.eSelectionnerById2(MdlBase);
                 MdlBase.EditSuppress2();
             }
 

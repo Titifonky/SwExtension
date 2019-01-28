@@ -55,8 +55,8 @@ namespace ModuleContraindreComposant
                     Feature PlanRef = ListePlanRef[i];
                     Feature Plan = ListePlan[i];
 
-                    PlanRef.eSelectionnerPMP(MdlBase, -1, false);
-                    Plan.eSelectionnerPMP(MdlBase, -1, true);
+                    PlanRef.eSelectionnerById2(MdlBase, -1, false);
+                    Plan.eSelectionnerById2(MdlBase, -1, true);
 
                     FxContrainte = _Ass.AddMate5((int)swMateType_e.swMateCOINCIDENT, (int)swMateAlign_e.swMateAlignALIGNED, false, 0, 0, 0, 0, 0, 0, 0, 0, false, true, 0, out Erreur);
                 }

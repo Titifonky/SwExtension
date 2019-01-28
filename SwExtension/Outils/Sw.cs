@@ -3016,11 +3016,24 @@ namespace Outils
         /// <param name="mdl"></param>
         /// <param name="marque"></param>
         /// <param name="ajouter"></param>
-        public static Boolean eSelectionnerPMP(this Feature f, ModelDoc2 mdl, int marque = -1, Boolean ajouter = false)
+        public static Boolean eSelectionnerById2(this Feature f, ModelDoc2 mdl, int marque = -1, Boolean ajouter = false)
         {
             String TypeF;
             String Nom = f.GetNameForSelection(out TypeF);
             return mdl.Extension.SelectByID2(Nom, TypeF, 0, 0, 0, ajouter, marque, null, (int)swSelectOption_e.swSelectOptionDefault);
+        }
+
+        public static Boolean eSelectionnerById2Dessin(this Feature f, ModelDoc2 mdl, View vue, int marque = -1, Boolean ajouter = false)
+        {
+            String TypeF;
+            String NomFonctionPourSelection = f.GetNameForSelection(out TypeF);
+            var lst = new List<String>(NomFonctionPourSelection.Split('@'));
+            var NomFonction = String.Format("{0}@{1}", lst[0], lst[1]);
+            lst.RemoveAt(0);
+            var NomVuePourSelection = String.Format("{0}/{1}", vue.GetName2(), String.Join("@", lst));
+            NomFonctionPourSelection = String.Format("{0}@{1}", NomFonction, NomVuePourSelection);
+
+            return mdl.Extension.SelectByID2(NomFonctionPourSelection, TypeF, 0, 0, 0, ajouter, marque, null, (int)swSelectOption_e.swSelectOptionDefault);
         }
 
         /// <summary>

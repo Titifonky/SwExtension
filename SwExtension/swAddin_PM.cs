@@ -156,7 +156,7 @@ namespace SwExtension
                 _Mnu.AjouterCmde("Mv", typeof(BoutonMasquerCorpsVue));
                 _Mnu.AjouterCmde("Rv", typeof(BoutonRetournerDvp));
                 _Mnu.AjouterCmde("Is", typeof(BoutonVueInverserStyle));
-                
+                _Mnu.AjouterCmde("Er", typeof(BoutonAfficherEsquisseAssemblage));
 
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde("Ed", typeof(PageDxfDwg));
