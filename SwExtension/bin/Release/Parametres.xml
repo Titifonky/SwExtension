@@ -254,5 +254,6 @@
   <Module name="ModifierLumiere" intitule="Modifier les lumières" />
   <Module name="BoutonAfficherEsquisseAssemblage" intitule="Afficher/Masquer l'esquisse de reperage">
     <Parametre name="AfficherMasquer" intitule="Afficher/Masquer les esquisses" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="NomEsquisse" intitule="Nom de l'esquisse à modifier" tip="" type="System.String">E - Reperage Dessin</Parametre>
   </Module>
 </Parametres>

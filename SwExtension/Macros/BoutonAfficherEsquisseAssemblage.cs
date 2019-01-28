@@ -37,7 +37,10 @@ namespace Macros
                 MdlBase.eEffacerSelection();
 
                 foreach (var vue in ListeVue)
-                    ParcourirDrawingComponent(vue.RootDrawingComponent, vue, NomEsquisse.GetValeur<String>(), AfficherMasquer.GetValeur<Boolean>());
+                {
+                    var dcp = vue.RootDrawingComponent;
+                    ParcourirDrawingComponent(MdlBase, dcp, vue, NomEsquisse.GetValeur<String>(), AfficherMasquer.GetValeur<Boolean>());
+                }
 
                 MdlBase.eEffacerSelection();
 
@@ -51,36 +54,47 @@ namespace Macros
             }
         }
 
-        private void ParcourirDrawingComponent(DrawingComponent dcp, View vue, String nomEsquisse, Boolean afficher)
+        private void ParcourirDrawingComponent(ModelDoc2 mdlBase, DrawingComponent dcp, View vue, String nomEsquisse, Boolean afficher)
         {
-            Component2 cp = dcp.Component;
-            cp.eParcourirFonctions(
-                f =>
-                {
-                    if (f.Name == nomEsquisse)
-                    {
-                        f.eSelectionnerById2Dessin(MdlBase, vue);
-                        if (afficher)
-                            MdlBase.UnblankSketch();
-                        else
-                            MdlBase.BlankSketch();
+            // Si le composant est Racine, on passe par le modele pour parcourir les fonctions
+            // sinon ça ne marche pas
+            if(dcp.Component.IsRoot())
+                dcp.View.ReferencedDocument.eParcourirFonctions(f => AppliquerOptions(mdlBase, f, vue, nomEsquisse, afficher), false);
+            else
+                dcp.Component.eParcourirFonctions(f => AppliquerOptions(mdlBase, f, vue, nomEsquisse, afficher), false);
 
-                        return true;
-                    }
-                    
-                    return false;
-                }
-                , false);
-
-            if (dcp.GetChildrenCount() > 0)
+            try
             {
-                Object[] l = (object[])dcp.GetChildren();
-                foreach (DrawingComponent sdcp in l)
+                if (dcp.GetChildrenCount() > 0)
                 {
-                    if (sdcp.Visible)
-                        ParcourirDrawingComponent(sdcp, vue, nomEsquisse, afficher);
+                    Object[] l = (object[])dcp.GetChildren();
+                    foreach (DrawingComponent sdcp in l)
+                    {
+                        if (sdcp.Visible)
+                            ParcourirDrawingComponent(mdlBase, sdcp, vue, nomEsquisse, afficher);
+                    }
                 }
             }
+            catch (Exception e)
+            {
+                this.LogErreur(new Object[] { e });
+            }
+        }
+
+        private Boolean AppliquerOptions(ModelDoc2 mdlBase, Feature f, View vue, String nomEsquisse, Boolean afficher)
+        {
+            if (f.Name == nomEsquisse)
+            {
+                f.eSelectionnerById2Dessin(mdlBase, vue);
+                if (afficher)
+                    mdlBase.UnblankSketch();
+                else
+                    mdlBase.BlankSketch();
+
+                return true;
+            }
+
+            return false;
         }
     }
 }
