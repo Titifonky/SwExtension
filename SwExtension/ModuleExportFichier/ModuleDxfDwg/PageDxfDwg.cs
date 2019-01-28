@@ -92,7 +92,9 @@ namespace ModuleExportFichier
 
                     _CheckBox_ExporterFeuilleEspacePapier = G.AjouterCheckBox(ExporterFeuilleEspacePapier);
 
-                    AvecIndice = false;
+                    AvecIndiceFichier = false;
+                    AvecIndiceDossier = false;
+
                     AjouterCalqueDossier();
 
                     _EnumComboBox_FormatExport.OnSelectionChanged += delegate (Object sender, int Item)

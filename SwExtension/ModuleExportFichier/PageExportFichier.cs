@@ -116,7 +116,8 @@ namespace ModuleExportFichier
         protected Dossier _DernierDossier;
         protected Dossier _SelectionnerDossier;
 
-        protected Boolean AvecIndice = true;
+        protected Boolean AvecIndiceFichier = true;
+        protected Boolean AvecIndiceDossier = true;
 
         public void AjouterCalqueDossier()
         {
@@ -124,8 +125,8 @@ namespace ModuleExportFichier
 
             String CheminDernierDossier = MdlBase.eDrawingDoc().eGetDernierDossier();
 
-            _DernierDossier = new Dossier(MdlBase, _Calque, GroupeDernierDossier, CheminDernierDossier, MdlBase.eNomSansExt(), FormatExport.GetValeur<eTypeFichierExport>(), false, false, AvecIndice);
-            _SelectionnerDossier = new Dossier(MdlBase, _Calque, GroupeSelectionnerDossier, OutilsCommun.CheminRelatif(MdlBase.eDossier(), MdlBase.eDossier()), MdlBase.eNomSansExt(), FormatExport.GetValeur<eTypeFichierExport>(), true, true, AvecIndice);
+            _DernierDossier = new Dossier(MdlBase, _Calque, GroupeDernierDossier, CheminDernierDossier, MdlBase.eNomSansExt(), FormatExport.GetValeur<eTypeFichierExport>(), false, AvecIndiceDossier, AvecIndiceFichier);
+            _SelectionnerDossier = new Dossier(MdlBase, _Calque, GroupeSelectionnerDossier, OutilsCommun.CheminRelatif(MdlBase.eDossier(), MdlBase.eDossier()), MdlBase.eNomSansExt(), FormatExport.GetValeur<eTypeFichierExport>(), true, AvecIndiceDossier, AvecIndiceFichier);
 
             _CheckBox_ToutesLesFeuilles.OnIsCheck += delegate (Object sender, Boolean value)
             {
