@@ -167,6 +167,9 @@ namespace ModuleProduction
                         PM.Delete2(CONSTANTES.REF_DOSSIER);
                         PM.Delete2(CONSTANTES.DESC_DOSSIER);
                         PM.Delete2(CONSTANTES.NOM_DOSSIER);
+
+                        String ValParDefaut = mdl.Extension.GetUserPreferenceString((int)swUserPreferenceStringValue_e.swSheetMetalDescription, (int)swUserPreferenceOption_e.swDetailingNoOptionSpecified);
+                        PM.ePropAdd(CONSTANTES.DESC_DOSSIER, ValParDefaut);
                     }
                 }
 
