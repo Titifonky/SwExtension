@@ -36,7 +36,7 @@ namespace Macros
 
                 MdlBase.eEffacerSelection();
 
-                MdlBase.FeatureManager.
+                
 
                 foreach (var vue in ListeVue)
                 {
