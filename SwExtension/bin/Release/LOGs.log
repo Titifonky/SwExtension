@@ -1,34 +1,60 @@
-13:29:21,267 | 
+14:02:37,300 | 
  
-13:29:21,277 | ====================================================================================================
-13:29:21,277 | |                                                                                                  |
-13:29:21,277 | |                                          DEBUG                                                   |
-13:29:21,277 | |                                                                                                  |
-13:29:21,277 | ====================================================================================================
-13:29:21,277 | 
+14:02:37,306 | ====================================================================================================
+14:02:37,306 | |                                                                                                  |
+14:02:37,306 | |                                          DEBUG                                                   |
+14:02:37,306 | |                                                                                                  |
+14:02:37,306 | ====================================================================================================
+14:02:37,306 | 
  
-13:29:37,747 | 				-> ## 01:29:37     0     0      AFFICHER/MASQUER L'ESQUISSE DE REPERAGE
-13:29:37,747 | 				-> ## 01:29:37     0     0  ========================
-13:29:37,747 | 				-> ## 01:29:37     0     0  
-13:29:38,407 | 				-> ## 01:29:38     1     1  Executé en 0s659
-13:29:38,411 | 				-> ## 01:29:38     1     0  
-13:29:39,457 | 				-> ## 01:29:39     0     0      AFFICHER/MASQUER L'ESQUISSE DE REPERAGE
-13:29:39,457 | 				-> ## 01:29:39     0     0  ========================
-13:29:39,467 | 				-> ## 01:29:39     0     0  
-13:29:40,167 | 				-> ## 01:29:40     1     1  Executé en 0s700
-13:29:40,171 | 				-> ## 01:29:40     1     0  
-13:29:41,296 | 				-> ## 01:29:41     0     0      AFFICHER/MASQUER L'ESQUISSE DE REPERAGE
-13:29:41,296 | 				-> ## 01:29:41     0     0  ========================
-13:29:41,307 | 				-> ## 01:29:41     0     0  
-13:29:41,987 | 				-> ## 01:29:41     1     1  Executé en 0s680
-13:29:41,987 | 				-> ## 01:29:41     1     0  
-13:29:42,747 | 				-> ## 01:29:42     0     0      AFFICHER/MASQUER L'ESQUISSE DE REPERAGE
-13:29:42,747 | 				-> ## 01:29:42     0     0  ========================
-13:29:42,757 | 				-> ## 01:29:42     0     0  
-13:29:43,440 | 				-> ## 01:29:43     1     1  Executé en 0s679
-13:29:43,440 | 				-> ## 01:29:43     1     0  
-13:29:45,067 | 				-> ## 01:29:45     0     0      AFFICHER/MASQUER L'ESQUISSE DE REPERAGE
-13:29:45,067 | 				-> ## 01:29:45     0     0  ========================
-13:29:45,077 | 				-> ## 01:29:45     0     0  
-13:29:45,777 | 				-> ## 01:29:45     1     1  Executé en 0s700
-13:29:45,777 | 				-> ## 01:29:45     1     0  
+14:05:23,635 | 				-> ## 02:05:23     0     0  Erreur : Consultez le fichier LOG
+14:05:23,635 | 			BoutonVueInverserStyle.Command  ->  System.NullReferenceException: La référence d'objet n'est pas définie à une instance d'un objet.
+   à Macros.BoutonVueInverserStyle.Command() dans E:\Mes documents\Projets Visual Studio\SwExtension\SwExtension\Macros\BoutonVueInverserStyle.cs:ligne 35
+14:06:41,061 | 				-> ## 02:06:41     0     0  Erreur : Consultez le fichier LOG
+14:06:41,061 | 			BoutonAfficherEsquisseAssemblage.Command  ->  System.NullReferenceException: La référence d'objet n'est pas définie à une instance d'un objet.
+   à Macros.BoutonAfficherEsquisseAssemblage.Command() dans E:\Mes documents\Projets Visual Studio\SwExtension\SwExtension\Macros\BoutonAfficherEsquisseAssemblage.cs:ligne 41
+14:06:56,767 | 				-> ## 02:06:56     0     0  Erreur : Consultez le fichier LOG
+14:06:56,767 | 			BoutonAfficherEsquisseAssemblage.Command  ->  System.NullReferenceException: La référence d'objet n'est pas définie à une instance d'un objet.
+   à Macros.BoutonAfficherEsquisseAssemblage.Command() dans E:\Mes documents\Projets Visual Studio\SwExtension\SwExtension\Macros\BoutonAfficherEsquisseAssemblage.cs:ligne 41
+14:10:44,712 | 			PageInsererNote..ctor  ->  Est initialisé : True
+14:10:44,739 | 				-> ## 02:10:44     0     0      INSERER LES QUANTITÉS
+14:10:44,739 | 				-> ## 02:10:44     0     0  ========================
+14:10:44,748 | 				-> ## 02:10:44     0     0  
+14:10:44,762 | 			PageInsererNote.Command  ->  Show
+14:10:44,828 | 				-> ## 02:10:44     0     0  Executé en 0s70
+14:10:44,828 | 				-> ## 02:10:44     0     0  
+14:14:25,479 | 				-> ## 02:14:25     0     0      RENOMMER TOUTES LES FEUILLES
+14:14:25,479 | 				-> ## 02:14:25     0     0  ========================
+14:14:25,479 | 				-> ## 02:14:25     0     0  
+14:14:28,079 | 				-> ## 02:14:28     3     3  4.6.2_T1_AA00-0
+14:14:28,474 | 				-> ## 02:14:28     3     0  4.6.2_T1_AA01-0
+14:14:28,879 | 				-> ## 02:14:28     3     0  4.6.2_T1_AA01-0S
+14:14:29,249 | 				-> ## 02:14:29     4     0  4.6.2_T1_AA01-1(1)
+14:14:29,639 | 				-> ## 02:14:29     4     0  4.6.2_T1_AA01-1(2)
+14:14:29,989 | 				-> ## 02:14:29     5     0  4.6.2_T1_AA01-1S
+14:14:30,829 | 				-> ## 02:14:30     5     1  Executé en 5s349
+14:14:30,829 | 				-> ## 02:14:30     5     0  
+14:14:44,784 | 				-> ## 02:14:44     0     0      RENOMMER TOUTES LES FEUILLES
+14:14:44,784 | 				-> ## 02:14:44     0     0  ========================
+14:14:44,784 | 				-> ## 02:14:44     0     0  
+14:14:47,553 | 				-> ## 02:14:47     3     3  4.6.2_T1_AA00-0
+14:14:47,959 | 				-> ## 02:14:47     3     0  4.6.2_T1_AA01-0
+14:14:48,369 | 				-> ## 02:14:48     4     0  4.6.2_T1_AA01-0S
+14:14:48,789 | 				-> ## 02:14:48     4     0  4.6.2_T1_AA01-1
+14:14:49,213 | 				-> ## 02:14:49     4     0  4.6.2_T1_AA01-1S
+14:14:49,659 | 				-> ## 02:14:49     5     0  4.6.2_T1_AA01-2
+14:14:50,439 | 				-> ## 02:14:50     6     1  Executé en 5s655
+14:14:50,449 | 				-> ## 02:14:50     6     0  
+14:16:50,280 | 			PagePdf..ctor  ->  Est initialisé : True
+14:16:50,284 | 				-> ## 02:16:50     0     0      EXPORTER EN PDF
+14:16:50,284 | 				-> ## 02:16:50     0     0  ========================
+14:16:50,290 | 				-> ## 02:16:50     0     0  
+14:16:50,320 | 			PagePdf.Command  ->  Show
+14:16:50,390 | 				-> ## 02:16:50     0     0  Executé en 0s99
+14:16:50,400 | 				-> ## 02:16:50     0     0  
+14:16:56,600 | 				-> ## 02:16:56     6     6  Export : PDF
+14:16:56,600 | 				-> ## 02:16:56     6     0  
+14:16:56,600 | 				-> ## 02:16:56     6     0    Dossier : T1
+14:16:56,610 | 				-> ## 02:16:56     6     0     4.6.2 Grilles & portillons à un vantail T1 - Plan de fab - Ind A.pdf
+14:17:04,464 | 				-> ## 02:17:04    14     8  
+14:17:04,464 | 				-> ## 02:17:04    14     0  Executé en 7s869

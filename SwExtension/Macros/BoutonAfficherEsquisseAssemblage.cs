@@ -36,10 +36,13 @@ namespace Macros
 
                 MdlBase.eEffacerSelection();
 
+                MdlBase.FeatureManager.
+
                 foreach (var vue in ListeVue)
                 {
                     var dcp = vue.RootDrawingComponent;
-                    ParcourirDrawingComponent(MdlBase, dcp, vue, NomEsquisse.GetValeur<String>(), AfficherMasquer.GetValeur<Boolean>());
+                    if(dcp.IsRef())
+                        ParcourirDrawingComponent(MdlBase, dcp, vue, NomEsquisse.GetValeur<String>(), AfficherMasquer.GetValeur<Boolean>());
                 }
 
                 MdlBase.eEffacerSelection();

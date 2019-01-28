@@ -32,19 +32,25 @@ namespace Macros
 
                 foreach (var vue in ListeVue)
                 {
-                    var style = (swDisplayMode_e)vue.GetDisplayMode2();
-                    switch (style)
+                    var vueParent = (View)vue.GetBaseView();
+                    if (vueParent.IsNull())
                     {
-                        case swDisplayMode_e.swHIDDEN:
-                            vue.SetDisplayMode3(false, (int)swDisplayMode_e.swSHADED, false, true);
-                            break;
-                        case swDisplayMode_e.swSHADED:
-                            vue.SetDisplayMode3(false, (int)swDisplayMode_e.swHIDDEN, false, true);
-                            break;
-                        default:
-                            break;
+                        var style = (swDisplayMode_e)vue.GetDisplayMode2();
+                        switch (style)
+                        {
+                            case swDisplayMode_e.swHIDDEN:
+                                vue.SetDisplayMode3(false, (int)swDisplayMode_e.swSHADED, false, true);
+                                break;
+                            case swDisplayMode_e.swSHADED:
+                                vue.SetDisplayMode3(true, (int)swDisplayMode_e.swHIDDEN, false, true);
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 }
+
+                MdlBase.ForceRebuild3(true);
 
             }
             catch (Exception e)
