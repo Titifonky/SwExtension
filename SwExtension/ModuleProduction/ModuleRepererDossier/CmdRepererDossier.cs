@@ -662,8 +662,13 @@ namespace ModuleProduction.ModuleRepererDossier
 
         private int GetRepere(Dimension param, String nomCfg)
         {
-            Double val = (Double)(param.GetSystemValue3((int)swSetValueInConfiguration_e.swSetValue_InSpecificConfigurations, nomCfg)[0]);
-            return (int)(val * 1000);
+            Double val = (Double)param.GetSystemValue3((int)swSetValueInConfiguration_e.swSetValue_InSpecificConfigurations, nomCfg)[0];
+            if (val == 0.5)
+                val = -1;
+            else
+                val *= 1000;
+
+            return (int)val;
         }
 
         private void SetRepere(Dimension param, int val, String nomCfg)
