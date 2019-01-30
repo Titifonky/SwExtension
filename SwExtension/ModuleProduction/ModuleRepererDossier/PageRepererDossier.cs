@@ -57,6 +57,7 @@ namespace ModuleProduction.ModuleRepererDossier
         }
 
         private CtrlTextBox _Texte_IndiceCampagne;
+        private CtrlTextBox _Texte_IndiceCampagneDepartDecompte;
         private CtrlCheckBox _CheckBox_MajCampagnePrecedente;
         private CtrlCheckBox _CheckBox_CampagneDepartDecompte;
         private Boolean ReinitCampagneActuelle = false;
@@ -78,6 +79,11 @@ namespace ModuleProduction.ModuleRepererDossier
                 _Texte_IndiceCampagne.LectureSeule = true;
 
                 _CheckBox_CampagneDepartDecompte = G.AjouterCheckBox("Campagne de depart pour les decomptes");
+
+                _Texte_IndiceCampagneDepartDecompte = G.AjouterTexteBox("Indice actuelle pour le décompte :");
+                _Texte_IndiceCampagneDepartDecompte.LectureSeule = true;
+                _Texte_IndiceCampagneDepartDecompte.StdIndent();
+
                 _CheckBox_ReinitCampagneActuelle = G.AjouterCheckBox("Reinitialiser la campagne actuelle");
                 _CheckBox_MajCampagnePrecedente = G.AjouterCheckBox("Mettre à jour la campagne précédente (en cas d'oubli)");
 
@@ -96,6 +102,7 @@ namespace ModuleProduction.ModuleRepererDossier
                         _CheckBox_ReinitCampagneActuelle.IsEnabled = false;
 
                     _CheckBox_CampagneDepartDecompte.IsEnabled = false;
+                    _Texte_IndiceCampagneDepartDecompte.IsEnabled = false;
                 };
                 _CheckBox_MajCampagnePrecedente.OnUnCheck += delegate
                 {
@@ -109,6 +116,7 @@ namespace ModuleProduction.ModuleRepererDossier
                     }
 
                     _CheckBox_CampagneDepartDecompte.IsEnabled = true;
+                    _Texte_IndiceCampagneDepartDecompte.IsEnabled = true;
                 };
 
                 G = _Calque.AjouterGroupe("Options");
@@ -149,8 +157,9 @@ namespace ModuleProduction.ModuleRepererDossier
                 IndiceCampagne = IndiceLaser + 1;
 
                 // Aquisition de la liste des corps déjà repérées
-                // et recherche de l'indice nomenclature max
                 ListeCorps = MdlBase.pChargerNomenclature();
+
+                _Texte_IndiceCampagneDepartDecompte.Text = ListeCorps.CampagneDepartDecompte.ToString();
 
                 WindowLog.EcrireF("{0} pièce(s) sont référencé(s)", ListeCorps.Count);
 
@@ -187,6 +196,9 @@ namespace ModuleProduction.ModuleRepererDossier
                 {
                     _CheckBox_CampagneDepartDecompte.IsEnabled = false;
                     _CheckBox_CampagneDepartDecompte.Visible = false;
+
+                    _Texte_IndiceCampagneDepartDecompte.IsEnabled = false;
+                    _Texte_IndiceCampagneDepartDecompte.Visible = false;
 
                     _CheckBox_MajCampagnePrecedente.IsEnabled = false;
                     _CheckBox_MajCampagnePrecedente.Visible = false;
