@@ -101,15 +101,23 @@ namespace ModuleProduction.ModuleRepererDossier
                     }
                 }
 
+                WindowLog.SautDeLigne();
+                WindowLog.EcrireF("Campagne de départ : {0}", ListeCorps.CampagneDepartDecompte);
+
                 // On charge les corps existant à partir des fichiers
+                // et seulement ceux dont la quantité pour CampagneDepartDecompte est supérieure à 0
                 if (CombinerCorpsIdentiques && CombinerAvecCampagnePrecedente && (ListeCorps.Count > 0))
                 {
                     WindowLog.SautDeLigne();
                     WindowLog.EcrireF("Chargement des corps existants ({0}):", ListeCorps.Count);
 
+                    var CampagneDepartDecompte = ListeCorps.CampagneDepartDecompte;
                     foreach (var corps in ListeCorps.Values)
                     {
-                        if (File.Exists(corps.CheminFichierRepere))
+                        if (corps.Campagne.ContainsKey(CampagneDepartDecompte) &&
+                            (corps.Campagne[CampagneDepartDecompte] > 0) &&
+                            File.Exists(corps.CheminFichierRepere)
+                            )
                         {
                             WindowLog.EcrireF("- {0}", corps.RepereComplet);
                             ModelDoc2 mdl = Sw.eOuvrir(corps.CheminFichierRepere);
@@ -154,7 +162,6 @@ namespace ModuleProduction.ModuleRepererDossier
                     // Le nom du modèle est stocké dans une propriété, si le modèle est copié
                     // la propriété n'est plus valable, on force le repérage
                     // On récupère également le dernier indice de la dimension utilisée
-
                     if (mdl.ePropExiste(CONST_PRODUCTION.ID_PIECE) && (mdl.eGetProp(CONST_PRODUCTION.ID_PIECE) == mdl.eNomSansExt()))
                     {
                         InitModele = false;
@@ -242,8 +249,8 @@ namespace ModuleProduction.ModuleRepererDossier
 
                                 foreach (var CorpsTest in ListeCorps.Values)
                                 {
-                                    if ((CombinerAvecCampagnePrecedente || CorpsTest.Campagne.ContainsKey(IndiceCampagne)) &&
-                                        CorpsTest.SwCorps.IsRef() &&
+                                    if (CorpsTest.SwCorps.IsRef() && 
+                                        (CombinerAvecCampagnePrecedente || CorpsTest.Campagne.ContainsKey(IndiceCampagne)) &&
                                         (MateriauCorps == CorpsTest.Materiau) &&
                                         (TypeCorps == CorpsTest.TypeCorps) &&
                                         SwCorps.eEstSemblable(CorpsTest.SwCorps))
