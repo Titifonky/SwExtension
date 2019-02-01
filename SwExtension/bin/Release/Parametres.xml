@@ -16,7 +16,7 @@
     <Parametre name="ExporterHauteQualite" intitule="Exporter en haute qualité" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="ExporterFeuilleEspacePapier" intitule="Exporter les feuilles dans l'espace papier" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="ConvertirSplineToPolyligne" intitule="Convertir les splines en polylignes" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">D:\Projet\E144 - Ville d'Arras\ED534 - Val de Scarpe - Serrurerie Facade V2\0\6.1 Enseigne\Laser tole\1</Parametre>
+    <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">D:\Projet\E151 - Ville de Villeneuve d'Ascq\ED400 - Vestiaire du Stade THERY\1\4.3.3 Garde-corps\Laser tole\2</Parametre>
   </Module>
   <Module name="ExportPdf" intitule="Exporter en Pdf">
     <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">True</Parametre>
@@ -238,10 +238,10 @@
     <Parametre name="LigneAttache" intitule="Ligne d'attache" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="ModifierHtTexte" intitule="Modifier la ht du texte" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="HtTexte" intitule="Ht du texte en mm" tip="Ht du texte en mm" type="System.Int32">10</Parametre>
-    <Parametre name="Reperage" intitule="Reperage" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="Reperage" intitule="Reperage" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="AfficherQuantite" intitule="Ajouter la quantité" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="Description" intitule="Description" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="PrefixeTole" intitule="Prefixe tole" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="PrefixeTole" intitule="Prefixe tole" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="AjouterMateriau" intitule="Ajouter le matériau" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="ProfilCourt" intitule="Nom de profil court" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="SautDeLigneMateriau" intitule="Saut de ligne matériau" tip="" type="System.Boolean">False</Parametre>
