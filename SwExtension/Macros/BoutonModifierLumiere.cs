@@ -23,10 +23,21 @@ namespace Macros
         {
             try
             {
-                MdlBase.SetLightSourcePropertyValuesVB("Ambiante-1", 1, 0, 16777215, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.85, 0, 0, false);
-                MdlBase.SetLightSourcePropertyValuesVB("Directionnelle-1", 4, 0.48, 16777215, 1, -0.34344602761096943, 0.3759484815317567, 0.77139240786555829, 0, 0, 0, 0, 0, 0, 0, 0.3, 0.3, 0, true);
-                MdlBase.SetLightSourcePropertyValuesVB("Directionnelle-2", 4, 0.05, 16777215, 1, 0.88322349334397254, -0.22360948011027768, -0.15573613187212906, 0, 0, 0, 0, 0, 0, 0, 0.05, 0.05, 0, true);
-                MdlBase.SetLightSourcePropertyValuesVB("Directionnelle-3", 4, 0.2, 16777215, 1, 0.6313116669339, -0.2392275902706372, 0.63131166693389773, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, true);
+                var lcfg = MdlBase.eListeNomConfiguration();
+
+                for (int idLumiere = 0; idLumiere < MdlBase.GetLightSourceCount(); idLumiere++)
+                {
+                    var nomLumiere = MdlBase.LightSourceUserName[idLumiere];
+
+                    if (nomLumiere.StartsWith("Ambiante"))
+                        MajAmbiant(MdlBase, idLumiere, 0.85);
+                    else if (nomLumiere.StartsWith("Directionnelle"))
+                    {
+                        var fl = MdlBase.eFonctionParLeNom(nomLumiere);
+                        fl.eModifierEtat(SolidWorks.Interop.swconst.swFeatureSuppressionAction_e.swSuppressFeature, lcfg);
+                    }
+                }
+
                 MdlBase.GraphicsRedraw();
             }
             catch (Exception e)
@@ -34,5 +45,50 @@ namespace Macros
                 this.LogErreur(new Object[] { e });
             }
         }
+
+        private void MajAmbiant(ModelDoc2 mdl, int idLumiere, double val)
+        {
+            var NomSwLumiere = NomLumiere(mdl, idLumiere);
+            var PropLumiere = (Double[])mdl.LightSourcePropertyValues[idLumiere];
+
+            MdlBase.SetLightSourcePropertyValuesVB(NomSwLumiere, (int)PropLumiere[0], PropLumiere[1], GetRgb(PropLumiere), 1, PropLumiere[5], PropLumiere[6], PropLumiere[7], PropLumiere[8], PropLumiere[9], PropLumiere[10], PropLumiere[11], 0, 0, 0, val, PropLumiere[16], 0, false);
+        }
+
+        private void ActiverLumiere(ModelDoc2 mdl, int idLumiere, Boolean etat)
+        {
+            var NomSwLumiere = NomLumiere(mdl, idLumiere);
+            var PropLumiere = (Double[])mdl.LightSourcePropertyValues[idLumiere];
+
+            MdlBase.SetLightSourcePropertyValuesVB(NomSwLumiere, (int)PropLumiere[0], PropLumiere[1], GetRgb(PropLumiere), 1, PropLumiere[5], PropLumiere[6], PropLumiere[7], PropLumiere[8], PropLumiere[9], PropLumiere[10], PropLumiere[11], 0, 0, 0, PropLumiere[15], PropLumiere[16], 0, !etat);
+        }
+
+        private void ModifierDiffLumiere(ModelDoc2 mdl, int idLumiere, Double diff, Double ambiant, Double specular, Boolean etat)
+        {
+            var NomSwLumiere = NomLumiere(mdl, idLumiere);
+            var PropLumiere = (Double[])mdl.LightSourcePropertyValues[idLumiere];
+
+            MdlBase.SetLightSourcePropertyValuesVB(NomSwLumiere, (int)PropLumiere[0], diff, GetRgb(PropLumiere), 1, PropLumiere[5], PropLumiere[6], PropLumiere[7], PropLumiere[8], PropLumiere[9], PropLumiere[10], PropLumiere[11], 0, 0, 0, ambiant, specular, 0, !etat);
+        }
+
+        private String NomLumiere(ModelDoc2 mdl, int idLumiere)
+        {
+            var NomLumiere = MdlBase.GetLightSourceName(idLumiere);
+            var result = NomLumiere;
+
+            if (NomLumiere.StartsWith("Ambiante"))
+                result = "Ambiante-1";
+            else if (NomLumiere.StartsWith("Directionnelle"))
+                result = String.Format("Directionnelle-{0}", NomLumiere.Replace("Directionnelle", ""));
+
+            return NomLumiere;
+        }
+
+        private int GetRgb(Double[] propLumiere)
+        {
+            var c = System.Drawing.Color.FromArgb((int)propLumiere[2], (int)propLumiere[3], (int)propLumiere[4]);
+            c.ToArgb();
+            return 16777215;
+        }
+
     }
 }

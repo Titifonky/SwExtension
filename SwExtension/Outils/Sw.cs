@@ -698,6 +698,30 @@ namespace Outils
             return App.Sw.ActiveDoc as ModelDoc2;
         }
 
+        public static Feature eFonctionParLeNom(this ModelDoc2 mdl, String nomFonction)
+        {
+            Feature f = null;
+
+            switch (mdl.TypeDoc())
+            {
+                case eTypeDoc.Piece:
+                    f = mdl.ePartDoc().FeatureByName(nomFonction);
+                    break;
+                case eTypeDoc.Assemblage:
+                    f = mdl.eAssemblyDoc().FeatureByName(nomFonction);
+                    break;
+                case eTypeDoc.Dessin:
+                    f = mdl.eDrawingDoc().FeatureByName(nomFonction);
+                    break;
+                case eTypeDoc.Inconnu:
+                    break;
+                default:
+                    break;
+            }
+
+            return f;
+        }
+
         public static void eRenommerFonction(this Feature f, String nom)
         {
             if (f.IsNull()) return;
