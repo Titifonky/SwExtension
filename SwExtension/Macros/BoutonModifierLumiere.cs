@@ -34,7 +34,8 @@ namespace Macros
                     else if (nomLumiere.StartsWith("Directionnelle"))
                     {
                         var fl = MdlBase.eFonctionParLeNom(nomLumiere);
-                        fl.eModifierEtat(SolidWorks.Interop.swconst.swFeatureSuppressionAction_e.swSuppressFeature, lcfg);
+                        if(fl.IsRef())
+                            fl.eModifierEtat(SolidWorks.Interop.swconst.swFeatureSuppressionAction_e.swSuppressFeature, lcfg);
                     }
                 }
 
