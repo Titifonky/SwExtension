@@ -103,6 +103,8 @@
     <Compile Include="Macros\BoutonAfficherLogDebug.cs" />
     <Compile Include="ModuleCreerSymetrie\CmdCreerSymetrie.cs" />
     <Compile Include="ModuleCreerSymetrie\PageCreerSymetrie.cs" />
+    <Compile Include="ModuleLumiere\CmdLumiere.cs" />
+    <Compile Include="ModuleLumiere\PageLumiere.cs" />
     <Compile Include="ModuleProduction\BoutonAfficherMasquerEsquisseReperage.cs" />
     <Compile Include="ModuleProduction\BoutonCommandeProfil.cs" />
     <Compile Include="ModuleProduction\BoutonNettoyerReperage.cs" />

@@ -220,13 +220,26 @@ namespace SwExtension
         }
 
         /// <summary>
-        /// Test si une chaine de caractère est un entier ou composé d'entiers séparés par des espaces
+        /// Test si une chaine de caractère est un entier
         /// </summary>
         /// <param name="text"></param>
         /// <returns></returns>
         protected static Boolean ValiderTextIsInteger(String text)
         {
             if (!text.Trim().eIsInteger())
+                return false;
+
+            return true;
+        }
+
+        /// <summary>
+        /// Test si une chaine de caractère est un nombre decimal
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        protected static Boolean ValiderTextIsDouble(String text)
+        {
+            if (!text.Trim().eIsDouble())
                 return false;
 
             return true;

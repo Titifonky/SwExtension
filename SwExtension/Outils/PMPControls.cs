@@ -1055,7 +1055,14 @@ namespace Outils
 
         private String _Text = "";
 
-        public String Text { get { return _Text; } set { _EcraserTexte = true; TextBoxChanged(this, value); _EcraserTexte = false; } }
+        public String Text {
+            get { return _Text; }
+            set {
+                _EcraserTexte = true;
+                TextBoxChanged(this, value);
+                _EcraserTexte = false;
+            }
+        }
 
         public T GetTextAs<T>()
         {
@@ -1194,7 +1201,8 @@ namespace Outils
 
             if (!LectureSeule && (ValiderTexte.IsRef()) && !ValiderTexte(text))
             {
-                val = "";
+                // On applique l'ancienne valeur
+                val = _Text;
                 _swTexteBox.Text = val;
             }
 
