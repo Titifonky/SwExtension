@@ -98,14 +98,19 @@ namespace ModuleProduction.ModuleModifierDvp
         {
             if (f.Name.StartsWith(CONSTANTES.LIGNES_DE_PLIAGE))
             {
-                vue.ShowSheetMetalBendNotes = AfficherNotePliage;
-
                 f.eSelectionnerById2Dessin(mdlBase, vue);
 
+                // Attention à l'ordre pour l'affichage des notes de pliage
                 if (AfficherLignePliage)
+                {
                     mdlBase.UnblankSketch();
+                    vue.ShowSheetMetalBendNotes = AfficherNotePliage;
+                }
                 else
+                {
+                    vue.ShowSheetMetalBendNotes = AfficherNotePliage;
                     mdlBase.BlankSketch();
+                }
 
                 return true;
             }
