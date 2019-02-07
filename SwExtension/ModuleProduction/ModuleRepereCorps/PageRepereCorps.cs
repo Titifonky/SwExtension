@@ -19,6 +19,7 @@ namespace ModuleProduction.ModuleRepereCorps
         private Mouse Souris = null;
         private MathUtility Mt = null;
         private ListeSortedCorps ListeCorps = new ListeSortedCorps();
+        private List<SwCorps> ListeSwCorps = new List<SwCorps>();
         private List<Annotation> ListeAnnotations = new List<Annotation>();
 
         public PageRepereCorps()
@@ -30,13 +31,17 @@ namespace ModuleProduction.ModuleRepereCorps
 
                 InitSouris();
 
+                WindowLog.EcrireF("Nb Corps : {0}", MdlBase.eComposantRacine().eListeCorps().Count);
+
                 OnCalque += Calque;
+                OnRunAfterActivation += ChargerCorps;
                 OnRunAfterClose += RunAfterClose;
             }
             catch (Exception e)
             { this.LogMethode(new Object[] { e }); }
         }
 
+        private CtrlCheckBox _CheckBox_SelectionnerCorpsIdentiques;
         private CtrlCheckBox _CheckBox_SupprimerLesNotes;
 
         protected void Calque()
@@ -47,7 +52,9 @@ namespace ModuleProduction.ModuleRepereCorps
 
                 G = _Calque.AjouterGroupe("Options");
 
-                _CheckBox_SupprimerLesNotes = G.AjouterCheckBox("Supprimer à la fin");
+                _CheckBox_SelectionnerCorpsIdentiques = G.AjouterCheckBox("Selectionner les corps identiques");
+
+                _CheckBox_SupprimerLesNotes = G.AjouterCheckBox("Supprimer les notes à la fin");
                 _CheckBox_SupprimerLesNotes.IsChecked = true;
             }
             catch (Exception e)
@@ -85,12 +92,15 @@ namespace ModuleProduction.ModuleRepereCorps
             {
                 var typeSel = MdlBase.eSelect_RecupererSwTypeObjet();
                 var typeCorps = eTypeCorps.Autre;
+                Body2 CorpsBase = null;
+                String MateriauCorpsBase = "";
 
                 if (typeSel == swSelectType_e.swSelFACES)
                 {
                     var f = MdlBase.eSelect_RecupererObjet<Face2>();
-                    var b = (Body2)f.GetBody();
-                    typeCorps = b.eTypeDeCorps();
+                    CorpsBase = (Body2)f.GetBody();
+                    MateriauCorpsBase = GetMateriauCorpsBase(CorpsBase, MdlBase.eSelect_RecupererComposant());
+                    typeCorps = CorpsBase.eTypeDeCorps();
                 }
 
                 if ((typeCorps == eTypeCorps.Barre) || (typeCorps == eTypeCorps.Tole))
@@ -101,7 +111,6 @@ namespace ModuleProduction.ModuleRepereCorps
 
                     Note Note = MdlBase.InsertNote(String.Format("$PRPWLD:\"{0}\"", CONSTANTES.REF_DOSSIER));
                     Annotation Annotation = Note.GetAnnotation();
-                    ListeAnnotations.Add(Annotation);
 
                     Note.SetTextJustification((int)swTextJustification_e.swTextJustificationCenter);
                     Annotation.SetLeader3((int)swLeaderStyle_e.swNO_LEADER, (int)swLeaderSide_e.swLS_SMART, true, true, false, false);
@@ -112,7 +121,38 @@ namespace ModuleProduction.ModuleRepereCorps
                     {
                         var corps = ListeCorps[Repere];
                         Note.PropertyLinkedText = String.Format("$PRPWLD:\"{0}\" (x{1})", CONSTANTES.REF_DOSSIER, corps.Campagne.Last().Value);
+                        ListeAnnotations.Add(Annotation);
+
+                        WindowLog.Ecrire(Repere);
                     }
+                    else
+                    {
+                        MdlBase.eEffacerSelection();
+                        Annotation.Select3(false, null);
+                        MdlBase.Extension.DeleteSelection2((int)swDeleteSelectionOptions_e.swDelete_Absorbed);
+                    }
+
+                    MdlBase.eEffacerSelection();
+
+                    if (_CheckBox_SelectionnerCorpsIdentiques.IsChecked)
+                    {
+                        var ListeCorpsIdentiques = new List<Body2>();
+
+                        foreach (var corps in ListeSwCorps)
+                        {
+                            if (MateriauCorpsBase != corps.Materiau) continue;
+
+                            if (corps.Swcorps.eEstSemblable(CorpsBase))
+                                ListeCorpsIdentiques.Add(corps.GetCorps());
+                        }
+
+                        foreach (var corps in ListeCorpsIdentiques)
+                        {
+                            corps.DisableHighlight = false;
+                            
+                        }
+                    }
+
                 }
             }
             catch (Exception e)
@@ -121,49 +161,58 @@ namespace ModuleProduction.ModuleRepereCorps
             return 1;
         }
 
-        private ePoint CoordModele(int x, int y)
+        private String GetMateriauCorpsBase(Body2 corpsBase, Component2 cpCorpsBase)
         {
-            var vue = MdlBase.GetFirstModelView() as ModelView;
+            String materiauxCorpsBase = "";
 
-            var mt = vue.Transform;
-            mt = mt.Inverse();
+            if (MdlBase.TypeDoc() == eTypeDoc.Piece)
+                materiauxCorpsBase = corpsBase.eGetMateriauCorpsOuPiece(MdlBase.ePartDoc(), MdlBase.eNomConfigActive());
+            else
+                materiauxCorpsBase = corpsBase.eGetMateriauCorpsOuComp(cpCorpsBase);
 
-            double[] Xform = new double[16];
-            object vXform = null;
+            return materiauxCorpsBase;
+        }
 
-            Xform[0] = 1.0;
-            Xform[1] = 0.0;
-            Xform[2] = 0.0;
-            Xform[3] = 0.0;
-            Xform[4] = 1.0;
-            Xform[5] = 0.0;
-            Xform[6] = 0.0;
-            Xform[7] = 0.0;
-            Xform[8] = 1.0;
-            Xform[9] = x;
-            Xform[10] = y;
-            Xform[11] = 0.0;
-            Xform[12] = 1.0;
-            Xform[13] = 0.0;
-            Xform[14] = 0.0;
-            Xform[15] = 0.0;
-            vXform = Xform;
-
-            var Point = (MathTransform)Mt.CreateTransform(vXform);
-            Point = Point.Multiply(mt);
-
-            return new ePoint(Point.ArrayData[9], Point.ArrayData[10], 0);
+        private void ChargerCorps()
+        {
+            foreach (var comp in MdlBase.eComposantRacine().eRecListeComposant(c => { return c.TypeDoc() == eTypeDoc.Piece; }))
+            {
+                foreach (var Corps in comp.eListeCorps())
+                    ListeSwCorps.Add(new SwCorps(comp, Corps, Corps.eGetMateriauCorpsOuComp(comp)));
+            }
         }
 
         protected void RunAfterClose()
         {
             SupprimerEvenementsSouris();
 
-            MdlBase.eEffacerSelection();
-            foreach (var Ann in ListeAnnotations)
-                Ann.Select3(true, null);
+            if (_CheckBox_SupprimerLesNotes.IsChecked)
+            {
+                MdlBase.eEffacerSelection();
+                foreach (var Ann in ListeAnnotations)
+                    Ann.Select3(true, null);
 
-            MdlBase.Extension.DeleteSelection2((int)swDeleteSelectionOptions_e.swDelete_Absorbed);
+                MdlBase.Extension.DeleteSelection2((int)swDeleteSelectionOptions_e.swDelete_Absorbed);
+            }
+        }
+
+        private class SwCorps
+        {
+            public Component2 Comp { get; private set; }
+            public Body2 Swcorps { get; private set; }
+            public String Materiau { get; private set; }
+
+            public SwCorps(Component2 comp, Body2 swcorps, String materiau)
+            {
+                Comp = comp;
+                Swcorps = swcorps;
+                Materiau = materiau;
+            }
+
+            public Body2 GetCorps()
+            {
+                return Comp.eChercherCorps(Swcorps.Name, false);
+            }
         }
     }
 }

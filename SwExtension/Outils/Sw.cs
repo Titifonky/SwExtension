@@ -2459,17 +2459,17 @@ namespace Outils
 
             Object vInfosCorps;
 
-            Object[] Corps = (Object[])cp.GetBodies3((int)swBodyType_e.swSolidBody, out vInfosCorps);
+            Object[] ArrCorps = (Object[])cp.GetBodies3((int)swBodyType_e.swSolidBody, out vInfosCorps);
             int[] InfosCorps = (int[])vInfosCorps;
 
-            for (int i = 0; i < Corps.Length; i++)
+            if (ArrCorps.IsRef())
             {
-                if (InfosCorps[i] == (int)swBodyInfo_e.swNormalBody_e)
-                    Liste.Add((Body2)Corps[i]);
+                for (int i = 0; i < ArrCorps.Length; i++)
+                {
+                    if (InfosCorps[i] == (int)swBodyInfo_e.swNormalBody_e)
+                        Liste.Add((Body2)ArrCorps[i]);
+                }
             }
-
-            //foreach (Body2 Cp in Corps)
-            //    Liste.Add(Cp);
 
             return Liste;
         }

@@ -53,7 +53,9 @@ namespace Macros
                         if (MateriauxCorpsBase != MateriauCorpsTest) continue;
 
                         if (Corps.eEstSemblable(CorpsBase))
+                        {
                             ListeCorpsIdentiques.Add(Corps);
+                        }
                     }
                 }
 

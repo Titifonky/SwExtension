@@ -136,7 +136,7 @@ namespace ModuleListerMateriaux
                     ListeHiddenComposants.Add(element.Composant.eKeyAvecConfig());
                 }
 
-                var corps = element.Composant.eChercherCorps(element.Corps.Name, false);
+                var corps = element.GetCorps();
                 if (corps.IsNull()) continue;
 
                 listeCorps.Add(corps);
@@ -325,6 +325,11 @@ namespace ModuleListerMateriaux
                 {
                     Composant = composant;
                     Corps = corps;
+                }
+
+                public Body2 GetCorps()
+                {
+                    return Composant.eChercherCorps(Corps.Name, false);
                 }
             }
         }
