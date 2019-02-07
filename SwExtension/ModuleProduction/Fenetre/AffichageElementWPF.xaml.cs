@@ -1,5 +1,6 @@
 ﻿using LogDebugging;
 using Outils;
+using SolidWorks.Interop.sldworks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -217,6 +218,17 @@ namespace ModuleProduction
                         Cp.Dvp = check;
                 }
             }
+        }
+
+        private void Ouvrir_Modele_Click(object sender, RoutedEventArgs e)
+        {
+            var Mi = sender as MenuItem;
+            var V = (Mi.Parent as ContextMenu).PlacementTarget as ListView;
+            var corps = (Corps)V.SelectedItem;
+            if(corps.IsRef())
+                Sw.eOuvrir(corps.CheminFichierRepere);
+
+            this.Topmost = true;
         }
     }
 }

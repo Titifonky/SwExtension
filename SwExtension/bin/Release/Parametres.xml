@@ -16,7 +16,7 @@
     <Parametre name="ExporterHauteQualite" intitule="Exporter en haute qualité" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="ExporterFeuilleEspacePapier" intitule="Exporter les feuilles dans l'espace papier" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="ConvertirSplineToPolyligne" intitule="Convertir les splines en polylignes" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">D:\Projet\E151 - Ville de Villeneuve d'Ascq\ED400 - Vestiaire du Stade THERY\1\4.3.3 Garde-corps\Laser tole\2</Parametre>
+    <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">D:\Projet\E144 - Ville d'Arras\ED477 - Mobilier\1\2.1 Reglette\Pn\Laser tole\2</Parametre>
   </Module>
   <Module name="ExportPdf" intitule="Exporter en Pdf">
     <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">True</Parametre>
@@ -196,8 +196,8 @@
   <Module name="ProduireDvp" intitule="Creer les dvp de tôle">
     <Parametre name="AfficherLignePliage" intitule="Afficher les lignes de pliage" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="AfficherNotePliage" intitule="Afficher les notes de pliage" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="InscrireNomTole" intitule="Inscrire la réf du dvp sur la tole" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="TailleInscription" intitule="Ht des inscriptions en mm" tip="Ht des inscriptions en mm" type="System.Int32">5</Parametre>
+    <Parametre name="InscrireNomTole" intitule="Inscrire la réf du dvp sur la tole" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="TailleInscription" intitule="Ht des inscriptions en mm" tip="Ht des inscriptions en mm" type="System.Int32">10</Parametre>
     <Parametre name="OrienterDvp" intitule="Orienter les dvps" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="OrientationDvp" intitule="" tip="" type="Outils.eOrientation">Portrait</Parametre>
     <Parametre name="FermerPlan" intitule="Fermer les plans" tip="Fermer les plans après génération des dvps" type="System.Boolean">False</Parametre>
@@ -260,5 +260,16 @@
     <Parametre name="ValAmbiante" intitule="Valeur de la lumière ambiante" tip="" type="System.Double">0.8545</Parametre>
     <Parametre name="ToutesLesConfigs" intitule="Appliquer à toutes les configs" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="DesactiverDirectionnelles" intitule="Desactiver les directionnelles" tip="" type="System.Boolean">True</Parametre>
+  </Module>
+  <Module name="ModifierDvp" intitule="Modifier les dvps">
+    <Parametre name="AfficherLignePliage" intitule="Afficher les lignes de pliage" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="AfficherNotePliage" intitule="Afficher les notes de pliage" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="InscrireNomTole" intitule="Inscrire la réf du dvp sur la tole" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="TailleInscription" intitule="Ht des inscriptions en mm" tip="Ht des inscriptions en mm" type="System.Int32">30</Parametre>
+    <Parametre name="OrienterDvp" intitule="Orienter les dvps" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="OrientationDvp" intitule="" tip="" type="Outils.eOrientation">Portrait</Parametre>
+  </Module>
+  <Module name="SupprimerGravure" intitule="Supprimer la gravure" />
+  <Module name="RepereCorps" intitule="Repère du corps">
   </Module>
 </Parametres>

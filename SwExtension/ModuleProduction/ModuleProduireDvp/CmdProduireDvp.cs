@@ -309,20 +309,7 @@ namespace ModuleProduction.ModuleProduireDvp
             Dessin.eFeuilleActive().SetName(Fichier);
             DicDessins.Add(Fichier, Dessin);
 
-            ModelDoc2 mdl = Dessin.eModelDoc2();
-
-            LayerMgr LM = mdl.GetLayerManager();
-            LM.AddLayer("GRAVURE", "", 1227327, (int)swLineStyles_e.swLineCONTINUOUS, (int)swLineWeights_e.swLW_LAYER);
-            LM.AddLayer("QUANTITE", "", 1227327, (int)swLineStyles_e.swLineCONTINUOUS, (int)swLineWeights_e.swLW_LAYER);
-
-            ModelDocExtension ext = mdl.Extension;
-
-            ext.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swFlatPatternOpt_ShowFixedFace, 0, false);
-            ext.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swShowSheetMetalBendNotes, (int)swUserPreferenceOption_e.swDetailingNoOptionSpecified, AfficherNotePliage);
-
-            TextFormat tf = ext.GetUserPreferenceTextFormat(((int)(swUserPreferenceTextFormat_e.swDetailingAnnotationTextFormat)), 0);
-            tf.CharHeight = TailleInscription / 1000.0;
-            ext.SetUserPreferenceTextFormat((int)swUserPreferenceTextFormat_e.swDetailingAnnotationTextFormat, 0, tf);
+            Dessin.eModelDoc2().AppliquerOptionsDessinLaser(AfficherNotePliage, TailleInscription);
 
             return Dessin;
         }
@@ -392,8 +379,6 @@ namespace ModuleProduction.ModuleProduireDvp
 
             MathUtility SwMath = App.Sw.GetMathUtility();
 
-            ModelDoc2 Dessin = dessin.eModelDoc2();
-
             var liste = piece.eListeFonctionsDepliee();
             if (liste.Count == 0) return null;
 
@@ -406,14 +391,19 @@ namespace ModuleProduction.ModuleProduireDvp
                 {
                     if (f.Name.StartsWith(CONSTANTES.LIGNES_DE_PLIAGE))
                     {
-                        String NomSelection = f.Name + "@" + vue.RootDrawingComponent.Name + "@" + vue.Name;
-                        Dessin.Extension.SelectByID2(NomSelection, "SKETCH", 0, 0, 0, false, 0, null, 0);
-                        if (AfficherLignePliage)
-                            Dessin.UnblankSketch();
-                        else
-                            Dessin.BlankSketch();
+                        //String NomSelection = f.Name + "@" + vue.RootDrawingComponent.Name + "@" + vue.Name;
+                        //Dessin.Extension.SelectByID2(NomSelection, "SKETCH", 0, 0, 0, false, 0, null, 0);
 
-                        Dessin.eEffacerSelection();
+                        ModelDoc2 mdlBase = dessin.eModelDoc2();
+
+                        f.eSelectionnerById2Dessin(mdlBase, vue);
+
+                        if (AfficherLignePliage)
+                            mdlBase.UnblankSketch();
+                        else
+                            mdlBase.BlankSketch();
+
+                        mdlBase.eEffacerSelection();
                     }
                     else if (f.Name.StartsWith(CONSTANTES.CUBE_DE_VISUALISATION))
                     {

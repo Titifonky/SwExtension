@@ -23,9 +23,11 @@ using ModuleProduction;
 using ModuleProduction.ModuleControlerRepere;
 using ModuleProduction.ModuleGenererConfigDvp;
 using ModuleProduction.ModuleInsererNote;
+using ModuleProduction.ModuleModifierDvp;
 using ModuleProduction.ModuleProduireBarre;
 using ModuleProduction.ModuleProduireDebit;
 using ModuleProduction.ModuleProduireDvp;
+using ModuleProduction.ModuleRepereCorps;
 using ModuleProduction.ModuleRepererDossier;
 using ModuleVoronoi;
 using Outils;
@@ -103,6 +105,7 @@ namespace SwExtension
 
                 _Mnu.AjouterCmde("Ar", typeof(BoutonAfficherReperage));
                 _Mnu.AjouterCmde("Cr", typeof(PageControlerRepere));
+                _Mnu.AjouterCmde("Rc", typeof(PageRepereCorps));
                 _Mnu.AjouterCmde("Nr", typeof(BoutonNettoyerReperage));
                 _Mnu.AjouterCmde("Ae", typeof(BoutonAfficherMasquerEsquisseReperage));
 
@@ -158,6 +161,8 @@ namespace SwExtension
                 _Mnu.AjouterCmde("Rv", typeof(BoutonRetournerDvp));
                 _Mnu.AjouterCmde("Is", typeof(BoutonVueInverserStyle));
                 _Mnu.AjouterCmde("Er", typeof(BoutonAfficherEsquisseAssemblage));
+                _Mnu.AjouterCmde("Md", typeof(PageModifierDvp));
+                _Mnu.AjouterCmde("Sg", typeof(BoutonSupprimerGravure));
 
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde("Ed", typeof(PageDxfDwg));

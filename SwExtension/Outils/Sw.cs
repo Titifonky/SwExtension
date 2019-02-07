@@ -145,7 +145,10 @@ namespace Outils
         internal const String CONFIG_DEPLIEE = "SM-FLAT-PATTERN";
         internal const String CONFIG_PLIEE_PATTERN = @"^([0-9]+)(?!.*SM-FLAT-PATTERN)((.)*)$";
         internal const String ARTICLE_LISTE_DES_PIECES_SOUDEES = "Article-liste-des-pièces-soudées";
-        
+
+        internal const String CALQUE_GRAVURE = "GRAVURE";
+        internal const String CALQUE_QUANTITE = "QUANTITE";
+
         internal const String NO_DOSSIER = "NoDossier";
         internal const String REF_DOSSIER = "RefDossier";
         internal const String PREFIXE_REF_DOSSIER = "P";
@@ -2195,7 +2198,7 @@ namespace Outils
                 if (filtre(pSwFonction))
                     return;
 
-                if (sousFonction && f.eParcourirSousFonction(filtre))
+                if (sousFonction && pSwFonction.eParcourirSousFonction(filtre))
                     return;
 
                 pSwFonction = pSwFonction.GetNextFeature();
@@ -2231,6 +2234,9 @@ namespace Outils
             while (pSwFonction != null)
             {
                 if (filtre(pSwFonction))
+                    return true;
+
+                if (pSwFonction.eParcourirSousFonction(filtre))
                     return true;
 
                 pSwFonction = pSwFonction.GetNextSubFeature();

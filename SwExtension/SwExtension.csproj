@@ -107,6 +107,7 @@
     <Compile Include="ModuleLumiere\PageLumiere.cs" />
     <Compile Include="ModuleProduction\BoutonAfficherMasquerEsquisseReperage.cs" />
     <Compile Include="ModuleProduction\BoutonCommandeProfil.cs" />
+    <Compile Include="ModuleProduction\BoutonSupprimerGravure.cs" />
     <Compile Include="ModuleProduction\BoutonNettoyerReperage.cs" />
     <Compile Include="ModuleProduction\BoutonAfficherReperage.cs" />
     <Compile Include="ModuleProduction\ModuleGenererConfigDvp\CmdGenererConfigDvp.cs" />
@@ -116,12 +117,16 @@
     </Compile>
     <Compile Include="ModuleProduction\ModuleControlerRepere\CmdControlerRepere.cs" />
     <Compile Include="ModuleProduction\ModuleControlerRepere\PageControlerRepere.cs" />
+    <Compile Include="ModuleProduction\ModuleRepereCorps\CmdRepereCorps.cs" />
+    <Compile Include="ModuleProduction\ModuleRepereCorps\PageRepereCorps.cs" />
     <Compile Include="ModuleProduction\ModuleInsererNote\CmdInsererNoteQuantite.cs" />
     <Compile Include="ModuleProduction\ModuleInsererNote\PageInsererNoteQuantite.cs" />
     <Compile Include="ModuleProduction\ModuleProduireDebit\CmdProduireDebit.cs" />
     <Compile Include="ModuleProduction\ModuleProduireDebit\PageProduireDebit.cs" />
     <Compile Include="ModuleProduction\ModuleProduireBarre\CmdProduireBarre.cs" />
     <Compile Include="ModuleProduction\ModuleProduireBarre\PageProduireBarre.cs" />
+    <Compile Include="ModuleProduction\ModuleModifierDvp\CmdModifierDvp.cs" />
+    <Compile Include="ModuleProduction\ModuleModifierDvp\PageModifierDvp.cs" />
     <Compile Include="ModuleProduction\ModuleProduireDvp\CmdProduireDvp.cs" />
     <Compile Include="ModuleProduction\ModuleProduireDvp\PageProduireDVP.cs" />
     <Compile Include="ModuleProduction\Fenetre\Vue.cs" />

@@ -648,6 +648,22 @@ namespace ModuleProduction
             PM.ePropAdd(CONSTANTES.DESC_DOSSIER, repere);
             PM.ePropAdd(CONSTANTES.NOM_DOSSIER, repere);
         }
+
+        public static void AppliquerOptionsDessinLaser(this ModelDoc2 mdlBase, Boolean afficherNotePliage, int tailleInscription)
+        {
+            LayerMgr LM = mdlBase.GetLayerManager();
+            LM.AddLayer(CONSTANTES.CALQUE_GRAVURE, "", 1227327, (int)swLineStyles_e.swLineCONTINUOUS, (int)swLineWeights_e.swLW_LAYER);
+            LM.AddLayer(CONSTANTES.CALQUE_QUANTITE, "", 1227327, (int)swLineStyles_e.swLineCONTINUOUS, (int)swLineWeights_e.swLW_LAYER);
+
+            ModelDocExtension ext = mdlBase.Extension;
+
+            ext.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swFlatPatternOpt_ShowFixedFace, 0, false);
+            ext.SetUserPreferenceToggle((int)swUserPreferenceToggle_e.swShowSheetMetalBendNotes, (int)swUserPreferenceOption_e.swDetailingNoOptionSpecified, afficherNotePliage);
+
+            TextFormat tf = ext.GetUserPreferenceTextFormat(((int)(swUserPreferenceTextFormat_e.swDetailingAnnotationTextFormat)), 0);
+            tf.CharHeight = tailleInscription / 1000.0;
+            ext.SetUserPreferenceTextFormat((int)swUserPreferenceTextFormat_e.swDetailingAnnotationTextFormat, 0, tf);
+        }
     }
 
     [ClassInterface(ClassInterfaceType.None)]
