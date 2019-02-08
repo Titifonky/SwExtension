@@ -4,8 +4,8 @@
     <Parametre name="Reinitialiser" intitule="Reinitialiser les menus &amp; onglets" tip="" type="System.Boolean">False</Parametre>
   </Module>
   <Module name="ExportDxfDwg" intitule="Exporter en Dxf/Dwg">
-    <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="SelectionnerDossier" intitule="Selectionner un dossier" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="SelectionnerDossier" intitule="Selectionner un dossier" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="ToutesLesFeuilles" intitule="Toutes les feuilles" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="FormatExport" intitule="Format" tip="" type="Outils.eTypeFichierExport">DWG</Parametre>
     <Parametre name="VersionExport" intitule="Version" tip="" type="Outils.eDxfFormat">R2010</Parametre>
@@ -16,7 +16,7 @@
     <Parametre name="ExporterHauteQualite" intitule="Exporter en haute qualité" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="ExporterFeuilleEspacePapier" intitule="Exporter les feuilles dans l'espace papier" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="ConvertirSplineToPolyligne" intitule="Convertir les splines en polylignes" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">D:\Projet\E144 - Ville d'Arras\ED477 - Mobilier\1\2.1 Reglette\Rg\T1\Laser tole\1</Parametre>
+    <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">D:\Projet\E144 - Ville d'Arras\ED496 - TS Pole educatif Val de Scarpe\1\5.3 Signalétique modulable\Laser tole\2</Parametre>
   </Module>
   <Module name="ExportPdf" intitule="Exporter en Pdf">
     <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">True</Parametre>
@@ -189,7 +189,7 @@
   </Module>
   <Module name="RepererDossier" intitule="Repérer les dossiers">
     <Parametre name="CombinerCorpsIdentiques" intitule="Combiner les corps identiques des différents modèles" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="CombinerAvecCampagnePrecedente" intitule="Combiner les corps avec les précédentes campagnes" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="CombinerAvecCampagnePrecedente" intitule="Combiner les corps avec les précédentes campagnes" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="CreerDvp" intitule="Creer les configs dvp des tôles" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="TypeCorps" intitule="Type de corps à repérer :" tip="" type="Outils.eTypeCorps">Piece</Parametre>
   </Module>

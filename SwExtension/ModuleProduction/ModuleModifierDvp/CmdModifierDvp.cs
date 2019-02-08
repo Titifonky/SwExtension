@@ -108,7 +108,7 @@ namespace ModuleProduction.ModuleModifierDvp
                 }
                 else
                 {
-                    vue.ShowSheetMetalBendNotes = AfficherNotePliage;
+                    vue.ShowSheetMetalBendNotes = false;
                     mdlBase.BlankSketch();
                 }
 

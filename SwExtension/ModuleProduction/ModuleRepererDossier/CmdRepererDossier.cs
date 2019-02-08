@@ -89,18 +89,6 @@ namespace ModuleProduction.ModuleRepererDossier
 
                 }
 
-                // On supprime les campagnes superieures à l'indice actuelle
-                foreach (var corps in ListeCorps.Values)
-                {
-                    corps.InitCampagne(IndiceCampagne);
-
-                    for (int i = IndiceCampagne; i < corps.Campagne.Keys.Max(); i++)
-                    {
-                        if (corps.Campagne.ContainsKey(i + 1))
-                            corps.Campagne.Remove(i + 1);
-                    }
-                }
-
                 WindowLog.SautDeLigne();
                 WindowLog.EcrireF("Campagne de départ : {0}", ListeCorps.CampagneDepartDecompte);
 
@@ -119,19 +107,35 @@ namespace ModuleProduction.ModuleRepererDossier
                             File.Exists(corps.CheminFichierRepere)
                             )
                         {
-                            WindowLog.EcrireF("- {0}", corps.RepereComplet);
                             ModelDoc2 mdl = Sw.eOuvrir(corps.CheminFichierRepere);
                             mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
 
                             var Piece = mdl.ePartDoc();
                             ListeCorps[corps.Repere].SwCorps = Piece.ePremierCorps();
+                            WindowLog.EcrireF("- {0} chargé", corps.RepereComplet);
                         }
+                    }
+                }
+
+                // On reinitialise la quantité pour la campagne actuelle à 0
+                // On supprime les campagnes superieures à l'indice actuelle
+                foreach (var corps in ListeCorps.Values)
+                {
+                    corps.InitCampagne(IndiceCampagne);
+
+                    for (int i = IndiceCampagne; i < corps.Campagne.Keys.Max(); i++)
+                    {
+                        if (corps.Campagne.ContainsKey(i + 1))
+                            corps.Campagne.Remove(i + 1);
                     }
                 }
 
                 ////////////////////////////////// DEBUT DU REPERAGE ////////////////////////////////////////////////////
 
                 MdlBase.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
+
+                WindowLog.SautDeLigne();
+                WindowLog.Ecrire("Debut du repérage");
 
                 // On recherche l'indice de repere max
                 if (ListeCorps.Count > 0)
