@@ -89,6 +89,17 @@ namespace ModuleProduction.ModuleRepererDossier
 
                 }
 
+                // On supprime les campagnes superieures à l'indice actuelle
+                foreach (var corps in ListeCorps.Values)
+                {
+                    for (int i = IndiceCampagne; i < corps.Campagne.Keys.Max(); i++)
+                    {
+                        if (corps.Campagne.ContainsKey(i + 1))
+                            corps.Campagne.Remove(i + 1);
+                    }
+                }
+
+
                 WindowLog.SautDeLigne();
                 WindowLog.EcrireF("Campagne de départ : {0}", ListeCorps.CampagneDepartDecompte);
 
@@ -96,39 +107,41 @@ namespace ModuleProduction.ModuleRepererDossier
                 // et seulement ceux dont la quantité pour CampagneDepartDecompte est supérieure à 0
                 if (CombinerCorpsIdentiques && CombinerAvecCampagnePrecedente && (ListeCorps.Count > 0))
                 {
-                    WindowLog.SautDeLigne();
-                    WindowLog.EcrireF("Chargement des corps existants ({0}):", ListeCorps.Count);
-
                     var CampagneDepartDecompte = ListeCorps.CampagneDepartDecompte;
+
+                    // On recherche les corps à charger
+                    var ListeCorpsAcharger = new List<Corps>();
                     foreach (var corps in ListeCorps.Values)
                     {
                         if (corps.Campagne.ContainsKey(CampagneDepartDecompte) &&
                             (corps.Campagne[CampagneDepartDecompte] > 0) &&
                             File.Exists(corps.CheminFichierRepere)
                             )
-                        {
-                            ModelDoc2 mdl = Sw.eOuvrir(corps.CheminFichierRepere);
-                            mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
+                            ListeCorpsAcharger.Add(corps);
+                    }
 
-                            var Piece = mdl.ePartDoc();
-                            ListeCorps[corps.Repere].SwCorps = Piece.ePremierCorps();
-                            WindowLog.EcrireF("- {0} chargé", corps.RepereComplet);
-                        }
+                    WindowLog.SautDeLigne();
+                    WindowLog.EcrireF("Chargement des corps existants ({0}):", ListeCorpsAcharger.Count);
+
+                    // On charge les corps
+                    foreach (var corps in ListeCorpsAcharger)
+                    {
+                        ModelDoc2 mdl = Sw.eOuvrir(corps.CheminFichierRepere);
+                        mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
+
+                        var Piece = mdl.ePartDoc();
+                        // On copie le corps pour qu'il persiste après la fermeture du modèle
+                        corps.SwCorps = Piece.ePremierCorps().Copy2(true);
+                        WindowLog.EcrireF("- {0} chargé", corps.RepereComplet);
+                        // Il faut fermer les modeles sinon SW bug après
+                        // en avoir ouvert une quarantaine
+                        App.Sw.CloseDoc(mdl.GetPathName());
                     }
                 }
 
                 // On reinitialise la quantité pour la campagne actuelle à 0
-                // On supprime les campagnes superieures à l'indice actuelle
                 foreach (var corps in ListeCorps.Values)
-                {
                     corps.InitCampagne(IndiceCampagne);
-
-                    for (int i = IndiceCampagne; i < corps.Campagne.Keys.Max(); i++)
-                    {
-                        if (corps.Campagne.ContainsKey(i + 1))
-                            corps.Campagne.Remove(i + 1);
-                    }
-                }
 
                 ////////////////////////////////// DEBUT DU REPERAGE ////////////////////////////////////////////////////
 
@@ -253,7 +266,7 @@ namespace ModuleProduction.ModuleRepererDossier
 
                                 foreach (var CorpsTest in ListeCorps.Values)
                                 {
-                                    if (CorpsTest.SwCorps.IsRef() && 
+                                    if (CorpsTest.SwCorps.IsRef() &&
                                         (CombinerAvecCampagnePrecedente || CorpsTest.Campagne.ContainsKey(IndiceCampagne)) &&
                                         (MateriauCorps == CorpsTest.Materiau) &&
                                         (TypeCorps == CorpsTest.TypeCorps) &&
