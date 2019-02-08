@@ -42,6 +42,8 @@ namespace ModuleProduction.ModuleRepererDossier
         {
             try
             {
+                App.Sw.CommandInProgress = true;
+
                 // Si aucun corps n'a déjà été repéré, on reinitialise tout
                 if (ListeCorps.Count == 0)
                 {
@@ -147,6 +149,8 @@ namespace ModuleProduction.ModuleRepererDossier
 
                 MdlBase.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
 
+                MdlBase.pActiverManager(false);
+
                 WindowLog.SautDeLigne();
                 WindowLog.Ecrire("Debut du repérage");
 
@@ -161,6 +165,8 @@ namespace ModuleProduction.ModuleRepererDossier
                 foreach (var mdl in ListeComposants.Keys)
                 {
                     mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
+
+                    mdl.pActiverManager(false);
 
                     // On met à jour les options
                     AppliqueOptionListeDePiecesSoudees(mdl);
@@ -327,11 +333,16 @@ namespace ModuleProduction.ModuleRepererDossier
                     mdl.ePropAdd(CONST_PRODUCTION.ID_PIECE, mdl.eNomSansExt());
                     mdl.ePropAdd(CONST_PRODUCTION.PIECE_ID_DOSSIERS, String.Join(" ", HashPieceIdDossiers));
                     mdl.ePropAdd(CONST_PRODUCTION.MAX_INDEXDIM, IndexDimension);
+
+                    mdl.pActiverManager(true);
+
                     mdl.eSauver();
 
                     if (mdl.GetPathName() != MdlBase.GetPathName())
                         App.Sw.CloseDoc(mdl.GetPathName());
                 }
+
+                MdlBase.pActiverManager(true);
 
                 MdlBase.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
                 MdlBase.EditRebuild3();
@@ -387,6 +398,8 @@ namespace ModuleProduction.ModuleRepererDossier
 
                     mdlFichier.Extension.BreakAllExternalFileReferences2(true);
 
+                    mdlFichier.pActiverManager(false);
+
                     foreach (var nomCfg in mdlFichier.eListeNomConfiguration())
                         if (nomCfg != corps.NomConfig)
                             mdlFichier.DeleteConfiguration2(nomCfg);
@@ -406,7 +419,7 @@ namespace ModuleProduction.ModuleRepererDossier
                     Piece.ePremierCorps(false).eVisible(true);
                     mdlFichier.EditRebuild3();
                     mdlFichier.pMasquerEsquisses();
-                    mdlFichier.FixerProp(corps.RepereComplet);
+                    mdlFichier.pFixerProp(corps.RepereComplet);
 
                     if ((corps.TypeCorps == eTypeCorps.Tole) && CreerDvp)
                         corps.pCreerDvp(MdlBase.pDossierPiece(), false);
@@ -417,6 +430,8 @@ namespace ModuleProduction.ModuleRepererDossier
                         OrienterVueTole(mdlFichier);
                     else if (corps.TypeCorps == eTypeCorps.Barre)
                         OrienterVueBarre(mdlFichier);
+
+                    mdlFichier.pActiverManager(true);
 
                     SauverVue(mdlFichier, mdlFichier.GetPathName());
                     mdlFichier.EditRebuild3();
@@ -449,6 +464,8 @@ namespace ModuleProduction.ModuleRepererDossier
                 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                 MdlBase.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
+
+                App.Sw.CommandInProgress = false;
 
                 var aff = new AffichageElementWPF(ListeCorps, IndiceCampagne);
                 aff.ShowDialog();

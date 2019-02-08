@@ -641,7 +641,7 @@ namespace ModuleProduction
             return Sw.CheminBloc(CONSTANTES.NOM_BLOCK_ESQUISSE_NUMEROTER);
         }
 
-        public static void FixerProp(this ModelDoc2 mdl, String repere)
+        public static void pFixerProp(this ModelDoc2 mdl, String repere)
         {
             CustomPropertyManager PM = mdl.ePartDoc().eListeDesFonctionsDePiecesSoudees()[0].CustomPropertyManager;
             PM.ePropAdd(CONSTANTES.REF_DOSSIER, repere);
@@ -649,7 +649,7 @@ namespace ModuleProduction
             PM.ePropAdd(CONSTANTES.NOM_DOSSIER, repere);
         }
 
-        public static void AppliquerOptionsDessinLaser(this ModelDoc2 mdlBase, Boolean afficherNotePliage, int tailleInscription)
+        public static void pAppliquerOptionsDessinLaser(this ModelDoc2 mdlBase, Boolean afficherNotePliage, int tailleInscription)
         {
             LayerMgr LM = mdlBase.GetLayerManager();
             LM.AddLayer(CONSTANTES.CALQUE_GRAVURE, "", 1227327, (int)swLineStyles_e.swLineCONTINUOUS, (int)swLineWeights_e.swLW_LAYER);
@@ -663,6 +663,13 @@ namespace ModuleProduction
             TextFormat tf = ext.GetUserPreferenceTextFormat(((int)(swUserPreferenceTextFormat_e.swDetailingAnnotationTextFormat)), 0);
             tf.CharHeight = tailleInscription / 1000.0;
             ext.SetUserPreferenceTextFormat((int)swUserPreferenceTextFormat_e.swDetailingAnnotationTextFormat, 0, tf);
+        }
+
+        public static void pActiverManager(this ModelDoc2 mdl, Boolean activer)
+        {
+            mdl.FeatureManager.EnableFeatureTree = activer;
+            mdl.FeatureManager.EnableFeatureTreeWindow = activer;
+            mdl.ConfigurationManager.EnableConfigurationTree = activer;
         }
     }
 

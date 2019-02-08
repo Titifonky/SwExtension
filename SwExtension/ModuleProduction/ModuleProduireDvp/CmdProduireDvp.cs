@@ -309,7 +309,7 @@ namespace ModuleProduction.ModuleProduireDvp
             Dessin.eFeuilleActive().SetName(Fichier);
             DicDessins.Add(Fichier, Dessin);
 
-            Dessin.eModelDoc2().AppliquerOptionsDessinLaser(AfficherNotePliage, TailleInscription);
+            Dessin.eModelDoc2().pAppliquerOptionsDessinLaser(AfficherNotePliage, TailleInscription);
 
             return Dessin;
         }

@@ -20,7 +20,7 @@ namespace ModuleProduction.ModuleModifierDvp
         {
             try
             {
-                MdlBase.AppliquerOptionsDessinLaser(AfficherNotePliage, TailleInscription);
+                MdlBase.pAppliquerOptionsDessinLaser(AfficherNotePliage, TailleInscription);
 
                 var Dessin = MdlBase.eDrawingDoc();
 
