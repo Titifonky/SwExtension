@@ -138,6 +138,7 @@ namespace SwExtension
                 _Mnu.AjouterCmde("Ma", typeof(BoutonMAJListePiecesSoudees), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
                 _Mnu.AjouterCmde("Ev", typeof(BoutonEnregistrerVue), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
                 _Mnu.AjouterCmde("Ml", typeof(PageLumiere), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
+                _Mnu.AjouterCmde("Nb", typeof(BoutonNettoyerBlocs), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
 
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde("Cp", typeof(BoutonDecompterPercage));

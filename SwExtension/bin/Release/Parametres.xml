@@ -272,4 +272,5 @@
   <Module name="SupprimerGravure" intitule="Supprimer la gravure" />
   <Module name="RepereCorps" intitule="Repère du corps">
   </Module>
+  <Module name="NettoyerBlocs" intitule="Nettoyer les blocs" />
 </Parametres>
