@@ -245,7 +245,7 @@ namespace ModuleProduction.ModuleRepererDossier
                                 BodyFolder Dossier = swD.GetSpecificFeature2();
 
                                 // Si le dossier est la racine d'un sous-ensemble soudé, il n'y a rien dedans
-                                if (Dossier.IsRef() && (Dossier.eNbCorps() > 0) &&
+                                if (Dossier.IsRef() && (Dossier.eNbCorps() > 0) && !Dossier.eEstExclu() &&
                                 FiltrerCorps.HasFlag(Dossier.eTypeDeDossier()))
                                     return true;
 

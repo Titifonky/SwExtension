@@ -191,8 +191,8 @@ namespace ModuleProduction.ModuleProduireDvp
                 {
                     foreach (var vue in Feuille.eListeDesVues())
                     {
-                        var mdl = vue.ReferencedDocument;
-                        if ((mdlCorps.eDossier() == mdl.eDossier()) && (mdlCorps.eDossier().ToLowerInvariant() == mdl.eDossier().ToLowerInvariant()))
+                        var mdlVue = vue.ReferencedDocument;
+                        if (mdlCorps.GetPathName() == mdlVue.GetPathName())
                         {
                             vue.eSelectionner(dessin);
                             dessin.eModelDoc2().EditDelete();
