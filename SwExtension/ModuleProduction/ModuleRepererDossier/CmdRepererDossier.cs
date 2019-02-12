@@ -132,6 +132,16 @@ namespace ModuleProduction.ModuleRepererDossier
                         mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
 
                         var Piece = mdl.ePartDoc();
+
+                        // On charge la première config pliée pour eviter
+                        // de comparer un corps déplié
+                        var lst = mdl.eListeNomConfiguration(eTypeConfig.Pliee);
+                        if (lst.Count > 0)
+                        {
+                            mdl.ShowConfiguration2(lst[0]);
+                            mdl.EditRebuild3();
+                        }
+                        
                         // On copie le corps pour qu'il persiste après la fermeture du modèle
                         corps.SwCorps = Piece.ePremierCorps().Copy2(true);
                         WindowLog.EcrireF("- {0} chargé", corps.RepereComplet);
