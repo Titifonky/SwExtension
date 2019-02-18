@@ -10,7 +10,6 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace ModuleProduction.ModuleRepererDossier
 {
@@ -20,6 +19,7 @@ namespace ModuleProduction.ModuleRepererDossier
         public int IndiceCampagne = 0;
 
         public Boolean ReinitCampagneActuelle = false;
+        public Boolean MajCampagnePrecedente = false;
         public Boolean CombinerCorpsIdentiques = false;
         public Boolean CombinerAvecCampagnePrecedente = false;
         public Boolean CreerDvp = false;
@@ -128,26 +128,30 @@ namespace ModuleProduction.ModuleRepererDossier
                     // On charge les corps
                     foreach (var corps in ListeCorpsAcharger)
                     {
-                        ModelDoc2 mdl = Sw.eOuvrir(corps.CheminFichierRepere);
-                        mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
+                        // On cherche la première config pliée
+                        var LstCfg = corps.CheminFichierRepere.eListeNomConfiguration();
+                        var Cfg = "";
+                        foreach (var c in corps.CheminFichierRepere.eListeNomConfiguration())
+                        {
+                            if (c.eEstConfigPliee())
+                            {
+                                Cfg = c;
+                                break;
+                            }
+                        }
+
+                        // On ouvre avec la config pliée
+                        ModelDoc2 mdl = Sw.eOuvrir(corps.CheminFichierRepere, Cfg);
+                        mdl.eActiver(swRebuildOnActivation_e.swDontRebuildActiveDoc);
 
                         var Piece = mdl.ePartDoc();
-
-                        // On charge la première config pliée pour eviter
-                        // de comparer un corps déplié
-                        var lst = mdl.eListeNomConfiguration(eTypeConfig.Pliee);
-                        if (lst.Count > 0)
-                        {
-                            mdl.ShowConfiguration2(lst[0]);
-                            mdl.EditRebuild3();
-                        }
                         
                         // On copie le corps pour qu'il persiste après la fermeture du modèle
                         corps.SwCorps = Piece.ePremierCorps().Copy2(true);
                         WindowLog.EcrireF("- {0} chargé", corps.RepereComplet);
                         // Il faut fermer les modeles sinon SW bug après
                         // en avoir ouvert une quarantaine
-                        App.Sw.CloseDoc(mdl.GetPathName());
+                        mdl.eFermer();
                     }
                 }
 
@@ -209,6 +213,7 @@ namespace ModuleProduction.ModuleRepererDossier
                         }
                     }
 
+                    ////////////////////////////////// BOUCLE SUR LES CONFIGS ////////////////////////////////////////////////////
                     foreach (var nomCfg in ListeComposants[mdl].Keys)
                     {
                         mdl.ShowConfiguration2(nomCfg);
@@ -255,6 +260,7 @@ namespace ModuleProduction.ModuleRepererDossier
 
                         var NbConfig = ListeComposants[mdl][nomCfg];
 
+                        ////////////////////////////////// BOUCLE SUR LES DOSSIERS ////////////////////////////////////////////////////
                         foreach (var fDossier in ListeDossier)
                         {
                             BodyFolder Dossier = fDossier.GetSpecificFeature2();
@@ -296,8 +302,11 @@ namespace ModuleProduction.ModuleRepererDossier
                             }
 
                             // Initialisation du repère
-                            if (Repere.EstNegatif())
+                            if (Repere.eEstNegatif())
                             {
+                                // A tester
+                                // Si on est mode "MajCampagnePrecedente", ça évite de repérer une seconde fois les pièces
+
                                 // Si on est pas en mode "Combiner les corps"
                                 // on recupère le repère du dossier
                                 // Sinon c'est forcément un nouveau repère
@@ -306,7 +315,7 @@ namespace ModuleProduction.ModuleRepererDossier
 
                                 // Création d'un nouveau repère suivant conditions
                                 // Dans tous les cas, si la clé est négative, on crée un nouveau repère
-                                if (Repere.EstNegatif() ||
+                                if (Repere.eEstNegatif() ||
                                     InitConfig ||
                                     !HashConfigIdDossiers.Contains(IdDossier) ||
                                     !ListeCorps.ContainsKey(Repere))
@@ -345,15 +354,11 @@ namespace ModuleProduction.ModuleRepererDossier
                     mdl.ePropAdd(CONST_PRODUCTION.MAX_INDEXDIM, IndexDimension);
 
                     mdl.pActiverManager(true);
-
                     mdl.eSauver();
-
-                    if (mdl.GetPathName() != MdlBase.GetPathName())
-                        App.Sw.CloseDoc(mdl.GetPathName());
+                    mdl.eFermer();
                 }
 
                 MdlBase.pActiverManager(true);
-
                 MdlBase.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
                 MdlBase.EditRebuild3();
                 MdlBase.eSauver();
@@ -362,7 +367,7 @@ namespace ModuleProduction.ModuleRepererDossier
 
                 // On fermer les fichiers chargé
                 foreach (var corps in ListeCorps.Values)
-                    App.Sw.CloseDoc(corps.CheminFichierRepere);
+                     Sw.eFermer(corps.CheminFichierRepere);
 
                 WindowLog.SautDeLigne();
                 if (ListeCorps.Count > 0)
@@ -447,7 +452,7 @@ namespace ModuleProduction.ModuleRepererDossier
                     mdlFichier.EditRebuild3();
                     mdlFichier.eSauver();
 
-                    App.Sw.CloseDoc(mdlFichier.GetPathName());
+                    mdlFichier.eFermer();
                 }
 
                 ////////////////////////////////// RECAP /////////////////////////////////////////////////
@@ -714,7 +719,8 @@ namespace ModuleProduction.ModuleRepererDossier
         private int GetRepere(Dimension param, String nomCfg)
         {
             Double val = (Double)param.GetSystemValue3((int)swSetValueInConfiguration_e.swSetValue_InSpecificConfigurations, nomCfg)[0];
-            if (val == 0.5)
+            
+            if (!val.eEstInteger())
                 val = -1;
             else
                 val *= 1000;

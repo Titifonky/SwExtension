@@ -897,7 +897,7 @@ namespace Outils
             return Modele;
         }
 
-        public static ModelDoc2 eOuvrir(String chemin, String config = "")
+        public static ModelDoc2 eOuvrir(String chemin, String config = "", Boolean lectureSeule = false)
         {
             ModelDoc2 mdl = eEstOuvert(Path.GetFileName(chemin));
 
@@ -920,7 +920,12 @@ namespace Outils
             if (TypeExt != swDocumentTypes_e.swDocNONE)
             {
                 int errors = 0, warnings = 0;
-                mdl = App.Sw.OpenDoc6(chemin, (int)TypeExt, (int)swOpenDocOptions_e.swOpenDocOptions_Silent, config, ref errors, ref warnings);
+                var options = swOpenDocOptions_e.swOpenDocOptions_Silent;
+
+                if (lectureSeule)
+                    options |= swOpenDocOptions_e.swOpenDocOptions_ReadOnly;
+
+                mdl = App.Sw.OpenDoc6(chemin, (int)TypeExt, (int)options, config, ref errors, ref warnings);
             }
 
             return mdl;
@@ -955,6 +960,26 @@ namespace Outils
             }
 
             return mdl;
+        }
+
+        public static void eFermer(String chemin)
+        {
+            App.Sw.CloseDoc(chemin);
+        }
+
+        public static void eFermer(this ModelDoc2 mdl)
+        {
+            App.Sw.CloseDoc(mdl.GetPathName());
+            mdl = null;
+        }
+
+        public static void eFermerSiDifferent(this ModelDoc2 mdl, ModelDoc2 mdlBase)
+        {
+            if (mdl.GetPathName() != mdlBase.GetPathName())
+            {
+                App.Sw.CloseDoc(mdl.GetPathName());
+                mdl = null;
+            }
         }
 
         public static ModelDoc2 eEstOuvert(String nomFichier)
@@ -1044,6 +1069,27 @@ namespace Outils
             ListeNomsConfig.Sort(new WindowsStringComparer());
 
             return ListeNomsConfig;
+        }
+
+        public static String eNomConfigActive(this String cheminMdl)
+        {
+            return App.Sw.GetActiveConfigurationName(cheminMdl);
+        }
+
+        public static List<String> eListeNomConfiguration(this String cheminMdl)
+        {
+            return ((String[])App.Sw.GetConfigurationNames(cheminMdl)).ToList();
+        }
+
+        public static void eListeNomConfiguration(this String cheminMdl, Predicate<String> filtre)
+        {
+            String[] ArrString = (String[])App.Sw.GetConfigurationNames(cheminMdl);
+
+            foreach (String Nom in ArrString)
+            {
+                if (filtre(Nom))
+                    return;
+            }
         }
 
         public static void eParcourirConfiguration(this ModelDoc2 mdl, Predicate<String> filtre)

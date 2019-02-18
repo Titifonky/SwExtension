@@ -190,8 +190,7 @@ namespace ModuleLaser
                             }
                         }
 
-                        if (mdl.GetPathName() != MdlBase.GetPathName())
-                            App.Sw.CloseDoc(mdl.GetPathName());
+                        mdl.eFermerSiDifferent(MdlBase);
                     }
 
                     MdlBase.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
@@ -454,8 +453,7 @@ namespace ModuleLaser
                         }
                     }
 
-                    if (mdl.GetPathName() != MdlBase.GetPathName())
-                        App.Sw.CloseDoc(mdl.GetPathName());
+                    mdl.eFermerSiDifferent(MdlBase);
                 }
 
                 WindowLog.EcrireF("Indice Max : {0}", indice);

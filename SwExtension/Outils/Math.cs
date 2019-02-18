@@ -33,26 +33,26 @@ namespace Outils
 
     public static class MathX
     {
-        public const Double Rad90D = 0.5 * Math.PI;
-        public const Double Rad180D = Math.PI;
-        public const Double Rad360D = 2 * Math.PI;
+        public const Double eRad90D = 0.5 * Math.PI;
+        public const Double eRad180D = Math.PI;
+        public const Double eRad360D = 2 * Math.PI;
 
-        public static Double Degree(this Double Rad)
+        public static Double eDegree(this Double Rad)
         {
             return Rad * 180.0 / Math.PI;
         }
 
-        public static Double Radian(this Double Deg)
+        public static Double eRadian(this Double Deg)
         {
             return Deg * Math.PI / 180.0;
         }
 
-        public static int Concat(this int a, int b)
+        public static int eConcat(this int a, int b)
         {
             return Convert.ToInt32(string.Format("{0}{1}", a, b));
         }
 
-        public static Boolean EstNegatif(this int a)
+        public static Boolean eEstNegatif(this int a)
         {
             return a < 0;
         }
@@ -101,6 +101,11 @@ namespace Outils
             }
 
             return Val;
+        }
+
+        public static Boolean eEstInteger(this Double a)
+        {
+            return Math.Abs(a % 1) <= (Double.Epsilon * 100);
         }
     }
 }

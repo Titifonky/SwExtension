@@ -318,8 +318,8 @@ namespace ModuleLaser
                         }
                     }
 
-                    if (fermerFichier && (mdl.GetPathName() != mdlBase.GetPathName()))
-                        App.Sw.CloseDoc(mdl.GetPathName());
+                    if (fermerFichier)
+                        mdl.eFermerSiDifferent(mdlBase); ;
                 }
 
                 // Conversion d'une liste de dossier

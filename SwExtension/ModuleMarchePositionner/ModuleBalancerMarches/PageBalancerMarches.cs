@@ -155,7 +155,7 @@ namespace ModuleMarchePositionner
             private String GetValDegree(Dimension d)
             {
                 Double[] tabDim = d.GetSystemValue3((int)swInConfigurationOpts_e.swThisConfiguration, null);
-                Double Val = tabDim[0].Degree();
+                Double Val = tabDim[0].eDegree();
                 if (Val > 180)
                     Val = (360 - Val) * -1;
 
@@ -169,7 +169,7 @@ namespace ModuleMarchePositionner
                 if (Val < 0)
                     Val = 360 + Val;
 
-                d.SetSystemValue3(Val.Radian(), (int)swInConfigurationOpts_e.swThisConfiguration, null);
+                d.SetSystemValue3(Val.eRadian(), (int)swInConfigurationOpts_e.swThisConfiguration, null);
             }
         }
     }

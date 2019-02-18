@@ -176,8 +176,7 @@ namespace ModuleLaser.ModuleCreerConfigDvp
                     mdl.ShowConfiguration2(cfgActive);
                     WindowLog.SautDeLigne();
 
-                    if (mdl.GetPathName() != MdlBase.GetPathName())
-                        App.Sw.CloseDoc(mdl.GetPathName());
+                    mdl.eFermerSiDifferent(MdlBase);
                 }
 
                 if (DicErreur.Count > 0)

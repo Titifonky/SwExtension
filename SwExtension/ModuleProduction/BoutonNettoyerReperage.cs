@@ -173,8 +173,7 @@ namespace ModuleProduction
                     }
                 }
 
-                if (mdl.GetPathName() != MdlBase.GetPathName())
-                    App.Sw.CloseDoc(mdl.GetPathName());
+                mdl.eFermerSiDifferent(MdlBase);
             }
 
             int errors = 0;

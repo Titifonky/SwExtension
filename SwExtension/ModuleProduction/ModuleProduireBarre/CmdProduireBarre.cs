@@ -255,7 +255,7 @@ namespace ModuleProduction.ModuleProduireBarre
                         mdlBarre.SauverEnPdf3D(CheminPDF);
                     }
 
-                    App.Sw.CloseDoc(mdlBarre.GetPathName());
+                    mdlBarre.eFermer();
                 }
             }
             catch (Exception e)
@@ -268,7 +268,7 @@ namespace ModuleProduction.ModuleProduireBarre
                 WindowLog.Ecrire("  - Ok");
             }
 
-            App.Sw.CloseDoc(mdlCorps.GetPathName());
+            mdlCorps.eFermer();
 
             return CheminFichierExportBarre;
         }

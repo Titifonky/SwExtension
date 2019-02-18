@@ -330,7 +330,7 @@ namespace SwExtension
 
         public void AjouterCmde(String iconTexte, Type type, swCommandTabButtonTextDisplay_e positionTexte = swCommandTabButtonTextDisplay_e.swCommandTabButton_TextBelow)
         {
-            int idCmd = _id.Concat(nextId);
+            int idCmd = _id.eConcat(nextId);
 
             Cmde C = new Cmde(type.GetModuleTitre(), NomFonction(_NomCallBackFunction, type), NomFonction(_NomEnableFunction, type), idCmd, iconTexte, type.GetModuleTypeDocContexte(), positionTexte, nextIdImg);
 

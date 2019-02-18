@@ -222,6 +222,7 @@ namespace ModuleProduction.ModuleRepererDossier
             Cmd.CombinerCorpsIdentiques = _CheckBox_CombinerCorpsIdentiques.IsChecked;
             Cmd.CombinerAvecCampagnePrecedente = _CheckBox_CombinerAvecCampagnePrecedente.IsChecked;
             Cmd.ReinitCampagneActuelle = ReinitCampagneActuelle && _CheckBox_ReinitCampagneActuelle.IsChecked;
+            Cmd.MajCampagnePrecedente = _CheckBox_MajCampagnePrecedente.IsChecked;
             Cmd.CreerDvp = _CheckBox_CreerDvp.IsChecked;
             Cmd.ListeCorps = ListeCorps;
             Cmd.FiltrerCorps = _EnumComboBox_TypeCorps.Val;

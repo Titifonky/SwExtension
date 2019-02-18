@@ -151,13 +151,12 @@ namespace ModuleLaser.ModuleExportBarre
                                     mdlBarre.SauverEnPdf3D(CheminPDF);
                                 }
 
-                                App.Sw.CloseDoc(mdlBarre.GetPathName());
+                                mdlBarre.eFermer();
                             }
                         }
                     }
 
-                    if (mdl.GetPathName() != MdlBase.GetPathName())
-                        App.Sw.CloseDoc(mdl.GetPathName());
+                    mdl.eFermerSiDifferent(MdlBase);
                 }
 
                 WindowLog.SautDeLigne();

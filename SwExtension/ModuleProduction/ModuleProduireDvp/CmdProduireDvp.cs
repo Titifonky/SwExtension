@@ -216,7 +216,7 @@ namespace ModuleProduction.ModuleProduireDvp
 
             mdlCorps.ShowConfiguration2(NomConfigPliee);
 
-            App.Sw.CloseDoc(mdlCorps.GetPathName());
+            mdlCorps.eFermer();
         }
 
         private String cmdRefPiece(ModelDoc2 mdl, String configPliee, String noDossier)
@@ -421,17 +421,17 @@ namespace ModuleProduction.ModuleProduireDvp
                                 switch (OrientationDvp)
                                 {
                                     case eOrientation.Portrait:
-                                        if (Math.Abs(Angle) != MathX.Rad90D)
+                                        if (Math.Abs(Angle) != MathX.eRad90D)
                                         {
-                                            Double a = MathX.Rad90D - Math.Abs(Angle);
+                                            Double a = MathX.eRad90D - Math.Abs(Angle);
                                             vue.Angle = (Math.Sign(Angle) == 0 ? 1 : Math.Sign(Angle)) * a;
                                         }
                                         break;
                                     case eOrientation.Paysage:
-                                        if (Math.Abs(Angle) != 0 || Math.Abs(Angle) != MathX.Rad180D)
+                                        if (Math.Abs(Angle) != 0 || Math.Abs(Angle) != MathX.eRad180D)
                                         {
-                                            Double a = MathX.Rad90D - Math.Abs(Angle);
-                                            vue.Angle = ((Math.Sign(Angle) == 0 ? 1 : Math.Sign(Angle)) * a) - MathX.Rad90D;
+                                            Double a = MathX.eRad90D - Math.Abs(Angle);
+                                            vue.Angle = ((Math.Sign(Angle) == 0 ? 1 : Math.Sign(Angle)) * a) - MathX.eRad90D;
                                         }
                                         break;
                                     default:

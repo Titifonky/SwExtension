@@ -95,10 +95,9 @@ namespace ModuleLaser
                         int lErrors = 0, lWarnings = 0;
                         mdlExport.Save3((int)swSaveAsOptions_e.swSaveAsOptions_Silent, ref lErrors, ref lWarnings);
 
-                        App.Sw.CloseDoc(mdlExport.GetPathName());
+                        mdlExport.eFermer();
 
-                        if (mdl.GetPathName() != MdlBase.GetPathName())
-                            App.Sw.CloseDoc(mdl.GetPathName());
+                        mdl.eFermerSiDifferent(MdlBase);
                     }
                 }
             }

@@ -149,8 +149,7 @@ namespace ModuleLaser.ModuleCreerDvp
                         NouvelleLigne = true;
                     }
 
-                    if (mdl.GetPathName() != MdlBase.GetPathName())
-                        App.Sw.CloseDoc(mdl.GetPathName());
+                    mdl.eFermerSiDifferent(MdlBase);
                 }
 
                 foreach (DrawingDoc dessin in DicDessins.Values)
@@ -165,7 +164,7 @@ namespace ModuleLaser.ModuleCreerDvp
                 if (FermerPlan)
                 {
                     foreach (ModelDoc2 dessin in DicDessins.Values)
-                        App.Sw.CloseDoc(dessin.GetPathName());
+                        dessin.eFermer();
                 }
 
                 if (DicErreur.Count > 0)
@@ -440,17 +439,17 @@ namespace ModuleLaser.ModuleCreerDvp
                                 switch (OrientationDvp)
                                 {
                                     case eOrientation.Portrait:
-                                        if (Math.Abs(Angle) != MathX.Rad90D)
+                                        if (Math.Abs(Angle) != MathX.eRad90D)
                                         {
-                                            Double a = MathX.Rad90D - Math.Abs(Angle);
+                                            Double a = MathX.eRad90D - Math.Abs(Angle);
                                             vue.Angle = (Math.Sign(Angle) == 0 ? 1 : Math.Sign(Angle)) * a;
                                         }
                                         break;
                                     case eOrientation.Paysage:
-                                        if (Math.Abs(Angle) != 0 || Math.Abs(Angle) != MathX.Rad180D)
+                                        if (Math.Abs(Angle) != 0 || Math.Abs(Angle) != MathX.eRad180D)
                                         {
-                                            Double a = MathX.Rad90D - Math.Abs(Angle);
-                                            vue.Angle = ((Math.Sign(Angle) == 0 ? 1 : Math.Sign(Angle)) * a) - MathX.Rad90D;
+                                            Double a = MathX.eRad90D - Math.Abs(Angle);
+                                            vue.Angle = ((Math.Sign(Angle) == 0 ? 1 : Math.Sign(Angle)) * a) - MathX.eRad90D;
                                         }
                                         break;
                                     default:
