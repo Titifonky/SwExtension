@@ -61,7 +61,7 @@ namespace SwExtension
             AideModule = this.GetModuleAide();
             TypeDocContexteModule = this.GetModuleTypeDocContexte();
 
-            _Config = new ConfigModule(NomModule, TitreModule);
+            _Config = new ConfigModule(this);
         }
 
         protected abstract void Command();

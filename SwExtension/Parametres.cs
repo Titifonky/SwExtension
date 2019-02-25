@@ -309,15 +309,30 @@ namespace SwExtension
 
         public ConfigModule(String nomModule)
         {
-            _NomModule = nomModule;
-            _IntituleModule = nomModule;
-
-            _Module = Module(nomModule, nomModule, true);
-
-            DicAncienParametre();
+            Init(nomModule, nomModule);
         }
 
         public ConfigModule(String nomModule, String intitule)
+        {
+            Init(nomModule, intitule);
+        }
+
+        public ConfigModule(BoutonBase value)
+        {
+            Init(value.GetType());
+        }
+
+        public ConfigModule(Type value)
+        {
+            Init(value);
+        }
+
+        private void Init(Type value)
+        {
+            Init(staticModuleInfo.GetModuleNom(value), staticModuleInfo.GetModuleTitre(value));
+        }
+
+        private void Init(String nomModule, String intitule)
         {
             _NomModule = nomModule;
             _IntituleModule = intitule;

@@ -98,6 +98,7 @@
     <Parametre name="PropTarauderEmpreinte" intitule="Propriete &quot;TarauderEmpreinte&quot;" tip="" type="System.String">TarauderEmpreinte</Parametre>
   </Module>
   <Module name="Test" intitule="Test">
+    <Parametre name="Pid" intitule="" tip="" type="System.String">à.&#x0;&#x0;&#x4;&#x0;&#x0;&#x0;ÿþÿ&#x0;&#x0;&#x0;&#x0;&#x0;&#x2;&#x0;&#x0;&#x0;p&#x0;&#x0;&#x0;m&#x0;&#x0;&#x0;</Parametre>
   </Module>
   <Module name="ParametresModule" intitule="Parametres des modules">
   </Module>

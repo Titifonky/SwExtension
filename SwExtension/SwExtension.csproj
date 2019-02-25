@@ -214,6 +214,7 @@
     <Compile Include="Outils\Apercu.cs" />
     <Compile Include="Outils\Divers.cs" />
     <Compile Include="Outils\InputBox.cs" />
+    <Compile Include="Outils\ManagedIStream.cs" />
     <Compile Include="Outils\TestBoolean.cs" />
     <Compile Include="Outils\PMPControls.cs" />
     <Compile Include="Outils\Reflexion.cs" />
