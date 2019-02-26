@@ -103,29 +103,26 @@ namespace ModuleProduction.ModuleRepererDossier
 
                 // On charge les corps existant à partir des fichiers
                 // et seulement ceux dont la quantité pour CampagneDepartDecompte est supérieure à 0
-                if (CombinerCorpsIdentiques && CombinerAvecCampagnePrecedente && (ListeCorps.Count > 0))
+                if (CombinerCorpsIdentiques && (ListeCorps.Count > 0))
                 {
-                    var CampagneDepartDecompte = ListeCorps.CampagneDepartDecompte;
+                    var FiltreCampagne = IndiceCampagne;
 
-                    // On recherche les corps à charger
-                    var ListeCorpsAcharger = new List<Corps>();
-                    foreach (var corps in ListeCorps.Values)
-                    {
-                        if (corps.Campagne.ContainsKey(CampagneDepartDecompte) &&
-                            (corps.Campagne[CampagneDepartDecompte] > 0) &&
-                            File.Exists(corps.CheminFichierRepere)
-                            )
-                            ListeCorpsAcharger.Add(corps);
-                    }
+                    if(CombinerAvecCampagnePrecedente)
+                        FiltreCampagne = ListeCorps.CampagneDepartDecompte;
 
                     WindowLog.SautDeLigne();
-                    WindowLog.EcrireF("Chargement des corps existants ({0}):", ListeCorpsAcharger.Count);
+                    WindowLog.Ecrire("Chargement des corps existants :");
 
-                    // On charge les corps
-                    foreach (var corps in ListeCorpsAcharger)
+                    foreach (var corps in ListeCorps.Values)
                     {
-                        WindowLog.EcrireF(" - {0}", corps.RepereComplet);
-                        corps.ChargerCorps();
+                        if (corps.Campagne.ContainsKey(FiltreCampagne) &&
+                            (corps.Campagne[FiltreCampagne] > 0) &&
+                            File.Exists(corps.CheminFichierRepere)
+                            )
+                        {
+                            WindowLog.EcrireF(" - {0}", corps.RepereComplet);
+                            corps.ChargerCorps();
+                        }
                     }
                 }
 

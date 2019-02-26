@@ -20,7 +20,11 @@ namespace ModuleProduction
         {
             try
             {
+                App.Sw.CommandInProgress = true;
+
                 Nettoyer();
+
+                App.Sw.CommandInProgress = false;
             }
             catch (Exception e)
             {
@@ -138,6 +142,7 @@ namespace ModuleProduction
             {
                 if (mdl.TypeDoc() != eTypeDoc.Piece) continue;
 
+                mdl.pActiverManager(false);
 
                 foreach (Configuration Cf in mdl.eListeConfigs(eTypeConfig.Depliee))
                     Cf.eSupprimerConfigAvecEtatAff(mdl);
@@ -172,6 +177,8 @@ namespace ModuleProduction
                         PM.ePropAdd(CONSTANTES.DESC_DOSSIER, ValParDefaut);
                     }
                 }
+
+                mdl.pActiverManager(true);
 
                 mdl.eFermerSiDifferent(MdlBase);
             }

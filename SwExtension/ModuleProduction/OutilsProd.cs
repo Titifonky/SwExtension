@@ -1454,7 +1454,7 @@ namespace ModuleProduction
         {
             MdlBase = mdlBase;
 
-            SwCorps = swCorps;
+            SwCorps = swCorps.Copy2(true);
             TypeCorps = typeCorps;
             Materiau = materiau;
         }
@@ -1572,8 +1572,6 @@ namespace ModuleProduction
 
         public void SauverRepere(Boolean creerDvp)
         {
-            SauverCorps();
-
             this.Modele.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
             this.Modele.ShowConfiguration2(this.NomConfig);
             this.Modele.EditRebuild3();
@@ -1595,14 +1593,16 @@ namespace ModuleProduction
 
             var Piece = mdlFichier.ePartDoc();
 
-            Body2 swCorps = null;
+            SwCorps = null;
 
             foreach (var c in Piece.eListeCorps(false))
                 if (c.Name == this.NomCorps)
-                    swCorps = c;
+                    SwCorps = c;
 
-            swCorps.eVisible(true);
-            swCorps.eSelect();
+            SauverCorps();
+
+            SwCorps.eVisible(true);
+            SwCorps.eSelect();
             mdlFichier.FeatureManager.InsertDeleteBody2(true);
 
             Piece.ePremierCorps(false).eVisible(true);
@@ -1829,6 +1829,7 @@ namespace ModuleProduction
             mdl.SaveBMP(CheminFichierApercu, 0, 0);
             Bitmap bmp = RedimensionnerImage(100, 100, CheminFichierApercu);
             bmp.Save(CheminFichierApercu);
+            bmp.Dispose();
         }
 
         private Bitmap RedimensionnerImage(int newWidth, int newHeight, string stPhotoPath)
