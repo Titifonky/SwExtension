@@ -13,6 +13,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Media.Imaging;
+using System.Drawing.Imaging;
+using System.Drawing.Drawing2D;
 
 namespace ModuleProduction
 {
@@ -20,6 +22,7 @@ namespace ModuleProduction
     {
         public const String DOSSIER_PIECES = "Pieces";
         public const String DOSSIER_PIECES_APERCU = "Apercu";
+        public const String DOSSIER_PIECES_CORPS = "Corps";
         public const String FICHIER_NOMENC = "Nomenclature.txt";
         public const String DOSSIER_LASERTOLE = "Laser tole";
         public const String DOSSIER_LASERTUBE = "Laser tube";
@@ -65,7 +68,7 @@ namespace ModuleProduction
             FonctionDepliee.eParcourirSousFonction(
                 f =>
                 {
-                    if(f.GetTypeName2() == FeatureType.swTnUiBend)
+                    if (f.GetTypeName2() == FeatureType.swTnUiBend)
                         nb++;
 
                     return false;
@@ -1411,7 +1414,7 @@ namespace ModuleProduction
         {
             String Ligne = "";
 
-            if(Dvp)
+            if (Dvp)
                 Ligne = String.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}", Repere, TypeCorps, Dimension, Volume, Materiau, Qte);
 
             return Ligne;
@@ -1477,6 +1480,9 @@ namespace ModuleProduction
         {
             _CheminFichierRepere = Path.Combine(MdlBase.pDossierPiece(), RepereComplet + OutilsProd.pExtPiece);
             _CheminFichierApercu = Path.Combine(MdlBase.pDossierPiece(), CONST_PRODUCTION.DOSSIER_PIECES_APERCU, RepereComplet + ".bmp");
+            _CheminFichierCorps = Path.Combine(MdlBase.pDossierPiece(), CONST_PRODUCTION.DOSSIER_PIECES_CORPS, RepereComplet + ".data");
+            Directory.CreateDirectory(Path.GetDirectoryName(CheminFichierApercu));
+            Directory.CreateDirectory(Path.GetDirectoryName(CheminFichierCorps));
         }
 
         public void AjouterModele(ModelDoc2 mdl, String config, int idDossier, String nomCorps)
@@ -1502,6 +1508,131 @@ namespace ModuleProduction
         public String CheminFichierApercu
         {
             get { return _CheminFichierApercu; }
+        }
+
+        private String _CheminFichierCorps = "";
+        public String CheminFichierCorps
+        {
+            get { return _CheminFichierCorps; }
+        }
+
+        public void ChargerCorps()
+        {
+            if (File.Exists(CheminFichierCorps))
+            {
+                Byte[] Tab = File.ReadAllBytes(CheminFichierCorps);
+                using (MemoryStream ms = new MemoryStream(Tab))
+                {
+                    ManagedIStream MgIs = new ManagedIStream(ms);
+                    Modeler mdlr = (Modeler)App.Sw.GetModeler();
+                    this.SwCorps = (Body2)mdlr.Restore(MgIs);
+                }
+            }
+            else
+            {
+                // On cherche la première config pliée
+                var LstCfg = this.CheminFichierRepere.eListeNomConfiguration();
+                var Cfg = "";
+                foreach (var c in this.CheminFichierRepere.eListeNomConfiguration())
+                {
+                    if (c.eEstConfigPliee())
+                    {
+                        Cfg = c;
+                        break;
+                    }
+                }
+
+                // On ouvre avec la config pliée
+                ModelDoc2 mdl = Sw.eOuvrir(this.CheminFichierRepere, Cfg);
+                mdl.eActiver();
+
+                var Piece = mdl.ePartDoc();
+
+                // On copie le corps pour qu'il persiste après la fermeture du modèle
+                this.SwCorps = Piece.ePremierCorps().Copy2(true);
+                // Il faut fermer les modeles sinon SW bug après
+                // en avoir ouvert une quarantaine
+                mdl.eFermer();
+                SauverCorps();
+            }
+        }
+
+        public void SauverCorps()
+        {
+            if (File.Exists(CheminFichierCorps)) return;
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                ManagedIStream MgIs = new ManagedIStream(ms);
+                this.SwCorps.Save(MgIs);
+                var Tab = ms.ToArray();
+                File.WriteAllBytes(CheminFichierCorps, Tab);
+            }
+        }
+
+        public void SauverRepere(Boolean creerDvp)
+        {
+            SauverCorps();
+
+            this.Modele.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
+            this.Modele.ShowConfiguration2(this.NomConfig);
+            this.Modele.EditRebuild3();
+
+            // Sauvegarde du fichier de base
+            int Errors = 0, Warning = 0;
+            this.Modele.Extension.SaveAs(this.CheminFichierRepere, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, (int)(swSaveAsOptions_e.swSaveAsOptions_Copy | swSaveAsOptions_e.swSaveAsOptions_Silent), null, ref Errors, ref Warning);
+
+            var mdlFichier = Sw.eOuvrir(this.CheminFichierRepere, this.NomConfig);
+            mdlFichier.eActiver();
+
+            mdlFichier.Extension.BreakAllExternalFileReferences2(true);
+
+            mdlFichier.pActiverManager(false);
+
+            foreach (var nomCfg in mdlFichier.eListeNomConfiguration())
+                if (nomCfg != this.NomConfig)
+                    mdlFichier.DeleteConfiguration2(nomCfg);
+
+            var Piece = mdlFichier.ePartDoc();
+
+            Body2 swCorps = null;
+
+            foreach (var c in Piece.eListeCorps(false))
+                if (c.Name == this.NomCorps)
+                    swCorps = c;
+
+            swCorps.eVisible(true);
+            swCorps.eSelect();
+            mdlFichier.FeatureManager.InsertDeleteBody2(true);
+
+            Piece.ePremierCorps(false).eVisible(true);
+            mdlFichier.EditRebuild3();
+            mdlFichier.pMasquerEsquisses();
+            mdlFichier.pFixerProp(this.RepereComplet);
+
+            if ((this.TypeCorps == eTypeCorps.Tole) && creerDvp)
+                this.pCreerDvp(MdlBase.pDossierPiece(), false);
+
+            mdlFichier.FeatureManager.EditFreeze2((int)swMoveFreezeBarTo_e.swMoveFreezeBarToEnd, "", true, true);
+
+            if (this.TypeCorps == eTypeCorps.Tole)
+                OrienterVueTole(mdlFichier);
+            else if (this.TypeCorps == eTypeCorps.Barre)
+                OrienterVueBarre(mdlFichier);
+
+            mdlFichier.pActiverManager(true);
+
+            SauverVue(mdlFichier);
+            mdlFichier.EditRebuild3();
+            mdlFichier.eSauver();
+            mdlFichier.eFermer();
+        }
+
+        public void SupprimerFichier()
+        {
+            File.Delete(this.CheminFichierRepere);
+            File.Delete(this.CheminFichierApercu);
+            File.Delete(this.CheminFichierCorps);
         }
 
         private BitmapImage _Apercu = null;
@@ -1615,6 +1746,152 @@ namespace ModuleProduction
         public Double DiffPliagePct { get; private set; }
 
         public int NbPli { get; set; }
+
+        private void OrienterVueTole(ModelDoc2 mdl)
+        {
+            var ListeDepliee = mdl.ePartDoc().eListeFonctionsDepliee();
+            if (ListeDepliee.Count > 0)
+            {
+                var fDepliee = ListeDepliee[0];
+                FlatPatternFeatureData fDeplieeInfo = fDepliee.GetDefinition();
+                Face2 face = fDeplieeInfo.FixedFace2;
+                Surface surface = face.GetSurface();
+
+                Boolean Reverse = face.FaceInSurfaceSense();
+
+                Double[] Param = surface.PlaneParams;
+
+                if (Reverse)
+                {
+                    Param[0] = Param[0] * -1;
+                    Param[1] = Param[1] * -1;
+                    Param[2] = Param[2] * -1;
+                }
+
+                gVecteur Normale = new gVecteur(Param[0], Param[1], Param[2]);
+                MathTransform mtNormale = MathRepere(Normale.MathVector());
+                MathTransform mtAxeZ = MathRepere(new gVecteur(1, 1, 1).MathVector()); ;
+
+                MathTransform mtRotate = mtAxeZ.Multiply(mtNormale.Inverse());
+
+                ModelView mv = mdl.ActiveView;
+                mv.Orientation3 = mtRotate;
+                mv.Activate();
+            }
+            mdl.ViewZoomtofit2();
+            mdl.GraphicsRedraw2();
+        }
+
+        private void OrienterVueBarre(ModelDoc2 mdl)
+        {
+            var corps = mdl.ePartDoc().ePremierCorps();
+
+            var analyse = new AnalyseGeomBarre(corps, mdl);
+
+            MathTransform mtNormale = MathRepere(analyse.PlanSection.Normale.MathVector());
+            MathTransform mtAxeZ = MathRepere(new gVecteur(1, 1, 1).MathVector()); ;
+
+            MathTransform mtRotate = mtAxeZ.Multiply(mtNormale.Inverse());
+
+            ModelView mv = mdl.ActiveView;
+            mv.Orientation3 = mtRotate;
+            mv.Activate();
+
+            mdl.ViewZoomtofit2();
+            mdl.GraphicsRedraw2();
+        }
+
+        private MathTransform MathRepere(MathVector X)
+        {
+            MathUtility Mu = App.Sw.GetMathUtility();
+            MathVector NormAxeX = null, NormAxeY = null, NormAxeZ = null;
+
+            if (X.ArrayData[0] == 0 && X.ArrayData[2] == 0)
+            {
+                NormAxeZ = Mu.CreateVector(new Double[] { 0, 1, 0 });
+                NormAxeX = Mu.CreateVector(new Double[] { 1, 0, 0 });
+                NormAxeY = Mu.CreateVector(new Double[] { 0, 0, -1 });
+            }
+            else
+            {
+                NormAxeZ = X.Normalise();
+                NormAxeX = Mu.CreateVector(new Double[] { X.ArrayData[2], 0, -1 * X.ArrayData[0] }).Normalise();
+                NormAxeY = NormAxeZ.Cross(NormAxeX).Normalise();
+            }
+
+            MathVector NormTrans = Mu.CreateVector(new Double[] { 0, 0, 0 });
+            MathTransform Mt = Mu.ComposeTransform(NormAxeX, NormAxeY, NormAxeZ, NormTrans, 1);
+            return Mt;
+        }
+
+        private void SauverVue(ModelDoc2 mdl)
+        {
+            mdl.SaveBMP(CheminFichierApercu, 0, 0);
+            Bitmap bmp = RedimensionnerImage(100, 100, CheminFichierApercu);
+            bmp.Save(CheminFichierApercu);
+        }
+
+        private Bitmap RedimensionnerImage(int newWidth, int newHeight, string stPhotoPath)
+        {
+            Bitmap img = new Bitmap(stPhotoPath);
+            Bitmap imageSource = img.Clone(new Rectangle(0, 0, img.Width, img.Height), PixelFormat.Format32bppRgb);
+            Image imgPhoto = imageSource.AutoCrop();
+            img.Dispose();
+            imageSource.Dispose();
+
+            int sourceWidth = imgPhoto.Width;
+            int sourceHeight = imgPhoto.Height;
+
+            //Consider vertical pics
+            if (sourceWidth < sourceHeight)
+            {
+                int buff = newWidth;
+
+                newWidth = newHeight;
+                newHeight = buff;
+            }
+
+            int sourceX = 0, sourceY = 0, destX = 0, destY = 0;
+            float nPercent = 0, nPercentW = 0, nPercentH = 0;
+
+            nPercentW = ((float)newWidth / (float)sourceWidth);
+            nPercentH = ((float)newHeight / (float)sourceHeight);
+            if (nPercentH < nPercentW)
+            {
+                nPercent = nPercentH;
+                destX = System.Convert.ToInt16((newWidth -
+                          (sourceWidth * nPercent)) / 2);
+            }
+            else
+            {
+                nPercent = nPercentW;
+                destY = System.Convert.ToInt16((newHeight -
+                          (sourceHeight * nPercent)) / 2);
+            }
+
+            int destWidth = (int)(sourceWidth * nPercent);
+            int destHeight = (int)(sourceHeight * nPercent);
+
+
+            Bitmap bmPhoto = new Bitmap(newWidth, newHeight,
+                          PixelFormat.Format32bppRgb);
+
+            bmPhoto.SetResolution(imgPhoto.HorizontalResolution,
+                         imgPhoto.VerticalResolution);
+
+            Graphics grPhoto = Graphics.FromImage(bmPhoto);
+            grPhoto.Clear(Color.White);
+            grPhoto.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+            grPhoto.DrawImage(imgPhoto,
+                new Rectangle(destX, destY, destWidth, destHeight),
+                new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight),
+                GraphicsUnit.Pixel);
+
+            grPhoto.Dispose();
+            imgPhoto.Dispose();
+            return bmPhoto;
+        }
 
         #region Notification WPF
 

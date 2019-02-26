@@ -5,9 +5,6 @@ using SolidWorks.Interop.swconst;
 using SwExtension;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 
@@ -83,8 +80,7 @@ namespace ModuleProduction.ModuleRepererDossier
                     {
                         if (FichierAsauvegarder.ContainsKey(corps.Repere)) continue;
 
-                        File.Delete(corps.CheminFichierRepere);
-                        File.Delete(corps.CheminFichierApercu);
+                        corps.SupprimerFichier();
                     }
 
                     ListeCorps = FichierAsauvegarder;
@@ -128,30 +124,8 @@ namespace ModuleProduction.ModuleRepererDossier
                     // On charge les corps
                     foreach (var corps in ListeCorpsAcharger)
                     {
-                        // On cherche la première config pliée
-                        var LstCfg = corps.CheminFichierRepere.eListeNomConfiguration();
-                        var Cfg = "";
-                        foreach (var c in corps.CheminFichierRepere.eListeNomConfiguration())
-                        {
-                            if (c.eEstConfigPliee())
-                            {
-                                Cfg = c;
-                                break;
-                            }
-                        }
-
-                        // On ouvre avec la config pliée
-                        ModelDoc2 mdl = Sw.eOuvrir(corps.CheminFichierRepere, Cfg);
-                        mdl.eActiver(swRebuildOnActivation_e.swDontRebuildActiveDoc);
-
-                        var Piece = mdl.ePartDoc();
-                        
-                        // On copie le corps pour qu'il persiste après la fermeture du modèle
-                        corps.SwCorps = Piece.ePremierCorps().Copy2(true);
-                        WindowLog.EcrireF("- {0} chargé", corps.RepereComplet);
-                        // Il faut fermer les modeles sinon SW bug après
-                        // en avoir ouvert une quarantaine
-                        mdl.eFermer();
+                        WindowLog.EcrireF(" - {0}", corps.RepereComplet);
+                        corps.ChargerCorps();
                     }
                 }
 
@@ -391,8 +365,8 @@ namespace ModuleProduction.ModuleRepererDossier
                     // Si on est pas en mode "Combiner corps identique" et que le fichier existe
                     // on le supprime pour le mettre à jour, sinon on peut se retrouver
                     // avec des fichiers ne correpondants pas au corps
-                    if (!CombinerCorpsIdentiques && File.Exists(corps.CheminFichierRepere))
-                        File.Delete(corps.CheminFichierRepere);
+                    if (!CombinerCorpsIdentiques)
+                        corps.SupprimerFichier();
 
                     // Si le fichier existe, on passe au suivant
                     if (File.Exists(corps.CheminFichierRepere))
@@ -400,59 +374,7 @@ namespace ModuleProduction.ModuleRepererDossier
 
                     WindowLog.EcrireF("- {0} exporté", CONSTANTES.PREFIXE_REF_DOSSIER + corps.Repere);
 
-                    corps.Modele.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
-                    corps.Modele.ShowConfiguration2(corps.NomConfig);
-                    corps.Modele.EditRebuild3();
-
-                    // Sauvegarde du fichier de base
-                    int Errors = 0, Warning = 0;
-                    corps.Modele.Extension.SaveAs(corps.CheminFichierRepere, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, (int)(swSaveAsOptions_e.swSaveAsOptions_Copy | swSaveAsOptions_e.swSaveAsOptions_Silent), null, ref Errors, ref Warning);
-
-                    var mdlFichier = Sw.eOuvrir(corps.CheminFichierRepere, corps.NomConfig);
-                    mdlFichier.eActiver();
-
-                    mdlFichier.Extension.BreakAllExternalFileReferences2(true);
-
-                    mdlFichier.pActiverManager(false);
-
-                    foreach (var nomCfg in mdlFichier.eListeNomConfiguration())
-                        if (nomCfg != corps.NomConfig)
-                            mdlFichier.DeleteConfiguration2(nomCfg);
-
-                    var Piece = mdlFichier.ePartDoc();
-
-                    Body2 swCorps = null;
-
-                    foreach (var c in Piece.eListeCorps(false))
-                        if (c.Name == corps.NomCorps)
-                            swCorps = c;
-
-                    swCorps.eVisible(true);
-                    swCorps.eSelect();
-                    mdlFichier.FeatureManager.InsertDeleteBody2(true);
-
-                    Piece.ePremierCorps(false).eVisible(true);
-                    mdlFichier.EditRebuild3();
-                    mdlFichier.pMasquerEsquisses();
-                    mdlFichier.pFixerProp(corps.RepereComplet);
-
-                    if ((corps.TypeCorps == eTypeCorps.Tole) && CreerDvp)
-                        corps.pCreerDvp(MdlBase.pDossierPiece(), false);
-
-                    mdlFichier.FeatureManager.EditFreeze2((int)swMoveFreezeBarTo_e.swMoveFreezeBarToEnd, "", true, true);
-
-                    if (corps.TypeCorps == eTypeCorps.Tole)
-                        OrienterVueTole(mdlFichier);
-                    else if (corps.TypeCorps == eTypeCorps.Barre)
-                        OrienterVueBarre(mdlFichier);
-
-                    mdlFichier.pActiverManager(true);
-
-                    SauverVue(mdlFichier, mdlFichier.GetPathName());
-                    mdlFichier.EditRebuild3();
-                    mdlFichier.eSauver();
-
-                    mdlFichier.eFermer();
+                    corps.SauverRepere(CreerDvp);
                 }
 
                 ////////////////////////////////// RECAP /////////////////////////////////////////////////
@@ -486,155 +408,6 @@ namespace ModuleProduction.ModuleRepererDossier
                 aff.ShowDialog();
             }
             catch (Exception e) { this.LogErreur(new Object[] { e }); }
-        }
-
-        private void OrienterVueTole(ModelDoc2 mdl)
-        {
-            var ListeDepliee = mdl.ePartDoc().eListeFonctionsDepliee();
-            if (ListeDepliee.Count > 0)
-            {
-                var fDepliee = ListeDepliee[0];
-                FlatPatternFeatureData fDeplieeInfo = fDepliee.GetDefinition();
-                Face2 face = fDeplieeInfo.FixedFace2;
-                Surface surface = face.GetSurface();
-
-                Boolean Reverse = face.FaceInSurfaceSense();
-
-                Double[] Param = surface.PlaneParams;
-
-                if (Reverse)
-                {
-                    Param[0] = Param[0] * -1;
-                    Param[1] = Param[1] * -1;
-                    Param[2] = Param[2] * -1;
-                }
-
-                gVecteur Normale = new gVecteur(Param[0], Param[1], Param[2]);
-                MathTransform mtNormale = MathRepere(Normale.MathVector());
-                MathTransform mtAxeZ = MathRepere(new gVecteur(1, 1, 1).MathVector()); ;
-
-                MathTransform mtRotate = mtAxeZ.Multiply(mtNormale.Inverse());
-
-                ModelView mv = mdl.ActiveView;
-                mv.Orientation3 = mtRotate;
-                mv.Activate();
-            }
-            mdl.ViewZoomtofit2();
-            mdl.GraphicsRedraw2();
-        }
-
-        private void OrienterVueBarre(ModelDoc2 mdl)
-        {
-            var corps = mdl.ePartDoc().ePremierCorps();
-
-            var analyse = new AnalyseGeomBarre(corps, mdl);
-
-            MathTransform mtNormale = MathRepere(analyse.PlanSection.Normale.MathVector());
-            MathTransform mtAxeZ = MathRepere(new gVecteur(1, 1, 1).MathVector()); ;
-
-            MathTransform mtRotate = mtAxeZ.Multiply(mtNormale.Inverse());
-
-            ModelView mv = mdl.ActiveView;
-            mv.Orientation3 = mtRotate;
-            mv.Activate();
-
-            mdl.ViewZoomtofit2();
-            mdl.GraphicsRedraw2();
-        }
-
-        private MathTransform MathRepere(MathVector X)
-        {
-            MathUtility Mu = App.Sw.GetMathUtility();
-            MathVector NormAxeX = null, NormAxeY = null, NormAxeZ = null;
-
-            if (X.ArrayData[0] == 0 && X.ArrayData[2] == 0)
-            {
-                NormAxeZ = Mu.CreateVector(new Double[] { 0, 1, 0 });
-                NormAxeX = Mu.CreateVector(new Double[] { 1, 0, 0 });
-                NormAxeY = Mu.CreateVector(new Double[] { 0, 0, -1 });
-            }
-            else
-            {
-                NormAxeZ = X.Normalise();
-                NormAxeX = Mu.CreateVector(new Double[] { X.ArrayData[2], 0, -1 * X.ArrayData[0] }).Normalise();
-                NormAxeY = NormAxeZ.Cross(NormAxeX).Normalise();
-            }
-
-            MathVector NormTrans = Mu.CreateVector(new Double[] { 0, 0, 0 });
-            MathTransform Mt = Mu.ComposeTransform(NormAxeX, NormAxeY, NormAxeZ, NormTrans, 1);
-            return Mt;
-        }
-
-        private void SauverVue(ModelDoc2 mdl, String cheminFichier)
-        {
-            String Dossier = Path.Combine(Path.GetDirectoryName(cheminFichier), CONST_PRODUCTION.DOSSIER_PIECES_APERCU);
-            Directory.CreateDirectory(Dossier);
-            String CheminImg = Path.Combine(Dossier, Path.GetFileNameWithoutExtension(cheminFichier) + ".bmp");
-            mdl.SaveBMP(CheminImg, 0, 0);
-            Bitmap bmp = RedimensionnerImage(100, 100, CheminImg);
-            bmp.Save(CheminImg);
-        }
-
-        public Bitmap RedimensionnerImage(int newWidth, int newHeight, string stPhotoPath)
-        {
-            Bitmap img = new Bitmap(stPhotoPath);
-            Bitmap imageSource = img.Clone(new Rectangle(0, 0, img.Width, img.Height), PixelFormat.Format32bppRgb);
-            Image imgPhoto = imageSource.AutoCrop();
-            img.Dispose();
-            imageSource.Dispose();
-
-            int sourceWidth = imgPhoto.Width;
-            int sourceHeight = imgPhoto.Height;
-
-            //Consider vertical pics
-            if (sourceWidth < sourceHeight)
-            {
-                int buff = newWidth;
-
-                newWidth = newHeight;
-                newHeight = buff;
-            }
-
-            int sourceX = 0, sourceY = 0, destX = 0, destY = 0;
-            float nPercent = 0, nPercentW = 0, nPercentH = 0;
-
-            nPercentW = ((float)newWidth / (float)sourceWidth);
-            nPercentH = ((float)newHeight / (float)sourceHeight);
-            if (nPercentH < nPercentW)
-            {
-                nPercent = nPercentH;
-                destX = System.Convert.ToInt16((newWidth -
-                          (sourceWidth * nPercent)) / 2);
-            }
-            else
-            {
-                nPercent = nPercentW;
-                destY = System.Convert.ToInt16((newHeight -
-                          (sourceHeight * nPercent)) / 2);
-            }
-
-            int destWidth = (int)(sourceWidth * nPercent);
-            int destHeight = (int)(sourceHeight * nPercent);
-
-
-            Bitmap bmPhoto = new Bitmap(newWidth, newHeight,
-                          PixelFormat.Format32bppRgb);
-
-            bmPhoto.SetResolution(imgPhoto.HorizontalResolution,
-                         imgPhoto.VerticalResolution);
-
-            Graphics grPhoto = Graphics.FromImage(bmPhoto);
-            grPhoto.Clear(Color.White);
-            grPhoto.InterpolationMode = InterpolationMode.HighQualityBicubic;
-
-            grPhoto.DrawImage(imgPhoto,
-                new Rectangle(destX, destY, destWidth, destHeight),
-                new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight),
-                GraphicsUnit.Pixel);
-
-            grPhoto.Dispose();
-            imgPhoto.Dispose();
-            return bmPhoto;
         }
 
         private Dimension GetParam(ModelDoc2 mdl, Feature fDossier, String nomCfg)
