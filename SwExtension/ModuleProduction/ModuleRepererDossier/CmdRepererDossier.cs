@@ -326,7 +326,7 @@ namespace ModuleProduction.ModuleRepererDossier
 
                     mdl.pActiverManager(true);
                     mdl.eSauver();
-                    mdl.eFermer();
+                    mdl.eFermerSiDifferent(MdlBase);
                 }
 
                 MdlBase.pActiverManager(true);
@@ -403,6 +403,9 @@ namespace ModuleProduction.ModuleRepererDossier
 
                 var aff = new AffichageElementWPF(ListeCorps, IndiceCampagne);
                 aff.ShowDialog();
+
+                ListeCorps = null;
+                ListeComposants = null;
             }
             catch (Exception e) { this.LogErreur(new Object[] { e }); }
         }

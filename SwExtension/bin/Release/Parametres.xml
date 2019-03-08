@@ -16,7 +16,7 @@
     <Parametre name="ExporterHauteQualite" intitule="Exporter en haute qualité" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="ExporterFeuilleEspacePapier" intitule="Exporter les feuilles dans l'espace papier" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="ConvertirSplineToPolyligne" intitule="Convertir les splines en polylignes" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">D:\Projet\E144 - Ville d'Arras\ED379 - Pole educatif Val de Scarpe\1\4.6.8 Volets exterieurs\Laser tole\2</Parametre>
+    <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">D:\Projet\E144 - Ville d'Arras\ED379 - Pole educatif Val de Scarpe\1\4.5.2 Boite aux lettres\T2\Laser tole\1</Parametre>
   </Module>
   <Module name="ExportPdf" intitule="Exporter en Pdf">
     <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">True</Parametre>
@@ -92,7 +92,7 @@
   </Module>
   <Module name="Empreinte" intitule="Empreinte entre les composants">
     <Parametre name="PrefixeBase" intitule="Filtrer les prefixes (?*#):" tip="" type="System.String">P2</Parametre>
-    <Parametre name="PrefixeEmpreinte" intitule="Filtrer les prefixes (?*#):" tip="" type="System.String">FH</Parametre>
+    <Parametre name="PrefixeEmpreinte" intitule="Filtrer les prefixes (?*#):" tip="" type="System.String">PO</Parametre>
     <Parametre name="PropEmpreinte" intitule="Propriete &quot;Empreinte&quot;" tip="" type="System.String">Empreinte</Parametre>
     <Parametre name="PropPrefixeEmpreinte" intitule="Propriete &quot;PrefixeEmpreinte&quot;" tip="" type="System.String">PrefixeEmpreinte</Parametre>
     <Parametre name="PropTarauderEmpreinte" intitule="Propriete &quot;TarauderEmpreinte&quot;" tip="" type="System.String">TarauderEmpreinte</Parametre>
@@ -156,7 +156,7 @@
   </Module>
   <Module name="LierLesConfigurations" intitule="Créer/Lier les configurations">
     <Parametre name="CreerConfig" intitule="Creer les configs manquante" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="ListeConfigs" intitule="Ajouter des configs&#xD;&#xA; Noms séparés par un espace" tip="" type="System.String">3 4 5</Parametre>
+    <Parametre name="ListeConfigs" intitule="Ajouter des configs&#xD;&#xA; Noms séparés par un espace" tip="" type="System.String">11 12 13 14</Parametre>
     <Parametre name="SupprimerNvlFonction" intitule="Supprimer les nouvelles fonctions ou contraintes&#xD;&#xA; dans la configuration" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="SupprimerNvComposant" intitule="Supprimer les nouveaux composants&#xD;&#xA; dans la configuration" tip="" type="System.Boolean">False</Parametre>
   </Module>
@@ -191,14 +191,14 @@
   <Module name="RepererDossier" intitule="Repérer les dossiers">
     <Parametre name="CombinerCorpsIdentiques" intitule="Combiner les corps identiques des différents modèles" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="CombinerAvecCampagnePrecedente" intitule="Combiner les corps avec les précédentes campagnes" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="CreerDvp" intitule="Creer les configs dvp des tôles" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="TypeCorps" intitule="Type de corps à repérer :" tip="" type="Outils.eTypeCorps">Piece</Parametre>
+    <Parametre name="CreerDvp" intitule="Creer les configs dvp des tôles" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="TypeCorps" intitule="Type de corps à repérer :" tip="" type="Outils.eTypeCorps">Tole</Parametre>
   </Module>
   <Module name="ProduireDvp" intitule="Creer les dvp de tôle">
     <Parametre name="AfficherLignePliage" intitule="Afficher les lignes de pliage" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="AfficherNotePliage" intitule="Afficher les notes de pliage" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="InscrireNomTole" intitule="Inscrire la réf du dvp sur la tole" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="TailleInscription" intitule="Ht des inscriptions en mm" tip="Ht des inscriptions en mm" type="System.Int32">10</Parametre>
+    <Parametre name="TailleInscription" intitule="Ht des inscriptions en mm" tip="Ht des inscriptions en mm" type="System.Int32">20</Parametre>
     <Parametre name="OrienterDvp" intitule="Orienter les dvps" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="OrientationDvp" intitule="" tip="" type="Outils.eOrientation">Portrait</Parametre>
     <Parametre name="FermerPlan" intitule="Fermer les plans" tip="Fermer les plans après génération des dvps" type="System.Boolean">False</Parametre>
@@ -244,7 +244,7 @@
     <Parametre name="Description" intitule="Description" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="PrefixeTole" intitule="Prefixe tole" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="AjouterMateriau" intitule="Ajouter le matériau" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="ProfilCourt" intitule="Nom de profil court" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="ProfilCourt" intitule="Nom de profil court" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="SautDeLigneMateriau" intitule="Saut de ligne matériau" tip="" type="System.Boolean">False</Parametre>
   </Module>
   <Module name="AfficherMasquerEsquisseReperage" intitule="Afficher/Masquer Esquisse reperage" />
@@ -254,8 +254,8 @@
   </Module>
   <Module name="ModifierLumiere" intitule="Modifier les lumières" />
   <Module name="BoutonAfficherEsquisseAssemblage" intitule="Afficher/Masquer l'esquisse de reperage">
-    <Parametre name="AfficherMasquer" intitule="Afficher/Masquer les esquisses" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="NomEsquisse" intitule="Nom de l'esquisse à modifier" tip="" type="System.String">E - Reperage Dessin</Parametre>
+    <Parametre name="AfficherMasquer" intitule="Afficher/Masquer les esquisses" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="NomEsquisse" intitule="Nom de l'esquisse à modifier" tip="" type="System.String">E - Reperage Dessin 2</Parametre>
   </Module>
   <Module name="Lumiere" intitule="Mettre à jour la lumière">
     <Parametre name="ValAmbiante" intitule="Valeur de la lumière ambiante" tip="" type="System.Double">0.6</Parametre>
