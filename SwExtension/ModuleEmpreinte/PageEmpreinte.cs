@@ -101,55 +101,94 @@ namespace ModuleEmpreinte
 
         private class FiltreComp
         {
-            private FiltreCompPropriete FiltreProp;
-            private FiltreCompConfig FiltreConfig;
+            private Groupe G;
+
+            private CtrlSelectionBox _SelectionBox;
+            private CtrlSelectionBox _Select_CompBase;
+            private CtrlTextBox _TextBox_NomComp;
 
             private CtrlOption o1;
             private CtrlOption o2;
 
-            private Groupe Grp;
+            private CtrlTextBox _TextBox_Prefixe;
+
+            private CtrlTextListBox _TextListBox_Configs;
+
+            private CtrlButton _Button;
 
             private ModelDoc2 _Mdl;
 
             public FiltreComp(ModelDoc2 mdl, Calque C, String TitreGroupe, CtrlSelectionBox SelectionBox, Parametre Prefixe)
             {
                 _Mdl = mdl;
-                Grp = C.AjouterGroupe(TitreGroupe);
+                _SelectionBox = SelectionBox;
 
-                o1 = Grp.AjouterOption("Filtrer propriete");
-                o2 = Grp.AjouterOption("Filtrer config");
+                G = C.AjouterGroupe(TitreGroupe);
 
-                FiltreProp = new FiltreCompPropriete(_Mdl, Grp, SelectionBox, Prefixe);
-                FiltreConfig = new FiltreCompConfig(mdl, Grp, SelectionBox);
+                _Select_CompBase = G.AjouterSelectionBox("", "Selectionnez le composant");
+                _Select_CompBase.SelectionMultipleMemeEntite = true;
+                _Select_CompBase.SelectionDansMultipleBox = true;
+                _Select_CompBase.UneSeuleEntite = true;
+                _Select_CompBase.FiltreSelection(swSelectType_e.swSelCOMPONENTS, swSelectType_e.swSelFACES);
+                _Select_CompBase.OnSelectionChanged += delegate (Object sender, int nb) { AfficherInfos(); };
+                _Select_CompBase.OnSubmitSelection += SelectionnerPiece;
+                _Select_CompBase.Hauteur = 2;
 
-                o1.OnCheck += delegate (Object sender) { FiltreProp.Afficher(true); FiltreConfig.Afficher(false); };
-                o2.OnCheck += delegate (Object sender) { FiltreProp.Afficher(false); FiltreConfig.Afficher(true); };
+                _TextBox_NomComp = G.AjouterTexteBox("");
+                _TextBox_NomComp.LectureSeule = true;
+                _TextBox_NomComp.NotifieSurFocus = true;
+
+                o1 = G.AjouterOption("Filtrer propriete");
+                o2 = G.AjouterOption("Filtrer config");
+
+                o1.OnCheck += delegate (Object sender) { _TextBox_Prefixe.Visible = true; _TextListBox_Configs.Visible = false; };
+                o2.OnCheck += delegate (Object sender) { _TextBox_Prefixe.Visible = false; _TextListBox_Configs.Visible = true; };
+
+                _TextBox_Prefixe = G.AjouterTexteBox(Prefixe, true);
+
+                _TextListBox_Configs = G.AjouterTextListBox("Liste des configurations");
+                _TextListBox_Configs.TouteHauteur = true;
+                _TextListBox_Configs.Height = 80;
+                _TextListBox_Configs.SelectionMultiple = true;
+
+                _Button = G.AjouterBouton("Rechercher empreintes");
+                _Button.OnButtonPress += delegate (Object sender)
+                {
+                    if (o1.IsChecked)
+                        RechercherComp(_SelectionBox, _TextBox_Prefixe.Text);
+                    else
+                        SelectionnerComposants();
+                };
             }
 
             public void AppliquerParam()
             {
                 o1.IsChecked = true;
             }
-        }
 
-        private class FiltreCompPropriete
-        {
-            private CtrlSelectionBox _SelectionBox;
-            private CtrlTextBox _TextBox;
-
-            private CtrlButton _Button;
-
-            private ModelDoc2 _Mdl;
-
-            public FiltreCompPropriete(ModelDoc2 mdl, Groupe G, CtrlSelectionBox SelectionBox, Parametre Prefixe)
+            private void AfficherInfos()
             {
-                _Mdl = mdl;
-                _SelectionBox = SelectionBox;
+                var Comp = _Mdl.eSelect_RecupererComposant(1, _Select_CompBase.Marque);
 
-                _TextBox = G.AjouterTexteBox(Prefixe, true);
-                _Button = G.AjouterBouton("Rechercher empreintes");
-                _Button.OnButtonPress += delegate (Object sender) { RechercherComp(_SelectionBox, _TextBox.Text); };
+                Comp.eDeSelectById(_Mdl);
+
+                if (Comp.IsNull() || (CompBase.IsRef() && (CompBase.GetPathName() == Comp.GetPathName())))
+                    return;
+
+                CompBase = Comp;
+                _TextListBox_Configs.Vider();
+                _TextBox_NomComp.Text = Comp.eNomSansExt();
+
+                Rechercher_Composants(CompBase);
+                _TextListBox_Configs.Liste = Bdd.ListeNomsConfigs();
+                _TextListBox_Configs.SelectedIndex = 0;
+
+                var valprefixe = Empreinte.ValProp(Comp).Trim();
+                if (!String.IsNullOrWhiteSpace(valprefixe))
+                    _TextBox_Prefixe.Text = valprefixe;
             }
+
+            //==================================
 
             private void RechercherComp(CtrlSelectionBox box, String pattern)
             {
@@ -208,52 +247,7 @@ namespace ModuleEmpreinte
                 return false;
             }
 
-            public void Afficher(Boolean etat)
-            {
-                _TextBox.Visible = etat;
-                _Button.Visible = etat;
-            }
-        }
-
-        private class FiltreCompConfig
-        {
-            private CtrlSelectionBox _SelectionBox;
-            private CtrlSelectionBox _Select_CompBase;
-            private CtrlTextBox _TextBox_NomComp;
-            private CtrlTextListBox _TextListBox_Configs;
-
-            private CtrlButton _Button;
-
-            private ModelDoc2 _Mdl;
-
-            public FiltreCompConfig(ModelDoc2 mdl, Groupe G, CtrlSelectionBox SelectionBox)
-            {
-                _Mdl = mdl;
-
-                _SelectionBox = SelectionBox;
-
-                _Select_CompBase = G.AjouterSelectionBox("", "Selectionnez le composant");
-                _Select_CompBase.SelectionMultipleMemeEntite = true;
-                _Select_CompBase.SelectionDansMultipleBox = true;
-                _Select_CompBase.UneSeuleEntite = true;
-                _Select_CompBase.FiltreSelection(swSelectType_e.swSelCOMPONENTS, swSelectType_e.swSelFACES);
-                _Select_CompBase.OnSelectionChanged += delegate (Object sender, int nb) { AfficherConfigs(); };
-                _Select_CompBase.OnSubmitSelection += SelectionnerPiece;
-                _Select_CompBase.Hauteur = 2;
-
-                _TextBox_NomComp = G.AjouterTexteBox("");
-                _TextBox_NomComp.LectureSeule = true;
-                _TextBox_NomComp.NotifieSurFocus = true;
-                //_TextBox_NomComp.OnTextBoxChanged += delegate (Object sender, String text) { WindowLog.Ecrire(text); };
-
-                _TextListBox_Configs = G.AjouterTextListBox("Liste des configurations");
-                _TextListBox_Configs.TouteHauteur = true;
-                _TextListBox_Configs.Height = 80;
-                _TextListBox_Configs.SelectionMultiple = true;
-
-                _Button = G.AjouterBouton("Rechercher empreintes");
-                _Button.OnButtonPress += delegate (Object sender) { SelectionnerComposants(); };
-            }
+            //==================================
 
             private Component2 CompBase = null;
 
@@ -265,38 +259,6 @@ namespace ModuleEmpreinte
                     Comp.eDeSelectById(_Mdl);
 
                 _Mdl.eSelectMulti(listeComps, _SelectionBox.Marque, true);
-            }
-
-            private void AfficherConfigs()
-            {
-                var Comp = _Mdl.eSelect_RecupererComposant(1, _Select_CompBase.Marque);
-
-                if (Comp.IsRef())
-                {
-                    if (CompBase.IsRef() && (CompBase.GetPathName() == Comp.GetPathName()))
-                        return;
-
-                    Comp.eDeSelectById(_Mdl);
-                    CompBase = Comp;
-                    _TextListBox_Configs.Vider();
-                }
-                else
-                    return;
-
-                _TextBox_NomComp.Text = Comp.eNomSansExt();
-
-                Rechercher_Composants(CompBase);
-                _TextListBox_Configs.Liste = Bdd.ListeNomsConfigs();
-                _TextListBox_Configs.SelectedIndex = 0;
-                Comp.eDeSelectById(_Mdl);
-            }
-
-            public void Afficher(Boolean etat)
-            {
-                _Select_CompBase.Visible = etat;
-                _TextBox_NomComp.Visible = etat;
-                _TextListBox_Configs.Visible = etat;
-                _Button.Visible = etat;
             }
 
             private BDD Bdd;
@@ -347,6 +309,222 @@ namespace ModuleEmpreinte
                 }
             }
         }
+
+        //private class FiltreCompPropriete
+        //{
+        //    private CtrlSelectionBox _SelectionBox;
+        //    private CtrlTextBox _TextBox;
+
+        //    private CtrlButton _Button;
+
+        //    private ModelDoc2 _Mdl;
+
+        //    public FiltreCompPropriete(ModelDoc2 mdl, Groupe G, CtrlSelectionBox SelectionBox, Parametre Prefixe)
+        //    {
+        //        _Mdl = mdl;
+        //        _SelectionBox = SelectionBox;
+
+        //        _TextBox = G.AjouterTexteBox(Prefixe, true);
+        //        _Button = G.AjouterBouton("Rechercher empreintes");
+        //        _Button.OnButtonPress += delegate (Object sender) { RechercherComp(_SelectionBox, _TextBox.Text); };
+        //    }
+
+        //    private void RechercherComp(CtrlSelectionBox box, String pattern)
+        //    {
+        //        try
+        //        {
+        //            if (String.IsNullOrWhiteSpace(pattern))
+        //                return;
+
+        //            String[] listePattern = pattern.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+        //            {
+        //                var lcp = _Mdl.eSelect_RecupererListeObjets<Component2>(box.Marque);
+        //                foreach (Component2 c in lcp)
+        //                    c.eDeSelectById(_Mdl);
+        //            }
+
+        //            box.Focus = true;
+
+        //            {
+        //                var lcp = new List<Component2>();
+        //                _Mdl.eRecParcourirComposants(
+        //                    c =>
+        //                    {
+
+        //                        if (!c.IsSuppressed() && (c.TypeDoc() == eTypeDoc.Piece))
+        //                        {
+        //                            if (c.ePropExiste(Empreinte.NomPropEmpreinte) && (c.eProp(Empreinte.NomPropEmpreinte) == "1"))
+        //                            {
+        //                                if (TestStringLikeListePattern(c.eProp(Empreinte.NomPropPrefixe), listePattern))
+        //                                    lcp.Add(c);
+        //                            }
+        //                        }
+        //                        return false;
+        //                    },
+        //                    null
+        //                    );
+
+        //                Isoler.Exit(_Mdl);
+
+        //                _Mdl.eSelectMulti(lcp, box.Marque, true);
+        //            }
+        //        }
+        //        catch (Exception e)
+        //        { this.LogMethode(new Object[] { e }); }
+
+        //    }
+
+        //    private Boolean TestStringLikeListePattern(String s, String[] Liste)
+        //    {
+        //        foreach (var t in Liste)
+        //        {
+        //            if (s.eIsLike(t))
+        //                return true;
+        //        }
+
+        //        return false;
+        //    }
+
+        //    public void Afficher(Boolean etat)
+        //    {
+        //        _TextBox.Visible = etat;
+        //        _Button.Visible = etat;
+        //    }
+        //}
+
+        //private class FiltreCompConfig
+        //{
+        //    private CtrlSelectionBox _SelectionBox;
+        //    private CtrlSelectionBox _Select_CompBase;
+        //    private CtrlTextBox _TextBox_NomComp;
+        //    private CtrlTextListBox _TextListBox_Configs;
+
+        //    private CtrlButton _Button;
+
+        //    private ModelDoc2 _Mdl;
+
+        //    public FiltreCompConfig(ModelDoc2 mdl, Groupe G, CtrlSelectionBox SelectionBox)
+        //    {
+        //        _Mdl = mdl;
+
+        //        _SelectionBox = SelectionBox;
+
+        //        _Select_CompBase = G.AjouterSelectionBox("", "Selectionnez le composant");
+        //        _Select_CompBase.SelectionMultipleMemeEntite = true;
+        //        _Select_CompBase.SelectionDansMultipleBox = true;
+        //        _Select_CompBase.UneSeuleEntite = true;
+        //        _Select_CompBase.FiltreSelection(swSelectType_e.swSelCOMPONENTS, swSelectType_e.swSelFACES);
+        //        _Select_CompBase.OnSelectionChanged += delegate (Object sender, int nb) { AfficherConfigs(); };
+        //        _Select_CompBase.OnSubmitSelection += SelectionnerPiece;
+        //        _Select_CompBase.Hauteur = 2;
+
+        //        _TextBox_NomComp = G.AjouterTexteBox("");
+        //        _TextBox_NomComp.LectureSeule = true;
+        //        _TextBox_NomComp.NotifieSurFocus = true;
+        //        //_TextBox_NomComp.OnTextBoxChanged += delegate (Object sender, String text) { WindowLog.Ecrire(text); };
+
+        //        _TextListBox_Configs = G.AjouterTextListBox("Liste des configurations");
+        //        _TextListBox_Configs.TouteHauteur = true;
+        //        _TextListBox_Configs.Height = 80;
+        //        _TextListBox_Configs.SelectionMultiple = true;
+
+        //        _Button = G.AjouterBouton("Rechercher empreintes");
+        //        _Button.OnButtonPress += delegate (Object sender) { SelectionnerComposants(); };
+        //    }
+
+        //    private Component2 CompBase = null;
+
+        //    private void SelectionnerComposants()
+        //    {
+        //        List<Component2> listeComps = Bdd.ListeComposants(_TextListBox_Configs.ListSelectedIndex);
+
+        //        foreach (var Comp in _Mdl.eSelect_RecupererListeComposants(_SelectionBox.Marque))
+        //            Comp.eDeSelectById(_Mdl);
+
+        //        _Mdl.eSelectMulti(listeComps, _SelectionBox.Marque, true);
+        //    }
+
+        //    private void AfficherConfigs()
+        //    {
+        //        var Comp = _Mdl.eSelect_RecupererComposant(1, _Select_CompBase.Marque);
+
+        //        if (Comp.IsRef())
+        //        {
+        //            if (CompBase.IsRef() && (CompBase.GetPathName() == Comp.GetPathName()))
+        //                return;
+
+        //            Comp.eDeSelectById(_Mdl);
+        //            CompBase = Comp;
+        //            _TextListBox_Configs.Vider();
+        //        }
+        //        else
+        //            return;
+
+        //        _TextBox_NomComp.Text = Comp.eNomSansExt();
+
+        //        Rechercher_Composants(CompBase);
+        //        _TextListBox_Configs.Liste = Bdd.ListeNomsConfigs();
+        //        _TextListBox_Configs.SelectedIndex = 0;
+        //        Comp.eDeSelectById(_Mdl);
+        //    }
+
+        //    public void Afficher(Boolean etat)
+        //    {
+        //        _Select_CompBase.Visible = etat;
+        //        _TextBox_NomComp.Visible = etat;
+        //        _TextListBox_Configs.Visible = etat;
+        //        _Button.Visible = etat;
+        //    }
+
+        //    private BDD Bdd;
+
+        //    private void Rechercher_Composants(Component2 compBase)
+        //    {
+        //        Bdd = new BDD();
+
+        //        _Mdl.eRecParcourirComposants(
+        //                c =>
+        //                {
+        //                    if (!c.IsSuppressed() && (c.GetPathName() == compBase.GetPathName()))
+        //                        Bdd.AjouterComposant(c);
+
+        //                    return false;
+        //                }
+        //            );
+        //    }
+
+        //    private class BDD
+        //    {
+        //        private Dictionary<String, List<Component2>> Dic = new Dictionary<String, List<Component2>>();
+
+        //        public void AjouterComposant(Component2 comp)
+        //        {
+        //            if (Dic.ContainsKey(comp.ReferencedConfiguration))
+        //                Dic[comp.ReferencedConfiguration].Add(comp);
+        //            else
+        //                Dic.Add(comp.ReferencedConfiguration, new List<Component2>() { comp });
+        //        }
+
+        //        private List<String> _ListeNomsConfigs;
+
+        //        public List<String> ListeNomsConfigs()
+        //        {
+        //            _ListeNomsConfigs = Dic.Keys.ToList();
+        //            return _ListeNomsConfigs;
+        //        }
+
+        //        public List<Component2> ListeComposants(List<int> ListeIndex)
+        //        {
+        //            List<Component2> Liste = new List<Component2>();
+
+        //            foreach (var index in ListeIndex)
+        //                Liste.AddRange(Dic[_ListeNomsConfigs[index]]);
+
+        //            return Liste;
+        //        }
+        //    }
+        //}
 
         protected void RunOkCommand()
         {

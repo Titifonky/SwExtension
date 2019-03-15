@@ -91,7 +91,7 @@
     <Parametre name="FixerComposant" intitule="Fixer les composants" tip="" type="System.Boolean">True</Parametre>
   </Module>
   <Module name="Empreinte" intitule="Empreinte entre les composants">
-    <Parametre name="PrefixeBase" intitule="Filtrer les prefixes (?*#):" tip="" type="System.String">P2</Parametre>
+    <Parametre name="PrefixeBase" intitule="Filtrer les prefixes (?*#):" tip="" type="System.String">AA</Parametre>
     <Parametre name="PrefixeEmpreinte" intitule="Filtrer les prefixes (?*#):" tip="" type="System.String">PO</Parametre>
     <Parametre name="PropEmpreinte" intitule="Propriete &quot;Empreinte&quot;" tip="" type="System.String">Empreinte</Parametre>
     <Parametre name="PropPrefixeEmpreinte" intitule="Propriete &quot;PrefixeEmpreinte&quot;" tip="" type="System.String">PrefixeEmpreinte</Parametre>

@@ -5,12 +5,6 @@ using SolidWorks.Interop.swcommands;
 using SolidWorks.Interop.swconst;
 using SwExtension;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Macros
 {
