@@ -467,6 +467,9 @@ namespace SwExtension
             CtrlBaseListBox ListBox = _Calque.DicControl[Id] as CtrlBaseListBox;
             if (ListBox.IsRef())
             {
+                if (ListBox.swListBox.GetSelectedItemsCount() > 0)
+                    Item = ListBox.swListBox.GetSelectedItems()[0];
+                
                 ListBox.SelectionChanged(ListBox, Item);
             }
         }
