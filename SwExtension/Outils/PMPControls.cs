@@ -209,6 +209,8 @@ namespace Outils
 
         public void Expand()
         {
+            if (_Expanded) return;
+
             _swGroup.Expanded = true;
             _Expanded = true;
 
@@ -222,6 +224,8 @@ namespace Outils
 
         public void UnExpand()
         {
+            if (!_Expanded) return;
+
             _swGroup.Expanded = false;
             _Expanded = false;
 

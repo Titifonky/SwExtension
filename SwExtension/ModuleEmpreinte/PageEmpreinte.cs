@@ -87,8 +87,10 @@ namespace ModuleEmpreinte
                 _FiltreCompEmpreinte = new FiltreComp(MdlBase, _Groupe2, _Select_CompEmpreinte, PrefixeEmpreinte);
 
                 _Groupe1.OnExpand += _Groupe2.UnExpand;
+                _Groupe1.OnUnExpand += _Groupe2.Expand;
                 _Groupe2.OnExpand += _Groupe1.UnExpand;
-                _Groupe1.Expand();
+                _Groupe2.OnUnExpand += _Groupe1.Expand;
+                _Groupe2.UnExpand();
 
                 G = _Calque.AjouterGroupe("Options");
 
