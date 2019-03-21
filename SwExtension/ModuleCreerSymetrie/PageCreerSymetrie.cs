@@ -29,10 +29,12 @@ namespace ModuleCreerSymetrie
             OnRunOkCommand += RunOkCommand;
         }
 
+        private CtrlButton _Button_Preselection;
+
         private CtrlSelectionBox _Select_P_Symetrie;
         private CtrlSelectionBox _Select_Corps;
 
-        private CtrlButton _Button_Preselection;
+        private CtrlCheckBox _Check_SupprimerSymetrie;
 
         protected void Calque()
         {
@@ -59,6 +61,11 @@ namespace ModuleCreerSymetrie
                 _Select_Corps.UneSeuleEntite = false;
                 _Select_Corps.Hauteur = 13;
                 _Select_Corps.FiltreSelection(swSelectType_e.swSelSOLIDBODIES);
+
+                G = _Calque.AjouterGroupe("Options");
+
+                _Check_SupprimerSymetrie = G.AjouterCheckBox("Supprimer l'original");
+                _Check_SupprimerSymetrie.IsChecked = true;
             }
             catch (Exception e)
             { this.LogMethode(new Object[] { e }); }
@@ -90,6 +97,7 @@ namespace ModuleCreerSymetrie
             Cmd.MdlBase = MdlBase;
             Cmd.Plan = MdlBase.eSelect_RecupererObjet<Feature>(1, _Select_P_Symetrie.Marque);
             Cmd.ListeCorps = MdlBase.eSelect_RecupererListeObjets<Body2>(_Select_Corps.Marque);
+            Cmd.SupprimerOriginal = _Check_SupprimerSymetrie.IsChecked;
 
             MdlBase.eEffacerSelection();
 

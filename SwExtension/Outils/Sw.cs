@@ -2961,6 +2961,8 @@ namespace Outils
         /// <param name="ajouter"></param>
         public static Boolean eSelect(this Feature f, Boolean ajouter = false)
         {
+            if (f.IsNull()) return false;
+
             return f.Select2(ajouter, -1);
         }
 

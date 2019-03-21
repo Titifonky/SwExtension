@@ -5,6 +5,7 @@ using SolidWorks.Interop.swconst;
 using SwExtension;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace Macros
 {
@@ -20,14 +21,23 @@ namespace Macros
             {
                 View Vue = MdlBase.eSelect_RecupererObjet<View>(1, -1);
 
-                Body2[] TabCorps = (Body2[])Vue.Bodies;
-
-                foreach (Body2 corps in TabCorps)
+                if (Vue.GetBodiesCount() == 0)
                 {
-                    WindowLog.Ecrire(corps.Name);
+                    WindowLog.Ecrire("Aucun corps");
+                    return;
                 }
 
-                Vue.Bodies = Vue.Bodies;
+                Object[] TabCorps = (Object[])Vue.Bodies;
+
+                DispatchWrapper[] arrBodiesIn = new DispatchWrapper[Vue.GetBodiesCount()];
+
+                for (int i = 0; i < TabCorps.Length; i++)
+                {
+                    arrBodiesIn[i] = new DispatchWrapper(TabCorps[i]);
+                    WindowLog.Ecrire(((Body2)TabCorps[i]).Name);
+                }
+
+                Vue.Bodies = (arrBodiesIn);
 
                 WindowLog.Ecrire(Vue.Name);
             }
