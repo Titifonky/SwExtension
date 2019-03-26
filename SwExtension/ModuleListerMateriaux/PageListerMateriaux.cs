@@ -191,7 +191,7 @@ namespace ModuleListerMateriaux
 
         public class BDD
         {
-            private Dictionary<String, Dictionary<String, Dictionary<String, List<Element>>>> Dic = new Dictionary<String, Dictionary<String, Dictionary<String, List<Element>>>>();
+            private SortedDictionary<String, SortedDictionary<String, SortedDictionary<String, List<Element>>>> Dic = new SortedDictionary<String, SortedDictionary<String, SortedDictionary<String, List<Element>>>>(new WindowsStringComparer());
 
             public void AjouterDossier(BodyFolder dossier, Component2 comp)
             {
@@ -224,13 +224,13 @@ namespace ModuleListerMateriaux
 
             private void Ajouter(String baseMateriau, String materiau, String profil, BodyFolder dossier, Component2 cp)
             {
-                Dictionary<String, Dictionary<String, List<Element>>> dicMat = new Dictionary<String, Dictionary<String, List<Element>>>();
+                SortedDictionary<String, SortedDictionary<String, List<Element>>> dicMat = new SortedDictionary<String, SortedDictionary<String, List<Element>>>(new WindowsStringComparer());
                 if (Dic.ContainsKey(baseMateriau))
                     dicMat = Dic[baseMateriau];
                 else
                     Dic.Add(baseMateriau, dicMat);
 
-                Dictionary<String, List<Element>> dicProfil = new Dictionary<String, List<Element>>();
+                SortedDictionary<String, List<Element>> dicProfil = new SortedDictionary<String, List<Element>>(new WindowsStringComparer());
                 if (dicMat.ContainsKey(materiau))
                     dicProfil = dicMat[materiau];
                 else
