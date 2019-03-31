@@ -168,7 +168,7 @@ namespace Outils
             }
         }
 
-        private Boolean _Expanded = false;
+        private Boolean _Expanded = true;
 
         public Boolean Expanded
         {

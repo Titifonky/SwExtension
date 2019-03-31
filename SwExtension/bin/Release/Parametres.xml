@@ -92,7 +92,7 @@
   </Module>
   <Module name="Empreinte" intitule="Empreinte entre les composants">
     <Parametre name="PrefixeBase" intitule="Filtrer les prefixes (?*#):" tip="" type="System.String">AA</Parametre>
-    <Parametre name="PrefixeEmpreinte" intitule="Filtrer les prefixes (?*#):" tip="" type="System.String">D7.1</Parametre>
+    <Parametre name="PrefixeEmpreinte" intitule="Filtrer les prefixes (?*#):" tip="" type="System.String">D12</Parametre>
     <Parametre name="PropEmpreinte" intitule="Propriete &quot;Empreinte&quot;" tip="" type="System.String">Empreinte</Parametre>
     <Parametre name="PropPrefixeEmpreinte" intitule="Propriete &quot;PrefixeEmpreinte&quot;" tip="" type="System.String">PrefixeEmpreinte</Parametre>
     <Parametre name="PropTarauderEmpreinte" intitule="Propriete &quot;TarauderEmpreinte&quot;" tip="" type="System.String">TarauderEmpreinte</Parametre>
@@ -156,7 +156,7 @@
   </Module>
   <Module name="LierLesConfigurations" intitule="Créer/Lier les configurations">
     <Parametre name="CreerConfig" intitule="Creer les configs manquante" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="ListeConfigs" intitule="Ajouter des configs&#xD;&#xA; Noms séparés par un espace" tip="" type="System.String">3</Parametre>
+    <Parametre name="ListeConfigs" intitule="Ajouter des configs&#xD;&#xA; Noms séparés par un espace" tip="" type="System.String">1</Parametre>
     <Parametre name="SupprimerNvlFonction" intitule="Supprimer les nouvelles fonctions ou contraintes&#xD;&#xA; dans la configuration" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="SupprimerNvComposant" intitule="Supprimer les nouveaux composants&#xD;&#xA; dans la configuration" tip="" type="System.Boolean">False</Parametre>
   </Module>
