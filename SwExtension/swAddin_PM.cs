@@ -7,6 +7,8 @@ using ModuleExportFichier.ModuleDxfDwg;
 using ModuleExportFichier.ModulePdf;
 using ModuleImporterInfos;
 using ModuleInsererPercage;
+using ModuleLaser.ModuleCreerConfigDvp;
+using ModuleLaser.ModuleCreerDvp;
 using ModuleLierLesConfigurations;
 using ModuleListerConfigComp;
 using ModuleListerMateriaux;
@@ -177,22 +179,12 @@ namespace SwExtension
                 _Mnu.AjouterCmde("Nt", typeof(PageInsererNote));
                 _Mnu.AjouterCmde("Dj", typeof(BoutonDateDuJour));
 
-                ////==================================================================================================
-                //_Mnu = _eListeMenu.Add("Laser", "Fonctions pour le débit laser");
+                //==================================================================================================
+                _Mnu = _eListeMenu.Add("Dvp", "Export des dvps");
 
-                //_Mnu.NouveauGroupe();
-                //_Mnu.AjouterCmde("Cd", typeof(PageCreerConfigDvp));
-                //_Mnu.AjouterCmde("Dv", typeof(PageCreerDvp));
-
-                //_Mnu.NouveauGroupe();
-                //_Mnu.AjouterCmde("Eb", typeof(PageExportBarre));
-                //_Mnu.AjouterCmde("Es", typeof(BoutonExportStructure));
-                //_Mnu.AjouterCmde("Ld", typeof(PageListeDebit));
-
-                //_Mnu.NouveauGroupe();
-                //_Mnu.AjouterCmde("Nd", typeof(PageNumeroterDossier));
-                //_Mnu.AjouterCmde("Vn", typeof(BoutonVerifierNumerotation));
-                //_Mnu.AjouterCmde("Lr", typeof(PageListerRepere));
+                _Mnu.NouveauGroupe();
+                _Mnu.AjouterCmde("Cd", typeof(PageCreerConfigDvp));
+                _Mnu.AjouterCmde("Dv", typeof(PageCreerDvp));
 
                 _eListeMenu.CreerMenus();
 

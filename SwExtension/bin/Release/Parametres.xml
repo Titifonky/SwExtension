@@ -16,11 +16,11 @@
     <Parametre name="ExporterHauteQualite" intitule="Exporter en haute qualité" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="ExporterFeuilleEspacePapier" intitule="Exporter les feuilles dans l'espace papier" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="ConvertirSplineToPolyligne" intitule="Convertir les splines en polylignes" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">D:\Projet\E56 - SAS Concept-TY\AD449 - SCCV MOBY - Tranche 01\0\12.1 Escalier droit\Laser tole\1</Parametre>
+    <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">D:\Projet\E144 - Ville d'Arras\ED379 - Pole educatif Val de Scarpe\1\4.5.5 Lisse de protection\V2\Laser tole\1</Parametre>
   </Module>
   <Module name="ExportPdf" intitule="Exporter en Pdf">
-    <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="SelectionnerDossier" intitule="Selectionner un dossier" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="SelectionnerDossier" intitule="Selectionner un dossier" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="ToutesLesFeuilles" intitule="Toutes les feuilles" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="FormatExport" intitule="Format" tip="" type="Outils.eTypeFichierExport">PDF</Parametre>
     <Parametre name="ExporterEnCouleur" intitule="Exporter en couleur" tip="" type="System.Boolean">True</Parametre>
@@ -156,7 +156,7 @@
   </Module>
   <Module name="LierLesConfigurations" intitule="Créer/Lier les configurations">
     <Parametre name="CreerConfig" intitule="Creer les configs manquante" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="ListeConfigs" intitule="Ajouter des configs&#xD;&#xA; Noms séparés par un espace" tip="" type="System.String">1</Parametre>
+    <Parametre name="ListeConfigs" intitule="Ajouter des configs&#xD;&#xA; Noms séparés par un espace" tip="" type="System.String">20</Parametre>
     <Parametre name="SupprimerNvlFonction" intitule="Supprimer les nouvelles fonctions ou contraintes&#xD;&#xA; dans la configuration" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="SupprimerNvComposant" intitule="Supprimer les nouveaux composants&#xD;&#xA; dans la configuration" tip="" type="System.Boolean">False</Parametre>
   </Module>
