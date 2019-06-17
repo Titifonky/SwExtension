@@ -30,3 +30,11 @@ E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\obj\
 E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\obj\Release\LoreSoft.MathExpressions.csproj.GenerateResource.Cache
 E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\obj\Release\LoreSoft.MathExpressions.dll
 E:\Mes documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\obj\Release\LoreSoft.MathExpressions.pdb
+E:\Documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\bin\Release\LoreSoft.MathExpressions.dll
+E:\Documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\bin\Release\LoreSoft.MathExpressions.pdb
+E:\Documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\obj\Release\LoreSoft.MathExpressions.csprojAssemblyReference.cache
+E:\Documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\obj\Release\LoreSoft.MathExpressions.Properties.Resources.resources
+E:\Documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\obj\Release\LoreSoft.MathExpressions.csproj.GenerateResource.cache
+E:\Documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\obj\Release\LoreSoft.MathExpressions.csproj.CoreCompileInputs.cache
+E:\Documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\obj\Release\LoreSoft.MathExpressions.dll
+E:\Documents\Projets Visual Studio\SwExtension\LoreSoft.MathExpressions\obj\Release\LoreSoft.MathExpressions.pdb

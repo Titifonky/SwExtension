@@ -15,8 +15,7 @@ namespace ModuleProduction.ModuleProduireDebit
     [ModuleTypeDocContexte(eTypeDoc.Assemblage | eTypeDoc.Piece),
         ModuleTitre("Liste de débit"),
         ModuleNom("ProduireDebit"),
-        ModuleDescription("Création de la liste de débit.")
-
+        ModuleDescription("Création de la liste de débit."),
         PageOptions(swPropertyManagerPageOptions_e.swPropertyManagerOptions_MultiplePages)
         ]
     public class PageProduireDebit : BoutonPMPManager

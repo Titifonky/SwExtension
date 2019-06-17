@@ -16,7 +16,7 @@ namespace ModuleLaser
         [ModuleTypeDocContexte(eTypeDoc.Assemblage | eTypeDoc.Piece),
             ModuleTitre("Liste de débit"),
             ModuleNom("ListeDebit"),
-            ModuleDescription("Création de la liste de débit.")
+            ModuleDescription("Création de la liste de débit."),
             PageOptions(swPropertyManagerPageOptions_e.swPropertyManagerOptions_MultiplePages)
             ]
         public class PageListeDebit : BoutonPMPManager
