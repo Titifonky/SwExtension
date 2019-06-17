@@ -48,6 +48,13 @@ namespace SwExtension
             protected set { _AideModule = value; }
         }
 
+        private Boolean _SauverConfigBouton = true;
+        public Boolean SauverConfigBouton
+        {
+            get { return _SauverConfigBouton; }
+            protected set { _SauverConfigBouton = value; }
+        }
+
         protected ConfigModule _Config;
 
         protected ModelDoc2 MdlBase = null;
@@ -76,6 +83,8 @@ namespace SwExtension
 
             Command();
 
+            SauverConfig();
+
             ExecuterEn(true);
             SautDeLigne();
 
@@ -84,7 +93,7 @@ namespace SwExtension
 
         protected void SauverConfig()
         {
-            if (_Config.IsRef()) _Config.Sauver();
+            if (_Config.IsRef() && SauverConfigBouton) _Config.Sauver();
         }
     }
 

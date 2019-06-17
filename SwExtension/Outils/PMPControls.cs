@@ -168,6 +168,12 @@ namespace Outils
             }
         }
 
+        private void GroupExpand(Boolean val)
+        {
+            _swGroup.Expanded = val;
+            _Expanded = val;
+        }
+
         private Boolean _Expanded = true;
 
         public Boolean Expanded
@@ -209,13 +215,14 @@ namespace Outils
 
         public void Expand()
         {
-            if (_Expanded) return;
-
-            _swGroup.Expanded = true;
-            _Expanded = true;
-
-            if (OnExpand.IsRef())
-                OnExpand();
+            if (_Expanded)
+                GroupExpand(true);
+            else
+            {
+                GroupExpand(true);
+                if (OnExpand.IsRef())
+                    OnExpand();
+            }
         }
 
         public delegate void OnUnExpandEventHandler();
@@ -224,13 +231,14 @@ namespace Outils
 
         public void UnExpand()
         {
-            if (!_Expanded) return;
-
-            _swGroup.Expanded = false;
-            _Expanded = false;
-
-            if (OnUnExpand.IsRef())
-                OnUnExpand();
+            if (!_Expanded)
+                GroupExpand(false);
+            else
+            {
+                GroupExpand(false);
+                if (OnUnExpand.IsRef())
+                    OnUnExpand();
+            }
         }
 
         private readonly int Option = (int)swAddControlOptions_e.swControlOptions_Visible + (int)swAddControlOptions_e.swControlOptions_Enabled;
@@ -319,12 +327,22 @@ namespace Outils
 
     public class GroupeAvecCheckBox : Groupe
     {
+        private void GroupCheck(Boolean val)
+        {
+            _swGroup.Checked = val;
+            _IsChecked = val;
+        }
+
         private Boolean _IsChecked = false;
 
         public Boolean IsChecked
         {
             get { return _IsChecked; }
-            set { IsCheck(null, value); }
+            set
+            {
+                GroupCheck(value);
+                IsCheck(null, value);
+            }
         }
 
         public GroupeAvecCheckBox(Calque page, int options, String titre)
@@ -358,8 +376,7 @@ namespace Outils
 
         public void Check(Object sender)
         {
-            _swGroup.Checked = true;
-            _IsChecked = true;
+            GroupCheck(true);
             SetParametre(true);
 
             if (OnCheck.IsRef())
@@ -372,8 +389,7 @@ namespace Outils
 
         public void UnCheck(Object sender)
         {
-            _swGroup.Checked = false;
-            _IsChecked = false;
+            GroupCheck(false);
             SetParametre(false);
 
             if (OnUnCheck.IsRef())

@@ -12,6 +12,7 @@ using System.Runtime.InteropServices.ComTypes;
 using System.Windows.Forms;
 using MS.Internal.IO.Packaging;
 using System.Security;
+using ModuleProduction;
 
 namespace Macros
 {
@@ -31,6 +32,26 @@ namespace Macros
         {
             try
             {
+                var lst = MdlBase.pListerComposants();
+                foreach (var m in lst.Keys)
+                {
+                    WindowLog.Ecrire(m.eNomAvecExt());
+                    foreach (var cfg in lst[m].Keys)
+                    {
+                        WindowLog.EcrireF("   {0} x{1}", cfg, lst[m][cfg]);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                this.LogMethode(new Object[] { e });
+            }
+        }
+
+        private void Cmd()
+        {
+            try
+            {
                 var face = MdlBase.eSelect_RecupererObjet<Face2>();
                 var corps = (Body2)face.GetBody();
                 MemoryStream ms = new MemoryStream();
@@ -39,13 +60,12 @@ namespace Macros
                 copie.Save(MgIs);
                 var Tab = ms.ToArray();
                 WindowLog.Ecrire(Tab.Length);
-                File.WriteAllBytes(Path.Combine(MdlBase.eDossier(),"Corps.data") , Tab);
+                File.WriteAllBytes(Path.Combine(MdlBase.eDossier(), "Corps.data"), Tab);
             }
             catch (Exception e)
             {
                 this.LogMethode(new Object[] { e });
             }
-            //Appliquer(MdlBase);
         }
 
         private void Appliquer(ModelDoc2 mdl)

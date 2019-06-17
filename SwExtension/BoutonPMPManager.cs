@@ -23,6 +23,8 @@ namespace SwExtension
         {
             try
             {
+                SauverConfigBouton = false;
+
                 var Options = PageOptions.Defaut;
 
                 PageOptions pageOptionsAtt = GetType().GetCustomAttribute<PageOptions>();

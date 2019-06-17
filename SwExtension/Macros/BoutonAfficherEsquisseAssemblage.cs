@@ -48,7 +48,6 @@ namespace Macros
                 MdlBase.eEffacerSelection();
 
                 AfficherMasquer.SetValeur<Boolean>(!AfficherMasquer.GetValeur<Boolean>());
-                _Config.Sauver();
 
             }
             catch (Exception e)
