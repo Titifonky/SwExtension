@@ -23,7 +23,7 @@ namespace SwExtension
         {
             try
             {
-                SauverConfigBouton = true;
+                SauverConfigBouton = false;
 
                 var Options = PageOptions.Defaut;
 
@@ -45,8 +45,6 @@ namespace SwExtension
                 this.LogMethode(new Object[] { "Erreur :", e });
                 IsInit = false;
             }
-
-            this.LogMethode(new Object[] { "Est initialisé :", IsInit });
         }
 
         protected override void Command()
@@ -63,8 +61,6 @@ namespace SwExtension
 
                 if (OnPreSelection.IsRef())
                     OnPreSelection();
-
-                this.LogMethode(new Object[] { "Show" });
 
                 swPropertyManagerPageStatus_e r = (swPropertyManagerPageStatus_e)_PmPage.Show2(0);
                 _IsShow = true;
@@ -306,6 +302,10 @@ namespace SwExtension
 
         void IPropertyManagerPage2Handler9.AfterClose()
         {
+            SauverConfigBouton = true;
+
+            SauverConfig();
+
             if (OnRunAfterClose.IsRef())
                 OnRunAfterClose();
 
@@ -316,7 +316,7 @@ namespace SwExtension
                     if (OnRunCancelCommand.IsRef())
                     OnRunCancelCommand();
 
-            SauverConfig();
+            //SauverConfig();
 
             _Config = null;
             _Calque = null;

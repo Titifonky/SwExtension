@@ -429,7 +429,7 @@ namespace SwExtension
                 _Module.AppendChild(NdParametre);
             }
 
-            //Log.MessageF("Module [{0}] sauvegardé", Nom);
+            Log.MessageF("Module [{0}] sauvegardé", Nom);
 
             _Doc.Save(_XmlPath);
         }
