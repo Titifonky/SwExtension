@@ -93,6 +93,7 @@ namespace SwExtension
 
         protected void SauverConfig()
         {
+            //Log.MessageF("Sauvegarde des parametres : [{0}]", _Config.Nom);
             if (_Config.IsRef() && SauverConfigBouton) _Config.Sauver();
         }
     }

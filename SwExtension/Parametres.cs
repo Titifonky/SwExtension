@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace SwExtension
@@ -163,10 +160,12 @@ namespace SwExtension
                 }
 
                 _Init = true;
+                Log.Message("Parametres chargés");
             }
             catch(Exception e)
             {
                 _Init = false;
+
                 Log.Methode(typeof(ConfigModule).ToString(), e);
             }
         }
@@ -429,6 +428,8 @@ namespace SwExtension
 
                 _Module.AppendChild(NdParametre);
             }
+
+            //Log.MessageF("Module [{0}] sauvegardé", Nom);
 
             _Doc.Save(_XmlPath);
         }

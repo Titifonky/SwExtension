@@ -23,7 +23,7 @@ namespace SwExtension
         {
             try
             {
-                SauverConfigBouton = false;
+                SauverConfigBouton = true;
 
                 var Options = PageOptions.Defaut;
 

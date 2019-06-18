@@ -263,7 +263,7 @@
     <Parametre name="NomEsquisse" intitule="Nom de l'esquisse à modifier" tip="" type="System.String">E - Reperage Dessin 2</Parametre>
   </Module>
   <Module name="Lumiere" intitule="Mettre à jour la lumière">
-    <Parametre name="ValAmbiante" intitule="Valeur de la lumière ambiante" tip="" type="System.Double">0.7</Parametre>
+    <Parametre name="ValAmbiante" intitule="Valeur de la lumière ambiante" tip="" type="System.Double">0.75</Parametre>
     <Parametre name="ToutesLesConfigs" intitule="Appliquer à toutes les configs" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="DesactiverDirectionnelles" intitule="Desactiver les directionnelles" tip="" type="System.Boolean">True</Parametre>
   </Module>

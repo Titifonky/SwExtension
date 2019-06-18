@@ -6,6 +6,7 @@ using SolidWorksTools;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
 
@@ -48,12 +49,18 @@ namespace SwExtension
                 CreerTaskpane();
                 CreerMenusEtOnglets();
                 AddEventHooks();
+                AppliquerOptions();
                 return true;
             }
             catch (Exception e)
             { this.LogMethode(new Object[] { e }); }
 
             return false;
+        }
+
+        private void AppliquerOptions()
+        {
+            CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator = ".";
         }
 
         bool ISwAddin.DisconnectFromSW()
