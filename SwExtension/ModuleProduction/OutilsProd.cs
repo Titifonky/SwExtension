@@ -1561,71 +1561,80 @@ namespace ModuleProduction
         {
             if (File.Exists(CheminFichierCorps)) return;
 
-            using (MemoryStream ms = new MemoryStream())
+            try
             {
-                ManagedIStream MgIs = new ManagedIStream(ms);
-                this.SwCorps.Save(MgIs);
-                var Tab = ms.ToArray();
-                File.WriteAllBytes(CheminFichierCorps, Tab);
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    ManagedIStream MgIs = new ManagedIStream(ms);
+                    this.SwCorps.Save(MgIs);
+                    var Tab = ms.ToArray();
+                    File.WriteAllBytes(CheminFichierCorps, Tab);
+                }
             }
+            catch (Exception ex) { Log.Message(ex); }
         }
 
         public void SauverRepere(Boolean creerDvp)
         {
-            this.Modele.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
-            this.Modele.ShowConfiguration2(this.NomConfig);
-            this.Modele.EditRebuild3();
+            try
+            {
+                this.Modele.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
+                this.Modele.ShowConfiguration2(this.NomConfig);
+                this.Modele.EditRebuild3();
 
-            // Sauvegarde du fichier de base
-            int Errors = 0, Warning = 0;
-            this.Modele.Extension.SaveAs(this.CheminFichierRepere, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, (int)(swSaveAsOptions_e.swSaveAsOptions_Copy | swSaveAsOptions_e.swSaveAsOptions_Silent), null, ref Errors, ref Warning);
+                // Sauvegarde du fichier de base
+                int Errors = 0, Warning = 0;
+                this.Modele.Extension.SaveAs(this.CheminFichierRepere, (int)swSaveAsVersion_e.swSaveAsCurrentVersion, (int)(swSaveAsOptions_e.swSaveAsOptions_Copy | swSaveAsOptions_e.swSaveAsOptions_Silent), null, ref Errors, ref Warning);
 
-            var mdlFichier = Sw.eOuvrir(this.CheminFichierRepere, this.NomConfig);
-            mdlFichier.eActiver();
+                var mdlFichier = Sw.eOuvrir(this.CheminFichierRepere, this.NomConfig);
+                mdlFichier.eActiver();
 
-            mdlFichier.Extension.BreakAllExternalFileReferences2(true);
+                // BreakAllExternalFileReferences2(true); peut causer des plantage !!!!!
+                mdlFichier.Extension.BreakAllExternalFileReferences2(false);
 
-            mdlFichier.pActiverManager(false);
+                mdlFichier.pActiverManager(false);
 
-            foreach (var nomCfg in mdlFichier.eListeNomConfiguration())
-                if (nomCfg != this.NomConfig)
-                    mdlFichier.DeleteConfiguration2(nomCfg);
+                foreach (var nomCfg in mdlFichier.eListeNomConfiguration())
+                    if (nomCfg != this.NomConfig)
+                        mdlFichier.DeleteConfiguration2(nomCfg);
 
-            var Piece = mdlFichier.ePartDoc();
+                var Piece = mdlFichier.ePartDoc();
 
-            SwCorps = null;
+                SwCorps = null;
 
-            foreach (var c in Piece.eListeCorps(false))
-                if (c.Name == this.NomCorps)
-                    SwCorps = c;
+                foreach (var c in Piece.eListeCorps(false))
+                    if (c.Name == this.NomCorps)
+                        SwCorps = c;
 
-            SauverCorps();
+                SauverCorps();
 
-            SwCorps.eVisible(true);
-            SwCorps.eSelect();
-            mdlFichier.FeatureManager.InsertDeleteBody2(true);
+                SwCorps.eVisible(true);
+                SwCorps.eSelect();
+                mdlFichier.FeatureManager.InsertDeleteBody2(true);
 
-            Piece.ePremierCorps(false).eVisible(true);
-            mdlFichier.EditRebuild3();
-            mdlFichier.pMasquerEsquisses();
-            mdlFichier.pFixerProp(this.RepereComplet);
+                Piece.ePremierCorps(false).eVisible(true);
+                mdlFichier.EditRebuild3();
+                mdlFichier.pMasquerEsquisses();
+                mdlFichier.pFixerProp(this.RepereComplet);
 
-            if ((this.TypeCorps == eTypeCorps.Tole) && creerDvp)
-                this.pCreerDvp(MdlBase.pDossierPiece(), false);
+                if ((this.TypeCorps == eTypeCorps.Tole) && creerDvp)
+                    this.pCreerDvp(MdlBase.pDossierPiece(), false);
 
-            mdlFichier.FeatureManager.EditFreeze2((int)swMoveFreezeBarTo_e.swMoveFreezeBarToEnd, "", true, true);
+                mdlFichier.FeatureManager.EditFreeze2((int)swMoveFreezeBarTo_e.swMoveFreezeBarToEnd, "", true, true);
 
-            if (this.TypeCorps == eTypeCorps.Tole)
-                OrienterVueTole(mdlFichier);
-            else if (this.TypeCorps == eTypeCorps.Barre)
-                OrienterVueBarre(mdlFichier);
+                if (this.TypeCorps == eTypeCorps.Tole)
+                    OrienterVueTole(mdlFichier);
+                else if (this.TypeCorps == eTypeCorps.Barre)
+                    OrienterVueBarre(mdlFichier);
 
-            mdlFichier.pActiverManager(true);
+                mdlFichier.pActiverManager(true);
 
-            SauverVue(mdlFichier);
-            mdlFichier.EditRebuild3();
-            mdlFichier.eSauver();
-            mdlFichier.eFermer();
+                SauverVue(mdlFichier);
+                mdlFichier.EditRebuild3();
+                mdlFichier.eSauver();
+                mdlFichier.eFermer();
+            }
+            catch (Exception ex) { Log.Message(ex); }
         }
 
         public void SupprimerFichier()
@@ -1826,10 +1835,14 @@ namespace ModuleProduction
 
         private void SauverVue(ModelDoc2 mdl)
         {
-            mdl.SaveBMP(CheminFichierApercu, 0, 0);
-            Bitmap bmp = RedimensionnerImage(100, 100, CheminFichierApercu);
-            bmp.Save(CheminFichierApercu);
-            bmp.Dispose();
+            try
+            {
+                mdl.SaveBMP(CheminFichierApercu, 0, 0);
+                Bitmap bmp = RedimensionnerImage(100, 100, CheminFichierApercu);
+                bmp.Save(CheminFichierApercu);
+                bmp.Dispose();
+            }
+            catch (Exception ex) { Log.Message(ex); }
         }
 
         private Bitmap RedimensionnerImage(int newWidth, int newHeight, string stPhotoPath)
@@ -1853,26 +1866,24 @@ namespace ModuleProduction
             }
 
             int sourceX = 0, sourceY = 0, destX = 0, destY = 0;
-            float nPercent = 0, nPercentW = 0, nPercentH = 0;
-
-            nPercentW = ((float)newWidth / (float)sourceWidth);
-            nPercentH = ((float)newHeight / (float)sourceHeight);
+            float nPercentW = newWidth / (float)sourceWidth;
+            float nPercentH = newHeight / (float)sourceHeight;
+            float nPercent;
             if (nPercentH < nPercentW)
             {
                 nPercent = nPercentH;
-                destX = System.Convert.ToInt16((newWidth -
+                destX = Convert.ToInt16((newWidth -
                           (sourceWidth * nPercent)) / 2);
             }
             else
             {
                 nPercent = nPercentW;
-                destY = System.Convert.ToInt16((newHeight -
+                destY = Convert.ToInt16((newHeight -
                           (sourceHeight * nPercent)) / 2);
             }
 
             int destWidth = (int)(sourceWidth * nPercent);
             int destHeight = (int)(sourceHeight * nPercent);
-
 
             Bitmap bmPhoto = new Bitmap(newWidth, newHeight,
                           PixelFormat.Format32bppRgb);

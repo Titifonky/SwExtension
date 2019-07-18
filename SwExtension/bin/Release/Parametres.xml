@@ -4,8 +4,8 @@
     <Parametre name="Reinitialiser" intitule="Reinitialiser les menus &amp; onglets" tip="" type="System.Boolean">False</Parametre>
   </Module>
   <Module name="ExportDxfDwg" intitule="Exporter en Dxf/Dwg">
-    <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="SelectionnerDossier" intitule="Selectionner un dossier" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="SelectionnerDossier" intitule="Selectionner un dossier" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="ToutesLesFeuilles" intitule="Toutes les feuilles" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="FormatExport" intitule="Format" tip="" type="Outils.eTypeFichierExport">DWG</Parametre>
     <Parametre name="VersionExport" intitule="Version" tip="" type="Outils.eDxfFormat">R2010</Parametre>
@@ -19,13 +19,13 @@
     <Parametre name="CheminDernierDossier" intitule="Dernier dossier utilisé" tip="" type="System.String">D:\Projet\E56 - SAS Concept-TY\AD549 - SCCV OCEANIS - Village d'entreprise Denain - Cellule HOPTALIS\1\Laser tole\1</Parametre>
   </Module>
   <Module name="ExportPdf" intitule="Exporter en Pdf">
-    <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="SelectionnerDossier" intitule="Selectionner un dossier" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="DernierDossier" intitule="Dernier dossier" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="SelectionnerDossier" intitule="Selectionner un dossier" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="ToutesLesFeuilles" intitule="Toutes les feuilles" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="FormatExport" intitule="Format" tip="" type="Outils.eTypeFichierExport">PDF</Parametre>
     <Parametre name="ExporterEnCouleur" intitule="Exporter en couleur" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="IncorporerLesPolices" intitule="Incorporer les polices" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="ExporterEnHauteQualite" intitule="Exporter en haute qualité" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="ExporterEnHauteQualite" intitule="Exporter en haute qualité" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="ImprimerEnTeteEtPiedDePage" intitule="Imprimer l'entête et le pied de page" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="EpaisseursDeLigneDeImprimante" intitule="Epaisseur de lignes de l'imprimante" tip="" type="System.Boolean">False</Parametre>
   </Module>
@@ -155,7 +155,7 @@
   </Module>
   <Module name="LierLesConfigurations" intitule="Créer/Lier les configurations">
     <Parametre name="CreerConfig" intitule="Creer les configs manquante" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="ListeConfigs" intitule="Ajouter des configs&#xD;&#xA; Noms séparés par un espace" tip="" type="System.String">21</Parametre>
+    <Parametre name="ListeConfigs" intitule="Ajouter des configs&#xD;&#xA; Noms séparés par un espace" tip="" type="System.String">1</Parametre>
     <Parametre name="SupprimerNvlFonction" intitule="Supprimer les nouvelles fonctions ou contraintes&#xD;&#xA; dans la configuration" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="SupprimerNvComposant" intitule="Supprimer les nouveaux composants&#xD;&#xA; dans la configuration" tip="" type="System.Boolean">False</Parametre>
   </Module>
@@ -174,8 +174,11 @@
   <Module name="DecompterPercage" intitule="Decompter les perçages" />
   <Module name="ListerPercage" intitule="Lister les percages">
   </Module>
-  <Module name="EnregistrerVue" intitule="Enregistrer la vue" />
-  <Module name="ActiverRelationAuto" intitule="Activer/Desactiver les relation auto" />
+  <Module name="EnregistrerVue" intitule="Enregistrer la vue">
+    <Parametre name="VuesStandard" intitule="Liste des vues standard à exclure (séparé par une virgule) :" tip="" type="System.String">*Normal à,*Face,*Arrière,*Gauche,*Droite,*Dessus,*Dessous,*Isométrique,*Trimétrique,*Dimétrique</Parametre>
+  </Module>
+  <Module name="ActiverRelationAuto" intitule="Activer/Desactiver les relation auto">
+  </Module>
   <Module name="MasquerCorpsVue" intitule="Masquerles corps de la vue" />
   <Module name="Test2" intitule="Test2" />
   <Module name="SelectionnerCorpsIdentiques" intitule="Selectionner les corps identiques">
@@ -189,8 +192,8 @@
   <Module name="ListerRepere" intitule="Lister les repères">
   </Module>
   <Module name="RepererDossier" intitule="Repérer les dossiers">
-    <Parametre name="CombinerCorpsIdentiques" intitule="Combiner les corps identiques des différents modèles" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="CombinerAvecCampagnePrecedente" intitule="Combiner les corps avec les précédentes campagnes" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="CombinerCorpsIdentiques" intitule="Combiner les corps identiques des différents modèles" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="CombinerAvecCampagnePrecedente" intitule="Combiner les corps avec les précédentes campagnes" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="CreerDvp" intitule="Creer les configs dvp des tôles" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="TypeCorps" intitule="Type de corps à repérer :" tip="" type="Outils.eTypeCorps">Piece</Parametre>
   </Module>
@@ -198,7 +201,7 @@
     <Parametre name="AfficherLignePliage" intitule="Afficher les lignes de pliage" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="AfficherNotePliage" intitule="Afficher les notes de pliage" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="InscrireNomTole" intitule="Inscrire la réf du dvp sur la tole" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="TailleInscription" intitule="Ht des inscriptions en mm" tip="Ht des inscriptions en mm" type="System.Int32">20</Parametre>
+    <Parametre name="TailleInscription" intitule="Ht des inscriptions en mm" tip="Ht des inscriptions en mm" type="System.Int32">15</Parametre>
     <Parametre name="OrienterDvp" intitule="Orienter les dvps" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="OrientationDvp" intitule="" tip="" type="Outils.eOrientation">Portrait</Parametre>
     <Parametre name="FermerPlan" intitule="Fermer les plans" tip="Fermer les plans après génération des dvps" type="System.Boolean">False</Parametre>
@@ -214,8 +217,10 @@
     <Parametre name="CreerPdf3D" intitule="Créer les pdf 3D des barres" tip="" type="System.Boolean">False</Parametre>
   </Module>
   <Module name="ControlerReperage" intitule="Contrôler le reperage" />
-  <Module name="NettoyerReperage" intitule="Nettoyer le reperage" />
-  <Module name="RetournerDvp" intitule="Retourner les Dvps selectionnés" />
+  <Module name="NettoyerReperage" intitule="Nettoyer le reperage">
+  </Module>
+  <Module name="RetournerDvp" intitule="Retourner les Dvps selectionnés">
+  </Module>
   <Module name="CommandeProfil" intitule="Commander les profils">
     <Parametre name="LongueurMax" intitule="" tip="" type="System.Int32">6000</Parametre>
   </Module>
@@ -237,7 +242,8 @@
   <Module name="CreerSymetrie" intitule="Creer la symetrie de la pièce">
     <Parametre name="PlanSymetrie" intitule="Selectionnez le plan de symetrie :" tip="" type="System.String">Plan de droite</Parametre>
   </Module>
-  <Module name="AfficherReperage" intitule="Contrôler le reperage" />
+  <Module name="AfficherReperage" intitule="Contrôler le reperage">
+  </Module>
   <Module name="InsererNoteQuantite" intitule="Inserer les quantités">
     <Parametre name="LigneAttache" intitule="Ligne d'attache" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="ModifierHtTexte" intitule="Modifier la ht du texte" tip="" type="System.Boolean">False</Parametre>
@@ -245,10 +251,10 @@
     <Parametre name="Reperage" intitule="Reperage" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="AfficherQuantite" intitule="Ajouter la quantité" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="Description" intitule="Description" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="PrefixeTole" intitule="Prefixe tole" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="AjouterMateriau" intitule="Ajouter le matériau" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="PrefixeTole" intitule="Prefixe tole" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="AjouterMateriau" intitule="Ajouter le matériau" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="ProfilCourt" intitule="Nom de profil court" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="SautDeLigneMateriau" intitule="Saut de ligne matériau" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="SautDeLigneMateriau" intitule="Saut de ligne matériau" tip="" type="System.Boolean">True</Parametre>
   </Module>
   <Module name="AfficherMasquerEsquisseReperage" intitule="Afficher/Masquer Esquisse reperage">
   </Module>
@@ -275,7 +281,8 @@
     <Parametre name="OrienterDvp" intitule="Orienter les dvps" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="OrientationDvp" intitule="" tip="" type="Outils.eOrientation">Portrait</Parametre>
   </Module>
-  <Module name="SupprimerGravure" intitule="Supprimer la gravure" />
+  <Module name="SupprimerGravure" intitule="Supprimer la gravure">
+  </Module>
   <Module name="RepereCorps" intitule="Repère du corps">
   </Module>
   <Module name="NettoyerBlocs" intitule="Nettoyer les blocs" />
