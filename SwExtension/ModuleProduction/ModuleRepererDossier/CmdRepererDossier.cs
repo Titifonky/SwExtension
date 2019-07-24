@@ -115,8 +115,10 @@ namespace ModuleProduction.ModuleRepererDossier
 
                     foreach (var corps in ListeCorps.Values)
                     {
+                        // On additionne les quantités pour les corps supperieur à filtreCampagne
+                        // S
                         if (corps.Campagne.ContainsKey(FiltreCampagne) &&
-                            (corps.Campagne[FiltreCampagne] > 0) &&
+                            corps.Campagne.Sum(d => d.Key >= FiltreCampagne? d.Value : 0) > 0 &&
                             File.Exists(corps.CheminFichierRepere)
                             )
                         {
@@ -263,7 +265,7 @@ namespace ModuleProduction.ModuleRepererDossier
                                         (CombinerAvecCampagnePrecedente || CorpsTest.Campagne.ContainsKey(IndiceCampagne)) &&
                                         (MateriauCorps == CorpsTest.Materiau) &&
                                         (TypeCorps == CorpsTest.TypeCorps) &&
-                                        SwCorps.eEstSemblable(CorpsTest.SwCorps))
+                                        SwCorps.eComparerGeometrie(CorpsTest.SwCorps) == Sw.Comparaison_e.Semblable)
                                     {
                                         Repere = CorpsTest.Repere;
                                         SetRepere(param, CorpsTest.Repere, nomCfg);

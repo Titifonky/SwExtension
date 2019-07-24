@@ -52,7 +52,7 @@ namespace Macros
                         var MateriauCorpsTest = Corps.eGetMateriauCorpsOuComp(comp);
                         if (MateriauxCorpsBase != MateriauCorpsTest) continue;
 
-                        if (Corps.eEstSemblable(CorpsBase))
+                        if (Corps.eComparerGeometrie(CorpsBase) == Sw.Comparaison_e.Semblable)
                         {
                             ListeCorpsIdentiques.Add(Corps);
                         }

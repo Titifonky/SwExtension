@@ -142,7 +142,7 @@ namespace ModuleProduction.ModuleRepereCorps
                         {
                             if (MateriauCorpsBase != corps.Materiau) continue;
 
-                            if (corps.Swcorps.eEstSemblable(CorpsBase))
+                            if (corps.Swcorps.eComparerGeometrie(CorpsBase) == Sw.Comparaison_e.Semblable)
                                 ListeCorpsIdentiques.Add(corps.GetCorps());
                         }
 

@@ -3321,11 +3321,18 @@ namespace Outils
         /// <param name="corps"></param>
         /// <param name="corpsTest"></param>
         /// <returns></returns>
-        public static Boolean eEstSemblable(this Body2 corps, Body2 corpsTest)
+        public static Comparaison_e eComparerGeometrie(this Body2 corps, Body2 corpsTest)
         {
             MathTransform mt = null;
 
-            return corps.eEstSemblable(corpsTest, out mt);
+            return corps.eComparerGeometrie(corpsTest, out mt);
+        }
+
+        public enum Comparaison_e
+        {
+            Different = 0,
+            Symetrique = 1,
+            Semblable = 2
         }
 
         /// <summary>
@@ -3335,25 +3342,38 @@ namespace Outils
         /// <param name="corpsTest"></param>
         /// <param name="mt"></param>
         /// <returns></returns>
-        public static Boolean eEstSemblable(this Body2 corps, Body2 corpsTest, out MathTransform mt)
+        public static Comparaison_e eComparerGeometrie(this Body2 corps, Body2 corpsTest, out MathTransform mt)
         {
-            // La méthode renvoi également true si les corps sont symétriques.
-            Boolean result = corps.GetCoincidenceTransform2((Object)corpsTest, out mt);
+            Comparaison_e result = Comparaison_e.Different;
+            mt = null;
 
-            if (result == true)
+            try
             {
-                // Vérification du déterminant de la matrice de rotation
-                // Calcul du déterminant
-                double[] v = (double[])mt.ArrayData;
-                double det1 = v[0] * ((v[4] * v[8]) - (v[7] * v[5]));
-                double det2 = v[1] * ((v[3] * v[8]) - (v[6] * v[5]));
-                double det3 = v[2] * ((v[3] * v[7]) - (v[6] * v[4]));
-                double det = det1 - det2 + det3;
+                // La méthode renvoi également true si les corps sont symétriques.
+                result = corps.GetCoincidenceTransform2((Object)corpsTest, out mt)? Comparaison_e.Semblable : Comparaison_e.Different;
 
-                // Si le déterminant est == -1, la matrice est une symetrie
-                // Les corps ne sont pas semblables
-                if (det < 0)
-                    result = false;
+                if (result == Comparaison_e.Semblable)
+                {
+                    // Vérification du déterminant de la matrice de rotation
+                    // Calcul du déterminant
+                    double[] v = (double[])mt.ArrayData;
+                    double det1 = v[0] * ((v[4] * v[8]) - (v[7] * v[5]));
+                    double det2 = v[1] * ((v[3] * v[8]) - (v[6] * v[5]));
+                    double det3 = v[2] * ((v[3] * v[7]) - (v[6] * v[4]));
+                    double det = det1 - det2 + det3;
+
+                    // Si le déterminant est == -1, la matrice est une symetrie
+                    // Les corps ne sont pas semblables
+                    if (det < 0)
+                        result = Comparaison_e.Symetrique;
+                }
+
+                return result;
+            }
+            catch(Exception ex)
+            {
+                Log.Message(ex);
+                Log.Message("Corps test : " + corpsTest.IsRef() + " / Corps : " + corps.IsRef());
             }
 
             return result;

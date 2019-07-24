@@ -155,7 +155,7 @@ namespace ModuleLaser
                                     {
                                         if ((MateriauCorps != CorpsTest.Materiau) || (TypeCorps != CorpsTest.TypeCorps)) continue;
 
-                                        if (SwCorps.eEstSemblable(CorpsTest.SwCorps))
+                                        if (SwCorps.eComparerGeometrie(CorpsTest.SwCorps) == Sw.Comparaison_e.Semblable)
                                         {
                                             CorpsTest.Nb += nbCorps;
 

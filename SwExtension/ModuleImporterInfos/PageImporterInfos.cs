@@ -4,6 +4,7 @@ using SwExtension;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows.Forms;
 
 namespace ModuleImporterInfos
 {
@@ -66,12 +67,14 @@ namespace ModuleImporterInfos
                 _Bouton_Parcourir = G.AjouterBouton("Parcourir");
                 _Bouton_Parcourir.OnButtonPress += delegate(Object Bouton)
                 {
-                    System.Windows.Forms.OpenFileDialog pDialogue = new System.Windows.Forms.OpenFileDialog();
-                    pDialogue.Filter = "Fichier texte (*.txt)|*.txt|Tout les fichiers (*.*)|*.*";
-                    pDialogue.Multiselect = false;
-                    pDialogue.InitialDirectory = Path.GetDirectoryName(MdlBase.GetPathName());
-                    pDialogue.RestoreDirectory = true;
-                    
+                    OpenFileDialog pDialogue = new OpenFileDialog
+                    {
+                        Filter = "Fichier texte (*.txt)|*.txt|Tout les fichiers (*.*)|*.*",
+                        Multiselect = false,
+                        InitialDirectory = Path.GetDirectoryName(MdlBase.GetPathName()),
+                        RestoreDirectory = true
+                    };
+
                     String pChemin = "";
 
                     if (pDialogue.ShowDialog() == System.Windows.Forms.DialogResult.OK)

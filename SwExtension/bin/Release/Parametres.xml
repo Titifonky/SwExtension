@@ -98,7 +98,6 @@
     <Parametre name="PropTarauderEmpreinte" intitule="Propriete &quot;TarauderEmpreinte&quot;" tip="" type="System.String">TarauderEmpreinte</Parametre>
   </Module>
   <Module name="Test" intitule="Test">
-    <Parametre name="Pid" intitule="" tip="" type="System.String">à.&#x0;&#x0;&#x4;&#x0;&#x0;&#x0;ÿþÿ&#x0;&#x0;&#x0;&#x0;&#x0;&#x2;&#x0;&#x0;&#x0;p&#x0;&#x0;&#x0;m&#x0;&#x0;&#x0;</Parametre>
   </Module>
   <Module name="ParametresModule" intitule="Parametres des modules">
   </Module>
@@ -186,21 +185,23 @@
   <Module name="NumeroterDossier" intitule="Numeroter les dossiers">
     <Parametre name="CombinerCorpsIdentiques" intitule="Combiner les corps identiques des différents modèles" tip="" type="System.Boolean">False</Parametre>
   </Module>
-  <Module name="AfficherLogDebug" intitule="Afficher le log de debug" />
+  <Module name="AfficherLogDebug" intitule="Afficher le log de debug">
+    <Parametre name="Fichier" intitule="" tip="" type="System.String">LOGs.log</Parametre>
+  </Module>
   <Module name="ExportStructure" intitule="Exporter les structures" />
   <Module name="VerifierNumerotation" intitule="Verifier la numerotation" />
   <Module name="ListerRepere" intitule="Lister les repères">
   </Module>
   <Module name="RepererDossier" intitule="Repérer les dossiers">
-    <Parametre name="CombinerCorpsIdentiques" intitule="Combiner les corps identiques des différents modèles" tip="" type="System.Boolean">False</Parametre>
-    <Parametre name="CombinerAvecCampagnePrecedente" intitule="Combiner les corps avec les précédentes campagnes" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="CombinerCorpsIdentiques" intitule="Combiner les corps identiques des différents modèles" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="CombinerAvecCampagnePrecedente" intitule="Combiner les corps avec les précédentes campagnes" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="CreerDvp" intitule="Creer les configs dvp des tôles" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="TypeCorps" intitule="Type de corps à repérer :" tip="" type="Outils.eTypeCorps">Piece</Parametre>
   </Module>
   <Module name="ProduireDvp" intitule="Creer les dvp de tôle">
     <Parametre name="AfficherLignePliage" intitule="Afficher les lignes de pliage" tip="" type="System.Boolean">True</Parametre>
     <Parametre name="AfficherNotePliage" intitule="Afficher les notes de pliage" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="InscrireNomTole" intitule="Inscrire la réf du dvp sur la tole" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="InscrireNomTole" intitule="Inscrire la réf du dvp sur la tole" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="TailleInscription" intitule="Ht des inscriptions en mm" tip="Ht des inscriptions en mm" type="System.Int32">15</Parametre>
     <Parametre name="OrienterDvp" intitule="Orienter les dvps" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="OrientationDvp" intitule="" tip="" type="Outils.eOrientation">Portrait</Parametre>
