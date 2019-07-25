@@ -248,9 +248,9 @@ namespace Outils
             return new CtrlSelectionBox(this, Option, avecCouleur, labelTitre, labelTip);
         }
 
-        public CtrlCheckBox AjouterCheckBox(String titre)
+        public CtrlCheckBox AjouterCheckBox(String titre, String tip = "")
         {
-            return new CtrlCheckBox(this, titre, Option);
+            return new CtrlCheckBox(this, titre, Option, "", tip);
         }
 
         public CtrlCheckBox AjouterCheckBox(Parametre param)

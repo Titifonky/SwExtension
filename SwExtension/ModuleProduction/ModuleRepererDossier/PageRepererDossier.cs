@@ -78,11 +78,11 @@ namespace ModuleProduction.ModuleRepererDossier
                 _Texte_IndiceCampagne = G.AjouterTexteBox("Indice de la campagne de repérage :");
                 _Texte_IndiceCampagne.LectureSeule = true;
 
-                _CheckBox_CampagneDepartDecompte = G.AjouterCheckBox("Campagne de depart pour les decomptes");
+                _CheckBox_CampagneDepartDecompte = G.AjouterCheckBox("Indice actuel comme depart pour le decompte");
 
-                _Texte_IndiceCampagneDepartDecompte = G.AjouterTexteBox("Indice actuelle pour le décompte :");
+                _Texte_IndiceCampagneDepartDecompte = G.AjouterTexteBox("Indice précédent pour le décompte :");
                 _Texte_IndiceCampagneDepartDecompte.LectureSeule = true;
-                _Texte_IndiceCampagneDepartDecompte.StdIndent();
+                //_Texte_IndiceCampagneDepartDecompte.StdIndent();
 
                 _CheckBox_ReinitCampagneActuelle = G.AjouterCheckBox("Reinitialiser la campagne actuelle");
                 _CheckBox_MajCampagnePrecedente = G.AjouterCheckBox("Mettre à jour la campagne précédente (en cas d'oubli)");
