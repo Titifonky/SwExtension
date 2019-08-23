@@ -201,8 +201,7 @@ namespace ModuleListerMateriaux
 
                 String BaseMateriau;
                 String Materiau = corps.eGetMateriauCorpsOuComp(comp, out BaseMateriau);
-                String Profil = "";
-
+                string Profil;
                 if (corps.eTypeDeCorps() == eTypeCorps.Tole)
                 {
                     Double E = corps.eEpaisseurCorpsOuDossier(dossier);

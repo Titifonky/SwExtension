@@ -3409,16 +3409,17 @@ namespace Outils
         {
             if (corps.IsRef())
             {
-                if (corps.IsSheetMetal())
-                    return eTypeCorps.Tole;
+                // Complètement instable, un corps extrudé peut se retrouver avec une fonction
+                // tôlerie à la racine. Il faut vérifier s'il a une fonction développer(flatpattern)
+                // pour savoir si c'est une tôle
+
+                //if (corps.IsSheetMetal())
+                //    return eTypeCorps.Tole;
 
                 foreach (Feature Fonction in corps.GetFeatures())
                 {
                     switch (Fonction.GetTypeName2())
                     {
-                        case "SheetMetal":
-                        case "SMBaseFlange":
-                        case "SolidToSheetMetal":
                         case "FlatPattern":
                             return eTypeCorps.Tole;
                         case "WeldMemberFeat":

@@ -29,17 +29,33 @@ namespace Macros
         {
             try
             {
-                Byte[] Tab = File.ReadAllBytes(Path.Combine(MdlBase.eDossier(), "Corps.data"));
-                MemoryStream ms = new MemoryStream(Tab);
-                ManagedIStream MgIs = new ManagedIStream(ms);
-                Modeler mdlr = (Modeler)App.Sw.GetModeler();
-                var corps = (Body2)mdlr.Restore(MgIs);
-                
-                var err = corps.Check3;
-                WindowLog.EcrireF("nb erreurs : {0}", err.Count);
+                //Body2 CorpsBase = null;
+                //if (MdlBase.eSelect_RecupererTypeObjet() == e_swSelectType.swSelFACES)
+                //{
+                //    var face = MdlBase.eSelect_RecupererObjet<Face2>();
+                //    CorpsBase = face.GetBody();
+                //}
+                //else if (MdlBase.eSelect_RecupererTypeObjet() == e_swSelectType.swSelSOLIDBODIES)
+                //{
+                //    CorpsBase = MdlBase.eSelect_RecupererObjet<Body2>();
+                //}
 
-                var retval = corps.Display3(MdlBase, 255, (int)swTempBodySelectOptions_e.swTempBodySelectable);
-                WindowLog.Ecrire("Temporary body displayed (0 = success)? " + retval);
+                //if (CorpsBase == null)
+                //{
+                //    WindowLog.Ecrire("Erreur de corps selectionné");
+                //    return;
+                //}
+
+
+                //WindowLog.Ecrire("Type de corps : " + CorpsBase.eTypeDeCorps());
+
+                if(MdlBase.eSelect_RecupererTypeObjet() == e_swSelectType.swSelBODYFEATURES)
+                {
+                    var f = MdlBase.eSelect_RecupererObjet<Feature>();
+                    WindowLog.Ecrire("Fonction : " + f.Name);
+                    WindowLog.Ecrire("   Type : " + f.GetTypeName2());
+                }
+
             }
             catch (Exception e)
             {
