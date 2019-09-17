@@ -2755,9 +2755,43 @@ namespace Outils
         public static Double eLgArrete(this Edge e)
         {
             Curve Courbe = e.GetCurve();
-            double Start, End; bool Ferme, Periodic;
-            Courbe.GetEndParams(out Start, out End, out Ferme, out Periodic);
+            Courbe.GetEndParams(out Double Start, out Double End, out _, out _);
             return Courbe.GetLength3(Start, End);
+        }
+
+        public static ePoint ePointDepart(this Curve c)
+        {
+            c.GetEndParams(out double Start, out _, out _, out _);
+
+            if (c.IsLine())
+                Start = 0;
+
+            return new ePoint((double[])c.Evaluate2(Start, 0));
+        }
+
+        public static ePoint ePointArrive(this Curve c)
+        {
+            c.GetEndParams(out _, out double End, out _, out _);
+
+            if (c.IsLine())
+                End = 1;
+
+            return new ePoint((double[])c.Evaluate2(End, 0));
+        }
+
+        public static ePoint ePointLePlusProche(this Curve c, ePoint p)
+        {
+            return new ePoint((Double[])c.GetClosestPointOn(p.X, p.Y, p.Z));
+        }
+
+        public static ePoint ePointLePlusProche(this Face2 f, ePoint p)
+        {
+            return new ePoint((Double[])f.GetClosestPointOn(p.X, p.Y, p.Z));
+        }
+
+        public static swSketchSegments_e eType(this SketchSegment s)
+        {
+            return (swSketchSegments_e)s.GetType();
         }
 
         //========================================================================================
@@ -2953,17 +2987,35 @@ namespace Outils
             return eSelectEntite((Entity)point, mdl, marque, ajouter);
         }
 
+        public static Boolean eSelect(this Feature f, Boolean ajouter = false)
+        {
+            if (f.IsNull()) return false;
+
+            return f.Select2(ajouter, -1);
+        }
+
         /// <summary>
         /// Selectionner une fonction.
         /// Ne fonctionne pas pendant l'edition d'un PropertyManagerPage
         /// </summary>
         /// <param name="f"></param>
         /// <param name="ajouter"></param>
-        public static Boolean eSelect(this Feature f, Boolean ajouter = false)
+        public static Boolean eSelect(this SketchSegment s, ModelDoc2 mdl, int marque = -1, Boolean ajouter = false)
         {
-            if (f.IsNull()) return false;
+            SelectionMgr sm = mdl.SelectionManager;
+            SelectData sd = sm.CreateSelectData();
+            sd.Mark = marque;
 
-            return f.Select2(ajouter, -1);
+            return s.Select4(ajouter, sd);
+        }
+
+        public static Boolean eSelect(this SketchPoint s, ModelDoc2 mdl, int marque = -1, Boolean ajouter = false)
+        {
+            SelectionMgr sm = mdl.SelectionManager;
+            SelectData sd = sm.CreateSelectData();
+            sd.Mark = marque;
+
+            return s.Select4(ajouter, sd);
         }
 
         /// <summary>
@@ -4327,30 +4379,65 @@ namespace Outils
 
         public ePoint() { }
 
-        public ePoint(Double x, double y, Double z) { X = x; Y = y; Z = z; Maj = false; }
+        public ePoint(Double x, Double y, Double z) { X = x; Y = y; Z = z; Maj = false; }
+
+        public ePoint(Double[] arr) { X = arr[0]; Y = arr[1]; Z = arr[2]; Maj = false; }
+
+        public ePoint(SketchPoint pt) { X = pt.X; Y = pt.Y; Z = pt.Z; Maj = false; }
 
         public Double X { get { return _X; } set { _X = value; Modify(); } }
         public Double Y { get { return _Y; } set { _Y = value; Modify(); } }
         public Double Z { get { return _Z; } set { _Z = value; Modify(); } }
 
-        public void Deplacer(eVecteur V)
+        public void Deplacer(eVecteur V) { X += V.X; Y += V.Y; Z += V.Z; }
+
+        public ePoint PointDeplacer(eVecteur V) => new ePoint(X + V.X, Y + V.Y, Z + V.Z);
+
+        public void Multiplier(Double f) { X *= f; Y *= f; Z *= f; }
+
+        public ePoint PointMultiplier(Double S) => new ePoint(X * S, Y * S, Z * S);
+
+        public eVecteur Vecteur(ePoint p) => new eVecteur(X - p.X, Y - p.Y, Z - p.Z);
+
+        public Double Distance(ePoint p)
         {
-            X += V.X; Y += V.Y; Z += V.Z;
+            return Math.Sqrt(Math.Pow(p.X - X, 2) + Math.Pow(p.Y - Y, 2) + Math.Pow(p.Z - Z, 2));
         }
 
-        public void Echelle(Double S)
+        public Double Distance2(ePoint p)
         {
-            X *= S; Y *= S; Z *= S;
+            return Math.Pow(p.X - X, 2) + Math.Pow(p.Y - Y, 2) + Math.Pow(p.Z - Z, 2);
         }
 
-        public ePoint Additionner(eVecteur V)
+        public void ApplyMathTransform(MathTransform xform)
         {
-            return new ePoint(X + V.X, Y + V.Y, Z + V.Z);
+            var mu = (MathUtility)App.Sw.GetMathUtility();
+            double[] vPnt = new double[3]; vPnt[0] = X; vPnt[1] = Y; vPnt[2] = Z;
+
+            var pt = (MathPoint)mu.CreatePoint(vPnt);
+            pt = pt.MultiplyTransform(xform);
+            var arr = (Double[])pt.ArrayData;
+
+            X = arr[0]; Y = arr[1]; Z = arr[2];
+
+            Modify();
         }
 
-        public ePoint Multiplier(Double S)
+        public ePoint GetPointApplyMathTransform(MathTransform xform)
         {
-            return new ePoint(X * S, Y * S, Z * S);
+            var mu = (MathUtility)App.Sw.GetMathUtility();
+            double[] vPnt = new double[3]; vPnt[0] = X; vPnt[1] = Y; vPnt[2] = Z;
+
+            var pt = (MathPoint)mu.CreatePoint(vPnt);
+            pt = pt.MultiplyTransform(xform);
+            var arr = (Double[])pt.ArrayData;
+
+            return new ePoint(arr[0], arr[1], arr[2]);
+        }
+
+        public override string ToString()
+        {
+            return String.Format("X : {0} // Y : {1} // Z : {2}", X, Y, Z);
         }
     }
 
@@ -4358,9 +4445,21 @@ namespace Outils
     {
         public eVecteur(Double X, Double Y, Double Z) { this.X = X; this.Y = Y; this.Z = Z; }
 
+        public eVecteur(Double[] arr) { X = arr[0]; Y = arr[1]; Z = arr[2]; }
+
         public Double X { get; set; }
         public Double Y { get; set; }
         public Double Z { get; set; }
+
+        public void Scalaire(Double f)
+        {
+            X *= f; Y *= f; Z *= f;
+        }
+
+        public eVecteur VecteurScalaire(Double f)
+        {
+            return new eVecteur(X * f, Y * f, Z * f);
+        }
     }
 
     public class eRepere

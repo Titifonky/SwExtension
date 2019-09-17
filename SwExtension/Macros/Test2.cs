@@ -17,44 +17,37 @@ namespace Macros
         ModuleNom("Test2")]
     public class Test2 : BoutonBase
     {
-        private Parametre Pid;
+        private readonly Double Decal = 40;
 
-        public Test2()
-        {
-            _Config = new ConfigModule(typeof(Test));
-            Pid = _Config.AjouterParam("Pid", "xxx");
-        }
+        public Test2() { }
 
         protected override void Command()
         {
             try
             {
-                //Body2 CorpsBase = null;
-                //if (MdlBase.eSelect_RecupererTypeObjet() == e_swSelectType.swSelFACES)
-                //{
-                //    var face = MdlBase.eSelect_RecupererObjet<Face2>();
-                //    CorpsBase = face.GetBody();
-                //}
-                //else if (MdlBase.eSelect_RecupererTypeObjet() == e_swSelectType.swSelSOLIDBODIES)
-                //{
-                //    CorpsBase = MdlBase.eSelect_RecupererObjet<Body2>();
-                //}
 
-                //if (CorpsBase == null)
-                //{
-                //    WindowLog.Ecrire("Erreur de corps selectionné");
-                //    return;
-                //}
+                if (MdlBase.eSelect_RecupererTypeObjet() != e_swSelectType.swSelFACES)
+                    return;
 
+                var face = MdlBase.eSelect_RecupererObjet<Face2>();
 
-                //WindowLog.Ecrire("Type de corps : " + CorpsBase.eTypeDeCorps());
+                var sm = MdlBase.SketchManager;
 
-                if(MdlBase.eSelect_RecupererTypeObjet() == e_swSelectType.swSelBODYFEATURES)
-                {
-                    var f = MdlBase.eSelect_RecupererObjet<Feature>();
-                    WindowLog.Ecrire("Fonction : " + f.Name);
-                    WindowLog.Ecrire("   Type : " + f.GetTypeName2());
-                }
+                sm.InsertSketch(false);
+
+                MdlBase.SketchOffsetEntities2(Decal * -0.001, false, false);
+
+                MdlBase.eEffacerSelection();
+
+                var sk = sm.ActiveSketch;
+
+                var arr = (object[])sk.GetSketchSegments();
+                foreach (SketchSegment sg in arr)
+                    sg.ConstructionGeometry = true;
+
+                sm.InsertSketch(true);
+
+                MdlBase.eEffacerSelection();
 
             }
             catch (Exception e)
