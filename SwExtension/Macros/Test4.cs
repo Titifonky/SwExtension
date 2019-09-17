@@ -57,7 +57,7 @@ namespace Macros
                         var pas = lg / (nb + 1);
                         nb = Math.Max(0, pas > 200 ? nb : nb - 1);
                         var ptDepart = new ePoint((SketchPoint)sl.GetStartPoint2());
-                        sm.CreatePoint(ptDepart.X, ptDepart.Y, ptDepart.Z);
+                        
                         if (nb > 0)
                         {
                             sg.eSelect(MdlBase, 1, false);
@@ -87,6 +87,8 @@ namespace Macros
 
                             sm.AddToDB = false;
                         }
+                        else
+                            sm.CreatePoint(ptDepart.X, ptDepart.Y, ptDepart.Z);
                     }
                 }
 

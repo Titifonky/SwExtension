@@ -102,6 +102,7 @@
     <Compile Include="Macros\BoutonMasquerCorpsVue.cs" />
     <Compile Include="Macros\BoutonSelectionnerCorpsIdentiques.cs" />
     <Compile Include="Macros\BoutonAfficherLogDebug.cs" />
+    <Compile Include="Macros\Test5.cs" />
     <Compile Include="Macros\Test4.cs" />
     <Compile Include="Macros\Test3.cs" />
     <Compile Include="ModuleCreerSymetrie\CmdCreerSymetrie.cs" />
@@ -139,7 +140,7 @@
     <Compile Include="ModuleLaser\BoutonVerifierNumerotation.cs" />
     <Compile Include="ModuleLaser\BoutonExportStructure.cs" />
     <Compile Include="Macros\Test2.cs" />
-    <Compile Include="Macros\Test.cs" />
+    <Compile Include="Macros\Test1.cs" />
     <Compile Include="ModuleLaser\ModuleNumeroterDossier\CmdNumeroterDossier.cs" />
     <Compile Include="ModuleLaser\ModuleNumeroterDossier\PageNumeroterDossier.cs" />
     <Compile Include="ModuleLaser\ModuleListeDebit\CmdListeDebit.cs" />

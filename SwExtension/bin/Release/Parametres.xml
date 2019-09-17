@@ -201,8 +201,8 @@
     <Parametre name="TypeCorps" intitule="Type de corps à repérer :" tip="" type="Outils.eTypeCorps">Piece</Parametre>
   </Module>
   <Module name="ProduireDvp" intitule="Creer les dvp de tôle">
-    <Parametre name="AfficherLignePliage" intitule="Afficher les lignes de pliage" tip="" type="System.Boolean">True</Parametre>
-    <Parametre name="AfficherNotePliage" intitule="Afficher les notes de pliage" tip="" type="System.Boolean">True</Parametre>
+    <Parametre name="AfficherLignePliage" intitule="Afficher les lignes de pliage" tip="" type="System.Boolean">False</Parametre>
+    <Parametre name="AfficherNotePliage" intitule="Afficher les notes de pliage" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="InscrireNomTole" intitule="Inscrire la réf du dvp sur la tole" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="TailleInscription" intitule="Ht des inscriptions en mm" tip="Ht des inscriptions en mm" type="System.Int32">15</Parametre>
     <Parametre name="OrienterDvp" intitule="Orienter les dvps" tip="" type="System.Boolean">False</Parametre>
@@ -292,5 +292,7 @@
   <Module name="Test3" intitule="Test3">
   </Module>
   <Module name="Test4" intitule="Test4">
+  </Module>
+  <Module name="Test5" intitule="Test5">
   </Module>
 </Parametres>

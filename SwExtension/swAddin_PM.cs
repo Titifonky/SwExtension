@@ -147,14 +147,17 @@ namespace SwExtension
 
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde("Vr", typeof(CmdVoronoi), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
+                _Mnu.AjouterCmde("T5", typeof(Test5), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
 
                 _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde("T1", typeof(Test), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
+                _Mnu.AjouterCmde("T1", typeof(Test1), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
                 _Mnu.AjouterCmde("T2", typeof(Test2), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
 
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde("T3", typeof(Test3), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
                 _Mnu.AjouterCmde("T4", typeof(Test4), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
+                
+
 
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde("PM", typeof(PageParametres));

@@ -9,11 +9,11 @@ using System.IO;
 namespace Macros
 {
     [ModuleTypeDocContexte(eTypeDoc.Assemblage | eTypeDoc.Piece),
-        ModuleTitre("Test"),
-        ModuleNom("Test")]
-    public class Test : BoutonBase
+        ModuleTitre("Test1"),
+        ModuleNom("Test1")]
+    public class Test1 : BoutonBase
     {
-        public Test() { }
+        public Test1() { }
 
         protected override void Command()
         {
