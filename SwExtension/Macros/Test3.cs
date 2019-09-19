@@ -12,7 +12,7 @@ using System.Windows.Forms;
 
 namespace Macros
 {
-    [ModuleTypeDocContexte(eTypeDoc.Assemblage | eTypeDoc.Piece | eTypeDoc.Dessin),
+    [ModuleTypeDocContexte(eTypeDoc.Assemblage | eTypeDoc.Piece),
         ModuleTitre("Test3"),
         ModuleNom("Test3")]
     public class Test3 : BoutonBase

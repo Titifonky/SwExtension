@@ -12,7 +12,7 @@ using System.Windows.Forms;
 
 namespace Macros
 {
-    [ModuleTypeDocContexte(eTypeDoc.Piece),
+    [ModuleTypeDocContexte(eTypeDoc.Assemblage | eTypeDoc.Piece),
         ModuleTitre("Test5"),
         ModuleNom("Test5")]
     public class Test5 : BoutonBase
@@ -27,6 +27,9 @@ namespace Macros
                     return;
 
                 var liste = MdlBase.eSelect_RecupererListeObjets<Face2>();
+
+                MdlBase.eEffacerSelection();
+
                 foreach (var face in liste)
                     Decaler(face, 0.0005, true);
 

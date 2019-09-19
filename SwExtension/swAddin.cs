@@ -17,10 +17,6 @@ namespace SwExtension
     [SwAddin(Description = "Extension des fonctions Sw", Title = "Sw Extension", LoadAtStartup = true)]
     public partial class swAddin : ISwAddin
     {
-        private static SldWorks _SwApp;
-
-        private int _AddInCookie;
-
         private TaskpaneView _TaskpaneOngletLog;
         private OngletLog _OngletLog;
 
@@ -30,26 +26,21 @@ namespace SwExtension
         private TaskpaneView _TaskpaneOngletDessin;
         private OngletDessin _OngletDessin;
 
-        public static SldWorks SwApp { get { return _SwApp; } }
-
         bool ISwAddin.ConnectToSW(object ThisSW, int Cookie)
         {
             try
             {
                 Log.Demarrer();
 
-                _AddInCookie = Cookie;
+                App.Init((SldWorks)ThisSW, this, Cookie);
 
-                // On initialise les outils d'extension SW
-                App.Sw = (SldWorks)ThisSW;
+                App.Sw.SetAddinCallbackInfo2(0, this, App.AddInCookie);
 
-                _SwApp = (SldWorks)ThisSW;
-                _SwApp.SetAddinCallbackInfo2(0, this, _AddInCookie);
-                CreerCmdMgr();
                 CreerTaskpane();
-                CreerMenusEtOnglets();
+                CreerMenusEtOnglets(App.CommandManager);
                 AddEventHooks();
                 AppliquerOptions();
+
                 return true;
             }
             catch (Exception e)
@@ -71,9 +62,7 @@ namespace SwExtension
             SupprimerPMP();
 
             // On nettoie les références à SW
-
-            _SwApp = null;
-            App.Sw = null;
+            App.Nettoyer();
             Log.Stopper();
             GC.Collect();
             return true;
@@ -136,29 +125,29 @@ namespace SwExtension
             ImgOngletParametre.Save(CheminImageOngletParametre, ImageFormat.Bmp);
             ImgOngletDessin.Save(CheminImageOngletDessin, ImageFormat.Bmp);
             
-            _TaskpaneOngletParametres = _SwApp.CreateTaskpaneView2(CheminImageOngletParametre, "Parametres");
-            _TaskpaneOngletDessin = _SwApp.CreateTaskpaneView2(CheminImageOngletDessin, "Dessin");
-            _TaskpaneOngletLog = _SwApp.CreateTaskpaneView2(CheminImageOngletLog, "Log");
+            _TaskpaneOngletParametres = App.Sw.CreateTaskpaneView2(CheminImageOngletParametre, "Parametres");
+            _TaskpaneOngletDessin = App.Sw.CreateTaskpaneView2(CheminImageOngletDessin, "Dessin");
+            _TaskpaneOngletLog = App.Sw.CreateTaskpaneView2(CheminImageOngletLog, "Log");
 
             _OngletLog = new OngletLog();
-            _OngletParametres = new OngletParametres(SwApp);
-            _OngletDessin = new OngletDessin(SwApp);
+            _OngletParametres = new OngletParametres(App.Sw);
+            _OngletDessin = new OngletDessin(App.Sw);
             
             _TaskpaneOngletParametres.DisplayWindowFromHandlex64(_OngletParametres.Handle.ToInt64());
             _TaskpaneOngletDessin.DisplayWindowFromHandlex64(_OngletDessin.Handle.ToInt64());
             _TaskpaneOngletLog.DisplayWindowFromHandlex64(_OngletLog.Handle.ToInt64());
 
-            _SwApp.ActiveDocChangeNotify += _OngletParametres.ActiveDocChange;
-            _SwApp.ActiveModelDocChangeNotify += _OngletParametres.ActiveDocChange;
-            _SwApp.FileCloseNotify += _OngletParametres.CloseDoc;
+            App.Sw.ActiveDocChangeNotify += _OngletParametres.ActiveDocChange;
+            App.Sw.ActiveModelDocChangeNotify += _OngletParametres.ActiveDocChange;
+            App.Sw.FileCloseNotify += _OngletParametres.CloseDoc;
 
-            _SwApp.ActiveDocChangeNotify += _OngletDessin.ActiveDocChange;
-            _SwApp.ActiveModelDocChangeNotify += _OngletDessin.ActiveDocChange;
-            _SwApp.FileCloseNotify += _OngletDessin.CloseDoc;
+            App.Sw.ActiveDocChangeNotify += _OngletDessin.ActiveDocChange;
+            App.Sw.ActiveModelDocChangeNotify += _OngletDessin.ActiveDocChange;
+            App.Sw.FileCloseNotify += _OngletDessin.CloseDoc;
 
-            _SwApp.ActiveDocChangeNotify += _OngletParametres.Rechercher_Propriete_Modele;
-            _SwApp.ActiveModelDocChangeNotify += _OngletParametres.Rechercher_Propriete_Modele;
-            _SwApp.FileCloseNotify += delegate (String nomFichier, int raison) { return _OngletParametres.Rechercher_Propriete_Modele(); };
+            App.Sw.ActiveDocChangeNotify += _OngletParametres.Rechercher_Propriete_Modele;
+            App.Sw.ActiveModelDocChangeNotify += _OngletParametres.Rechercher_Propriete_Modele;
+            App.Sw.FileCloseNotify += delegate (String nomFichier, int raison) { return _OngletParametres.Rechercher_Propriete_Modele(); };
 
             WindowLog.Text += delegate (String t, Boolean Ajouter)
             {

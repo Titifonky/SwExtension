@@ -400,7 +400,22 @@ namespace Outils
             MacroEnCours = false;
         }
 
-        public static SldWorks Sw = null;
+        public static void Init(SldWorks sw, Object addIn, int cookie)
+        {
+            Sw = sw;
+            AddInCookie = cookie;
+            CommandManager = Sw.GetCommandManager(AddInCookie);
+        }
+
+        public static void Nettoyer()
+        {
+            CommandManager = null;
+            Sw = null;
+        }
+
+        public static SldWorks Sw { get; private set; }
+        public static int AddInCookie { get; private set; }
+        public static CommandManager CommandManager { get; private set; }
         public static ModelDoc2 ModelDoc2 { get { return Sw.ActiveDoc; } }
         public static AssemblyDoc AssemblyDoc { get { return Sw.ActiveDoc; } }
         public static PartDoc PartDoc { get { return Sw.ActiveDoc; } }

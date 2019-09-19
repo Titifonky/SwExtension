@@ -1,53 +1,110 @@
-16:46:24,451 | 				-> Parametres chargés
-16:46:24,463 | 
+17:16:31,954 | 				-> Parametres chargés
+17:16:31,965 | 
  
-16:46:24,463 | ====================================================================================================
-16:46:24,463 | |                                                                                                  |
-16:46:24,463 | |                                          DEBUG                                                   |
-16:46:24,463 | |                                                                                                  |
-16:46:24,463 | ====================================================================================================
-16:46:24,463 | 
+17:16:31,965 | ====================================================================================================
+17:16:31,965 | |                                                                                                  |
+17:16:31,965 | |                                          DEBUG                                                   |
+17:16:31,965 | |                                                                                                  |
+17:16:31,965 | ====================================================================================================
+17:16:31,965 | 
  
-16:46:25,482 | 				-> Module [Parametres] sauvegardé
-16:49:06,358 | 				-> ## 04:49:06     0     0      TEST5
-16:49:06,382 | 				-> ## 04:49:06     0     0  ========================
-16:49:06,398 | 				-> ## 04:49:06     0     0  
-16:49:08,115 | 				-> ## 04:49:08     2     2  Décalage : True
-16:49:09,465 | 				-> ## 04:49:09     3     1  Décalage : True
-16:49:10,850 | 				-> ## 04:49:10     5     1  Décalage : True
-16:49:12,031 | 				-> ## 04:49:12     6     1  Décalage : True
-16:49:13,248 | 				-> ## 04:49:13     7     1  Décalage : True
-16:49:14,632 | 				-> ## 04:49:14     8     1  Décalage : True
-16:49:15,732 | 				-> ## 04:49:15     9     1  Décalage : True
-16:49:17,099 | 				-> ## 04:49:17    11     1  Décalage : True
-16:49:18,332 | 				-> ## 04:49:18    12     1  Décalage : True
-16:49:19,582 | 				-> ## 04:49:19    13     1  Décalage : True
-16:49:20,815 | 				-> ## 04:49:20    14     1  Décalage : True
-16:49:22,065 | 				-> ## 04:49:22    16     1  Décalage : True
-16:49:23,482 | 				-> ## 04:49:23    17     1  Décalage : True
-16:49:24,666 | 				-> ## 04:49:24    18     1  Décalage : True
-16:49:25,949 | 				-> ## 04:49:25    20     1  Décalage : True
-16:49:27,276 | 				-> ## 04:49:27    21     1  Décalage : True
-16:49:28,782 | 				-> ## 04:49:28    22     2  Décalage : True
-16:49:30,232 | 				-> ## 04:49:30    24     1  Décalage : True
-16:49:31,765 | 				-> ## 04:49:31    25     2  Décalage : True
-16:49:32,816 | 				-> ## 04:49:32    26     1  Décalage : True
-16:49:34,216 | 				-> ## 04:49:34    28     1  Décalage : True
-16:49:35,516 | 				-> ## 04:49:35    29     1  Décalage : True
-16:49:36,650 | 				-> ## 04:49:36    30     1  Décalage : True
-16:49:38,283 | 				-> ## 04:49:38    32     2  Décalage : True
-16:49:39,650 | 				-> ## 04:49:39    33     1  Décalage : True
-16:49:40,969 | 				-> ## 04:49:40    35     1  Décalage : True
-16:49:42,317 | 				-> ## 04:49:42    36     1  Décalage : True
-16:49:43,534 | 				-> ## 04:49:43    37     1  Décalage : True
-16:49:45,150 | 				-> ## 04:49:45    39     2  Décalage : True
-16:49:46,400 | 				-> ## 04:49:46    40     1  Décalage : True
-16:49:47,866 | 				-> ## 04:49:47    42     1  Décalage : True
-16:49:49,434 | 				-> ## 04:49:49    43     2  Décalage : True
-16:49:50,985 | 				-> ## 04:49:50    45     2  Décalage : True
-16:49:52,752 | 				-> ## 04:49:52    46     2  Décalage : True
-16:49:54,634 | 				-> ## 04:49:54    48     2  Décalage : True
-16:49:55,884 | 				-> ## 04:49:55    50     1  Décalage : True
-16:49:55,884 | 				-> Module [Test5] sauvegardé
-16:49:55,901 | 				-> ## 04:49:55    50     0  Executé en 49s
-16:49:55,917 | 				-> ## 04:49:55    50     0  
+17:16:32,173 | 				-> Fonction Ext supp : False
+17:16:32,174 | 				-> Production supp : False
+17:16:32,182 | 				-> Escalier supp : False
+17:16:32,182 | 				-> Macro supp : False
+17:16:32,182 | 				-> Test supp : False
+17:16:32,183 | 				-> Dvp supp : True
+17:16:32,183 | 				-> Fonction Ext supp : False
+17:16:32,183 | 				-> Production supp : False
+17:16:32,183 | 				-> Escalier supp : False
+17:16:32,184 | 				-> Macro supp : False
+17:16:32,184 | 				-> Test supp : False
+17:16:32,184 | 				-> Dvp supp : True
+17:16:32,184 | 				-> Macro supp : False
+17:16:32,185 | 				-> Dessin supp : True
+17:16:32,190 | 				->    Dvp
+17:16:32,190 | 				->       Création : swCreateCommandGroup_Success
+17:16:32,233 | 				->         Creer les config. dvp-> 41655 // 70000
+17:16:32,233 | 				->         Creer les dvp de tôle-> 41656 // 70001
+17:16:32,233 | 				->    Dessin
+17:16:32,233 | 				->       Création : swCreateCommandGroup_Success
+17:16:32,382 | 				->         Mettre en page les feuilles-> 41657 // 60000
+17:16:32,382 | 				->         Renommer toutes les feuilles-> 41658 // 60001
+17:16:32,382 | 				->         Masquer les corps de la vue-> 41659 // 60002
+17:16:32,382 | 				->         Retourner les Dvps selectionnés-> 41660 // 60003
+17:16:32,382 | 				->         Inverser le style d'affichage-> 41661 // 60004
+17:16:32,382 | 				->         Afficher/Masquer l'esquisse de reperage-> 41662 // 60005
+17:16:32,383 | 				->         Modifier les dvps-> 41663 // 60006
+17:16:32,383 | 				->         Supprimer la gravure-> 41664 // 60007
+17:16:32,383 | 				->         Exporter en Dxf/Dwg-> 41665 // 60008
+17:16:32,383 | 				->         Exporter en Pdf-> 41666 // 60009
+17:16:32,383 | 				->         Redimensionner la feuille-> 41667 // 60010
+17:16:32,383 | 				->         Renommer la feuille-> 41668 // 60011
+17:16:32,383 | 				->         Inserer les quantités-> 41669 // 60012
+17:16:32,383 | 				->         Date du jour-> 41670 // 60013
+17:16:32,383 | 				->    Test
+17:16:32,383 | 				->       Création : swCreateCommandGroup_Success
+17:16:32,466 | 				->         Test1-> 41671 // 50000
+17:16:32,466 | 				->         Test2-> 41672 // 50001
+17:16:32,466 | 				->         Test3-> 41673 // 50002
+17:16:32,466 | 				->         Test4-> 41674 // 50003
+17:16:32,466 | 				->         Test5-> 41675 // 50004
+17:16:32,466 | 				->         Test6-> 41676 // 50005
+17:16:32,466 | 				->         Test7-> 41677 // 50006
+17:16:32,466 | 				->    Macro
+17:16:32,466 | 				->       Création : swCreateCommandGroup_Success
+17:16:32,629 | 				->         Importer des infos-> 41678 // 40000
+17:16:32,629 | 				->         Ouvrir le dossier du composant-> 41679 // 40001
+17:16:32,629 | 				->         Activer/Desactiver l'aimantation-> 41680 // 40002
+17:16:32,629 | 				->         Activer/Desactiver les relation auto-> 41681 // 40003
+17:16:32,629 | 				->         Tout reconstruire-> 41682 // 40004
+17:16:32,629 | 				->         Supp. Config depliee-> 41683 // 40005
+17:16:32,629 | 				->         Lister les materiaux-> 41684 // 40006
+17:16:32,629 | 				->         Inclure/Exclure de la nomenclature-> 41685 // 40007
+17:16:32,629 | 				->         MAJ Liste des pièces soudées-> 41686 // 40008
+17:16:32,629 | 				->         Enregistrer la vue-> 41687 // 40009
+17:16:32,629 | 				->         Mettre à jour la lumière-> 41688 // 40010
+17:16:32,629 | 				->         Nettoyer les blocs-> 41689 // 40011
+17:16:32,629 | 				->         Decompter les perçages-> 41690 // 40012
+17:16:32,629 | 				->         Creer des cellules de Voronoi-> 41691 // 40013
+17:16:32,629 | 				->         Parametres des modules-> 41692 // 40014
+17:16:32,629 | 				->         Afficher le log de debug-> 41693 // 40015
+17:16:32,629 | 				->    Escalier
+17:16:32,629 | 				->       Création : swCreateCommandGroup_Success
+17:16:32,703 | 				->         Inserer l'esquisse à configurer-> 41694 // 30000
+17:16:32,703 | 				->         Positionner les platines-> 41695 // 30001
+17:16:32,703 | 				->         Configurer les platines-> 41696 // 30002
+17:16:32,703 | 				->         Configurer les contremarches-> 41697 // 30003
+17:16:32,703 | 				->         Inserer les marches-> 41698 // 30004
+17:16:32,703 | 				->         Balancer les marches-> 41699 // 30005
+17:16:32,703 | 				->    Production
+17:16:32,703 | 				->       Création : swCreateCommandGroup_Success
+17:16:32,822 | 				->         Repérer les dossiers-> 41700 // 20000
+17:16:32,822 | 				->         Creer les dvp de tôle-> 41701 // 20001
+17:16:32,822 | 				->         Exporter les barres-> 41702 // 20002
+17:16:32,822 | 				->         Commander les profils-> 41703 // 20003
+17:16:32,822 | 				->         Liste de débit-> 41704 // 20004
+17:16:32,822 | 				->         Générer les config. dvp-> 41705 // 20005
+17:16:32,822 | 				->         Afficher le reperage-> 41706 // 20006
+17:16:32,822 | 				->         Controler les repères-> 41707 // 20007
+17:16:32,822 | 				->         Repère du corps-> 41708 // 20008
+17:16:32,822 | 				->         Nettoyer le reperage-> 41709 // 20009
+17:16:32,822 | 				->         Afficher/Masquer Esquisse reperage-> 41710 // 20010
+17:16:32,822 | 				->    Fonction Ext
+17:16:32,822 | 				->       Création : swCreateCommandGroup_Success
+17:16:32,923 | 				->         Créer/Lier les configurations-> 41711 // 10000
+17:16:32,923 | 				->         Contraindre des composants-> 41712 // 10001
+17:16:32,923 | 				->         Inserer les perçages-> 41713 // 10002
+17:16:32,923 | 				->         Empreinte entre les composants-> 41714 // 10003
+17:16:32,923 | 				->         Creer la symetrie de la pièce-> 41715 // 10004
+17:16:32,923 | 				->         Selectionner les corps identiques-> 41716 // 10005
+17:16:32,923 | 				->         Lister les materiaux et les profils-> 41717 // 10006
+17:16:32,923 | 				->         Lister les configs-> 41718 // 10007
+17:16:32,923 | 				->         Lister les percages-> 41719 // 10008
+17:16:32,939 | 				-> Module [Parametres] sauvegardé
+17:16:57,971 | 				-> ## 05:16:57     0     0      INSERER LES PERÇAGES
+17:16:57,988 | 				-> ## 05:16:57     0     0  ========================
+17:16:58,004 | 				-> ## 05:16:58     0     0  
+17:16:58,254 | 				-> ## 05:16:58     0     0  Executé en 0s223
+17:16:58,270 | 				-> ## 05:16:58     0     0  
+17:17:13,529 | 				-> Module [InsererPercage] sauvegardé

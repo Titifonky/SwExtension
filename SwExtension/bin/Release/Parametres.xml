@@ -105,7 +105,7 @@
   <Module name="InsererPercage" intitule="Inserer les perçages">
     <Parametre name="PieceBase" intitule="Selectionnez le composant de reference" tip="" type="System.String">Pièce1</Parametre>
     <Parametre name="Percage" intitule="Selectionnez le composant de perçage" tip="" type="System.String">Pièce2</Parametre>
-    <Parametre name="Diametre" intitule="Diametres des trous :" tip="" type="System.String">0</Parametre>
+    <Parametre name="Diametre" intitule="Diametres des trous :" tip="" type="System.String">10</Parametre>
     <Parametre name="PercageOuvert" intitule="Prendre en compte les perçages ouvert" tip="" type="System.Boolean">False</Parametre>
     <Parametre name="ToutesLesConfig" intitule="Appliquer à toutes les configs" tip="" type="System.Boolean">True</Parametre>
   </Module>
@@ -294,5 +294,9 @@
   <Module name="Test4" intitule="Test4">
   </Module>
   <Module name="Test5" intitule="Test5">
+  </Module>
+  <Module name="Test6" intitule="Test6">
+  </Module>
+  <Module name="Test7" intitule="Test7">
   </Module>
 </Parametres>
