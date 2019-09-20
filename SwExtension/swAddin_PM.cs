@@ -7,6 +7,7 @@ using ModuleExportFichier.ModuleDxfDwg;
 using ModuleExportFichier.ModulePdf;
 using ModuleImporterInfos;
 using ModuleInsererPercage;
+using ModuleInsererPercageTole;
 using ModuleLaser.ModuleCreerConfigDvp;
 using ModuleLaser.ModuleCreerDvp;
 using ModuleLierLesConfigurations;
@@ -44,7 +45,6 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 
 namespace SwExtension
@@ -75,131 +75,141 @@ namespace SwExtension
                 int d = 0;
 
                 //==================================================================================================
-                _Mnu = _eListeMenu.Add(10, "Fonction Ext", "Extension des fonctions Sw");
                 d = 10000;
+                _Mnu = _eListeMenu.Add(d++, "Fonction Ext", "Extension des fonctions Sw");
+                
                 _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde(d + 0, "Lc", typeof(PageLierLesConfigurations));
-                _Mnu.AjouterCmde(d + 1, "Co", typeof(PageContraindreComposant));
+                _Mnu.AjouterCmde(d++, "Lc", typeof(PageLierLesConfigurations));
+                _Mnu.AjouterCmde(d++, "Co", typeof(PageContraindreComposant));
 
                 _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde(d + 2, "Ip", typeof(PageInsererPercage));
-                _Mnu.AjouterCmde(d + 3, "Ep", typeof(PageEmpreinte));
-                _Mnu.AjouterCmde(d + 4, "Sp", typeof(PageCreerSymetrie));
+                _Mnu.AjouterCmde(d++, "Ip", typeof(PageInsererPercage));
+                _Mnu.AjouterCmde(d++, "It", typeof(PageInsererPercageTole));
 
                 _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde(d + 5, "Si", typeof(BoutonSelectionnerCorpsIdentiques));
-                _Mnu.AjouterCmde(d + 6, "Lm", typeof(PageListerMateriaux));
-                _Mnu.AjouterCmde(d + 7, "Lc", typeof(PageListerConfigComp));
-                _Mnu.AjouterCmde(d + 8, "Lp", typeof(PageListerPercage));
+                _Mnu.AjouterCmde(d++, "Ep", typeof(PageEmpreinte));
+                _Mnu.AjouterCmde(d++, "Sp", typeof(PageCreerSymetrie));
+
+                _Mnu.NouveauGroupe();
+                _Mnu.AjouterCmde(d++, "Si", typeof(BoutonSelectionnerCorpsIdentiques));
+                _Mnu.AjouterCmde(d++, "Lm", typeof(PageListerMateriaux));
+                _Mnu.AjouterCmde(d++, "Lc", typeof(PageListerConfigComp));
+                _Mnu.AjouterCmde(d++, "Lp", typeof(PageListerPercage));
 
                 //==================================================================================================
-                _Mnu = _eListeMenu.Add(20, "Production", "Fonctions pour la production laser");
                 d = 20000;
+                _Mnu = _eListeMenu.Add(d++, "Production", "Fonctions pour la production laser");
+                
                 _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde(d + 0, "Rd", typeof(PageRepererDossier));
-                _Mnu.AjouterCmde(d + 1, "Pd", typeof(PageProduireDvp));
-                _Mnu.AjouterCmde(d + 2, "Pb", typeof(PageProduireBarre));
+                _Mnu.AjouterCmde(d++, "Rd", typeof(PageRepererDossier));
+                _Mnu.AjouterCmde(d++, "Pd", typeof(PageProduireDvp));
+                _Mnu.AjouterCmde(d++, "Pb", typeof(PageProduireBarre));
 
                 _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde(d + 3, "Cp", typeof(BoutonCommandeProfil));
-                _Mnu.AjouterCmde(d + 4, "Ld", typeof(PageProduireDebit));
+                _Mnu.AjouterCmde(d++, "Cp", typeof(BoutonCommandeProfil));
+                _Mnu.AjouterCmde(d++, "Ld", typeof(PageProduireDebit));
 
                 _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde(d + 5, "Gd", typeof(PageGenererConfigDvp));
-                _Mnu.AjouterCmde(d + 6, "Ar", typeof(BoutonAfficherReperage));
-                _Mnu.AjouterCmde(d + 7, "Cr", typeof(PageControlerRepere));
-                _Mnu.AjouterCmde(d + 8, "Rc", typeof(PageRepereCorps));
-                _Mnu.AjouterCmde(d + 9, "Nr", typeof(BoutonNettoyerReperage));
-                _Mnu.AjouterCmde(d + 10, "Ae", typeof(BoutonAfficherMasquerEsquisseReperage));
+                _Mnu.AjouterCmde(d++, "Gd", typeof(PageGenererConfigDvp));
+                _Mnu.AjouterCmde(d++, "Ar", typeof(BoutonAfficherReperage));
+                _Mnu.AjouterCmde(d++, "Cr", typeof(PageControlerRepere));
+                _Mnu.AjouterCmde(d++, "Rc", typeof(PageRepereCorps));
+                _Mnu.AjouterCmde(d++, "Nr", typeof(BoutonNettoyerReperage));
+                _Mnu.AjouterCmde(d++, "Ae", typeof(BoutonAfficherMasquerEsquisseReperage));
 
                 //==================================================================================================
-                _Mnu = _eListeMenu.Add(30, "Escalier", "Fonctions d'aide à la création d'escalier");
                 d = 30000;
+                _Mnu = _eListeMenu.Add(d++, "Escalier", "Fonctions d'aide à la création d'escalier");
+                
                 _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde(d + 0, "Ie", typeof(PageInsererEsquisseConfig));
-                _Mnu.AjouterCmde(d + 1, "Pp", typeof(PagePositionnerPlatine));
-                _Mnu.AjouterCmde(d + 2, "Cp", typeof(PageConfigurerPlatine));
-                _Mnu.AjouterCmde(d + 3, "Cc", typeof(PageConfigurerContreMarche));
+                _Mnu.AjouterCmde(d++, "Ie", typeof(PageInsererEsquisseConfig));
+                _Mnu.AjouterCmde(d++, "Pp", typeof(PagePositionnerPlatine));
+                _Mnu.AjouterCmde(d++, "Cp", typeof(PageConfigurerPlatine));
+                _Mnu.AjouterCmde(d++, "Cc", typeof(PageConfigurerContreMarche));
 
                 _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde(d + 4, "Im", typeof(PageInsererMarches));
-                _Mnu.AjouterCmde(d + 5, "Bm", typeof(PageBalancerMarches));
+                _Mnu.AjouterCmde(d++, "Im", typeof(PageInsererMarches));
+                _Mnu.AjouterCmde(d++, "Bm", typeof(PageBalancerMarches));
 
                 //==================================================================================================
-                _Mnu = _eListeMenu.Add(40, "Macro", "Macro Sw");
                 d = 40000;
+                _Mnu = _eListeMenu.Add(d++, "Macro", "Macro Sw");
+                
                 _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde(d + 0, "If", typeof(PageImporterInfos));
-                _Mnu.AjouterCmde(d + 1, "OD", typeof(BoutonOuvrirDossier));
-                _Mnu.AjouterCmde(d + 2, "AA", typeof(BoutonActiverAimantation), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
-                _Mnu.AjouterCmde(d + 3, "AR", typeof(BoutonActiverRelationAuto), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
+                _Mnu.AjouterCmde(d++, "If", typeof(PageImporterInfos));
+                _Mnu.AjouterCmde(d++, "OD", typeof(BoutonOuvrirDossier));
+                _Mnu.AjouterCmde(d++, "AA", typeof(BoutonActiverAimantation), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
+                _Mnu.AjouterCmde(d++, "AR", typeof(BoutonActiverRelationAuto), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
 
                 _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde(d + 4, "Tr", typeof(BoutonToutReconstruire), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
-                _Mnu.AjouterCmde(d + 5, "Sc", typeof(BoutonSupprimerConfigDepliee), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
-                _Mnu.AjouterCmde(d + 6, "Lm", typeof(BoutonListerMateriaux), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
-                _Mnu.AjouterCmde(d + 7, "En", typeof(BoutonExclureNomenclature), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
-                _Mnu.AjouterCmde(d + 8, "Ma", typeof(BoutonMAJListePiecesSoudees), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
-                _Mnu.AjouterCmde(d + 9, "Ev", typeof(BoutonEnregistrerVue), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
-                _Mnu.AjouterCmde(d + 10, "Ml", typeof(PageLumiere), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
-                _Mnu.AjouterCmde(d + 11, "Nb", typeof(BoutonNettoyerBlocs), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
+                _Mnu.AjouterCmde(d++, "Tr", typeof(BoutonToutReconstruire), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
+                _Mnu.AjouterCmde(d++, "Sc", typeof(BoutonSupprimerConfigDepliee), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
+                _Mnu.AjouterCmde(d++, "Lm", typeof(BoutonListerMateriaux), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
+                _Mnu.AjouterCmde(d++, "En", typeof(BoutonExclureNomenclature), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
+                _Mnu.AjouterCmde(d++, "Ma", typeof(BoutonMAJListePiecesSoudees), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
+                _Mnu.AjouterCmde(d++, "Ev", typeof(BoutonEnregistrerVue), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
+                _Mnu.AjouterCmde(d++, "Ml", typeof(PageLumiere), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
+                _Mnu.AjouterCmde(d++, "Nb", typeof(BoutonNettoyerBlocs), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
 
                 _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde(d + 12, "Cp", typeof(BoutonDecompterPercage), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
-                _Mnu.AjouterCmde(d + 13, "Vr", typeof(CmdVoronoi), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
+                _Mnu.AjouterCmde(d++, "Cp", typeof(BoutonDecompterPercage), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
+                _Mnu.AjouterCmde(d++, "Vr", typeof(CmdVoronoi), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
 
                 _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde(d + 14, "PM", typeof(PageParametres));
-                _Mnu.AjouterCmde(d + 15, "Al", typeof(BoutonAfficherLogDebug));
+                _Mnu.AjouterCmde(d++, "PM", typeof(PageParametres));
+                _Mnu.AjouterCmde(d++, "Al", typeof(BoutonAfficherLogDebug));
 
                 //==================================================================================================
-                _Mnu = _eListeMenu.Add(50, "Test", "Macro Test");
                 d = 50000;
+                _Mnu = _eListeMenu.Add(d++, "Test", "Macro Test");
+                
                 _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde(d + 0, "T1", typeof(Test1), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
-                _Mnu.AjouterCmde(d + 1, "T2", typeof(Test2), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
-                _Mnu.AjouterCmde(d + 2, "T3", typeof(Test3), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
+                _Mnu.AjouterCmde(d++, "T1", typeof(Test1), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
+                _Mnu.AjouterCmde(d++, "T2", typeof(Test2), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
+                _Mnu.AjouterCmde(d++, "T3", typeof(Test3), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
 
                 _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde(d + 3, "T4", typeof(Test4), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
-                _Mnu.AjouterCmde(d + 4, "T5", typeof(Test5), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
-                _Mnu.AjouterCmde(d + 5, "T6", typeof(Test6), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
+                _Mnu.AjouterCmde(d++, "T4", typeof(Test4), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
+                _Mnu.AjouterCmde(d++, "T5", typeof(Test5), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
+                _Mnu.AjouterCmde(d++, "T6", typeof(Test6), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
 
                 _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde(d + 6, "T7", typeof(Test7), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
+                _Mnu.AjouterCmde(d++, "T7", typeof(Test7), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
 
 
                 //==================================================================================================
-                _Mnu = _eListeMenu.Add(60, "Dessin", "Dessin Sw");
                 d = 60000;
+                _Mnu = _eListeMenu.Add(d++, "Dessin", "Dessin Sw");
+                
                 _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde(d + 0, "Mp", typeof(BoutonMettreEnPage));
-                _Mnu.AjouterCmde(d + 1, "Rt", typeof(BoutonRenommerToutesFeuilles));
-                _Mnu.AjouterCmde(d + 2, "Mv", typeof(BoutonMasquerCorpsVue));
-                _Mnu.AjouterCmde(d + 3, "Rv", typeof(BoutonRetournerDvp));
-                _Mnu.AjouterCmde(d + 4, "Is", typeof(BoutonVueInverserStyle));
-                _Mnu.AjouterCmde(d + 5, "Er", typeof(BoutonAfficherEsquisseAssemblage));
-                _Mnu.AjouterCmde(d + 6, "Md", typeof(PageModifierDvp));
-                _Mnu.AjouterCmde(d + 7, "Sg", typeof(BoutonSupprimerGravure));
+                _Mnu.AjouterCmde(d++, "Mp", typeof(BoutonMettreEnPage));
+                _Mnu.AjouterCmde(d++, "Rt", typeof(BoutonRenommerToutesFeuilles));
+                _Mnu.AjouterCmde(d++, "Mv", typeof(BoutonMasquerCorpsVue));
+                _Mnu.AjouterCmde(d++, "Rv", typeof(BoutonRetournerDvp));
+                _Mnu.AjouterCmde(d++, "Is", typeof(BoutonVueInverserStyle));
+                _Mnu.AjouterCmde(d++, "Er", typeof(BoutonAfficherEsquisseAssemblage));
+                _Mnu.AjouterCmde(d++, "Md", typeof(PageModifierDvp));
+                _Mnu.AjouterCmde(d++, "Sg", typeof(BoutonSupprimerGravure));
 
                 _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde(d + 8, "Ed", typeof(PageDxfDwg));
-                _Mnu.AjouterCmde(d + 9, "Ep", typeof(PagePdf));
+                _Mnu.AjouterCmde(d++, "Ed", typeof(PageDxfDwg));
+                _Mnu.AjouterCmde(d++, "Ep", typeof(PagePdf));
 
                 _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde(d + 10, "Rf", typeof(BoutonRedimensionnerFeuille));
-                _Mnu.AjouterCmde(d + 11, "Rn", typeof(BoutonRenommerFeuille));
+                _Mnu.AjouterCmde(d++, "Rf", typeof(BoutonRedimensionnerFeuille));
+                _Mnu.AjouterCmde(d++, "Rn", typeof(BoutonRenommerFeuille));
 
                 _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde(d + 12, "Nt", typeof(PageInsererNote));
-                _Mnu.AjouterCmde(d + 13, "Dj", typeof(BoutonDateDuJour));
+                _Mnu.AjouterCmde(d++, "Nt", typeof(PageInsererNote));
+                _Mnu.AjouterCmde(d++, "Dj", typeof(BoutonDateDuJour));
 
                 //==================================================================================================
-                _Mnu = _eListeMenu.Add(70, "Dvp", "Export des dvps");
                 d = 70000;
+                _Mnu = _eListeMenu.Add(d++, "Dvp", "Export des dvps");
+                
                 _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde(d + 0, "Cd", typeof(PageCreerConfigDvp));
-                _Mnu.AjouterCmde(d + 1, "Dv", typeof(PageCreerDvp));
+                _Mnu.AjouterCmde(d++, "Cd", typeof(PageCreerConfigDvp));
+                _Mnu.AjouterCmde(d++, "Dv", typeof(PageCreerDvp));
 
                 _eListeMenu.CreerMenus();
 

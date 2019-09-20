@@ -109,6 +109,8 @@
     <Compile Include="Macros\Test3.cs" />
     <Compile Include="ModuleCreerSymetrie\CmdCreerSymetrie.cs" />
     <Compile Include="ModuleCreerSymetrie\PageCreerSymetrie.cs" />
+    <Compile Include="ModuleInsererPercageTole\CmdInsererPercageTole.cs" />
+    <Compile Include="ModuleInsererPercageTole\PageInsererPercageTole.cs" />
     <Compile Include="ModuleLumiere\CmdLumiere.cs" />
     <Compile Include="ModuleLumiere\PageLumiere.cs" />
     <Compile Include="ModuleProduction\BoutonAfficherMasquerEsquisseReperage.cs" />

@@ -8,29 +8,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace ModuleInsererPercage
+namespace ModuleInsererPercageTole
 {
     [ModuleTypeDocContexte(eTypeDoc.Assemblage),
-        ModuleTitre("Inserer les perçages"),
-        ModuleNom("InsererPercage"),
-        ModuleDescription("Inserer les perçages")
+        ModuleTitre("Inserer les perçages sur des toles"),
+        ModuleNom("InsererPercageTole"),
+        ModuleDescription("Inserer les perçages sur des toles")
         ]
-    public class PageInsererPercage : BoutonPMPManager
+    public class PageInsererPercageTole : BoutonPMPManager
     {
         private Parametre _pPieceBase;
         private Parametre _pPercage;
         private Parametre _pDiametre;
         private Parametre _pPercageOuvert;
-        private Parametre _pToutesLesConfig;
 
-        public PageInsererPercage()
+        public PageInsererPercageTole()
         {
             _pPieceBase = _Config.AjouterParam("PieceBase", "PP01", "Selectionnez le composant de reference");
             _pPercage = _Config.AjouterParam("Percage", "PX50", "Selectionnez le composant de perçage");
             _pDiametre = _Config.AjouterParam("Diametre", "0", "Diametres des trous :");
             _pPercageOuvert = _Config.AjouterParam("PercageOuvert", false, "Prendre en compte les perçages ouvert");
-
-            _pToutesLesConfig = _Config.AjouterParam("ToutesLesConfig", false, "Appliquer à toutes les configs");
 
             OnCalque += Calque;
             OnRunOkCommand += RunOkCommand;
@@ -38,11 +35,9 @@ namespace ModuleInsererPercage
 
         private CtrlSelectionBox _Select_Base;
         private CtrlSelectionBox _Select_Percage;
-        private CtrlSelectionBox _Select_Entite_Contrainte;
         private CtrlTextBox _Text_Diametre;
         private CtrlCheckBox _Check_PercageOuvert;
 
-        private CtrlCheckBox _CheckBox_ToutesLesConfig;
         private CtrlCheckBox _CheckBox_EnregistrerSelection;
         private CtrlButton _Button_Preselection;
 
@@ -53,7 +48,6 @@ namespace ModuleInsererPercage
                 Groupe G;
                 G = _Calque.AjouterGroupe("Appliquer");
 
-                _CheckBox_ToutesLesConfig = G.AjouterCheckBox(_pToutesLesConfig);
                 _CheckBox_EnregistrerSelection = G.AjouterCheckBox("Enregistrer les selections");
                 _Button_Preselection = G.AjouterBouton("Preselectionner");
                 _Button_Preselection.OnButtonPress += delegate (object sender) { PreSelection(); };
@@ -80,25 +74,11 @@ namespace ModuleInsererPercage
 
                 _Select_Base.OnApplyOnSelection += _Select_Percage.GainedFocus;
 
-                G = _Calque.AjouterGroupe("Plan ou face pour la contrainte de base"
-                                            + "\r\n  Aucun(e) pour contraindre sur une face adjacente au trou"
-                                            + "\r\n  Une face pour inserer seulement sur les trous de celle ci");
-
-                _Select_Entite_Contrainte = G.AjouterSelectionBox("Selectionnez le plan ou la face");
-                _Select_Entite_Contrainte.SelectionMultipleMemeEntite = false;
-                _Select_Entite_Contrainte.SelectionDansMultipleBox = false;
-                _Select_Entite_Contrainte.UneSeuleEntite = false;
-                _Select_Entite_Contrainte.FiltreSelection(swSelectType_e.swSelDATUMPLANES, swSelectType_e.swSelFACES);
-
-                _Select_Percage.OnApplyOnSelection += _Select_Entite_Contrainte.GainedFocus;
-
                 G = _Calque.AjouterGroupe("Diametres des trous à contraindre en mm"
                                            + "\r\n  0 ou vide pour tout les perçages"
                                            + "\r\n  Valeurs séparés par une virgule");
 
                 _Text_Diametre = G.AjouterTexteBox(_pDiametre, false);
-
-                _Select_Entite_Contrainte.OnApplyOnSelection += _Text_Diametre.GainedFocus;
 
                 G = _Calque.AjouterGroupe("Supprimer le perçage de base");
 
@@ -117,13 +97,6 @@ namespace ModuleInsererPercage
             Component2 Cp = MdlBase.eSelect_RecupererComposant(1, ((CtrlSelectionBox)SelBox).Marque);
             if (Cp.IsRef() && _CheckBox_EnregistrerSelection.IsChecked)
                 Param.SetValeur(Cp.eNomSansExt());
-        }
-
-        public void SvgNomFonction(Object SelBox, Parametre Param)
-        {
-            Feature F = MdlBase.eSelect_RecupererObjet<Feature>(1, ((CtrlSelectionBox)SelBox).Marque);
-            if (F.IsRef() && _CheckBox_EnregistrerSelection.IsChecked)
-                Param.SetValeur(F.Name);
         }
 
         protected void PreSelection()
@@ -153,16 +126,13 @@ namespace ModuleInsererPercage
 
         protected void RunOkCommand()
         {
-            CmdInsererPercage Cmd = new CmdInsererPercage
+            CmdInsererPercageTole Cmd = new CmdInsererPercageTole
             {
                 MdlBase = MdlBase,
                 CompBase = MdlBase.eSelect_RecupererComposant(1, _Select_Base.Marque),
                 CompPercage = MdlBase.eSelect_RecupererComposant(1, _Select_Percage.Marque),
-                Face = MdlBase.eSelect_RecupererObjet<Face2>(1, _Select_Entite_Contrainte.Marque),
-                Plan = MdlBase.eSelect_RecupererObjet<Feature>(1, _Select_Entite_Contrainte.Marque),
                 ListeDiametre = new List<double>(_Text_Diametre.Text.Split(',').Select(x => { return x.Trim().eToDouble(); })),
-                PercageOuvert = _Check_PercageOuvert.IsChecked,
-                SurTouteLesConfigs = _CheckBox_ToutesLesConfig.IsChecked
+                PercageOuvert = _Check_PercageOuvert.IsChecked
             };
 
             MdlBase.ClearSelection2(true);

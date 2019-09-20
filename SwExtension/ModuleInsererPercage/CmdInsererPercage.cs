@@ -11,19 +11,26 @@ namespace ModuleInsererPercage
 {
     public class CmdInsererPercage : Cmd
     {
-        public ModelDoc2 MdlBase = null;
-        public Component2 Base = null;
-        public Component2 Percage = null;
+        private ModelDoc2 _MdlBase;
+        private AssemblyDoc _AssBase = null;
+        public ModelDoc2 MdlBase
+        {
+            get { return _MdlBase; }
+            set { _MdlBase = value; _AssBase = value.eAssemblyDoc(); }
+        }
+
+        public Component2 CompBase = null;
+        public Component2 CompPercage = null;
         public Face2 Face = null;
         public Feature Plan = null;
         public List<Double> ListeDiametre = new List<double>() { 0 };
         public Boolean PercageOuvert = false;
         public Boolean SurTouteLesConfigs = false;
 
+        
         private String _NomConfigCourante = "";
         private String _NomConfigActive = "";
 
-        private AssemblyDoc _Ass = null;
         private Dictionary<String, String> _ListePercage = new Dictionary<String, String>();
 
         private Dictionary<String, List<String>> _DicConfigWithComp = new Dictionary<string, List<String>>();
@@ -32,26 +39,24 @@ namespace ModuleInsererPercage
         {
             try
             {
-                _Ass = MdlBase.eAssemblyDoc();
-
-                _NomConfigCourante = MdlBase.ConfigurationManager.ActiveConfiguration.Name;
-
-                var pidBase = new SwObjectPID<Component2>(Base, MdlBase);
-                var pidFace = new SwObjectPID<Face2>(Face, MdlBase);
-                var pidPlan = new SwObjectPID<Feature>(Plan, MdlBase);
-
-                AjouterPercage(Percage);
+                AjouterPercage(CompPercage);
 
                 if (SurTouteLesConfigs)
                 {
-                    List<String> ListeNomsConfig = MdlBase.eListeNomConfiguration(eTypeConfig.DeBase);
+                    _NomConfigCourante = _MdlBase.ConfigurationManager.ActiveConfiguration.Name;
+
+                    var pidBase = new SwObjectPID<Component2>(CompBase, _MdlBase);
+                    var pidFace = new SwObjectPID<Face2>(Face, _MdlBase);
+                    var pidPlan = new SwObjectPID<Feature>(Plan, _MdlBase);
+
+                    List<String> ListeNomsConfig = _MdlBase.eListeNomConfiguration(eTypeConfig.DeBase);
 
                     foreach (String NomConfig in ListeNomsConfig)
                     {
-                        MdlBase.ShowConfiguration2(NomConfig);
-                        MdlBase.EditRebuild3();
+                        _MdlBase.ShowConfiguration2(NomConfig);
+                        _MdlBase.EditRebuild3();
 
-                        Configuration Conf = MdlBase.GetConfigurationByName(NomConfig);
+                        Configuration Conf = _MdlBase.GetConfigurationByName(NomConfig);
                         Conf.SuppressNewFeatures = true;
                         //Conf.eSetSupprimerNouvellesFonctions(true, MdlBase);
                     }
@@ -59,14 +64,14 @@ namespace ModuleInsererPercage
                     foreach (String NomConfig in ListeNomsConfig)
                     {
                         _NomConfigActive = NomConfig;
-                        MdlBase.ShowConfiguration2(NomConfig);
-                        MdlBase.EditRebuild3();
+                        _MdlBase.ShowConfiguration2(NomConfig);
+                        _MdlBase.EditRebuild3();
 
-                        pidBase.Maj(ref Base);
+                        pidBase.Maj(ref CompBase);
                         pidFace.Maj(ref Face);
                         pidPlan.Maj(ref Plan);
 
-                        Run(Base, Face, Plan);
+                        Run(CompBase);
                     }
 
                     InsererDansUnDossier();
@@ -74,35 +79,32 @@ namespace ModuleInsererPercage
                     foreach (String NomConfig in ListeNomsConfig)
                     {
                         _NomConfigActive = NomConfig;
-                        MdlBase.ShowConfiguration2(NomConfig);
-                        MdlBase.EditRebuild3();
+                        _MdlBase.ShowConfiguration2(NomConfig);
+                        _MdlBase.EditRebuild3();
 
                         List<String> ListeComp = _DicConfigWithComp[NomConfig];
                         foreach (String NomComp in _ListePercage.Keys)
                         {
                             if (!ListeComp.Contains(NomComp))
                             {
-                                MdlBase.eSelectByIdComp(_ListePercage[NomComp]);
-                                _Ass.eModifierEtatComposant(swComponentSuppressionState_e.swComponentSuppressed);
-                                MdlBase.eEffacerSelection();
+                                _MdlBase.eSelectByIdComp(_ListePercage[NomComp]);
+                                _AssBase.eModifierEtatComposant(swComponentSuppressionState_e.swComponentSuppressed);
+                                _MdlBase.eEffacerSelection();
                             }
                         }
                     }
 
-                    MdlBase.ShowConfiguration2(_NomConfigCourante);
+                    _MdlBase.ShowConfiguration2(_NomConfigCourante);
                 }
                 else
                 {
-                    Run(Base, Face, Plan);
-
+                    Run(CompBase);
                     InsererDansUnDossier();
                 }
 
-
                 // On met les percages dans un dossier, c'est plus propre
 
-
-                MdlBase.EditRebuild3();
+                _MdlBase.EditRebuild3();
             }
             catch (Exception e)
             {
@@ -110,7 +112,7 @@ namespace ModuleInsererPercage
             }
         }
 
-        private void Run(Component2 cBase, Face2 face, Feature plan)
+        private void Run(Component2 cBase)
         {
             if (cBase == null)
             {
@@ -122,7 +124,6 @@ namespace ModuleInsererPercage
             try
             {
                 List<Body2> ListeCorps = cBase.eListeCorps();
-
                 List<Face2> ListeFace = new List<Face2>();
 
                 // Recherche des faces cylindriques
@@ -135,7 +136,6 @@ namespace ModuleInsererPercage
                         {
                             if (PercageOuvert || (F.GetLoopCount() > 1))
                             {
-
                                 // Si le diametre == 0 on recupère toutes les faces
                                 if ((ListeDiametre.Count == 1) && (ListeDiametre[0] == 0))
                                 {
@@ -159,13 +159,10 @@ namespace ModuleInsererPercage
                 }
 
                 // S'il n'y a pas assez de composant de perçage, on en rajoute
-
                 while (_ListePercage.Count < ListeFace.Count)
-                {
                     AjouterPercage();
-                }
 
-                MdlBase.EditRebuild3();
+                _MdlBase.EditRebuild3();
 
                 // Mise à jour des références des perçages
                 //ReinitialiserRefListe(ref _ListePercage);
@@ -183,12 +180,12 @@ namespace ModuleInsererPercage
                 for (int i = 0; i < ListeFace.Count; i++)
                 {
                     String NomComp = ListeNomComp[i];
-                    Component2 Comp = _Ass.GetComponentByName(NomComp);
+                    Component2 Comp = _AssBase.GetComponentByName(NomComp);
                     // On active le composant au cas ou :)
 
-                    MdlBase.eSelectByIdComp(_ListePercage[NomComp]);
-                    _Ass.eModifierEtatComposant(swComponentSuppressionState_e.swComponentResolved);
-                    MdlBase.eEffacerSelection();
+                    _MdlBase.eSelectByIdComp(_ListePercage[NomComp]);
+                    _AssBase.eModifierEtatComposant(swComponentSuppressionState_e.swComponentResolved);
+                    _MdlBase.eEffacerSelection();
 
                     Face2 Cylindre = ListeFace[i];
 
@@ -196,7 +193,7 @@ namespace ModuleInsererPercage
 
                     //DesactiverContrainte(Comp);
 
-                    MdlBase.ClearSelection2(true);
+                    _MdlBase.ClearSelection2(true);
 
                     if (Plan.IsRef())
                         Plan.eSelect();
@@ -226,13 +223,13 @@ namespace ModuleInsererPercage
                     fPlan.eSelect(true);
 
                     int longstatus = 0;
-                    _Ass.AddMate5((int)swMateType_e.swMateCOINCIDENT,
+                    _AssBase.AddMate5((int)swMateType_e.swMateCOINCIDENT,
                                     (int)swMateAlign_e.swMateAlignCLOSEST,
                                     false,
                                     0, 0, 0, 0, 0, 0, 0, 0,
                                     false, false, 0, out longstatus);
 
-                    MdlBase.eEffacerSelection();
+                    _MdlBase.eEffacerSelection();
 
                     Cylindre.eSelectEntite();
 
@@ -240,13 +237,13 @@ namespace ModuleInsererPercage
 
                     fFace.eSelectEntite(true);
 
-                    _Ass.AddMate5((int)swMateType_e.swMateCONCENTRIC,
+                    _AssBase.AddMate5((int)swMateType_e.swMateCONCENTRIC,
                                     (int)swMateAlign_e.swMateAlignCLOSEST,
                                     false,
                                     0, 0, 0, 0, 0, 0, 0, 0,
                                     false, true, 0, out longstatus);
 
-                    MdlBase.eEffacerSelection();
+                    _MdlBase.eEffacerSelection();
 
                 }
 
@@ -267,18 +264,18 @@ namespace ModuleInsererPercage
 
             if (comp.IsNull())
             {
-                Comp = _Ass.AddComponent5(Percage.GetPathName(),
+                Comp = _AssBase.AddComponent5(CompPercage.GetPathName(),
                                                             (int)swAddComponentConfigOptions_e.swAddComponentConfigOptions_CurrentSelectedConfig,
                                                             "",
                                                             true,
-                                                            Percage.eNomConfiguration(),
+                                                            CompPercage.eNomConfiguration(),
                                                             0, 0, 0);
 
             }
 
-            MdlBase.eSelectByIdComp(Comp.GetSelectByIDString());
-            _Ass.eModifierEtatComposant(swComponentSuppressionState_e.swComponentResolved);
-            MdlBase.eEffacerSelection();
+            _MdlBase.eSelectByIdComp(Comp.GetSelectByIDString());
+            _AssBase.eModifierEtatComposant(swComponentSuppressionState_e.swComponentResolved);
+            _MdlBase.eEffacerSelection();
 
             _ListePercage.Add(Comp.Name2, Comp.GetSelectByIDString());
         }
@@ -290,11 +287,11 @@ namespace ModuleInsererPercage
             foreach (Mate2 M in Liste)
             {
                 Feature F = M as Feature;
-                F.eSelectionnerById2(MdlBase);
-                MdlBase.EditSuppress2();
+                F.eSelectionnerById2(_MdlBase);
+                _MdlBase.EditSuppress2();
             }
 
-            MdlBase.ClearSelection2(true);
+            _MdlBase.ClearSelection2(true);
         }
 
         private void InsererDansUnDossier()
@@ -302,17 +299,17 @@ namespace ModuleInsererPercage
 
             if (_ListePercage.Count > 0)
             {
-                MdlBase.eEffacerSelection();
+                _MdlBase.eEffacerSelection();
 
                 foreach (String NomCompSelection in _ListePercage.Values)
                 {
-                    MdlBase.eSelectByIdComp(NomCompSelection,-1, true);
+                    _MdlBase.eSelectByIdComp(NomCompSelection,-1, true);
                 }
 
-                Feature fDossier = MdlBase.FeatureManager.InsertFeatureTreeFolder2((int)swFeatureTreeFolderType_e.swFeatureTreeFolder_Containing);
+                Feature fDossier = _MdlBase.FeatureManager.InsertFeatureTreeFolder2((int)swFeatureTreeFolderType_e.swFeatureTreeFolder_Containing);
                 fDossier.Name = "Percage";
 
-                MdlBase.eEffacerSelection();
+                _MdlBase.eEffacerSelection();
             }
         }
 

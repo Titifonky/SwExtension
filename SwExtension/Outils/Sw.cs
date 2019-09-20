@@ -782,6 +782,13 @@ namespace Outils
             mdl.ViewZoomtofit2();
         }
 
+        public static void eActiverManager(this ModelDoc2 mdl, Boolean activer)
+        {
+            mdl.FeatureManager.EnableFeatureTree = activer;
+            mdl.FeatureManager.EnableFeatureTreeWindow = activer;
+            mdl.ConfigurationManager.EnableConfigurationTree = activer;
+        }
+
         //========================================================================================
 
         public static String eNomSansExt(this Component2 cp)
@@ -2362,7 +2369,7 @@ namespace Outils
             return pListeFonctions;
         }
 
-        public static List<Feature> eListeFonctions(this Body2 corps, Predicate<Feature> filtre, Boolean sousFonction = false)
+        public static List<Feature> eListeFonctions(this Body2 corps, Predicate<Feature> filtre = null, Boolean sousFonction = false)
         {
             return corps.eListeFonctionsBase(filtre, sousFonction, false);
         }
