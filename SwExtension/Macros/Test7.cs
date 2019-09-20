@@ -25,6 +25,10 @@ namespace Macros
             {
                 try
                 {
+                    if (MdlBase.eSelect_RecupererTypeObjet() != e_swSelectType.swSelFACES)
+                        return;
+
+                    var face = MdlBase.eSelect_RecupererObjet<Face2>(1);
                     
 
                 }

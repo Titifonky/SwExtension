@@ -136,7 +136,7 @@ namespace ModuleProduction.ModuleRepererDossier
 
                 MdlBase.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
 
-                MdlBase.pActiverManager(false);
+                MdlBase.eActiverManager(false);
 
                 WindowLog.SautDeLigne();
                 WindowLog.Ecrire("Debut du repérage");
@@ -153,7 +153,7 @@ namespace ModuleProduction.ModuleRepererDossier
                 {
                     mdl.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
 
-                    mdl.pActiverManager(false);
+                    mdl.eActiverManager(false);
 
                     // On met à jour les options
                     AppliqueOptionListeDePiecesSoudees(mdl);
@@ -326,12 +326,12 @@ namespace ModuleProduction.ModuleRepererDossier
                     mdl.ePropAdd(CONST_PRODUCTION.PIECE_ID_DOSSIERS, String.Join(" ", HashPieceIdDossiers));
                     mdl.ePropAdd(CONST_PRODUCTION.MAX_INDEXDIM, IndexDimension);
 
-                    mdl.pActiverManager(true);
+                    mdl.eActiverManager(true);
                     mdl.eSauver();
                     mdl.eFermerSiDifferent(MdlBase);
                 }
 
-                MdlBase.pActiverManager(true);
+                MdlBase.eActiverManager(true);
                 MdlBase.eActiver(swRebuildOnActivation_e.swRebuildActiveDoc);
                 MdlBase.EditRebuild3();
                 MdlBase.eSauver();

@@ -2730,14 +2730,10 @@ namespace Outils
         {
             List<Loop2> Liste = new List<Loop2>();
 
-            Object[] Loop = (Object[])f.GetLoops();
-
-            foreach (Loop2 L in Loop)
+            foreach (Loop2 L in (Object[])f.GetLoops())
             {
                 if (filtreTest.IsNull() || filtreTest(L))
-                {
                     Liste.Add(L);
-                }
             }
 
             return Liste;
@@ -2752,9 +2748,7 @@ namespace Outils
         {
             List<CoEdge> Liste = new List<CoEdge>();
 
-            Object[] CoEdge = (Object[])l.GetCoEdges();
-
-            foreach (CoEdge C in CoEdge)
+            foreach (CoEdge C in (Object[])l.GetCoEdges())
                 Liste.Add(C);
 
             return Liste;
@@ -2777,8 +2771,17 @@ namespace Outils
         public static Double eLgArrete(this Edge e)
         {
             Curve Courbe = e.GetCurve();
-            Courbe.GetEndParams(out Double Start, out Double End, out _, out _);
-            return Courbe.GetLength3(Start, End);
+            var param = (CurveParamData)e.GetCurveParams3();
+            var start = param.UMinValue;
+            var end = param.UMaxValue;
+            if(!param.Sense)
+            {
+                var t = end * -1;
+                end = start * -1;
+                start = t;
+            }
+
+            return Courbe.GetLength3(start, end);
         }
 
         public static ePoint ePointDepart(this Curve c)
@@ -4473,7 +4476,40 @@ namespace Outils
         public Double Y { get; set; }
         public Double Z { get; set; }
 
-        public void Scalaire(Double f)
+        public void Ajouter(eVecteur v)
+        {
+            X += v.X; Y += v.Y; Z += v.Z;
+        }
+
+        public Double Norme
+        {
+            get
+            {
+                return Math.Sqrt(Math.Pow(X, 2) + Math.Pow(Y, 2) + Math.Pow(Z, 2));
+            }
+        }
+
+        public void Normaliser()
+        {
+            Double Lg = Norme;
+            X /= Lg;
+            Y /= Lg;
+            Z /= Lg;
+        }
+
+        public eVecteur Unitaire()
+        {
+            Double Lg = Norme;
+
+            eVecteur prod = new eVecteur(
+                X / Lg,
+                Y / Lg,
+                Z / Lg);
+
+            return prod;
+        }
+
+        public void Multiplier(Double f)
         {
             X *= f; Y *= f; Z *= f;
         }
@@ -4481,6 +4517,48 @@ namespace Outils
         public eVecteur VecteurScalaire(Double f)
         {
             return new eVecteur(X * f, Y * f, Z * f);
+        }
+
+        public eVecteur Vectoriel(eVecteur v)
+        {
+            var prod = new eVecteur(
+                Y * v.Z - Z * v.Y,
+                Z * v.X - X * v.Z,
+                X * v.Y - Y * v.X);
+
+            return prod;
+        }
+
+        public eVecteur Compose(eVecteur v)
+        {
+            eVecteur C = new eVecteur(X, Y, Z);
+            C.Ajouter(v);
+            return C;
+        }
+
+        public Boolean EstColineaire(eVecteur v, Double arrondi = 1E-10, Boolean prendreEnCompteSens = true)
+        {
+            var result = false;
+
+            var v1 = Unitaire();
+            var v2 = v.Unitaire();
+
+            var vn = v1.Vectoriel(v2);
+
+            if (vn.Norme < arrondi)
+            {
+                if (prendreEnCompteSens)
+                {
+                    // Si on aditionne les deux vecteurs et que la norme est supérieur à 0
+                    // c'est qu'ils ne sont pas opposé
+                    if (v1.Compose(v2).Norme > arrondi)
+                        result = true;
+                }
+                else
+                    result = true;
+            }
+
+            return result;
         }
     }
 

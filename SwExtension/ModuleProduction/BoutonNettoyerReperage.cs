@@ -142,7 +142,7 @@ namespace ModuleProduction
             {
                 if (mdl.TypeDoc() != eTypeDoc.Piece) continue;
 
-                mdl.pActiverManager(false);
+                mdl.eActiverManager(false);
 
                 foreach (Configuration Cf in mdl.eListeConfigs(eTypeConfig.Depliee))
                     Cf.eSupprimerConfigAvecEtatAff(mdl);
@@ -178,7 +178,7 @@ namespace ModuleProduction
                     }
                 }
 
-                mdl.pActiverManager(true);
+                mdl.eActiverManager(true);
 
                 mdl.eFermerSiDifferent(MdlBase);
             }

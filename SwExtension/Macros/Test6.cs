@@ -29,22 +29,13 @@ namespace Macros
                     return;
 
                 var face = MdlBase.eSelect_RecupererObjet<Face2>();
-                var comp = MdlBase.eSelect_RecupererComposant();
 
                 FaceBase = face;
                 MdlBase.eEffacerSelection();
 
-                WindowLog.Ecrire("Recherche du corps du composant");
-
                 var corps = (Body2)face.GetBody();
 
-                WindowLog.Ecrire(corps.Name);
-
-                corps = comp.eChercherCorps(corps.Name, false);
-
-                WindowLog.Ecrire(corps.Name);
-
-                Lancer(corps, comp);
+                Lancer(corps);
 
             }
             catch (Exception e)
@@ -53,28 +44,77 @@ namespace Macros
             }
         }
 
-        private void Lancer(Body2 corps, Component2 comp)
+        private void Lancer(Body2 corps)
         {
-            Face2 faceBase = null;
-            var listeFunction = (object[])corps.GetFeatures();
+            MdlBase.eEffacerSelection();
+
+            var faceBase = eFaceFixe(corps);
+
+            var liste = new List<Face2>();
+
+            eFacesTangentes(faceBase, ref liste);
+
+            foreach (var face in liste)
+                face.eSelectEntite(MdlBase, -1, true);
+
+            //if (faceBase.IsNull())
+            //{
+            //    WindowLog.Ecrire("Pas de face de base");
+            //    return;
+            //}
+
+            //MdlBase.eEffacerSelection();
+
+            //var listeLoop = (Object[])faceBase.GetLoops();
+            //WindowLog.Ecrire("Recherche des loop // Nb de loop : " + listeLoop.Length);
+
+            //var listePercage = new List<Loop2>();
+
+            //foreach (Loop2 loop in listeLoop)
+            //    if (!loop.IsOuter())
+            //        listePercage.Add(loop);
+
+            //MdlBase.eEffacerSelection();
+
+            //WindowLog.Ecrire("Selection des percages // Nb de percage : " + listePercage.Count);
+            //foreach (var loop in listePercage)
+            //{
+            //    var edge = (Edge)loop.GetEdges()[0];
+
+            //    Face2 faceCylindre = null;
+            //    foreach (Face2 face in edge.GetTwoAdjacentFaces2())
+            //    {
+            //        if (!face.IsSame(faceBase))
+            //        {
+            //            faceCylindre = face;
+            //            faceCylindre.eSelectEntite(MdlBase, -1, true);
+            //            break;
+            //        }
+            //    }
+            //}
+        }
+
+        private Face2 eFaceFixe(Body2 tole)
+        {
+            Face2 faceFixe = null;
 
             // On recherche la face de base de la tôle
             // On part de la fonction dépliée pour récupérer la face fixe.
-            foreach (Feature feature in (object[])corps.GetFeatures())
+            foreach (Feature feature in (object[])tole.GetFeatures())
             {
                 if (feature.GetTypeName2() == FeatureType.swTnFlatPattern)
                 {
                     // On récupère la face fixe
                     var def = (FlatPatternFeatureData)feature.GetDefinition();
-                    faceBase = (Face2)def.FixedFace2;
+                    faceFixe = (Face2)def.FixedFace2;
 
                     // On liste les faces du corps et on regarde 
                     // la face qui est la même que celle de la face fixe
-                    foreach (var face in corps.eListeDesFaces())
+                    foreach (var face in tole.eListeDesFaces())
                     {
-                        if(face.IsSame(faceBase))
+                        if (face.IsSame(faceFixe))
                         {
-                            faceBase = face;
+                            faceFixe = face;
                             break;
                         }
                     }
@@ -82,41 +122,77 @@ namespace Macros
                 }
             }
 
-            if (faceBase.IsNull())
+            return faceFixe;
+        }
+
+        private void eFacesTangentes(Face2 face, ref List<Face2> listeFaces)
+        {
+            var listeFacesTangentes = new List<Face2>();
+
+            foreach (Loop2 loop in (Object[])face.GetLoops())
             {
-                WindowLog.Ecrire("Pas de face de base");
-                return;
-            }
-
-            MdlBase.eEffacerSelection();
-
-            var listeLoop = (Object[])faceBase.GetLoops();
-            WindowLog.Ecrire("Recherche des loop // Nb de loop : " + listeLoop.Length);
-
-            var listePercage = new List<Loop2>();
-
-            foreach (Loop2 loop in listeLoop)
-                if (!loop.IsOuter())
-                    listePercage.Add(loop);
-
-            MdlBase.eEffacerSelection();
-
-            WindowLog.Ecrire("Selection des percages // Nb de percage : " + listePercage.Count);
-            foreach (var loop in listePercage)
-            {
-                var edge = (Edge)loop.GetEdges()[0];
-
-                Face2 faceCylindre = null;
-                foreach (Face2 face in edge.GetTwoAdjacentFaces2())
+                foreach (Edge edge in loop.GetEdges())
                 {
-                    if (!face.IsSame(faceBase))
+                    if(eFacesContiguesTangentes(edge))
                     {
-                        faceCylindre = face;
-                        faceCylindre.eSelectEntite(MdlBase, -1, true);
-                        break;
+                        foreach (var faceTangente in edge.eListeDesFaces())
+                        {
+                            Boolean ajouter = true;
+                            foreach (var f in listeFaces)
+                            {
+                                if (f.IsSame(faceTangente))
+                                {
+                                    ajouter = false;
+                                    break;
+                                }
+                            }
+
+                            if(ajouter)
+                            {
+                                listeFaces.Add(faceTangente);
+                                listeFacesTangentes.Add(faceTangente);
+                            }
+                        }
                     }
                 }
             }
+
+            foreach (var faceTangente in listeFacesTangentes)
+                eFacesTangentes(faceTangente, ref listeFaces);
+        }
+
+        private Boolean eFacesContiguesTangentes(Edge edge)
+        {
+            var pt = ePointMilieu(edge);
+            var lf = edge.eListeDesFaces();
+            var f1 = (Surface)lf[0].GetSurface();
+            var f2 = (Surface)lf[1].GetSurface();
+            var v1 = new eVecteur((double[])f1.EvaluateAtPoint(pt.X, pt.Y, pt.Z));
+            var v2 = new eVecteur((double[])f2.EvaluateAtPoint(pt.X, pt.Y, pt.Z));
+
+            if (v1.EstColineaire(v2, 1E-10, false))
+                return true;
+
+            return false;
+        }
+
+        public ePoint ePointMilieu(Edge edge)
+        {
+            edge.GetCurve();
+            Curve Courbe = edge.GetCurve();
+            var param = (CurveParamData)edge.GetCurveParams3();
+            var start = param.UMinValue;
+            var end = param.UMaxValue;
+            if (!param.Sense)
+            {
+                var t = end * -1;
+                end = start * -1;
+                start = t;
+            }
+
+            var r = (double[])edge.Evaluate2((end + start) * 0.5, 0);
+
+            return new ePoint(r);
         }
     }
 }

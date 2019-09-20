@@ -667,13 +667,6 @@ namespace ModuleProduction
             tf.CharHeight = tailleInscription / 1000.0;
             ext.SetUserPreferenceTextFormat((int)swUserPreferenceTextFormat_e.swDetailingAnnotationTextFormat, 0, tf);
         }
-
-        public static void pActiverManager(this ModelDoc2 mdl, Boolean activer)
-        {
-            mdl.FeatureManager.EnableFeatureTree = activer;
-            mdl.FeatureManager.EnableFeatureTreeWindow = activer;
-            mdl.ConfigurationManager.EnableConfigurationTree = activer;
-        }
     }
 
     [ClassInterface(ClassInterfaceType.None)]
@@ -1592,7 +1585,7 @@ namespace ModuleProduction
                 // BreakAllExternalFileReferences2(true); peut causer des plantage !!!!!
                 mdlFichier.Extension.BreakAllExternalFileReferences2(false);
 
-                mdlFichier.pActiverManager(false);
+                mdlFichier.eActiverManager(false);
 
                 foreach (var nomCfg in mdlFichier.eListeNomConfiguration())
                     if (nomCfg != this.NomConfig)
@@ -1627,7 +1620,7 @@ namespace ModuleProduction
                 else if (this.TypeCorps == eTypeCorps.Barre)
                     OrienterVueBarre(mdlFichier);
 
-                mdlFichier.pActiverManager(true);
+                mdlFichier.eActiverManager(true);
 
                 SauverVue(mdlFichier);
                 mdlFichier.EditRebuild3();

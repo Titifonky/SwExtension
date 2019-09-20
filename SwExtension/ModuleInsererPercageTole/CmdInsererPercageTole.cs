@@ -69,6 +69,7 @@ namespace ModuleInsererPercageTole
                 // Recherche des faces cylindriques
                 foreach (Body2 C in ListeCorps)
                 {
+                    // On recherche la fonction depliée de la tole
                     Face2 faceBase = null;
                     foreach (Feature feature in (object[])C.GetFeatures())
                     {
@@ -91,6 +92,8 @@ namespace ModuleInsererPercageTole
                             break;
                         }
                     }
+
+                    if (faceBase.IsNull()) continue;
 
                     foreach (Face2 F in C.eListeDesFaces())
                     {
