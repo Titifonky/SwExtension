@@ -54,6 +54,8 @@ namespace Macros
 
             eFacesTangentes(faceBase, ref liste);
 
+            liste = liste.FindAll(f => ((Surface)f.GetSurface()).IsPlane());
+
             foreach (var face in liste)
                 face.eSelectEntite(MdlBase, -1, true);
 
@@ -163,23 +165,7 @@ namespace Macros
 
         private Boolean eFacesContiguesTangentes(Edge edge)
         {
-            var pt = ePointMilieu(edge);
-            var lf = edge.eListeDesFaces();
-            var f1 = (Surface)lf[0].GetSurface();
-            var f2 = (Surface)lf[1].GetSurface();
-            var v1 = new eVecteur((double[])f1.EvaluateAtPoint(pt.X, pt.Y, pt.Z));
-            var v2 = new eVecteur((double[])f2.EvaluateAtPoint(pt.X, pt.Y, pt.Z));
-
-            if (v1.EstColineaire(v2, 1E-10, false))
-                return true;
-
-            return false;
-        }
-
-        public ePoint ePointMilieu(Edge edge)
-        {
             edge.GetCurve();
-            Curve Courbe = edge.GetCurve();
             var param = (CurveParamData)edge.GetCurveParams3();
             var start = param.UMinValue;
             var end = param.UMaxValue;
@@ -189,10 +175,18 @@ namespace Macros
                 end = start * -1;
                 start = t;
             }
-
             var r = (double[])edge.Evaluate2((end + start) * 0.5, 0);
+            var pt = new ePoint(r);
+            var listefaces = edge.eListeDesFaces();
+            var s1 = (Surface)listefaces[0].GetSurface();
+            var s2 = (Surface)listefaces[1].GetSurface();
+            var v1 = new eVecteur((double[])s1.EvaluateAtPoint(pt.X, pt.Y, pt.Z));
+            var v2 = new eVecteur((double[])s2.EvaluateAtPoint(pt.X, pt.Y, pt.Z));
 
-            return new ePoint(r);
+            if (v1.EstColineaire(v2, 1E-10, false))
+                return true;
+
+            return false;
         }
     }
 }
