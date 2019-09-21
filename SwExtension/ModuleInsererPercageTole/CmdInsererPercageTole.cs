@@ -62,28 +62,32 @@ namespace ModuleInsererPercageTole
                 // Recherche des faces cylindriques
                 foreach (Body2 C in ListeCorps)
                 {
-                    // On recherche la fonction depliée de la tole
+                    // On recherche la face fixe de la tôle
                     Face2 faceFixe = C.eFaceFixeTolerie();
 
-                    var liste = new List<Face2>();
+                    // S'il n'y en a pas c'est que ce n'est pas une tôle
+                    if (faceFixe.IsNull()) continue;
 
+                    // On recherche les faces de cette tôle
+                    var liste = new List<Face2>();
                     faceFixe.eChercherFacesTangentes(ref liste);
 
+                    // Pour chaque face plane
                     foreach (Face2 faceBase in liste.FindAll(f => ((Surface)f.GetSurface()).IsPlane()))
                     {
+                        // On récupère les boucles internes
                         var listePercage = new List<Loop2>();
-
                         foreach (Loop2 loop in (Object[])faceBase.GetLoops())
                             if (!loop.IsOuter())
                                 listePercage.Add(loop);
 
+                        // Pour chaque boucle interne
                         foreach (var loop in listePercage)
                         {
                             var edge = (Edge)loop.GetEdges()[0];
-
                             var facePercage = edge.eAutreFace(faceBase);
 
-                            // On reverifie que le perçage est un cylindre
+                            // On verifie que le perçage est un cylindre
                             // et qu'il débouche bien
                             if (facePercage.eEstUnCylindre() && (facePercage.GetLoopCount() > 1))
                             {
