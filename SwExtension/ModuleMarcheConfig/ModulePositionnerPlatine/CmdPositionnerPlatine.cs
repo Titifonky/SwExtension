@@ -113,11 +113,11 @@ namespace ModuleMarcheConfig
                     }
                     List<Face2> L = null;
 
-                    L = E_Gauche.eListeDesFaces();
+                    L = E_Gauche.eDeuxFacesAdjacentes();
                     L.Remove(dessus);
                     Face2 FaceGauche = L[0];
 
-                    L = E_Droit.eListeDesFaces();
+                    L = E_Droit.eDeuxFacesAdjacentes();
                     L.Remove(dessus);
                     Face2 FaceDroite = L[0];
 

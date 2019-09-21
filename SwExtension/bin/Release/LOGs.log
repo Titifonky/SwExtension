@@ -1,150 +1,152 @@
-00:16:08,287 | 				-> Parametres chargés
-00:16:08,318 | 
+13:32:52,930 | 				-> Parametres chargés
+13:32:52,961 | 
  
-00:16:08,318 | ====================================================================================================
-00:16:08,318 | |                                                                                                  |
-00:16:08,318 | |                                          DEBUG                                                   |
-00:16:08,318 | |                                                                                                  |
-00:16:08,318 | ====================================================================================================
-00:16:08,318 | 
+13:32:52,961 | ====================================================================================================
+13:32:52,961 | |                                                                                                  |
+13:32:52,961 | |                                          DEBUG                                                   |
+13:32:52,961 | |                                                                                                  |
+13:32:52,961 | ====================================================================================================
+13:32:52,961 | 
  
-00:16:08,490 | 				-> Fonction Ext supp : False
-00:16:08,490 | 				-> Production supp : False
-00:16:08,490 | 				-> Escalier supp : False
-00:16:08,490 | 				-> Macro supp : False
-00:16:08,490 | 				-> Test supp : False
-00:16:08,490 | 				-> Dvp supp : True
-00:16:08,490 | 				-> Fonction Ext supp : False
-00:16:08,490 | 				-> Production supp : False
-00:16:08,490 | 				-> Escalier supp : False
-00:16:08,490 | 				-> Macro supp : False
-00:16:08,490 | 				-> Test supp : False
-00:16:08,490 | 				-> Dvp supp : True
-00:16:08,490 | 				-> Macro supp : False
-00:16:08,490 | 				-> Dessin supp : True
-00:16:08,521 | 				->    Dvp
-00:16:08,521 | 				->       Création : swCreateCommandGroup_Success
-00:16:08,552 | 				->         Creer les config. dvp-> 41655 // 70001
-00:16:08,552 | 				->         Creer les dvp de tôle-> 41656 // 70002
-00:16:08,552 | 				->    Dessin
-00:16:08,552 | 				->       Création : swCreateCommandGroup_Success
-00:16:08,693 | 				->         Mettre en page les feuilles-> 41657 // 60001
-00:16:08,693 | 				->         Renommer toutes les feuilles-> 41658 // 60002
-00:16:08,693 | 				->         Masquer les corps de la vue-> 41659 // 60003
-00:16:08,693 | 				->         Retourner les Dvps selectionnés-> 41660 // 60004
-00:16:08,693 | 				->         Inverser le style d'affichage-> 41661 // 60005
-00:16:08,693 | 				->         Afficher/Masquer l'esquisse de reperage-> 41662 // 60006
-00:16:08,693 | 				->         Modifier les dvps-> 41663 // 60007
-00:16:08,693 | 				->         Supprimer la gravure-> 41664 // 60008
-00:16:08,693 | 				->         Exporter en Dxf/Dwg-> 41665 // 60009
-00:16:08,693 | 				->         Exporter en Pdf-> 41666 // 60010
-00:16:08,693 | 				->         Redimensionner la feuille-> 41667 // 60011
-00:16:08,693 | 				->         Renommer la feuille-> 41668 // 60012
-00:16:08,693 | 				->         Inserer les quantités-> 41669 // 60013
-00:16:08,693 | 				->         Date du jour-> 41670 // 60014
-00:16:08,693 | 				->    Test
-00:16:08,693 | 				->       Création : swCreateCommandGroup_Success
-00:16:08,771 | 				->         Test1-> 41671 // 50001
-00:16:08,771 | 				->         Test2-> 41672 // 50002
-00:16:08,771 | 				->         Test3-> 41673 // 50003
-00:16:08,771 | 				->         Test4-> 41674 // 50004
-00:16:08,771 | 				->         Test5-> 41675 // 50005
-00:16:08,771 | 				->         Test6-> 41676 // 50006
-00:16:08,771 | 				->         Test7-> 41677 // 50007
-00:16:08,771 | 				->    Macro
-00:16:08,771 | 				->       Création : swCreateCommandGroup_Success
-00:16:08,912 | 				->         Importer des infos-> 41678 // 40001
-00:16:08,912 | 				->         Ouvrir le dossier du composant-> 41679 // 40002
-00:16:08,912 | 				->         Activer/Desactiver l'aimantation-> 41680 // 40003
-00:16:08,912 | 				->         Activer/Desactiver les relation auto-> 41681 // 40004
-00:16:08,912 | 				->         Tout reconstruire-> 41682 // 40005
-00:16:08,912 | 				->         Supp. Config depliee-> 41683 // 40006
-00:16:08,912 | 				->         Lister les materiaux-> 41684 // 40007
-00:16:08,912 | 				->         Inclure/Exclure de la nomenclature-> 41685 // 40008
-00:16:08,912 | 				->         MAJ Liste des pièces soudées-> 41686 // 40009
-00:16:08,912 | 				->         Enregistrer la vue-> 41687 // 40010
-00:16:08,912 | 				->         Mettre à jour la lumière-> 41688 // 40011
-00:16:08,912 | 				->         Nettoyer les blocs-> 41689 // 40012
-00:16:08,912 | 				->         Decompter les perçages-> 41690 // 40013
-00:16:08,912 | 				->         Creer des cellules de Voronoi-> 41691 // 40014
-00:16:08,912 | 				->         Parametres des modules-> 41692 // 40015
-00:16:08,912 | 				->         Afficher le log de debug-> 41693 // 40016
-00:16:08,912 | 				->    Escalier
-00:16:08,912 | 				->       Création : swCreateCommandGroup_Success
-00:16:08,990 | 				->         Inserer l'esquisse à configurer-> 41694 // 30001
-00:16:08,990 | 				->         Positionner les platines-> 41695 // 30002
-00:16:08,990 | 				->         Configurer les platines-> 41696 // 30003
-00:16:08,990 | 				->         Configurer les contremarches-> 41697 // 30004
-00:16:08,990 | 				->         Inserer les marches-> 41698 // 30005
-00:16:08,990 | 				->         Balancer les marches-> 41699 // 30006
-00:16:08,990 | 				->    Production
-00:16:08,990 | 				->       Création : swCreateCommandGroup_Success
-00:16:09,100 | 				->         Repérer les dossiers-> 41700 // 20001
-00:16:09,100 | 				->         Creer les dvp de tôle-> 41701 // 20002
-00:16:09,100 | 				->         Exporter les barres-> 41702 // 20003
-00:16:09,100 | 				->         Commander les profils-> 41703 // 20004
-00:16:09,100 | 				->         Liste de débit-> 41704 // 20005
-00:16:09,100 | 				->         Générer les config. dvp-> 41705 // 20006
-00:16:09,100 | 				->         Afficher le reperage-> 41706 // 20007
-00:16:09,100 | 				->         Controler les repères-> 41707 // 20008
-00:16:09,100 | 				->         Repère du corps-> 41708 // 20009
-00:16:09,100 | 				->         Nettoyer le reperage-> 41709 // 20010
-00:16:09,100 | 				->         Afficher/Masquer Esquisse reperage-> 41710 // 20011
-00:16:09,100 | 				->    Fonction Ext
-00:16:09,100 | 				->       Création : swCreateCommandGroup_Success
-00:16:09,209 | 				->         Créer/Lier les configurations-> 41711 // 10001
-00:16:09,209 | 				->         Contraindre des composants-> 41712 // 10002
-00:16:09,209 | 				->         Inserer les perçages-> 41713 // 10003
-00:16:09,209 | 				->         Inserer les perçages sur des toles-> 41714 // 10004
-00:16:09,209 | 				->         Empreinte entre les composants-> 41715 // 10005
-00:16:09,209 | 				->         Creer la symetrie de la pièce-> 41716 // 10006
-00:16:09,209 | 				->         Selectionner les corps identiques-> 41717 // 10007
-00:16:09,209 | 				->         Lister les materiaux et les profils-> 41718 // 10008
-00:16:09,209 | 				->         Lister les configs-> 41719 // 10009
-00:16:09,209 | 				->         Lister les percages-> 41720 // 10010
-00:16:09,209 | 				-> Module [Parametres] sauvegardé
-00:16:21,803 | 				-> ## 12:16:21     0     0      TEST6
-00:16:21,803 | 				-> ## 12:16:21     0     0  ========================
-00:16:21,803 | 				-> ## 12:16:21     0     0  
-00:16:21,897 | 				-> Module [Test6] sauvegardé
-00:16:21,897 | 				-> ## 12:16:21     0     0  Executé en 0s94
-00:16:21,912 | 				-> ## 12:16:21     0     0  
-00:16:48,725 | 				-> ## 12:16:48     0     0      TEST6
-00:16:48,740 | 				-> ## 12:16:48     0     0  ========================
-00:16:48,740 | 				-> ## 12:16:48     0     0  
-00:16:48,803 | 				-> Module [Test6] sauvegardé
-00:16:48,818 | 				-> ## 12:16:48     0     0  Executé en 0s78
-00:16:48,818 | 				-> ## 12:16:48     0     0  
-00:16:52,896 | 				-> ## 12:16:52     0     0      TEST6
-00:16:52,912 | 				-> ## 12:16:52     0     0  ========================
-00:16:52,912 | 				-> ## 12:16:52     0     0  
-00:16:52,990 | 				-> Module [Test6] sauvegardé
-00:16:52,990 | 				-> ## 12:16:52     0     0  Executé en 0s78
-00:16:53,006 | 				-> ## 12:16:53     0     0  
-00:17:04,053 | 				-> ## 12:17:04     0     0      TEST6
-00:17:04,053 | 				-> ## 12:17:04     0     0  ========================
-00:17:04,053 | 				-> ## 12:17:04     0     0  
-00:17:04,131 | 				-> Module [Test6] sauvegardé
-00:17:04,146 | 				-> ## 12:17:04     0     0  Executé en 0s93
-00:17:04,162 | 				-> ## 12:17:04     0     0  
-00:17:18,865 | 				-> CommandGroup Fonction Ext(10000) supp : swRemoveCommandGroup_Success
-00:17:18,881 | 				-> CommandGroup Production(20000) supp : swRemoveCommandGroup_Success
-00:17:18,881 | 				-> CommandGroup Escalier(30000) supp : swRemoveCommandGroup_Success
-00:17:18,881 | 				-> CommandGroup Macro(40000) supp : swRemoveCommandGroup_Success
-00:17:18,896 | 				-> CommandGroup Test(50000) supp : swRemoveCommandGroup_Success
-00:17:18,896 | 				-> CommandGroup Dessin(60000) supp : swRemoveCommandGroup_Success
-00:17:18,896 | 				-> CommandGroup Dvp(70000) supp : swRemoveCommandGroup_Success
-00:17:18,896 | 				-> Fonction Ext supp : False
-00:17:18,896 | 				-> Production supp : False
-00:17:18,896 | 				-> Escalier supp : False
-00:17:18,896 | 				-> Macro supp : False
-00:17:18,896 | 				-> Test supp : False
-00:17:18,896 | 				-> Dvp supp : True
-00:17:18,912 | 				-> Fonction Ext supp : False
-00:17:18,912 | 				-> Production supp : False
-00:17:18,912 | 				-> Escalier supp : False
-00:17:18,912 | 				-> Macro supp : False
-00:17:18,912 | 				-> Test supp : False
-00:17:18,912 | 				-> Dvp supp : True
-00:17:18,912 | 				-> Macro supp : False
-00:17:18,912 | 				-> Dessin supp : True
+13:32:53,102 | 				-> Fonction Ext supp : False
+13:32:53,102 | 				-> Production supp : False
+13:32:53,111 | 				-> Escalier supp : False
+13:32:53,111 | 				-> Macro supp : False
+13:32:53,111 | 				-> Test supp : False
+13:32:53,111 | 				-> Dvp supp : True
+13:32:53,111 | 				-> Fonction Ext supp : False
+13:32:53,111 | 				-> Production supp : False
+13:32:53,111 | 				-> Escalier supp : False
+13:32:53,111 | 				-> Macro supp : False
+13:32:53,111 | 				-> Test supp : False
+13:32:53,111 | 				-> Dvp supp : True
+13:32:53,111 | 				-> Macro supp : False
+13:32:53,111 | 				-> Dessin supp : True
+13:32:53,117 | 				->    Dvp
+13:32:53,117 | 				->       Création : swCreateCommandGroup_Success
+13:32:53,149 | 				->         Creer les config. dvp-> 41655 // 70001
+13:32:53,149 | 				->         Creer les dvp de tôle-> 41656 // 70002
+13:32:53,149 | 				->    Dessin
+13:32:53,149 | 				->       Création : swCreateCommandGroup_Success
+13:32:53,290 | 				->         Mettre en page les feuilles-> 41657 // 60001
+13:32:53,290 | 				->         Renommer toutes les feuilles-> 41658 // 60002
+13:32:53,290 | 				->         Masquer les corps de la vue-> 41659 // 60003
+13:32:53,290 | 				->         Retourner les Dvps selectionnés-> 41660 // 60004
+13:32:53,290 | 				->         Inverser le style d'affichage-> 41661 // 60005
+13:32:53,290 | 				->         Afficher/Masquer l'esquisse de reperage-> 41662 // 60006
+13:32:53,290 | 				->         Modifier les dvps-> 41663 // 60007
+13:32:53,290 | 				->         Supprimer la gravure-> 41664 // 60008
+13:32:53,290 | 				->         Exporter en Dxf/Dwg-> 41665 // 60009
+13:32:53,290 | 				->         Exporter en Pdf-> 41666 // 60010
+13:32:53,290 | 				->         Redimensionner la feuille-> 41667 // 60011
+13:32:53,290 | 				->         Renommer la feuille-> 41668 // 60012
+13:32:53,290 | 				->         Inserer les quantités-> 41669 // 60013
+13:32:53,290 | 				->         Date du jour-> 41670 // 60014
+13:32:53,290 | 				->    Test
+13:32:53,290 | 				->       Création : swCreateCommandGroup_Success
+13:32:53,352 | 				->         Test1-> 41671 // 50001
+13:32:53,352 | 				->         Test2-> 41672 // 50002
+13:32:53,352 | 				->         Test3-> 41673 // 50003
+13:32:53,352 | 				->         Test4-> 41674 // 50004
+13:32:53,352 | 				->         Test5-> 41675 // 50005
+13:32:53,352 | 				->         Test6-> 41676 // 50006
+13:32:53,352 | 				->         Test7-> 41677 // 50007
+13:32:53,367 | 				->    Macro
+13:32:53,367 | 				->       Création : swCreateCommandGroup_Success
+13:32:53,508 | 				->         Importer des infos-> 41678 // 40001
+13:32:53,508 | 				->         Ouvrir le dossier du composant-> 41679 // 40002
+13:32:53,508 | 				->         Activer/Desactiver l'aimantation-> 41680 // 40003
+13:32:53,508 | 				->         Activer/Desactiver les relation auto-> 41681 // 40004
+13:32:53,508 | 				->         Tout reconstruire-> 41682 // 40005
+13:32:53,508 | 				->         Supp. Config depliee-> 41683 // 40006
+13:32:53,508 | 				->         Lister les materiaux-> 41684 // 40007
+13:32:53,508 | 				->         Inclure/Exclure de la nomenclature-> 41685 // 40008
+13:32:53,508 | 				->         MAJ Liste des pièces soudées-> 41686 // 40009
+13:32:53,508 | 				->         Enregistrer la vue-> 41687 // 40010
+13:32:53,508 | 				->         Mettre à jour la lumière-> 41688 // 40011
+13:32:53,508 | 				->         Nettoyer les blocs-> 41689 // 40012
+13:32:53,508 | 				->         Decompter les perçages-> 41690 // 40013
+13:32:53,508 | 				->         Creer des cellules de Voronoi-> 41691 // 40014
+13:32:53,508 | 				->         Parametres des modules-> 41692 // 40015
+13:32:53,508 | 				->         Afficher le log de debug-> 41693 // 40016
+13:32:53,508 | 				->    Escalier
+13:32:53,508 | 				->       Création : swCreateCommandGroup_Success
+13:32:53,586 | 				->         Inserer l'esquisse à configurer-> 41694 // 30001
+13:32:53,586 | 				->         Positionner les platines-> 41695 // 30002
+13:32:53,586 | 				->         Configurer les platines-> 41696 // 30003
+13:32:53,586 | 				->         Configurer les contremarches-> 41697 // 30004
+13:32:53,586 | 				->         Inserer les marches-> 41698 // 30005
+13:32:53,586 | 				->         Balancer les marches-> 41699 // 30006
+13:32:53,586 | 				->    Production
+13:32:53,586 | 				->       Création : swCreateCommandGroup_Success
+13:32:53,696 | 				->         Repérer les dossiers-> 41700 // 20001
+13:32:53,696 | 				->         Creer les dvp de tôle-> 41701 // 20002
+13:32:53,696 | 				->         Exporter les barres-> 41702 // 20003
+13:32:53,696 | 				->         Commander les profils-> 41703 // 20004
+13:32:53,696 | 				->         Liste de débit-> 41704 // 20005
+13:32:53,696 | 				->         Générer les config. dvp-> 41705 // 20006
+13:32:53,696 | 				->         Afficher le reperage-> 41706 // 20007
+13:32:53,696 | 				->         Controler les repères-> 41707 // 20008
+13:32:53,696 | 				->         Repère du corps-> 41708 // 20009
+13:32:53,696 | 				->         Nettoyer le reperage-> 41709 // 20010
+13:32:53,696 | 				->         Afficher/Masquer Esquisse reperage-> 41710 // 20011
+13:32:53,696 | 				->    Fonction Ext
+13:32:53,696 | 				->       Création : swCreateCommandGroup_Success
+13:32:53,796 | 				->         Créer/Lier les configurations-> 41711 // 10001
+13:32:53,796 | 				->         Contraindre des composants-> 41712 // 10002
+13:32:53,796 | 				->         Inserer les perçages-> 41713 // 10003
+13:32:53,796 | 				->         Inserer les perçages sur des toles-> 41714 // 10004
+13:32:53,796 | 				->         Empreinte entre les composants-> 41715 // 10005
+13:32:53,796 | 				->         Creer la symetrie de la pièce-> 41716 // 10006
+13:32:53,796 | 				->         Selectionner les corps identiques-> 41717 // 10007
+13:32:53,796 | 				->         Lister les materiaux et les profils-> 41718 // 10008
+13:32:53,796 | 				->         Lister les configs-> 41719 // 10009
+13:32:53,796 | 				->         Lister les percages-> 41720 // 10010
+13:32:53,805 | 				-> Module [Parametres] sauvegardé
+13:33:52,086 | 				-> ## 01:33:52     0     0      CONTRAINDRE DES COMPOSANTS
+13:33:52,102 | 				-> ## 01:33:52     0     0  ========================
+13:33:52,102 | 				-> ## 01:33:52     0     0  
+13:33:52,336 | 				-> ## 01:33:52     0     0  Executé en 0s234
+13:33:52,336 | 				-> ## 01:33:52     0     0  
+13:33:55,117 | 				-> Module [ContraindreComposant] sauvegardé
+13:33:55,149 | 				-> Test-1
+13:33:55,368 | 				-> ## 01:33:55     3     3  
+13:33:55,368 | 				-> ## 01:33:55     3     0  Executé en 0s219
+13:34:16,321 | 				-> ## 01:34:16     0     0      INSERER LES PERÇAGES SUR DES TOLES
+13:34:16,321 | 				-> ## 01:34:16     0     0  ========================
+13:34:16,321 | 				-> ## 01:34:16     0     0  
+13:34:16,430 | 				-> ## 01:34:16     0     0  Executé en 0s109
+13:34:16,430 | 				-> ## 01:34:16     0     0  
+13:34:33,293 | 				-> Module [InsererPercageTole] sauvegardé
+13:34:33,649 | 				-> ## 01:34:33    17    17  
+13:34:33,649 | 				-> ## 01:34:33    17     0  Executé en 0s337
+13:38:11,805 | 				-> Module [ListerPercage] sauvegardé
+13:39:10,540 | 				-> ## 01:39:10     0     0      INSERER LES PERÇAGES SUR DES TOLES
+13:39:10,540 | 				-> ## 01:39:10     0     0  ========================
+13:39:10,555 | 				-> ## 01:39:10     0     0  
+13:39:10,711 | 				-> ## 01:39:10     0     0  Executé en 0s156
+13:39:10,727 | 				-> ## 01:39:10     0     0  
+13:39:21,696 | 				-> Module [InsererPercageTole] sauvegardé
+13:44:50,086 | 				-> ## 01:44:50   340   339  
+13:44:50,102 | 				-> ## 01:44:50   340     0  Executé en 5m28s
+13:47:48,305 | 				-> CommandGroup Fonction Ext(10000) supp : swRemoveCommandGroup_Success
+13:47:48,305 | 				-> CommandGroup Production(20000) supp : swRemoveCommandGroup_Success
+13:47:48,305 | 				-> CommandGroup Escalier(30000) supp : swRemoveCommandGroup_Success
+13:47:48,305 | 				-> CommandGroup Macro(40000) supp : swRemoveCommandGroup_Success
+13:47:48,321 | 				-> CommandGroup Test(50000) supp : swRemoveCommandGroup_Success
+13:47:48,321 | 				-> CommandGroup Dessin(60000) supp : swRemoveCommandGroup_Success
+13:47:48,321 | 				-> CommandGroup Dvp(70000) supp : swRemoveCommandGroup_Success
+13:47:48,321 | 				-> Fonction Ext supp : False
+13:47:48,321 | 				-> Production supp : False
+13:47:48,321 | 				-> Escalier supp : False
+13:47:48,321 | 				-> Macro supp : False
+13:47:48,321 | 				-> Test supp : False
+13:47:48,321 | 				-> Dvp supp : True
+13:47:48,321 | 				-> Fonction Ext supp : False
+13:47:48,321 | 				-> Production supp : False
+13:47:48,321 | 				-> Escalier supp : False
+13:47:48,321 | 				-> Macro supp : False
+13:47:48,321 | 				-> Test supp : False
+13:47:48,321 | 				-> Dvp supp : True
+13:47:48,321 | 				-> Macro supp : False
+13:47:48,321 | 				-> Dessin supp : True

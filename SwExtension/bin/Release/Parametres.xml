@@ -303,6 +303,5 @@
     <Parametre name="PieceBase" intitule="Selectionnez le composant de reference" tip="" type="System.String">5.7-PX01_Bois_2</Parametre>
     <Parametre name="Percage" intitule="Selectionnez le composant de perçage" tip="" type="System.String">5.7-PX10</Parametre>
     <Parametre name="Diametre" intitule="Diametres des trous :" tip="" type="System.String">10</Parametre>
-    <Parametre name="PercageOuvert" intitule="Prendre en compte les perçages ouvert" tip="" type="System.Boolean">False</Parametre>
   </Module>
 </Parametres>

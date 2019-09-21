@@ -20,14 +20,12 @@ namespace ModuleInsererPercageTole
         private Parametre _pPieceBase;
         private Parametre _pPercage;
         private Parametre _pDiametre;
-        private Parametre _pPercageOuvert;
 
         public PageInsererPercageTole()
         {
             _pPieceBase = _Config.AjouterParam("PieceBase", "PP01", "Selectionnez le composant de reference");
             _pPercage = _Config.AjouterParam("Percage", "PX50", "Selectionnez le composant de perçage");
             _pDiametre = _Config.AjouterParam("Diametre", "0", "Diametres des trous :");
-            _pPercageOuvert = _Config.AjouterParam("PercageOuvert", false, "Prendre en compte les perçages ouvert");
 
             OnCalque += Calque;
             OnRunOkCommand += RunOkCommand;
@@ -36,7 +34,6 @@ namespace ModuleInsererPercageTole
         private CtrlSelectionBox _Select_Base;
         private CtrlSelectionBox _Select_Percage;
         private CtrlTextBox _Text_Diametre;
-        private CtrlCheckBox _Check_PercageOuvert;
 
         private CtrlCheckBox _CheckBox_EnregistrerSelection;
         private CtrlButton _Button_Preselection;
@@ -79,10 +76,6 @@ namespace ModuleInsererPercageTole
                                            + "\r\n  Valeurs séparés par une virgule");
 
                 _Text_Diametre = G.AjouterTexteBox(_pDiametre, false);
-
-                G = _Calque.AjouterGroupe("Supprimer le perçage de base");
-
-                _Check_PercageOuvert = G.AjouterCheckBox(_pPercageOuvert);
 
                 // OnCheck, on enregistre les parametres
                 _CheckBox_EnregistrerSelection.OnCheck += _Select_Base.ApplyOnSelection;
@@ -132,7 +125,6 @@ namespace ModuleInsererPercageTole
                 CompBase = MdlBase.eSelect_RecupererComposant(1, _Select_Base.Marque),
                 CompPercage = MdlBase.eSelect_RecupererComposant(1, _Select_Percage.Marque),
                 ListeDiametre = new List<double>(_Text_Diametre.Text.Split(',').Select(x => { return x.Trim().eToDouble(); })),
-                PercageOuvert = _Check_PercageOuvert.IsChecked
             };
 
             MdlBase.ClearSelection2(true);

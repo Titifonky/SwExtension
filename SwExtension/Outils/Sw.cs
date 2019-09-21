@@ -2626,7 +2626,7 @@ namespace Outils
             return Liste;
         }
 
-        public static List<Face2> eListeDesFaces(this Edge e)
+        public static List<Face2> eDeuxFacesAdjacentes(this Edge e)
         {
             List<Face2> Liste = new List<Face2>();
 
@@ -2687,7 +2687,7 @@ namespace Outils
 
             foreach (Edge E in ListeArretes)
             {
-                foreach (Face2 F in E.eListeDesFaces())
+                foreach (Face2 F in E.eDeuxFacesAdjacentes())
                     ListeFaces.Add(F);
 
                 ListeFaces.Remove(face);
@@ -2965,6 +2965,107 @@ namespace Outils
             }
 
             return Liste;
+        }
+
+        public static Face2 eFaceFixeTolerie(this Body2 tole)
+        {
+            Face2 faceFixe = null;
+
+            // On recherche la face de base de la tôle
+            // On part de la fonction dépliée pour récupérer la face fixe.
+            foreach (Feature feature in (object[])tole.GetFeatures())
+            {
+                if (feature.GetTypeName2() == FeatureType.swTnFlatPattern)
+                {
+                    // On récupère la face fixe
+                    var def = (FlatPatternFeatureData)feature.GetDefinition();
+                    faceFixe = (Face2)def.FixedFace2;
+
+                    // On liste les faces du corps et on regarde 
+                    // la face qui est la même que celle de la face fixe
+                    foreach (var face in tole.eListeDesFaces())
+                    {
+                        if (face.IsSame(faceFixe))
+                        {
+                            faceFixe = face;
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+
+            return faceFixe;
+        }
+
+        public static void eChercherFacesTangentes(this Face2 face, ref List<Face2> listeFaces)
+        {
+            listeFaces.Add(face);
+
+            var listeFacesTangentes = new List<Face2>();
+
+            foreach (Loop2 loop in (Object[])face.GetLoops())
+            {
+                foreach (Edge edge in loop.GetEdges())
+                {
+                    if (edge.eFacesAdjacentesSontTangentes())
+                    {
+                        // On récupère les deux faces
+                        var lft = edge.eDeuxFacesAdjacentes();
+                        // On regarde si la face est déjà dans la liste
+                        foreach (var ft in edge.eDeuxFacesAdjacentes())
+                            if (!listeFaces.Exists(f => f.IsSame(ft)))
+                                listeFacesTangentes.Add(ft);
+                    }
+                }
+            }
+
+            foreach (var ft in listeFacesTangentes)
+                ft.eChercherFacesTangentes(ref listeFaces);
+        }
+
+        public static Boolean eFacesAdjacentesSontTangentes(this Edge edge)
+        {
+            edge.GetCurve();
+            var param = (CurveParamData)edge.GetCurveParams3();
+            var start = param.UMinValue;
+            var end = param.UMaxValue;
+            if (!param.Sense)
+            {
+                var t = end * -1;
+                end = start * -1;
+                start = t;
+            }
+            var r = (double[])edge.Evaluate2((end + start) * 0.5, 0);
+            var pt = new ePoint(r);
+            var listefaces = edge.eDeuxFacesAdjacentes();
+            var s1 = (Surface)listefaces[0].GetSurface();
+            var s2 = (Surface)listefaces[1].GetSurface();
+            var v1 = new eVecteur((double[])s1.EvaluateAtPoint(pt.X, pt.Y, pt.Z));
+            var v2 = new eVecteur((double[])s2.EvaluateAtPoint(pt.X, pt.Y, pt.Z));
+
+            if (v1.EstColineaire(v2, 1E-10, false))
+                return true;
+
+            return false;
+        }
+
+        public static Boolean eEstUnCylindre(this Face2 face)
+        {
+            Surface S = face.GetSurface();
+            if (S.IsCylinder())
+                return true;
+
+            return false;
+        }
+
+        public static Face2 eAutreFace(this Edge edge, Face2 face)
+        {
+            var lf = edge.GetTwoAdjacentFaces2();
+            if (face.IsSame(lf[0]))
+                return lf[1];
+
+            return lf[0];
         }
 
         //========================================================================================

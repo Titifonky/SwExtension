@@ -19,8 +19,6 @@ namespace Macros
     {
         public Test6() { }
 
-        private Face2 FaceBase = null;
-
         protected override void Command()
         {
             try
@@ -28,14 +26,20 @@ namespace Macros
                 if (MdlBase.eSelect_RecupererTypeObjet() != e_swSelectType.swSelFACES)
                     return;
 
-                var face = MdlBase.eSelect_RecupererObjet<Face2>();
+                var faceSel = MdlBase.eSelect_RecupererObjet<Face2>();
 
-                FaceBase = face;
                 MdlBase.eEffacerSelection();
 
-                var corps = (Body2)face.GetBody();
+                var faceBase = faceSel;
 
-                Lancer(corps);
+                var liste = new List<Face2>();
+
+                faceBase.eChercherFacesTangentes(ref liste);
+
+                //liste = liste.FindAll(f => ((Surface)f.GetSurface()).IsPlane());
+
+                foreach (var face in liste)
+                    face.eSelectEntite(MdlBase, -1, true);
 
             }
             catch (Exception e)
@@ -48,11 +52,11 @@ namespace Macros
         {
             MdlBase.eEffacerSelection();
 
-            var faceBase = eFaceFixe(corps);
+            var faceBase = corps.eFaceFixeTolerie();
 
             var liste = new List<Face2>();
 
-            eFacesTangentes(faceBase, ref liste);
+            faceBase.eChercherFacesTangentes(ref liste);
 
             liste = liste.FindAll(f => ((Surface)f.GetSurface()).IsPlane());
 
@@ -94,99 +98,6 @@ namespace Macros
             //        }
             //    }
             //}
-        }
-
-        private Face2 eFaceFixe(Body2 tole)
-        {
-            Face2 faceFixe = null;
-
-            // On recherche la face de base de la tôle
-            // On part de la fonction dépliée pour récupérer la face fixe.
-            foreach (Feature feature in (object[])tole.GetFeatures())
-            {
-                if (feature.GetTypeName2() == FeatureType.swTnFlatPattern)
-                {
-                    // On récupère la face fixe
-                    var def = (FlatPatternFeatureData)feature.GetDefinition();
-                    faceFixe = (Face2)def.FixedFace2;
-
-                    // On liste les faces du corps et on regarde 
-                    // la face qui est la même que celle de la face fixe
-                    foreach (var face in tole.eListeDesFaces())
-                    {
-                        if (face.IsSame(faceFixe))
-                        {
-                            faceFixe = face;
-                            break;
-                        }
-                    }
-                    break;
-                }
-            }
-
-            return faceFixe;
-        }
-
-        private void eFacesTangentes(Face2 face, ref List<Face2> listeFaces)
-        {
-            var listeFacesTangentes = new List<Face2>();
-
-            foreach (Loop2 loop in (Object[])face.GetLoops())
-            {
-                foreach (Edge edge in loop.GetEdges())
-                {
-                    if(eFacesContiguesTangentes(edge))
-                    {
-                        foreach (var faceTangente in edge.eListeDesFaces())
-                        {
-                            Boolean ajouter = true;
-                            foreach (var f in listeFaces)
-                            {
-                                if (f.IsSame(faceTangente))
-                                {
-                                    ajouter = false;
-                                    break;
-                                }
-                            }
-
-                            if(ajouter)
-                            {
-                                listeFaces.Add(faceTangente);
-                                listeFacesTangentes.Add(faceTangente);
-                            }
-                        }
-                    }
-                }
-            }
-
-            foreach (var faceTangente in listeFacesTangentes)
-                eFacesTangentes(faceTangente, ref listeFaces);
-        }
-
-        private Boolean eFacesContiguesTangentes(Edge edge)
-        {
-            edge.GetCurve();
-            var param = (CurveParamData)edge.GetCurveParams3();
-            var start = param.UMinValue;
-            var end = param.UMaxValue;
-            if (!param.Sense)
-            {
-                var t = end * -1;
-                end = start * -1;
-                start = t;
-            }
-            var r = (double[])edge.Evaluate2((end + start) * 0.5, 0);
-            var pt = new ePoint(r);
-            var listefaces = edge.eListeDesFaces();
-            var s1 = (Surface)listefaces[0].GetSurface();
-            var s2 = (Surface)listefaces[1].GetSurface();
-            var v1 = new eVecteur((double[])s1.EvaluateAtPoint(pt.X, pt.Y, pt.Z));
-            var v2 = new eVecteur((double[])s2.EvaluateAtPoint(pt.X, pt.Y, pt.Z));
-
-            if (v1.EstColineaire(v2, 1E-10, false))
-                return true;
-
-            return false;
         }
     }
 }

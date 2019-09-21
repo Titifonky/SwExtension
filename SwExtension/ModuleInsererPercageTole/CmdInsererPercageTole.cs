@@ -22,12 +22,8 @@ namespace ModuleInsererPercageTole
         public Component2 CompBase = null;
         public Component2 CompPercage = null;
         public List<Double> ListeDiametre = new List<double>() { 0 };
-        public Boolean PercageOuvert = false;
-
         
         private Dictionary<String, String> _ListePercage = new Dictionary<String, String>();
-
-        private Dictionary<String, List<String>> _DicConfigWithComp = new Dictionary<string, List<String>>();
 
         protected override void Command()
         {
@@ -37,13 +33,10 @@ namespace ModuleInsererPercageTole
                 MdlBase.eActiverManager(false);
 
                 AjouterPercage(CompPercage);
-
                 Run(CompBase);
                 InsererDansUnDossier();
-
-                // On met les percages dans un dossier, c'est plus propre
-
                 _MdlBase.EditRebuild3();
+
                 MdlBase.eActiverManager(true);
                 App.Sw.CommandInProgress = false;
             }
@@ -70,42 +63,37 @@ namespace ModuleInsererPercageTole
                 foreach (Body2 C in ListeCorps)
                 {
                     // On recherche la fonction depliée de la tole
-                    Face2 faceBase = null;
-                    foreach (Feature feature in (object[])C.GetFeatures())
+                    Face2 faceFixe = C.eFaceFixeTolerie();
+
+                    var liste = new List<Face2>();
+
+                    faceFixe.eChercherFacesTangentes(ref liste);
+
+                    foreach (Face2 faceBase in liste.FindAll(f => ((Surface)f.GetSurface()).IsPlane()))
                     {
-                        if (feature.GetTypeName2() == FeatureType.swTnFlatPattern)
+                        var listePercage = new List<Loop2>();
+
+                        foreach (Loop2 loop in (Object[])faceBase.GetLoops())
+                            if (!loop.IsOuter())
+                                listePercage.Add(loop);
+
+                        foreach (var loop in listePercage)
                         {
-                            // On récupère la face fixe
-                            var def = (FlatPatternFeatureData)feature.GetDefinition();
-                            faceBase = (Face2)def.FixedFace2;
+                            var edge = (Edge)loop.GetEdges()[0];
 
-                            // On liste les faces du corps et on regarde 
-                            // la face qui est la même que celle de la face fixe
-                            foreach (var face in C.eListeDesFaces())
+                            var facePercage = edge.eAutreFace(faceBase);
+
+                            // On reverifie que le perçage est un cylindre
+                            // et qu'il débouche bien
+                            if (facePercage.eEstUnCylindre() && (facePercage.GetLoopCount() > 1))
                             {
-                                if (face.IsSame(faceBase))
-                                {
-                                    faceBase = face;
-                                    break;
-                                }
+                                // Si le diametre == 0 on recupère toutes les faces
+                                if ((ListeDiametre.Count == 1) && (ListeDiametre[0] == 0))
+                                    ListeTrou.Add(new Trou(facePercage, faceBase));
+                                // Sinon, on verifie qu'elle corresponde bien au diametre demandé
+                                else if (ListeDiametre.Contains(DiametreMm(facePercage)))
+                                    ListeTrou.Add(new Trou(facePercage, faceBase));
                             }
-                            break;
-                        }
-                    }
-
-                    if (faceBase.IsNull()) continue;
-
-                    foreach (Face2 F in C.eListeDesFaces())
-                    {
-                        Surface S = F.GetSurface();
-                        if (S.IsCylinder() && (PercageOuvert || (F.GetLoopCount() > 1)))
-                            {
-                            // Si le diametre == 0 on recupère toutes les faces
-                            if ((ListeDiametre.Count == 1) && (ListeDiametre[0] == 0))
-                                ListeTrou.Add(new Trou(F, faceBase));
-                            // Sinon, on verifie qu'elle corresponde bien au diametre demandé
-                            else if (ListeDiametre.Contains(DiametreMm(S)))
-                                ListeTrou.Add(new Trou(F, faceBase));
                         }
                     }
                 }
@@ -160,6 +148,12 @@ namespace ModuleInsererPercageTole
             {
                 this.LogMethode(new Object[] { e });
             }
+        }
+
+        private Double DiametreMm(Face2 face)
+        {
+            Surface s = face.GetSurface();
+            return DiametreMm(s);
         }
 
         private Double DiametreMm(Surface s)
