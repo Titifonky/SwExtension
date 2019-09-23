@@ -53,15 +53,7 @@ namespace Macros
 
             var listeFace = new List<Face2>();
             foreach (Edge e in bord.GetEdges())
-            {
-                Object[] Faces = (Object[])e.GetTwoAdjacentFaces2();
-
-                foreach (Face2 f in Faces)
-                {
-                    if (!f.IsSame(face))
-                        listeFace.Add(f);
-                }
-            }
+                listeFace.Add(e.eAutreFace(face));
 
             MdlBase.eEffacerSelection();
 

@@ -84,6 +84,8 @@ namespace SwExtension
 
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde(d++, "Ip", typeof(PageInsererPercage));
+
+                _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde(d++, "It", typeof(PageInsererPercageTole));
 
                 _Mnu.NouveauGroupe();
