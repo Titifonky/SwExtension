@@ -12,6 +12,9 @@ using System.Windows.Forms;
 
 namespace Macros
 {
+    /*
+     * Créer une fonction de répétition suivant une courbe
+     */
     [ModuleTypeDocContexte(eTypeDoc.Assemblage | eTypeDoc.Piece),
         ModuleTitre("Test3"),
         ModuleNom("Test3")]

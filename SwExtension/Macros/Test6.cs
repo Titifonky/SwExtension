@@ -12,6 +12,9 @@ using System.Windows.Forms;
 
 namespace Macros
 {
+    /*
+     * Selectionne toutes les faces planes d'un coté de la tôle
+     */
     [ModuleTypeDocContexte(eTypeDoc.Assemblage | eTypeDoc.Piece),
         ModuleTitre("Test6"),
         ModuleNom("Test6")]

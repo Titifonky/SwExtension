@@ -1593,6 +1593,12 @@ namespace ModuleProduction
 
                 var Piece = mdlFichier.ePartDoc();
 
+                if (Piece.eDossierListeDesPiecesSoudees().GetAutomaticUpdate() == false)
+                {
+                    Piece.eMajListeDesPiecesSoudeesAuto(true);
+                    mdlFichier.EditRebuild3();
+                }
+
                 SwCorps = null;
 
                 foreach (var c in Piece.eListeCorps(false))

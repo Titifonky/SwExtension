@@ -35,7 +35,7 @@ namespace ModuleInsererPercageTole
                 AjouterPercage(CompPercage);
                 Run(CompBase);
                 InsererDansUnDossier();
-                _MdlBase.EditRebuild3();
+                MdlBase.EditRebuild3();
 
                 MdlBase.eActiverManager(true);
                 App.Sw.CommandInProgress = false;
@@ -106,7 +106,7 @@ namespace ModuleInsererPercageTole
                 while (_ListePercage.Count < ListeTrou.Count)
                     AjouterPercage();
 
-                _MdlBase.EditRebuild3();
+                MdlBase.EditRebuild3();
 
                 List<String> ListeNomComp = _ListePercage.Keys.ToList();
 
@@ -117,14 +117,14 @@ namespace ModuleInsererPercageTole
                     Component2 Comp = _AssBase.GetComponentByName(NomComp);
                     // On active le composant au cas ou :)
 
-                    _MdlBase.eSelectByIdComp(_ListePercage[NomComp]);
+                    MdlBase.eSelectByIdComp(_ListePercage[NomComp]);
                     _AssBase.eModifierEtatComposant(swComponentSuppressionState_e.swComponentResolved);
-                    _MdlBase.eEffacerSelection();
+                    MdlBase.eEffacerSelection();
 
                     int longstatus = 0;
                     var Trou = ListeTrou[i];
 
-                    _MdlBase.ClearSelection2(true);
+                    MdlBase.ClearSelection2(true);
                     Trou.Plan.eSelectEntite();
                     PlanDeFace(Comp).eSelect(true);
                     
@@ -134,7 +134,7 @@ namespace ModuleInsererPercageTole
                                     0, 0, 0, 0, 0, 0, 0, 0,
                                     false, false, 0, out longstatus);
 
-                    _MdlBase.eEffacerSelection();
+                    MdlBase.eEffacerSelection();
                     Trou.Cylindre.eSelectEntite();
                     FaceCylindrique(Comp).eSelectEntite(true);
 
@@ -144,7 +144,7 @@ namespace ModuleInsererPercageTole
                                     0, 0, 0, 0, 0, 0, 0, 0,
                                     false, true, 0, out longstatus);
 
-                    _MdlBase.eEffacerSelection();
+                    MdlBase.eEffacerSelection();
                 }
 
             }
@@ -192,9 +192,9 @@ namespace ModuleInsererPercageTole
 
             }
 
-            _MdlBase.eSelectByIdComp(Comp.GetSelectByIDString());
+            MdlBase.eSelectByIdComp(Comp.GetSelectByIDString());
             _AssBase.eModifierEtatComposant(swComponentSuppressionState_e.swComponentResolved);
-            _MdlBase.eEffacerSelection();
+            MdlBase.eEffacerSelection();
 
             _ListePercage.Add(Comp.Name2, Comp.GetSelectByIDString());
         }
@@ -204,17 +204,17 @@ namespace ModuleInsererPercageTole
 
             if (_ListePercage.Count > 0)
             {
-                _MdlBase.eEffacerSelection();
+                MdlBase.eEffacerSelection();
 
                 foreach (String NomCompSelection in _ListePercage.Values)
                 {
-                    _MdlBase.eSelectByIdComp(NomCompSelection, -1, true);
+                    MdlBase.eSelectByIdComp(NomCompSelection, -1, true);
                 }
 
-                Feature fDossier = _MdlBase.FeatureManager.InsertFeatureTreeFolder2((int)swFeatureTreeFolderType_e.swFeatureTreeFolder_Containing);
+                Feature fDossier = MdlBase.FeatureManager.InsertFeatureTreeFolder2((int)swFeatureTreeFolderType_e.swFeatureTreeFolder_Containing);
                 fDossier.Name = "Percage";
 
-                _MdlBase.eEffacerSelection();
+                MdlBase.eEffacerSelection();
             }
         }
 

@@ -12,6 +12,9 @@ using System.Windows.Forms;
 
 namespace Macros
 {
+    /*
+     * Décaler/Réduire les faces adjacentes à celle sélectionner de 5mm
+     */
     [ModuleTypeDocContexte(eTypeDoc.Assemblage | eTypeDoc.Piece),
         ModuleTitre("Test5"),
         ModuleNom("Test5")]

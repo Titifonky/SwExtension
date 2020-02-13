@@ -566,4 +566,240 @@ namespace Outils
         }
 
     }
+
+    public abstract class eGeomBase
+    {
+        public Boolean Maj = true;
+
+        public delegate void OnModifyEventHandler();
+
+        public event OnModifyEventHandler OnModify;
+
+        public void Modify()
+        {
+            if (!Maj && OnModify.IsRef())
+                OnModify();
+        }
+    }
+
+    public class ePoint : eGeomBase
+    {
+        private Double _X = 0;
+        private Double _Y = 0;
+        private Double _Z = 0;
+
+        public ePoint() { }
+
+        public ePoint(Double x, Double y, Double z) { X = x; Y = y; Z = z; Maj = false; }
+
+        public ePoint(Double[] arr) { X = arr[0]; Y = arr[1]; Z = arr[2]; Maj = false; }
+
+        public ePoint(SketchPoint pt) { X = pt.X; Y = pt.Y; Z = pt.Z; Maj = false; }
+
+        public Double X { get { return _X; } set { _X = value; Modify(); } }
+        public Double Y { get { return _Y; } set { _Y = value; Modify(); } }
+        public Double Z { get { return _Z; } set { _Z = value; Modify(); } }
+
+        public void Deplacer(eVecteur V) { X += V.X; Y += V.Y; Z += V.Z; }
+
+        public ePoint PointDeplacer(eVecteur V) => new ePoint(X + V.X, Y + V.Y, Z + V.Z);
+
+        public void Multiplier(Double f) { X *= f; Y *= f; Z *= f; }
+
+        public ePoint PointMultiplier(Double S) => new ePoint(X * S, Y * S, Z * S);
+
+        public eVecteur Vecteur(ePoint p) => new eVecteur(X - p.X, Y - p.Y, Z - p.Z);
+
+        public Double Distance(ePoint p)
+        {
+            return Math.Sqrt(Math.Pow(p.X - X, 2) + Math.Pow(p.Y - Y, 2) + Math.Pow(p.Z - Z, 2));
+        }
+
+        public Double Distance2(ePoint p)
+        {
+            return Math.Pow(p.X - X, 2) + Math.Pow(p.Y - Y, 2) + Math.Pow(p.Z - Z, 2);
+        }
+
+        public void ApplyMathTransform(MathTransform xform)
+        {
+            var mu = (MathUtility)App.Sw.GetMathUtility();
+            double[] vPnt = new double[3]; vPnt[0] = X; vPnt[1] = Y; vPnt[2] = Z;
+
+            var pt = (MathPoint)mu.CreatePoint(vPnt);
+            pt = pt.MultiplyTransform(xform);
+            var arr = (Double[])pt.ArrayData;
+
+            X = arr[0]; Y = arr[1]; Z = arr[2];
+
+            Modify();
+        }
+
+        public ePoint GetPointApplyMathTransform(MathTransform xform)
+        {
+            var mu = (MathUtility)App.Sw.GetMathUtility();
+            double[] vPnt = new double[3]; vPnt[0] = X; vPnt[1] = Y; vPnt[2] = Z;
+
+            var pt = (MathPoint)mu.CreatePoint(vPnt);
+            pt = pt.MultiplyTransform(xform);
+            var arr = (Double[])pt.ArrayData;
+
+            return new ePoint(arr[0], arr[1], arr[2]);
+        }
+
+        public override string ToString()
+        {
+            return String.Format("X : {0} // Y : {1} // Z : {2}", X, Y, Z);
+        }
+    }
+
+    public class eVecteur
+    {
+        public eVecteur(Double X, Double Y, Double Z) { this.X = X; this.Y = Y; this.Z = Z; }
+
+        public eVecteur(Double[] arr) { X = arr[0]; Y = arr[1]; Z = arr[2]; }
+
+        public Double X { get; set; }
+        public Double Y { get; set; }
+        public Double Z { get; set; }
+
+        public void Ajouter(eVecteur v)
+        {
+            X += v.X; Y += v.Y; Z += v.Z;
+        }
+
+        public Double Norme
+        {
+            get
+            {
+                return Math.Sqrt(Math.Pow(X, 2) + Math.Pow(Y, 2) + Math.Pow(Z, 2));
+            }
+        }
+
+        public void Normaliser()
+        {
+            Double Lg = Norme;
+            X /= Lg;
+            Y /= Lg;
+            Z /= Lg;
+        }
+
+        public eVecteur Unitaire()
+        {
+            Double Lg = Norme;
+
+            eVecteur prod = new eVecteur(
+                X / Lg,
+                Y / Lg,
+                Z / Lg);
+
+            return prod;
+        }
+
+        public void Multiplier(Double f)
+        {
+            X *= f; Y *= f; Z *= f;
+        }
+
+        public eVecteur VecteurScalaire(Double f)
+        {
+            return new eVecteur(X * f, Y * f, Z * f);
+        }
+
+        public eVecteur Vectoriel(eVecteur v)
+        {
+            var prod = new eVecteur(
+                Y * v.Z - Z * v.Y,
+                Z * v.X - X * v.Z,
+                X * v.Y - Y * v.X);
+
+            return prod;
+        }
+
+        public eVecteur Compose(eVecteur v)
+        {
+            eVecteur C = new eVecteur(X, Y, Z);
+            C.Ajouter(v);
+            return C;
+        }
+
+        public Boolean EstColineaire(eVecteur v, Double arrondi = 1E-10, Boolean prendreEnCompteSens = true)
+        {
+            var result = false;
+
+            var v1 = Unitaire();
+            var v2 = v.Unitaire();
+
+            var vn = v1.Vectoriel(v2);
+
+            if (vn.Norme < arrondi)
+            {
+                if (prendreEnCompteSens)
+                {
+                    // Si on aditionne les deux vecteurs et que la norme est supérieur à 0
+                    // c'est qu'ils ne sont pas opposé
+                    if (v1.Compose(v2).Norme > arrondi)
+                        result = true;
+                }
+                else
+                    result = true;
+            }
+
+            return result;
+        }
+    }
+
+    public class eRepere
+    {
+        private ePoint _Origine = new ePoint(0, 0, 0);
+        private eVecteur _VecteurX = new eVecteur(0, 0, 0);
+        private eVecteur _VecteurY = new eVecteur(0, 0, 0);
+        private eVecteur _VecteurZ = new eVecteur(0, 0, 0);
+
+        public ePoint Origine { get { return _Origine; } set { _Origine = value; } }
+        public eVecteur VecteurX { get { return _VecteurX; } set { _VecteurX = value; } }
+        public eVecteur VecteurY { get { return _VecteurY; } set { _VecteurY = value; } }
+        public eVecteur VecteurZ { get { return _VecteurZ; } set { _VecteurZ = value; } }
+        public Double Echelle { get; set; }
+    }
+
+    public class eRectangle : eGeomBase
+    {
+        private Double _Lg = 0;
+        private Double _Ht = 0;
+
+        public Double Lg { get { return _Lg; } set { _Lg = value; Modify(); } }
+        public Double Ht { get { return _Ht; } set { _Ht = value; Modify(); } }
+
+        public eRectangle(Double lg, Double ht) { Lg = lg; Ht = ht; Maj = false; }
+    }
+
+    public class eZone
+    {
+        private ePoint _Centre = new ePoint(0, 0, 0);
+
+        private eRectangle _Rectangle = new eRectangle(0, 0);
+
+        private ePoint _PointMin = new ePoint(0, 0, 0);
+        private ePoint _PointMax = new ePoint(0, 0, 0);
+
+        public ePoint PointMin { get { return _PointMin; } }
+        public ePoint PointMax { get { return _PointMax; } }
+
+        public eZone()
+        { }
+
+        private void Maj()
+        {
+            _Centre.X = (_PointMin.X + PointMax.X) * 0.5;
+            _Centre.Y = (_PointMin.Y + PointMax.Y) * 0.5;
+            _Centre.Z = (_PointMin.Z + PointMax.Z) * 0.5;
+
+            _Rectangle.Lg = _PointMax.X - _PointMin.X;
+            _Rectangle.Ht = _PointMax.Y - _PointMin.Y;
+        }
+
+        public ePoint CentreZone { get { Maj(); return _Centre; } }
+
+        public eRectangle Rectangle { get { Maj(); return _Rectangle; } }
+    }
 }

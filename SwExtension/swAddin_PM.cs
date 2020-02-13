@@ -83,10 +83,8 @@ namespace SwExtension
                 _Mnu.AjouterCmde(d++, "Co", typeof(PageContraindreComposant));
 
                 _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde(d++, "Ip", typeof(PageInsererPercage));
-
-                _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde(d++, "It", typeof(PageInsererPercageTole));
+                _Mnu.AjouterCmde(d++, "Ip", typeof(PageInsererPercage), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
+                _Mnu.AjouterCmde(d++, "It", typeof(PageInsererPercageTole), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
 
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde(d++, "Ep", typeof(PageEmpreinte));
@@ -177,7 +175,7 @@ namespace SwExtension
 
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde(d++, "T7", typeof(Test7), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
-
+                _Mnu.AjouterCmde(d++, "T8", typeof(Test8), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
 
                 //==================================================================================================
                 d = 60000;
@@ -418,6 +416,7 @@ namespace SwExtension
                     index -= listeCmd.Count;
                     CmdGrp.AddSpacer2(index, (int)swCommandItemType_e.swMenuItem);
 
+                    // On met à jour l'index en fonction du nb de séparateur ajouté
                     foreach (var cmd in listeCmd)
                         cmd.CommandIndex += i;
                 }

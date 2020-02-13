@@ -107,7 +107,7 @@ namespace ModuleProduction.ModuleProduireDvp
                 NettoyerFichier();
 
                 foreach (var corps in ListeCorps.Values)
-                        CreerVue(corps);
+                    CreerVue(corps);
 
                 foreach (DrawingDoc dessin in DicDessins.Values)
                 {
@@ -123,7 +123,7 @@ namespace ModuleProduction.ModuleProduireDvp
                     if (corps.Dvp && corps.Maj)
                     {
                         WindowLog.EcrireF("{2} P{0} ×{1}", corps.Repere, corps.Qte, IndiceCampagne);
-                        if((corps.DiffPliage > 0) || ((corps.NbPli > 0) && (corps.DiffPliage == 0)))
+                        if ((corps.DiffPliage > 0) || ((corps.NbPli > 0) && (corps.DiffPliage == 0)))
                             WindowLog.EcrireF("  - Controle : {0}% [{1}] / Nb pli : {2}", corps.DiffPliagePct, corps.DiffPliage, corps.NbPli);
                     }
 
@@ -187,7 +187,7 @@ namespace ModuleProduction.ModuleProduireDvp
 
             try
             {
-                if(MettreAjourCampagne)
+                if (MettreAjourCampagne)
                 {
                     foreach (var vue in Feuille.eListeDesVues())
                     {
@@ -295,7 +295,7 @@ namespace ModuleProduction.ModuleProduireDvp
             DrawingDoc Dessin = null;
             ModelDoc2 Mdl = null;
 
-            if(mettreAJourExistant)
+            if (mettreAJourExistant)
                 Mdl = Sw.eOuvrir(Path.Combine(DossierDVP, Fichier), eTypeDoc.Dessin);
 
             if (Mdl.IsNull())
@@ -331,8 +331,9 @@ namespace ModuleProduction.ModuleProduireDvp
 
                 Vue.eSelectionner(dessin);
 
+                try
                 {
-                    Note Note = dessin.eModelDoc2().InsertNote(String.Format("{0}× {1} [{2}] (Ep{3})", quantite, Ref, materiau, epaisseur));
+                    Note Note = dessin.eModelDoc2().InsertNote(String.Format("qté {0} // réf {1} [{2}] (Ep{3})", quantite, Ref, materiau, epaisseur));
                     Note.SetTextJustification((int)swTextJustification_e.swTextJustificationCenter);
 
                     Annotation Annotation = Note.GetAnnotation();
@@ -348,27 +349,42 @@ namespace ModuleProduction.ModuleProduireDvp
                     Annotation.SetPosition(g.ptCentreRectangleX, g.ptMinY - Math.Max(0.005, Math.Floor(Math.Max(g.Ht, g.Lg) * 0.001 * 1000) * 0.001), 0);
                     g.Agrandir(Note);
                 }
+                catch (Exception e)
+                {
+                    WindowLog.Ecrire("  - Erreur");
+                    this.LogMethode(new Object[] { e });
+                }
 
                 if (InscrireNomTole)
                 {
-                    Note Note = dessin.eModelDoc2().InsertNote(Ref);
-                    Note.SetTextJustification((int)swTextJustification_e.swTextJustificationCenter);
+                    try
+                    {
+                        Note Note = dessin.eModelDoc2().InsertNote(Ref);
+                        Note.SetTextJustification((int)swTextJustification_e.swTextJustificationCenter);
 
-                    Annotation Annotation = Note.GetAnnotation();
+                        Annotation Annotation = Note.GetAnnotation();
 
-                    TextFormat swTextFormat = Annotation.GetTextFormat(0);
-                    // Hauteur du texte en fonction des dimensions du dvp, 2.5% de la dimension max du dvp
-                    swTextFormat.CharHeight = TailleInscription * 0.001;
-                    Annotation.SetTextFormat(0, false, swTextFormat);
-                    
-                    Annotation.Layer = "GRAVURE";
-                    Annotation.SetLeader3((int)swLeaderStyle_e.swNO_LEADER, (int)swLeaderSide_e.swLS_SMART, true, true, false, false);
+                        TextFormat swTextFormat = Annotation.GetTextFormat(0);
+                        // Hauteur du texte en fonction des dimensions du dvp, 2.5% de la dimension max du dvp
+                        swTextFormat.CharHeight = TailleInscription * 0.001;
+                        Annotation.SetTextFormat(0, false, swTextFormat);
+
+                        Annotation.Layer = "GRAVURE";
+                        Annotation.SetLeader3((int)swLeaderStyle_e.swNO_LEADER, (int)swLeaderSide_e.swLS_SMART, true, true, false, false);
+                    }
+                    catch (Exception e)
+                    {
+                        WindowLog.Ecrire("  - Erreur");
+                        this.LogMethode(new Object[] { e });
+                    }
                 }
 
                 PositionnerVue(feuille, Vue, g);
 
                 return Vue;
             }
+
+            WindowLog.Ecrire("  - Erreur : pas de vue dvp");
 
             return null;
         }

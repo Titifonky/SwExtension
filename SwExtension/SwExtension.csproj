@@ -102,6 +102,7 @@
     <Compile Include="Macros\BoutonMasquerCorpsVue.cs" />
     <Compile Include="Macros\BoutonSelectionnerCorpsIdentiques.cs" />
     <Compile Include="Macros\BoutonAfficherLogDebug.cs" />
+    <Compile Include="Macros\Test8.cs" />
     <Compile Include="Macros\Test7.cs" />
     <Compile Include="Macros\Test6.cs" />
     <Compile Include="Macros\Test5.cs" />

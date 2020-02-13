@@ -12,6 +12,11 @@ using System.Windows.Forms;
 
 namespace Macros
 {
+    /*
+     * Créer une ligne de perçage à 40 du bord de la face
+     * avec un perçage de diamètre 10
+     * et les répétitions qui vont bien
+     */
     [ModuleTypeDocContexte(eTypeDoc.Assemblage | eTypeDoc.Piece),
         ModuleTitre("Test4"),
         ModuleNom("Test4")]

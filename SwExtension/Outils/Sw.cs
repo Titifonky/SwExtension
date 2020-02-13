@@ -991,16 +991,14 @@ namespace Outils
 
         public static void eFermer(this ModelDoc2 mdl)
         {
-            App.Sw.CloseDoc(mdl.GetPathName());
-            mdl = null;
+            App.Sw.CloseDoc(mdl.eNomAvecExt());
         }
 
         public static void eFermerSiDifferent(this ModelDoc2 mdl, ModelDoc2 mdlBase)
         {
             if (mdl.GetPathName() != mdlBase.GetPathName())
             {
-                App.Sw.CloseDoc(mdl.GetPathName());
-                mdl = null;
+                eFermer(mdl);
             }
         }
 
@@ -1774,40 +1772,24 @@ namespace Outils
 
         public static Boolean eInsererListeDesPiecesSoudees(this PartDoc piece)
         {
-            if (piece.eDossierListeDesPiecesSoudees().IsRef()) return false;
+            if (piece.eFonctionListeDesPiecesSoudees().IsRef()) return false;
 
             piece.eModelDoc2().FeatureManager.InsertWeldmentFeature();
 
             return true;
         }
 
-        public static void eMajListeDesPiecesSoudees(this Component2 composant)
-        {
-            if (composant.TypeDoc() != eTypeDoc.Piece) return;
-
-            if (composant.IsRoot())
-                composant.ePartDoc().eDossierListeDesPiecesSoudees().eMajListeDesPiecesSoudees();
-            else
-                composant.eDossierListeDesPiecesSoudees().eMajListeDesPiecesSoudees();
-        }
-
         public static void eMajListeDesPiecesSoudees(this PartDoc piece)
         {
-            piece.eDossierListeDesPiecesSoudees().eMajListeDesPiecesSoudees();
+            piece.eDossierListeDesPiecesSoudees().UpdateCutList();
         }
 
-        private static void eMajListeDesPiecesSoudees(this Feature fonction)
+        public static void eMajListeDesPiecesSoudeesAuto(this PartDoc piece, Boolean maj)
         {
-            if (fonction.IsNull()) return;
-
-            BodyFolder dossier = fonction.GetSpecificFeature2();
-
-            if (dossier.IsNull()) return;
-
-            dossier.UpdateCutList();
+            piece.eDossierListeDesPiecesSoudees().SetAutomaticUpdate(maj);
         }
 
-        private static Feature eDossierListeDesPiecesSoudees(this Feature fonction)
+        private static Feature eFonctionListeDesPiecesSoudees(this Feature fonction)
         {
             Feature pFonction = fonction;
 
@@ -1822,14 +1804,14 @@ namespace Outils
             return null;
         }
 
-        public static Feature eDossierListeDesPiecesSoudees(this PartDoc piece)
+        public static Feature eFonctionListeDesPiecesSoudees(this PartDoc piece)
         {
             Feature pFonction = piece.FirstFeature();
 
-            return pFonction.eDossierListeDesPiecesSoudees();
+            return pFonction.eFonctionListeDesPiecesSoudees();
         }
 
-        public static Feature eDossierListeDesPiecesSoudees(this Component2 composant)
+        public static Feature eFonctionListeDesPiecesSoudees(this Component2 composant)
         {
             if (composant.TypeDoc() != eTypeDoc.Piece)
             {
@@ -1842,7 +1824,18 @@ namespace Outils
             if (composant.IsRoot())
                 pFonction = composant.ePartDoc().FirstFeature();
 
-            return pFonction.eDossierListeDesPiecesSoudees();
+            return pFonction.eFonctionListeDesPiecesSoudees();
+        }
+
+        public static BodyFolder eDossierListeDesPiecesSoudees(this PartDoc piece)
+        {
+            Feature pFonction = piece.FirstFeature();
+
+            pFonction = pFonction.eFonctionListeDesPiecesSoudees();
+
+            BodyFolder dossier = pFonction.GetSpecificFeature2() as BodyFolder;
+
+            return dossier;
         }
 
         public static void eParcourirFonctionsDePiecesSoudees(this Feature Fonction, Action<Feature> action)
@@ -1885,7 +1878,7 @@ namespace Outils
 
         public static List<BodyFolder> eListeDesDossiersDePiecesSoudees(this PartDoc piece, Predicate<BodyFolder> filtre = null)
         {
-            return piece.eDossierListeDesPiecesSoudees().eListeDesDossiersDePiecesSoudees(filtre);
+            return piece.eFonctionListeDesPiecesSoudees().eListeDesDossiersDePiecesSoudees(filtre);
         }
 
         /// <summary>
@@ -1896,7 +1889,7 @@ namespace Outils
         /// <returns></returns>
         public static List<BodyFolder> eListeDesDossiersDePiecesSoudees(this Component2 composant, Predicate<BodyFolder> filtre = null)
         {
-            return composant.eDossierListeDesPiecesSoudees().eListeDesDossiersDePiecesSoudees(filtre);
+            return composant.eFonctionListeDesPiecesSoudees().eListeDesDossiersDePiecesSoudees(filtre);
         }
 
         public static List<Feature> eListeDesFonctionsDePiecesSoudees(this Feature Fonction, Predicate<Feature> filtre = null)
@@ -1916,7 +1909,7 @@ namespace Outils
 
         public static List<Feature> eListeDesFonctionsDePiecesSoudees(this PartDoc piece, Predicate<Feature> filtre = null)
         {
-            return piece.eDossierListeDesPiecesSoudees().eListeDesFonctionsDePiecesSoudees(filtre);
+            return piece.eFonctionListeDesPiecesSoudees().eListeDesFonctionsDePiecesSoudees(filtre);
         }
 
         public static ListPID<Feature> eListePIDdesFonctionsDePiecesSoudees(this Feature Fonction, ModelDoc2 mdl, Predicate<Feature> filtre = null)
@@ -1936,7 +1929,7 @@ namespace Outils
 
         public static ListPID<Feature> eListePIDdesFonctionsDePiecesSoudees(this PartDoc piece, Predicate<Feature> filtre = null)
         {
-            return piece.eDossierListeDesPiecesSoudees().eListePIDdesFonctionsDePiecesSoudees(piece.eModelDoc2(), filtre);
+            return piece.eFonctionListeDesPiecesSoudees().eListePIDdesFonctionsDePiecesSoudees(piece.eModelDoc2(), filtre);
         }
 
         public static ListPID<Feature> eListePIDdesFonctionsDeSousEnsembleDePiecesSoudees(this Feature Fonction, ModelDoc2 mdl)
@@ -3361,7 +3354,11 @@ namespace Outils
             int Count = SelMgr.GetSelectedObjectCount2(marque);
 
             for (int i = 1; i <= Count; i++)
-                Liste.Add(SelMgr.GetSelectedObject6(i, marque) as T);
+            {
+                var obj = SelMgr.GetSelectedObject6(i, marque) as T;
+                if(obj.IsRef())
+                    Liste.Add(obj);
+            }
 
             return Liste;
         }
@@ -4482,241 +4479,241 @@ namespace Outils
         }
     }
 
-    public abstract class eGeomBase
-    {
-        public Boolean Maj = true;
+    //public abstract class eGeomBase
+    //{
+    //    public Boolean Maj = true;
 
-        public delegate void OnModifyEventHandler();
+    //    public delegate void OnModifyEventHandler();
 
-        public event OnModifyEventHandler OnModify;
+    //    public event OnModifyEventHandler OnModify;
 
-        public void Modify()
-        {
-            if (!Maj && OnModify.IsRef())
-                OnModify();
-        }
-    }
+    //    public void Modify()
+    //    {
+    //        if (!Maj && OnModify.IsRef())
+    //            OnModify();
+    //    }
+    //}
 
-    public class ePoint : eGeomBase
-    {
-        private Double _X = 0;
-        private Double _Y = 0;
-        private Double _Z = 0;
+    //public class ePoint : eGeomBase
+    //{
+    //    private Double _X = 0;
+    //    private Double _Y = 0;
+    //    private Double _Z = 0;
 
-        public ePoint() { }
+    //    public ePoint() { }
 
-        public ePoint(Double x, Double y, Double z) { X = x; Y = y; Z = z; Maj = false; }
+    //    public ePoint(Double x, Double y, Double z) { X = x; Y = y; Z = z; Maj = false; }
 
-        public ePoint(Double[] arr) { X = arr[0]; Y = arr[1]; Z = arr[2]; Maj = false; }
+    //    public ePoint(Double[] arr) { X = arr[0]; Y = arr[1]; Z = arr[2]; Maj = false; }
 
-        public ePoint(SketchPoint pt) { X = pt.X; Y = pt.Y; Z = pt.Z; Maj = false; }
+    //    public ePoint(SketchPoint pt) { X = pt.X; Y = pt.Y; Z = pt.Z; Maj = false; }
 
-        public Double X { get { return _X; } set { _X = value; Modify(); } }
-        public Double Y { get { return _Y; } set { _Y = value; Modify(); } }
-        public Double Z { get { return _Z; } set { _Z = value; Modify(); } }
+    //    public Double X { get { return _X; } set { _X = value; Modify(); } }
+    //    public Double Y { get { return _Y; } set { _Y = value; Modify(); } }
+    //    public Double Z { get { return _Z; } set { _Z = value; Modify(); } }
 
-        public void Deplacer(eVecteur V) { X += V.X; Y += V.Y; Z += V.Z; }
+    //    public void Deplacer(eVecteur V) { X += V.X; Y += V.Y; Z += V.Z; }
 
-        public ePoint PointDeplacer(eVecteur V) => new ePoint(X + V.X, Y + V.Y, Z + V.Z);
+    //    public ePoint PointDeplacer(eVecteur V) => new ePoint(X + V.X, Y + V.Y, Z + V.Z);
 
-        public void Multiplier(Double f) { X *= f; Y *= f; Z *= f; }
+    //    public void Multiplier(Double f) { X *= f; Y *= f; Z *= f; }
 
-        public ePoint PointMultiplier(Double S) => new ePoint(X * S, Y * S, Z * S);
+    //    public ePoint PointMultiplier(Double S) => new ePoint(X * S, Y * S, Z * S);
 
-        public eVecteur Vecteur(ePoint p) => new eVecteur(X - p.X, Y - p.Y, Z - p.Z);
+    //    public eVecteur Vecteur(ePoint p) => new eVecteur(X - p.X, Y - p.Y, Z - p.Z);
 
-        public Double Distance(ePoint p)
-        {
-            return Math.Sqrt(Math.Pow(p.X - X, 2) + Math.Pow(p.Y - Y, 2) + Math.Pow(p.Z - Z, 2));
-        }
+    //    public Double Distance(ePoint p)
+    //    {
+    //        return Math.Sqrt(Math.Pow(p.X - X, 2) + Math.Pow(p.Y - Y, 2) + Math.Pow(p.Z - Z, 2));
+    //    }
 
-        public Double Distance2(ePoint p)
-        {
-            return Math.Pow(p.X - X, 2) + Math.Pow(p.Y - Y, 2) + Math.Pow(p.Z - Z, 2);
-        }
+    //    public Double Distance2(ePoint p)
+    //    {
+    //        return Math.Pow(p.X - X, 2) + Math.Pow(p.Y - Y, 2) + Math.Pow(p.Z - Z, 2);
+    //    }
 
-        public void ApplyMathTransform(MathTransform xform)
-        {
-            var mu = (MathUtility)App.Sw.GetMathUtility();
-            double[] vPnt = new double[3]; vPnt[0] = X; vPnt[1] = Y; vPnt[2] = Z;
+    //    public void ApplyMathTransform(MathTransform xform)
+    //    {
+    //        var mu = (MathUtility)App.Sw.GetMathUtility();
+    //        double[] vPnt = new double[3]; vPnt[0] = X; vPnt[1] = Y; vPnt[2] = Z;
 
-            var pt = (MathPoint)mu.CreatePoint(vPnt);
-            pt = pt.MultiplyTransform(xform);
-            var arr = (Double[])pt.ArrayData;
+    //        var pt = (MathPoint)mu.CreatePoint(vPnt);
+    //        pt = pt.MultiplyTransform(xform);
+    //        var arr = (Double[])pt.ArrayData;
 
-            X = arr[0]; Y = arr[1]; Z = arr[2];
+    //        X = arr[0]; Y = arr[1]; Z = arr[2];
 
-            Modify();
-        }
+    //        Modify();
+    //    }
 
-        public ePoint GetPointApplyMathTransform(MathTransform xform)
-        {
-            var mu = (MathUtility)App.Sw.GetMathUtility();
-            double[] vPnt = new double[3]; vPnt[0] = X; vPnt[1] = Y; vPnt[2] = Z;
+    //    public ePoint GetPointApplyMathTransform(MathTransform xform)
+    //    {
+    //        var mu = (MathUtility)App.Sw.GetMathUtility();
+    //        double[] vPnt = new double[3]; vPnt[0] = X; vPnt[1] = Y; vPnt[2] = Z;
 
-            var pt = (MathPoint)mu.CreatePoint(vPnt);
-            pt = pt.MultiplyTransform(xform);
-            var arr = (Double[])pt.ArrayData;
+    //        var pt = (MathPoint)mu.CreatePoint(vPnt);
+    //        pt = pt.MultiplyTransform(xform);
+    //        var arr = (Double[])pt.ArrayData;
 
-            return new ePoint(arr[0], arr[1], arr[2]);
-        }
+    //        return new ePoint(arr[0], arr[1], arr[2]);
+    //    }
 
-        public override string ToString()
-        {
-            return String.Format("X : {0} // Y : {1} // Z : {2}", X, Y, Z);
-        }
-    }
+    //    public override string ToString()
+    //    {
+    //        return String.Format("X : {0} // Y : {1} // Z : {2}", X, Y, Z);
+    //    }
+    //}
 
-    public class eVecteur
-    {
-        public eVecteur(Double X, Double Y, Double Z) { this.X = X; this.Y = Y; this.Z = Z; }
+    //public class eVecteur
+    //{
+    //    public eVecteur(Double X, Double Y, Double Z) { this.X = X; this.Y = Y; this.Z = Z; }
 
-        public eVecteur(Double[] arr) { X = arr[0]; Y = arr[1]; Z = arr[2]; }
+    //    public eVecteur(Double[] arr) { X = arr[0]; Y = arr[1]; Z = arr[2]; }
 
-        public Double X { get; set; }
-        public Double Y { get; set; }
-        public Double Z { get; set; }
+    //    public Double X { get; set; }
+    //    public Double Y { get; set; }
+    //    public Double Z { get; set; }
 
-        public void Ajouter(eVecteur v)
-        {
-            X += v.X; Y += v.Y; Z += v.Z;
-        }
+    //    public void Ajouter(eVecteur v)
+    //    {
+    //        X += v.X; Y += v.Y; Z += v.Z;
+    //    }
 
-        public Double Norme
-        {
-            get
-            {
-                return Math.Sqrt(Math.Pow(X, 2) + Math.Pow(Y, 2) + Math.Pow(Z, 2));
-            }
-        }
+    //    public Double Norme
+    //    {
+    //        get
+    //        {
+    //            return Math.Sqrt(Math.Pow(X, 2) + Math.Pow(Y, 2) + Math.Pow(Z, 2));
+    //        }
+    //    }
 
-        public void Normaliser()
-        {
-            Double Lg = Norme;
-            X /= Lg;
-            Y /= Lg;
-            Z /= Lg;
-        }
+    //    public void Normaliser()
+    //    {
+    //        Double Lg = Norme;
+    //        X /= Lg;
+    //        Y /= Lg;
+    //        Z /= Lg;
+    //    }
 
-        public eVecteur Unitaire()
-        {
-            Double Lg = Norme;
+    //    public eVecteur Unitaire()
+    //    {
+    //        Double Lg = Norme;
 
-            eVecteur prod = new eVecteur(
-                X / Lg,
-                Y / Lg,
-                Z / Lg);
+    //        eVecteur prod = new eVecteur(
+    //            X / Lg,
+    //            Y / Lg,
+    //            Z / Lg);
 
-            return prod;
-        }
+    //        return prod;
+    //    }
 
-        public void Multiplier(Double f)
-        {
-            X *= f; Y *= f; Z *= f;
-        }
+    //    public void Multiplier(Double f)
+    //    {
+    //        X *= f; Y *= f; Z *= f;
+    //    }
 
-        public eVecteur VecteurScalaire(Double f)
-        {
-            return new eVecteur(X * f, Y * f, Z * f);
-        }
+    //    public eVecteur VecteurScalaire(Double f)
+    //    {
+    //        return new eVecteur(X * f, Y * f, Z * f);
+    //    }
 
-        public eVecteur Vectoriel(eVecteur v)
-        {
-            var prod = new eVecteur(
-                Y * v.Z - Z * v.Y,
-                Z * v.X - X * v.Z,
-                X * v.Y - Y * v.X);
+    //    public eVecteur Vectoriel(eVecteur v)
+    //    {
+    //        var prod = new eVecteur(
+    //            Y * v.Z - Z * v.Y,
+    //            Z * v.X - X * v.Z,
+    //            X * v.Y - Y * v.X);
 
-            return prod;
-        }
+    //        return prod;
+    //    }
 
-        public eVecteur Compose(eVecteur v)
-        {
-            eVecteur C = new eVecteur(X, Y, Z);
-            C.Ajouter(v);
-            return C;
-        }
+    //    public eVecteur Compose(eVecteur v)
+    //    {
+    //        eVecteur C = new eVecteur(X, Y, Z);
+    //        C.Ajouter(v);
+    //        return C;
+    //    }
 
-        public Boolean EstColineaire(eVecteur v, Double arrondi = 1E-10, Boolean prendreEnCompteSens = true)
-        {
-            var result = false;
+    //    public Boolean EstColineaire(eVecteur v, Double arrondi = 1E-10, Boolean prendreEnCompteSens = true)
+    //    {
+    //        var result = false;
 
-            var v1 = Unitaire();
-            var v2 = v.Unitaire();
+    //        var v1 = Unitaire();
+    //        var v2 = v.Unitaire();
 
-            var vn = v1.Vectoriel(v2);
+    //        var vn = v1.Vectoriel(v2);
 
-            if (vn.Norme < arrondi)
-            {
-                if (prendreEnCompteSens)
-                {
-                    // Si on aditionne les deux vecteurs et que la norme est supérieur à 0
-                    // c'est qu'ils ne sont pas opposé
-                    if (v1.Compose(v2).Norme > arrondi)
-                        result = true;
-                }
-                else
-                    result = true;
-            }
+    //        if (vn.Norme < arrondi)
+    //        {
+    //            if (prendreEnCompteSens)
+    //            {
+    //                // Si on aditionne les deux vecteurs et que la norme est supérieur à 0
+    //                // c'est qu'ils ne sont pas opposé
+    //                if (v1.Compose(v2).Norme > arrondi)
+    //                    result = true;
+    //            }
+    //            else
+    //                result = true;
+    //        }
 
-            return result;
-        }
-    }
+    //        return result;
+    //    }
+    //}
 
-    public class eRepere
-    {
-        private ePoint _Origine = new ePoint(0, 0, 0);
-        private eVecteur _VecteurX = new eVecteur(0, 0, 0);
-        private eVecteur _VecteurY = new eVecteur(0, 0, 0);
-        private eVecteur _VecteurZ = new eVecteur(0, 0, 0);
+    //public class eRepere
+    //{
+    //    private ePoint _Origine = new ePoint(0, 0, 0);
+    //    private eVecteur _VecteurX = new eVecteur(0, 0, 0);
+    //    private eVecteur _VecteurY = new eVecteur(0, 0, 0);
+    //    private eVecteur _VecteurZ = new eVecteur(0, 0, 0);
 
-        public ePoint Origine { get { return _Origine; } set { _Origine = value; } }
-        public eVecteur VecteurX { get { return _VecteurX; } set { _VecteurX = value; } }
-        public eVecteur VecteurY { get { return _VecteurY; } set { _VecteurY = value; } }
-        public eVecteur VecteurZ { get { return _VecteurZ; } set { _VecteurZ = value; } }
-        public Double Echelle { get; set; }
-    }
+    //    public ePoint Origine { get { return _Origine; } set { _Origine = value; } }
+    //    public eVecteur VecteurX { get { return _VecteurX; } set { _VecteurX = value; } }
+    //    public eVecteur VecteurY { get { return _VecteurY; } set { _VecteurY = value; } }
+    //    public eVecteur VecteurZ { get { return _VecteurZ; } set { _VecteurZ = value; } }
+    //    public Double Echelle { get; set; }
+    //}
 
-    public class eRectangle : eGeomBase
-    {
-        private Double _Lg = 0;
-        private Double _Ht = 0;
+    //public class eRectangle : eGeomBase
+    //{
+    //    private Double _Lg = 0;
+    //    private Double _Ht = 0;
 
-        public Double Lg { get { return _Lg; } set { _Lg = value; Modify(); } }
-        public Double Ht { get { return _Ht; } set { _Ht = value; Modify(); } }
+    //    public Double Lg { get { return _Lg; } set { _Lg = value; Modify(); } }
+    //    public Double Ht { get { return _Ht; } set { _Ht = value; Modify(); } }
 
-        public eRectangle(Double lg, Double ht) { Lg = lg; Ht = ht; Maj = false; }
-    }
+    //    public eRectangle(Double lg, Double ht) { Lg = lg; Ht = ht; Maj = false; }
+    //}
 
-    public class eZone
-    {
-        private ePoint _Centre = new ePoint(0, 0, 0);
+    //public class eZone
+    //{
+    //    private ePoint _Centre = new ePoint(0, 0, 0);
 
-        private eRectangle _Rectangle = new eRectangle(0, 0);
+    //    private eRectangle _Rectangle = new eRectangle(0, 0);
 
-        private ePoint _PointMin = new ePoint(0, 0, 0);
-        private ePoint _PointMax = new ePoint(0, 0, 0);
+    //    private ePoint _PointMin = new ePoint(0, 0, 0);
+    //    private ePoint _PointMax = new ePoint(0, 0, 0);
 
-        public ePoint PointMin { get { return _PointMin; } }
-        public ePoint PointMax { get { return _PointMax; } }
+    //    public ePoint PointMin { get { return _PointMin; } }
+    //    public ePoint PointMax { get { return _PointMax; } }
 
-        public eZone()
-        { }
+    //    public eZone()
+    //    { }
 
-        private void Maj()
-        {
-            _Centre.X = (_PointMin.X + PointMax.X) * 0.5;
-            _Centre.Y = (_PointMin.Y + PointMax.Y) * 0.5;
-            _Centre.Z = (_PointMin.Z + PointMax.Z) * 0.5;
+    //    private void Maj()
+    //    {
+    //        _Centre.X = (_PointMin.X + PointMax.X) * 0.5;
+    //        _Centre.Y = (_PointMin.Y + PointMax.Y) * 0.5;
+    //        _Centre.Z = (_PointMin.Z + PointMax.Z) * 0.5;
 
-            _Rectangle.Lg = _PointMax.X - _PointMin.X;
-            _Rectangle.Ht = _PointMax.Y - _PointMin.Y;
-        }
+    //        _Rectangle.Lg = _PointMax.X - _PointMin.X;
+    //        _Rectangle.Ht = _PointMax.Y - _PointMin.Y;
+    //    }
 
-        public ePoint CentreZone { get { Maj(); return _Centre; } }
+    //    public ePoint CentreZone { get { Maj(); return _Centre; } }
 
-        public eRectangle Rectangle { get { Maj(); return _Rectangle; } }
-    }
+    //    public eRectangle Rectangle { get { Maj(); return _Rectangle; } }
+    //}
 
     public enum eFeatureType
     {

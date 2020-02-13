@@ -25,6 +25,10 @@ namespace ModuleEmpreinte
                 MdlBase.eEffacerSelection();
                 Ass = MdlBase.eAssemblyDoc();
 
+                App.Sw.CommandInProgress = true;
+                MdlBase.eActiverManager(false);
+                
+
                 Dictionary<Component2, Dictionary<String, List<Component2>>> Dic = new Dictionary<Component2, Dictionary<String, List<Component2>>>();
 
                 foreach (Component2 cpB in ListeCompBase)
@@ -62,7 +66,6 @@ namespace ModuleEmpreinte
                     }
                 }
 
-
                 foreach (Component2 cpB in Dic.Keys)
                 {
                     MdlBase.eEffacerSelection();
@@ -90,6 +93,11 @@ namespace ModuleEmpreinte
                     Ass.eEditerAssemblage();
 
                 }
+
+                MdlBase.EditRebuild3();
+
+                MdlBase.eActiverManager(true);
+                App.Sw.CommandInProgress = false;
             }
             catch (Exception e)
             {

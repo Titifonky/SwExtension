@@ -156,7 +156,16 @@ namespace ModuleProduction.ModuleRepererDossier
                     mdl.eActiverManager(false);
 
                     // On met à jour les options
-                    AppliqueOptionListeDePiecesSoudees(mdl);
+                    mdl.Extension.SetUserPreferenceToggle(((int)(swUserPreferenceToggle_e.swDisableDerivedConfigurations)), 0, false);
+                    mdl.Extension.SetUserPreferenceToggle(((int)(swUserPreferenceToggle_e.swWeldmentRenameCutlistDescriptionPropertyValue)), 0, true);
+                    mdl.Extension.SetUserPreferenceToggle(((int)(swUserPreferenceToggle_e.swWeldmentCollectIdenticalBodies)), 0, true);
+                    mdl.Extension.SetUserPreferenceString(((int)(swUserPreferenceStringValue_e.swSheetMetalDescription)), 0, "Tôle");
+
+                    if (mdl.ePartDoc().eDossierListeDesPiecesSoudees().GetAutomaticUpdate() == false)
+                    {
+                        mdl.ePartDoc().eMajListeDesPiecesSoudeesAuto(true);
+                        mdl.EditRebuild3();
+                    }
 
                     // On crée l'esquisse pour le reperage des dossiers
                     mdl.pEsquisseRepere();
@@ -481,14 +490,6 @@ namespace ModuleProduction.ModuleRepererDossier
             catch (Exception e) { this.LogErreur(new Object[] { e }); }
 
             return param;
-        }
-
-        private void AppliqueOptionListeDePiecesSoudees(ModelDoc2 mdl)
-        {
-            mdl.Extension.SetUserPreferenceToggle(((int)(swUserPreferenceToggle_e.swDisableDerivedConfigurations)), 0, false);
-            mdl.Extension.SetUserPreferenceToggle(((int)(swUserPreferenceToggle_e.swWeldmentRenameCutlistDescriptionPropertyValue)), 0, true);
-            mdl.Extension.SetUserPreferenceToggle(((int)(swUserPreferenceToggle_e.swWeldmentCollectIdenticalBodies)), 0, true);
-            mdl.Extension.SetUserPreferenceString(((int)(swUserPreferenceStringValue_e.swSheetMetalDescription)), 0, "Tôle");
         }
 
         private int GetRepere(Dimension param, String nomCfg)
