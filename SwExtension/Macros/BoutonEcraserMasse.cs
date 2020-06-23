@@ -13,11 +13,11 @@ using System.Windows.Forms;
 namespace Macros
 {
     [ModuleTypeDocContexte(eTypeDoc.Piece),
-        ModuleTitre("Test8"),
-        ModuleNom("Test8")]
-    public class Test8 : BoutonBase
+        ModuleTitre("Ecraser la masse"),
+        ModuleNom("EcraserMasse")]
+    public class BoutonEcraserMasse : BoutonBase
     {
-        public Test8() { }
+        public BoutonEcraserMasse() { }
 
         protected override void Command()
         {

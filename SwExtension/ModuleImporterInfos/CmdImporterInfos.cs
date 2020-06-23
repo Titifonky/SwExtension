@@ -44,7 +44,12 @@ namespace ModuleImporterInfos
             {
                 WindowLog.Ecrire(v);
                 String[] l = v.Split(new Char[] { ':' }, 2, StringSplitOptions.None);
-                _Dic.Add(l[0].Trim(), l[1].Trim());
+                var cle = l[0].Trim();
+                var val = l[1].Trim();
+                if (_Dic.ContainsKey(cle))
+                    _Dic[cle] = val;
+                else
+                    _Dic.Add(cle, val);
             }
 
             WindowLog.SautDeLigne();

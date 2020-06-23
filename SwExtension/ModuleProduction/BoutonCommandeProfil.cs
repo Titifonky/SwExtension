@@ -49,7 +49,7 @@ namespace ModuleProduction
                                 BodyFolder Dossier = swD.GetSpecificFeature2();
 
                                 // Si le dossier est la racine d'un sous-ensemble soudé, il n'y a rien dedans
-                                if (Dossier.IsRef() && (Dossier.eNbCorps() > 0) &&
+                                if (Dossier.IsRef() && (Dossier.eEstExclu() == false) && (Dossier.eNbCorps() > 0) &&
                                 (eTypeCorps.Barre).HasFlag(Dossier.eTypeDeDossier()))
                                     return true;
 

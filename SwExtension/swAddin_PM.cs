@@ -150,6 +150,10 @@ namespace SwExtension
                 _Mnu.AjouterCmde(d++, "Ev", typeof(BoutonEnregistrerVue), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
                 _Mnu.AjouterCmde(d++, "Ml", typeof(PageLumiere), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
                 _Mnu.AjouterCmde(d++, "Nb", typeof(BoutonNettoyerBlocs), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
+                _Mnu.AjouterCmde(d++, "Em", typeof(BoutonEcraserMasse), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
+
+                _Mnu.NouveauGroupe();
+                _Mnu.AjouterCmde(d++, "Sa", typeof(ExportScriptAcad), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
 
                 _Mnu.NouveauGroupe();
                 _Mnu.AjouterCmde(d++, "Cp", typeof(BoutonDecompterPercage), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
@@ -172,10 +176,6 @@ namespace SwExtension
                 _Mnu.AjouterCmde(d++, "T4", typeof(Test4), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
                 _Mnu.AjouterCmde(d++, "T5", typeof(Test5), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
                 _Mnu.AjouterCmde(d++, "T6", typeof(Test6), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
-
-                _Mnu.NouveauGroupe();
-                _Mnu.AjouterCmde(d++, "T7", typeof(Test7), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
-                _Mnu.AjouterCmde(d++, "T8", typeof(Test8), swCommandTabButtonTextDisplay_e.swCommandTabButton_TextHorizontal);
 
                 //==================================================================================================
                 d = 60000;
