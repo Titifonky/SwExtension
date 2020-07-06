@@ -401,71 +401,137 @@ namespace ModuleProduction.ModuleProduireDvp
             Feature FonctionDepliee = liste[0];
 
             GeomVue g = null;
+            var Liste = FonctionDepliee.eListeSousFonction();
 
-            FonctionDepliee.eParcourirSousFonction(
-                f =>
+            Feature f = Liste[0];
+
+            // Les fonctions "Lignes de pliage" et "Cube de visualisation" ne sont pas toujours correctement
+            // nommées donc ont considère que la première fonction = Ligne de pliage et la deuxième = Cube de visualisation
+
+            if (f.GetTypeName2() == FeatureType.swTnProfileFeature)
+            {
+                ModelDoc2 mdlBase = dessin.eModelDoc2();
+
+                f.eSelectionnerById2Dessin(mdlBase, vue);
+
+                if (AfficherLignePliage)
+                    mdlBase.UnblankSketch();
+                else
+                    mdlBase.BlankSketch();
+
+                mdlBase.eEffacerSelection();
+            }
+
+            f = Liste[1];
+
+            if(f.GetTypeName2() == FeatureType.swTnProfileFeature)
+            {
+                try
                 {
-                    if (f.Name.StartsWith(CONSTANTES.LIGNES_DE_PLIAGE))
+                    f.eModifierEtat(swFeatureSuppressionAction_e.swUnSuppressFeature);
+
+                    Sketch Esquisse = f.GetSpecificFeature2();
+
+                    if (OrienterDvp)
                     {
-                        //String NomSelection = f.Name + "@" + vue.RootDrawingComponent.Name + "@" + vue.Name;
-                        //Dessin.Extension.SelectByID2(NomSelection, "SKETCH", 0, 0, 0, false, 0, null, 0);
+                        Double Angle = AngleCubeDeVisualisation(vue, Esquisse);
 
-                        ModelDoc2 mdlBase = dessin.eModelDoc2();
-
-                        f.eSelectionnerById2Dessin(mdlBase, vue);
-
-                        if (AfficherLignePliage)
-                            mdlBase.UnblankSketch();
-                        else
-                            mdlBase.BlankSketch();
-
-                        mdlBase.eEffacerSelection();
-                    }
-                    else if (f.Name.StartsWith(CONSTANTES.CUBE_DE_VISUALISATION))
-                    {
-                        try
+                        // On oriente la vue
+                        switch (OrientationDvp)
                         {
-                            f.eModifierEtat(swFeatureSuppressionAction_e.swUnSuppressFeature);
-
-                            Sketch Esquisse = f.GetSpecificFeature2();
-
-                            if (OrienterDvp)
-                            {
-                                Double Angle = AngleCubeDeVisualisation(vue, Esquisse);
-
-                                // On oriente la vue
-                                switch (OrientationDvp)
+                            case eOrientation.Portrait:
+                                if (Math.Abs(Angle) != MathX.eRad90D)
                                 {
-                                    case eOrientation.Portrait:
-                                        if (Math.Abs(Angle) != MathX.eRad90D)
-                                        {
-                                            Double a = MathX.eRad90D - Math.Abs(Angle);
-                                            vue.Angle = (Math.Sign(Angle) == 0 ? 1 : Math.Sign(Angle)) * a;
-                                        }
-                                        break;
-                                    case eOrientation.Paysage:
-                                        if (Math.Abs(Angle) != 0 || Math.Abs(Angle) != MathX.eRad180D)
-                                        {
-                                            Double a = MathX.eRad90D - Math.Abs(Angle);
-                                            vue.Angle = ((Math.Sign(Angle) == 0 ? 1 : Math.Sign(Angle)) * a) - MathX.eRad90D;
-                                        }
-                                        break;
-                                    default:
-                                        break;
+                                    Double a = MathX.eRad90D - Math.Abs(Angle);
+                                    vue.Angle = (Math.Sign(Angle) == 0 ? 1 : Math.Sign(Angle)) * a;
                                 }
-                            }
-
-                            g = new GeomVue(vue, Esquisse);
+                                break;
+                            case eOrientation.Paysage:
+                                if (Math.Abs(Angle) != 0 || Math.Abs(Angle) != MathX.eRad180D)
+                                {
+                                    Double a = MathX.eRad90D - Math.Abs(Angle);
+                                    vue.Angle = ((Math.Sign(Angle) == 0 ? 1 : Math.Sign(Angle)) * a) - MathX.eRad90D;
+                                }
+                                break;
+                            default:
+                                break;
                         }
-                        catch
-                        {
-                            WindowLog.EcrireF("Impossible d'orienter la vue : {0}", vue.Name);
-                        }
-                        return true;
                     }
-                    return false;
+
+                    g = new GeomVue(vue, Esquisse);
                 }
-                );
+                catch
+                {
+                    WindowLog.EcrireF("Impossible d'orienter la vue : {0}", vue.Name);
+                }
+            }
+
+            
+
+            //FonctionDepliee.eParcourirSousFonction(
+            //    f =>
+            //    {
+            //        if (f.Name.StartsWith(CONSTANTES.LIGNES_DE_PLIAGE))
+            //        {
+            //            //String NomSelection = f.Name + "@" + vue.RootDrawingComponent.Name + "@" + vue.Name;
+            //            //Dessin.Extension.SelectByID2(NomSelection, "SKETCH", 0, 0, 0, false, 0, null, 0);
+
+            //            ModelDoc2 mdlBase = dessin.eModelDoc2();
+
+            //            f.eSelectionnerById2Dessin(mdlBase, vue);
+
+            //            if (AfficherLignePliage)
+            //                mdlBase.UnblankSketch();
+            //            else
+            //                mdlBase.BlankSketch();
+
+            //            mdlBase.eEffacerSelection();
+            //        }
+            //        else if (f.Name.StartsWith(CONSTANTES.CUBE_DE_VISUALISATION))
+            //        {
+            //            try
+            //            {
+            //                f.eModifierEtat(swFeatureSuppressionAction_e.swUnSuppressFeature);
+
+            //                Sketch Esquisse = f.GetSpecificFeature2();
+
+            //                if (OrienterDvp)
+            //                {
+            //                    Double Angle = AngleCubeDeVisualisation(vue, Esquisse);
+
+            //                    // On oriente la vue
+            //                    switch (OrientationDvp)
+            //                    {
+            //                        case eOrientation.Portrait:
+            //                            if (Math.Abs(Angle) != MathX.eRad90D)
+            //                            {
+            //                                Double a = MathX.eRad90D - Math.Abs(Angle);
+            //                                vue.Angle = (Math.Sign(Angle) == 0 ? 1 : Math.Sign(Angle)) * a;
+            //                            }
+            //                            break;
+            //                        case eOrientation.Paysage:
+            //                            if (Math.Abs(Angle) != 0 || Math.Abs(Angle) != MathX.eRad180D)
+            //                            {
+            //                                Double a = MathX.eRad90D - Math.Abs(Angle);
+            //                                vue.Angle = ((Math.Sign(Angle) == 0 ? 1 : Math.Sign(Angle)) * a) - MathX.eRad90D;
+            //                            }
+            //                            break;
+            //                        default:
+            //                            break;
+            //                    }
+            //                }
+
+            //                g = new GeomVue(vue, Esquisse);
+            //            }
+            //            catch
+            //            {
+            //                WindowLog.EcrireF("Impossible d'orienter la vue : {0}", vue.Name);
+            //            }
+            //            return true;
+            //        }
+            //        return false;
+            //    }
+            //    );
 
             return g;
         }
