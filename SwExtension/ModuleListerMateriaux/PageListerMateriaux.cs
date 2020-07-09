@@ -204,14 +204,14 @@ namespace ModuleListerMateriaux
                 string Profil;
                 if (corps.eTypeDeCorps() == eTypeCorps.Tole)
                 {
-                    Double E = corps.eEpaisseurCorpsOuDossier(dossier);
-                    if (E == -1)
+                    Double Ep = corps.eEpaisseurCorpsOuDossier(dossier);
+                    if (Ep == -1)
                     {
                         WindowLog.EcrireF("Pb d'epaisseur sur le corps {0}", corps.Name);
                         return;
                     }
 
-                    Profil = "Ep " + E.ToString();
+                    Profil = "Ep " + Ep.ToString();
                 }
                 else if (dossier.ePropExiste(CONSTANTES.PROFIL_NOM))
                     Profil = dossier.eProp(CONSTANTES.PROFIL_NOM);

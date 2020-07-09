@@ -1007,7 +1007,7 @@ namespace Outils
             var Modeles = (object[])App.Sw.GetDocuments();
             var test = nomFichier.ToUpperInvariant();
 
-            foreach (ModelDoc2  mdl in Modeles)
+            foreach (ModelDoc2 mdl in Modeles)
                 if (Path.GetFileName(mdl.GetPathName()).ToUpperInvariant() == test)
                     return mdl;
 
@@ -2518,16 +2518,14 @@ namespace Outils
         {
             List<Body2> Liste = new List<Body2>();
 
-            Object vInfosCorps;
-
-            Object[] ArrCorps = (Object[])cp.GetBodies3((int)swBodyType_e.swSolidBody, out vInfosCorps);
+            Object[] ArrCorps = (Object[])cp.GetBodies3((int)swBodyType_e.swSolidBody, out object vInfosCorps);
             int[] InfosCorps = (int[])vInfosCorps;
 
             if (ArrCorps.IsRef())
             {
                 for (int i = 0; i < ArrCorps.Length; i++)
                 {
-                    if (InfosCorps[i] == (int)swBodyInfo_e.swNormalBody_e)
+                    //if (InfosCorps[i] == (int)swBodyInfo_e.swNormalBody_e)
                         Liste.Add((Body2)ArrCorps[i]);
                 }
             }
@@ -2560,7 +2558,7 @@ namespace Outils
 
             Object[] TabCorps = (Object[])piece.GetBodies2((int)swBodyType_e.swSolidBody, VisibleOnly);
 
-            if(TabCorps.IsRef() && (TabCorps.Length > 0))
+            if (TabCorps.IsRef() && (TabCorps.Length > 0))
                 Cp = (Body2)TabCorps[0];
 
             return Cp;
@@ -2767,7 +2765,7 @@ namespace Outils
             var param = (CurveParamData)e.GetCurveParams3();
             var start = param.UMinValue;
             var end = param.UMaxValue;
-            if(!param.Sense)
+            if (!param.Sense)
             {
                 var t = end * -1;
                 end = start * -1;
@@ -3295,7 +3293,7 @@ namespace Outils
                 NomFonctionPourSelection = String.Format("{0}@{1}", NomFonction, NomVuePourSelection);
             }
             else
-                NomFonctionPourSelection = String.Format("{0}@{1}@{2}", NomFonctionPourSelection, vue.RootDrawingComponent.Name ,vue.GetName2());
+                NomFonctionPourSelection = String.Format("{0}@{1}@{2}", NomFonctionPourSelection, vue.RootDrawingComponent.Name, vue.GetName2());
 
             return mdl.Extension.SelectByID2(NomFonctionPourSelection, TypeF, 0, 0, 0, ajouter, marque, null, (int)swSelectOption_e.swSelectOptionDefault);
         }
@@ -3356,7 +3354,7 @@ namespace Outils
             for (int i = 1; i <= Count; i++)
             {
                 var obj = SelMgr.GetSelectedObject6(i, marque) as T;
-                if(obj.IsRef())
+                if (obj.IsRef())
                     Liste.Add(obj);
             }
 
@@ -3525,7 +3523,7 @@ namespace Outils
             try
             {
                 // La méthode renvoi également true si les corps sont symétriques.
-                result = corps.GetCoincidenceTransform2((Object)corpsTest, out mt)? Comparaison_e.Semblable : Comparaison_e.Different;
+                result = corps.GetCoincidenceTransform2((Object)corpsTest, out mt) ? Comparaison_e.Semblable : Comparaison_e.Different;
 
                 if (result == Comparaison_e.Semblable)
                 {
@@ -3545,7 +3543,7 @@ namespace Outils
 
                 return result;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Message(ex);
                 Log.Message("Corps test : " + corpsTest.IsRef() + " / Corps : " + corps.IsRef());
@@ -3994,11 +3992,20 @@ namespace Outils
         /// <returns></returns>
         public static Double eEpaisseurCorpsOuDossier(this Body2 corps, BodyFolder dossier)
         {
-            Double E = corps.eEpaisseurCorps();
-            if (E == -1)
-                E = dossier.eEpaisseurDossier();
+            Double Ep = -1;
+            try
+            {
+                Ep = corps.eEpaisseurCorps();
+                if (Ep == -1)
+                    Ep = dossier.eEpaisseurDossier();
+            }
+            catch (Exception e)
+            {
+                Log.Message(e);
+                Log.MessageF("Dossier : {0}", dossier.eNom());
+            }
 
-            return E;
+            return Ep;
         }
 
         /// <summary>
@@ -4106,7 +4113,7 @@ namespace Outils
                                                   out pStatut,
                                                   out pWarning);
 
-            
+
             if (Resultat)
                 return App.ModelDoc2;
 
