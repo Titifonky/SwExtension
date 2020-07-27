@@ -6,6 +6,7 @@ using SwExtension;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows.Forms;
 
 namespace ModuleProduction
 {
@@ -23,14 +24,21 @@ namespace ModuleProduction
         public BoutonCommandeProfil()
         {
             ParamLongueurMax = _Config.AjouterParam("LongueurMax", 6000);
+            LgMax = ParamLongueurMax.GetValeur<Double>();
+
+            var lg = "6000";
+
+            if (Interaction.InputBox("Lg nominale des barres", "Lg :", ref lg) == DialogResult.OK)
+            {
+                if (!String.IsNullOrWhiteSpace(lg) && (lg.eToDouble() != 0))
+                    LgMax = lg.eToDouble();
+            }
         }
 
         protected override void Command()
         {
             try
             {
-                LgMax = ParamLongueurMax.GetValeur<Double>();
-
                 // On liste les composants
                 var ListeComposants = MdlBase.pListerComposants();
 
@@ -76,7 +84,7 @@ namespace ModuleProduction
                                 while (LgTmp > LgMax)
                                 {
                                     RassemblerBarre(MateriauCorps, Profil, LgMax);
-                                    LgTmp = LgTmp - LgMax;
+                                    LgTmp -= LgMax;
                                 }
 
                                 RassemblerBarre(MateriauCorps, Profil, LgTmp);

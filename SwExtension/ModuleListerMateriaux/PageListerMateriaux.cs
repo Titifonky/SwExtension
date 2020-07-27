@@ -161,7 +161,7 @@ namespace ModuleListerMateriaux
             {
                 Bdd = new BDD();
 
-                Predicate<Component2> Test = c =>
+                bool Test(Component2 c)
                 {
                     if (c.TypeDoc() == eTypeDoc.Piece && (!c.IsSuppressed()))
                     {
@@ -178,12 +178,19 @@ namespace ModuleListerMateriaux
                     }
 
                     return false;
-                };
+                }
+
+                bool Rec(Component2 c)
+                {
+                    if (c.ExcludeFromBOM) return false;
+
+                    return true;
+                }
 
                 if (MdlBase.TypeDoc() == eTypeDoc.Piece)
                     Test(MdlBase.eComposantRacine());
                 else
-                    MdlBase.eRecParcourirComposants(Test);
+                    MdlBase.eRecParcourirComposants(Test, Rec);
             }
             catch (Exception e)
             { this.LogMethode(new Object[] { e }); }
