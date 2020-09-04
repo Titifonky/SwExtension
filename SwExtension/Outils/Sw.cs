@@ -1700,12 +1700,23 @@ namespace Outils
         {
             CustomPropertyManager pPropMgr = dossier.GetFeature().CustomPropertyManager;
 
-            foreach (String iNom in pPropMgr.GetNames())
+            if (pPropMgr.IsNull())
             {
-                String pVal, pResult;
-                Boolean Resolved;
+                Log.MessageF("Erreur Dossier : {0}", dossier.eNom());
+                return false;
+            }
 
-                pPropMgr.Get5(iNom, false, out pVal, out pResult, out Resolved);
+            String[] PropNames = (String[])pPropMgr.GetNames();
+
+            if (PropNames.IsNull())
+            {
+                Log.MessageF("Erreur PropNames Dossier : {0}", dossier.eNom());
+                return false;
+            }
+
+            foreach (String nom in PropNames)
+            {
+                _ = pPropMgr.Get5(nom, false, out string pVal, out _, out _);
 
                 if (Regex.IsMatch(pVal, "^\"LENGTH@@@"))
                 {
@@ -1723,20 +1734,35 @@ namespace Outils
         /// <returns></returns>
         public static Boolean eEstUnDossierDeToles(this BodyFolder dossier)
         {
-            CustomPropertyManager pPropMgr = dossier.GetFeature().CustomPropertyManager;
-
-            foreach (String nom in pPropMgr.GetNames())
+            try
             {
-                String pVal, pResult;
-                Boolean Resolved;
+                CustomPropertyManager pPropMgr = dossier.GetFeature().CustomPropertyManager;
 
-                pPropMgr.Get5(nom, false, out pVal, out pResult, out Resolved);
-
-                if (Regex.IsMatch(pVal, "^\"SW-Longueur du flanc de tôle@@@"))
+                if (pPropMgr.IsNull())
                 {
-                    return true;
+                    Log.MessageF("Erreur Dossier : {0}", dossier.eNom());
+                    return false;
+                }
+
+                String[] PropNames = (String[])pPropMgr.GetNames();
+
+                if (PropNames.IsNull())
+                {
+                    Log.MessageF("Erreur PropNames Dossier : {0}", dossier.eNom());
+                    return false;
+                }
+
+                foreach (String nom in PropNames)
+                {
+                    _ = pPropMgr.Get5(nom, false, out string pVal, out _, out _);
+
+                    if (Regex.IsMatch(pVal, "^\"SW-Longueur du flanc de tôle@@@"))
+                    {
+                        return true;
+                    }
                 }
             }
+            catch (Exception e) { Log.Message(e); }
 
             return false;
         }

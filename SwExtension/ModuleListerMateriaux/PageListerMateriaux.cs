@@ -183,7 +183,7 @@ namespace ModuleListerMateriaux
                 bool Rec(Component2 c)
                 {
                     if (c.ExcludeFromBOM) return false;
-
+ 
                     return true;
                 }
 
