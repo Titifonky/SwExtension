@@ -228,8 +228,8 @@ namespace Macros
 
                 foreach (Piece piece in ListePiece)
                 {
-                    WindowLog.Ecrire(piece.Nb + " × " + piece.Composant.eNomSansExt() + " Config \"" + piece.Composant.eNomConfiguration() + "\"");
-                    WindowLog.Ecrire(" -> Mat : " + piece.Info.Materiau + " / Base : " + piece.Info.Base);
+                    //WindowLog.Ecrire(piece.Nb + " × " + piece.Composant.eNomSansExt() + " Config \"" + piece.Composant.eNomConfiguration() + "\"");
+                    //WindowLog.Ecrire(" -> Mat : " + piece.Info.Materiau + " / Base : " + piece.Info.Base);
 
                     var ListeDossier = piece.Composant.eListeDesDossiersDePiecesSoudees();
 
@@ -263,7 +263,7 @@ namespace Macros
                             dossier.eNbCorps()
                             );
 
-                        WindowLog.Ecrire(Ligne);
+                        //WindowLog.Ecrire(Ligne);
                     }
 
                     Ensemble.AjouterPiece(piece);
@@ -283,10 +283,10 @@ namespace Macros
                             TextePiece.Insert(0, String.Format("  {0} : {1:0.0} kg", classe, Masse));
                         }
                         TextePiece.Insert(0, String.Format("Poids de la piece : {0:0.0} kg", piece.Masse));
-                        WindowLog.Ecrire(TextePiece);
+                        //WindowLog.Ecrire(TextePiece);
                     }
 
-                    WindowLog.SautDeLigne();
+                    //WindowLog.SautDeLigne();
                 }
 
                 WindowLog.SautDeLigne();
