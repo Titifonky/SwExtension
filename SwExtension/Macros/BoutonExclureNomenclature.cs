@@ -51,7 +51,7 @@ namespace Macros
                         case 1:
                             {
                                 cp.ExcludeFromBOM = true;
-                                WindowLog.Ecrire(cp.Name2 + " : Est exclu");
+                                //WindowLog.Ecrire(cp.Name2 + " : Est exclu");
                                 break;
                             }
 
@@ -74,7 +74,7 @@ namespace Macros
                                                 cp.ExcludeFromBOM = true;
                                                 //WindowLog.Ecrire(cp.Name2);
                                                 //WindowLog.Ecrire(cp.eNomConfiguration());
-                                                WindowLog.EcrireF("{0}  \"{1}\" : Est exclu", cp.Name2, cp.eNomConfiguration());
+                                                //WindowLog.EcrireF("{0}  \"{1}\" : Est exclu", cp.Name2, cp.eNomConfiguration());
                                                 break;
                                             }
 
